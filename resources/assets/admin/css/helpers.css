@@ -1,0 +1,27 @@
+input:-webkit-autofill, textarea:-webkit-autofill {
+  -webkit-text-fill-color: #FFFFFF;
+}
+
+::-webkit-input-placeholder, :-moz-placeholder, ::-moz-placeholder, :-ms-input-placeholder {
+  color: #FFFFFF;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]:focus {
+  -moz-appearance: number-input;
+}
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+select::-ms-expand {
+  display: none;
+}
+
+/*# sourceMappingURL=helpers.css.map */

@@ -1,0 +1,58 @@
+section.list {
+  padding: 10px 0 0 0;
+  border-bottom: none;
+}
+section.list table {
+  width: 100%;
+  color: #7E8890;
+}
+section.list table thead > tr {
+  font-size: 12px;
+  font-size: 0.75rem;
+  background: #FFFFFF;
+  font-family: 'Open Sans Bold', sans-serif;
+  text-transform: uppercase;
+}
+section.list table thead > tr td:not(:last-of-type) {
+  cursor: pointer;
+}
+section.list table thead > tr td:not(:last-of-type) i {
+  color: #C9CBD1;
+}
+section.list table tbody > tr {
+  font-size: 13px;
+  font-size: 0.8125rem;
+  font-family: 'Open Sans', sans-serif;
+}
+section.list table tbody > tr.odd {
+  background: #FFFFFF;
+}
+section.list table tbody > tr.even {
+  background: #FCFCFC;
+}
+section.list table tr > td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #EAEAEA;
+}
+@media only screen and (max-width: 767px) {
+  section.list table tr > td {
+    display: none;
+  }
+}
+@media only screen and (max-width: 767px) {
+  section.list table tr > td:first-of-type {
+    display: table-cell;
+  }
+}
+section.list table tr > td:last-of-type {
+  width: 155px;
+  padding: 10px;
+}
+@media only screen and (max-width: 767px) {
+  section.list table tr > td:last-of-type {
+    display: table-cell;
+    width: 78px;
+  }
+}
+
+/*# sourceMappingURL=list.css.map */

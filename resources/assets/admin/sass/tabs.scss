@@ -1,0 +1,43 @@
+@import 'init';
+
+section.tabs {
+    @include clear-padding();
+
+    margin: 0 0 20px 0;
+    padding: 0 5px;
+
+    a {
+        @include font-size(12px);
+        @include clear-padding();
+
+        display: block;
+        float: left;
+        margin: 0 10px;
+        padding: 18px 5px 12px 5px;
+        border-bottom: 3px solid $colorWhite;
+        background: $colorWhite;
+        color: $colorOsloGray;
+        font-family: 'Open Sans Bold', sans-serif;
+        text-transform: uppercase;
+
+        @include media-query('tablet') {
+            @include calc(width, '33% - 20px');
+        }
+
+        @include media-query('tablet-small') {
+            @include calc(width, '50% - 20px');
+        }
+
+        @include media-query('phone-wide') {
+            @include calc(width, '100% - 20px');
+        }
+
+        &:hover {
+            border-bottom: 3px solid $colorAthensGray;
+        }
+
+        &.active {
+            border-bottom: 3px solid $colorPictonBlue;
+        }
+    }
+}

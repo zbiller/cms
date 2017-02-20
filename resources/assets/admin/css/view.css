@@ -1,0 +1,90 @@
+section.view {
+  margin: 0 0 20px 0;
+  padding: 15px;
+}
+
+div.tab {
+  display: none;
+}
+div.tab.active {
+  display: block;
+}
+
+.form fieldset {
+  display: block;
+  float: left;
+  width: 100%;
+  margin: 10px 0;
+}
+.form fieldset:first-of-type {
+  margin-top: 0;
+}
+.form label {
+  font-size: 12px;
+  font-size: 0.75rem;
+  display: block;
+  float: left;
+  width: 20%;
+  margin: 10px 0 0 0;
+  color: #B0BEC5;
+  font-family: 'Open Sans Bold', sans-serif;
+  text-transform: uppercase;
+}
+@media only screen and (max-width: 1247px) {
+  .form label {
+    width: 27%;
+  }
+}
+@media only screen and (max-width: 639px) {
+  .form label {
+    width: 100%;
+  }
+}
+.form input, .form select, .form textarea {
+  font-size: 13px;
+  font-size: 0.8125rem;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  display: block;
+  float: right;
+  width: 80%;
+  margin: 0;
+  padding: 5px;
+  border: none;
+  border-bottom: 1px solid #e2e2e2;
+  background: #FFFFFF;
+  color: #7E8890;
+  font-family: 'Open Sans', sans-serif;
+}
+.form input:focus, .form select:focus, .form textarea:focus {
+  border-bottom: 1px solid #4AAEE3;
+}
+@media only screen and (max-width: 1247px) {
+  .form input, .form select, .form textarea {
+    width: 73%;
+  }
+}
+@media only screen and (max-width: 639px) {
+  .form input, .form select, .form textarea {
+    width: 100%;
+  }
+}
+.form select {
+  padding: 5px 32px 5px 5px;
+  background: url("../img/select-dropdown-bg.png") no-repeat right 5px center;
+}
+.form textarea {
+  border-right: 1px solid #e2e2e2;
+  height: 120px;
+}
+.form textarea:focus {
+  border-right: 1px solid #4AAEE3;
+}
+
+/*# sourceMappingURL=view.css.map */

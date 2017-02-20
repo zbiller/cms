@@ -1,0 +1,49 @@
+header {
+  width: -moz-calc(100% - 250px);
+  width: -webkit-calc(100% - 250px);
+  width: calc(100% - 250px);
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  z-index: 3;
+  position: fixed;
+  top: 0;
+  right: 0;
+  padding: 0 10px 0 0;
+  border-bottom: 1px solid #EAEAEA;
+  background: #FFFFFF;
+}
+@media only screen and (max-width: 1023px) {
+  header {
+    width: 100%;
+  }
+}
+header button {
+  display: none;
+}
+@media only screen and (max-width: 1023px) {
+  header button {
+    font-size: 16px;
+    font-size: 1rem;
+    display: inline-block;
+    width: 62px;
+    height: 62px;
+    border: 0;
+    cursor: pointer;
+    outline: none;
+    background: #45576D;
+    color: #FFFFFF;
+  }
+}
+header h1 {
+  font-size: 12px;
+  font-size: 0.75rem;
+  display: inline-block;
+  margin: 0;
+  padding: 23px 0 0 15px;
+  color: #7E8890;
+  font-family: 'Open Sans Bold', sans-serif;
+  text-transform: uppercase;
+}
+
+/*# sourceMappingURL=header.css.map */

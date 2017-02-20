@@ -1,0 +1,90 @@
+@import 'init';
+
+section.view {
+    margin: 0 0 20px 0;
+    padding: 15px;
+}
+
+div.tab {
+    display: none;
+
+    &.active {
+        display: block;
+    }
+}
+
+.form {
+    fieldset {
+        display: block;
+        float: left;
+        width: 100%;
+        margin: 10px 0;
+
+        &:first-of-type {
+            margin-top: 0;
+        }
+    }
+
+    label {
+        @include font-size(12px);
+
+        display: block;
+        float: left;
+        width: 20%;
+        margin: 10px 0 0 0;
+        color: $colorTowerGray;
+        font-family: 'Open Sans Bold', sans-serif;
+        text-transform: uppercase;
+
+        @include media-query('desktop') {
+            width: 27%;
+        }
+
+        @include media-query('tablet-small') {
+            width: 100%;
+        }
+    }
+
+    input, select, textarea {
+        @include font-size(13px);
+        @include transition(all 0.3s ease);
+        @include clear-padding();
+
+        display: block;
+        float: right;
+        width: 80%;
+        margin: 0;
+        padding: 5px;
+        border: none;
+        border-bottom: 1px solid darken($colorGallery, 3%);
+        background: $colorWhite;
+        color: $colorOsloGray;
+        font-family: 'Open Sans', sans-serif;
+
+        &:focus {
+            border-bottom: 1px solid $colorPictonBlue;
+        }
+
+        @include media-query('desktop') {
+            width: 73%;
+        }
+
+        @include media-query('tablet-small') {
+            width: 100%;
+        }
+    }
+
+    select {
+        padding: 5px 32px 5px 5px;
+        background: url('../img/select-dropdown-bg.png') no-repeat right 5px center;
+    }
+
+    textarea {
+        border-right: 1px solid darken($colorGallery, 3%);
+        height: 120px;
+
+        &:focus {
+            border-right: 1px solid $colorPictonBlue;
+        }
+    }
+}

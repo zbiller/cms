@@ -1,0 +1,105 @@
+footer {
+  width: -moz-calc(100% - 250px);
+  width: -webkit-calc(100% - 250px);
+  width: calc(100% - 250px);
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  z-index: 2;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  padding: 0 15px;
+  background: #FFFFFF;
+  border-top: 1px solid #EAEAEA;
+}
+@media only screen and (max-width: 1023px) {
+  footer {
+    width: 100%;
+  }
+}
+
+.pagination {
+  float: left;
+}
+.pagination a {
+  font-size: 12px;
+  font-size: 0.75rem;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  display: block;
+  float: left;
+  width: 34px;
+  height: 30px;
+  margin: 15px 1px 15px 0;
+  background: #cdd6db;
+  color: #FFFFFF;
+  font-family: 'Open Sans Semibold', sans-serif;
+  text-align: center;
+  line-height: 30px;
+}
+@media only screen and (max-width: 639px) {
+  .pagination a {
+    display: none;
+  }
+  .pagination a.first, .pagination a.last, .pagination a.previous, .pagination a.next {
+    display: block;
+  }
+}
+.pagination a:hover {
+  background: #B0BEC5;
+}
+.pagination a.current {
+  background: #4AAEE3;
+}
+.pagination a.inactive {
+  cursor: not-allowed;
+  background: #cdd6db;
+}
+.pagination .jump {
+  float: left;
+  margin: 15px 0 15px 20px;
+}
+@media only screen and (max-width: 639px) {
+  .pagination .jump {
+    display: none;
+  }
+}
+.pagination .jump input[type="number"] {
+  width: 50px;
+  height: 28px;
+  padding: 0 5px;
+  border: 1px solid #e5e5e5;
+  background: #FFFFFF;
+  color: #7E8890;
+}
+.pagination .jump input[type="submit"] {
+  font-size: 12px;
+  font-size: 0.75rem;
+  -webkit-transition: background 0.3s ease;
+  -moz-transition: background 0.3s ease;
+  -ms-transition: background 0.3s ease;
+  -o-transition: background 0.3s ease;
+  transition: background 0.3s ease;
+  width: 40px;
+  height: 30px;
+  margin: 0 0 0 -5px;
+  border: none;
+  cursor: pointer;
+  background: #4AAEE3;
+  color: #FFFFFF;
+  font-family: 'Open Sans Bold', sans-serif;
+  text-transform: uppercase;
+}
+.pagination .jump input[type="submit"]:hover {
+  background: #2199d9;
+}
+
+section.actions {
+  float: right;
+}
+
+/*# sourceMappingURL=footer.css.map */

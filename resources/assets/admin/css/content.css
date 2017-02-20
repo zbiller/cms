@@ -1,0 +1,156 @@
+main {
+  width: -moz-calc(100% - 250px);
+  width: -webkit-calc(100% - 250px);
+  width: calc(100% - 250px);
+  z-index: 1;
+  display: block;
+  float: right;
+  margin: 82px 0;
+}
+@media only screen and (max-width: 1023px) {
+  main {
+    width: 100%;
+  }
+}
+main section {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  display: block;
+  float: left;
+  width: 100%;
+  background: #FFFFFF;
+  border-top: 1px solid #EAEAEA;
+  border-bottom: 1px solid #EAEAEA;
+}
+
+a.btn {
+  font-size: 12px;
+  font-size: 0.75rem;
+  -webkit-transition: background 0.3s ease;
+  -moz-transition: background 0.3s ease;
+  -ms-transition: background 0.3s ease;
+  -o-transition: background 0.3s ease;
+  transition: background 0.3s ease;
+  display: block;
+  float: left;
+  margin: 15px 5px;
+  padding: 7px 10px;
+  background: #B0BEC5;
+  color: #FFFFFF;
+  font-family: 'Open Sans Bold', sans-serif;
+  text-transform: uppercase;
+}
+@media only screen and (max-width: 767px) {
+  a.btn {
+    font-size: 14px;
+    font-size: 0.875rem;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    text-indent: -9999px;
+    width: 32px;
+    height: 30px;
+  }
+}
+@media only screen and (max-width: 767px) {
+  a.btn > i {
+    text-indent: 0;
+    float: left;
+  }
+}
+a.btn:hover {
+  background: #93a6af;
+}
+a.btn.no-margin {
+  margin: 0;
+}
+a.btn.no-margin-top {
+  margin-top: 0;
+}
+a.btn.no-margin-bottom {
+  margin-bottom: 0;
+}
+a.btn.no-margin-right {
+  margin-right: 0;
+}
+a.btn.no-margin-left {
+  margin-left: 0;
+}
+a.btn.gray {
+  background: #cdd6db;
+}
+a.btn.gray:hover {
+  background: #B0BEC5;
+}
+a.btn.blue {
+  background: #4AAEE3;
+}
+a.btn.blue:hover {
+  background: #2199d9;
+}
+a.btn.green {
+  background: #55D98D;
+}
+a.btn.green:hover {
+  background: #2ecd71;
+}
+a.btn.red {
+  background: #DD7467;
+}
+a.btn.red:hover {
+  background: #d44e3d;
+}
+a.btn.yellow {
+  background: #FFC65D;
+}
+a.btn.yellow:hover {
+  background: #ffb42a;
+}
+a.btn.dark-blue {
+  background: #45576D;
+}
+a.btn.dark-blue:hover {
+  background: #313e4e;
+}
+
+.flash {
+  opacity: 0.9;
+  filter: alpha(opacity=90);
+  z-index: 5;
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  max-width: 300px;
+  padding: 15px 45px 15px 15px;
+}
+.flash.success {
+  background: #55D98D;
+}
+.flash.error {
+  background: #DD7467;
+}
+.flash a {
+  position: fixed;
+  top: 45px;
+  right: 45px;
+  color: #FFFFFF;
+}
+.flash p {
+  font-size: 13px;
+  font-size: 0.8125rem;
+  margin: 0;
+  padding: 0;
+  color: #FFFFFF;
+  font-family: 'Open Sans Semibold', sans-serif;
+}
+
+.left {
+  float: left !important;
+}
+
+.right {
+  float: right !important;
+}
+
+/*# sourceMappingURL=content.css.map */

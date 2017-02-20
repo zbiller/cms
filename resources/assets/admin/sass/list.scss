@@ -1,0 +1,66 @@
+@import 'init';
+
+section.list {
+    padding: 10px 0 0 0;
+    border-bottom: none;
+
+    table {
+        width: 100%;
+        color: $colorOsloGray;
+
+        thead > tr {
+            @include font-size(12px);
+
+            background: $colorWhite;
+            font-family: 'Open Sans Bold', sans-serif;
+            text-transform: uppercase;
+
+            td:not(:last-of-type) {
+                cursor: pointer;
+
+                i {
+                    color: $colorGhost;
+                }
+            }
+        }
+
+        tbody > tr {
+            @include font-size(13px);
+
+            font-family: 'Open Sans', sans-serif;
+
+            &.odd {
+                background: $colorWhite;
+            }
+
+            &.even {
+                background: $colorAlabaster;
+            }
+        }
+
+        tr > td {
+            padding: 10px 15px;
+            border-bottom: 1px solid $colorGallery;
+
+            @include media-query('tablet') {
+                display: none;
+            }
+
+            &:first-of-type {
+                @include media-query('tablet') {
+                    display: table-cell;
+                }
+            }
+
+            &:last-of-type {
+                width: 155px;
+                padding: 10px;
+
+                @include media-query('tablet') {
+                    display: table-cell;
+                    width: 78px;
+                }
+            }
+        }
+    }
+}

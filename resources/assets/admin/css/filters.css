@@ -1,0 +1,50 @@
+section.filters {
+  margin: 0 0 20px 0;
+  padding: 0 5px;
+}
+section.filters form fieldset {
+  float: left;
+  margin: 15px 10px;
+}
+@media only screen and (max-width: 559px) {
+  section.filters form fieldset {
+    width: -moz-calc(100% - 20px);
+    width: -webkit-calc(100% - 20px);
+    width: calc(100% - 20px);
+  }
+}
+section.filters form div {
+  float: right;
+  margin: 15px 10px;
+}
+@media only screen and (max-width: 1023px) {
+  section.filters form div {
+    float: left;
+  }
+}
+section.filters form input, section.filters form select {
+  font-size: 13px;
+  font-size: 0.8125rem;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  display: block;
+  float: left;
+  width: 100%;
+  padding: 5px 2px;
+  border: none;
+  border-bottom: 1px solid #e2e2e2;
+  color: #9AADB6;
+  font-family: 'Open Sans', sans-serif;
+}
+section.filters form input:focus, section.filters form select:focus {
+  border-bottom: 1px solid #4AAEE3;
+}
+section.filters form select {
+  padding: 5px 32px 5px 2px;
+  background: url("../img/select-dropdown-bg.png") no-repeat right 2px center;
+}
+
+/*# sourceMappingURL=filters.css.map */

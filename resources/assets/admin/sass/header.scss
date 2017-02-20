@@ -1,0 +1,46 @@
+@import 'init';
+
+header {
+    @include calc(width, "100% - 250px");
+    @include clear-padding();
+
+    z-index: z-index('header');
+    position: fixed;
+    top: 0;
+    right: 0;
+    padding: 0 10px 0 0;
+    border-bottom: 1px solid $colorGallery;
+    background: $colorWhite;
+
+    @include media-query('tablet-wide') {
+        width: 100%;
+    }
+
+    button {
+        display: none;
+
+        @include media-query('tablet-wide') {
+            @include font-size(16px);
+
+            display: inline-block;
+            width: 62px;
+            height: 62px;
+            border: 0;
+            cursor: pointer;
+            outline: none;
+            background: $colorFiord;
+            color: $colorWhite;
+        }
+    }
+
+    h1 {
+        @include font-size(12px);
+
+        display: inline-block;
+        margin: 0;
+        padding: 23px 0 0 15px;
+        color: $colorOsloGray;
+        font-family: 'Open Sans Bold', sans-serif;
+        text-transform: uppercase;
+    }
+}

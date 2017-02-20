@@ -1,0 +1,90 @@
+@import 'init';
+
+nav {
+    z-index: z-index('menu');
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 250px;
+    height: 100%;
+    overflow: hidden;
+    background: $colorFiord;
+
+    @include media-query('tablet-wide') {
+        margin-left: -250px;
+        top: 48px;
+    }
+
+    span {
+        @include font-size(14px);
+
+        display: block;
+        float: left;
+        margin: 10px 0 0 0;
+        padding: 8px 15px;
+        background: $colorWhite;
+        color: $colorFiord;
+        font-family: 'Open Sans Extrabold', sans-serif;
+    }
+
+    ul {
+        list-style: none;
+
+        li {
+            a {
+                @include transition(all 0.3s ease);
+
+                display: block;
+                color: $colorGhost;
+
+                &:hover {
+                    color: $colorWhite;
+                }
+
+                &.active {
+                    color: $colorWhite;
+                }
+            }
+        }
+    }
+
+    .main-menu {
+        > li {
+            > a {
+                @include font-size(12px);
+
+                padding: 12px 15px;
+                background: url('../img/arrow-right.png') no-repeat right 15px center;
+                font-family: 'Open Sans Bold', sans-serif;
+                text-transform: uppercase;
+
+                &:hover {
+                    background: darken($colorFiord, 7%) url('../img/arrow-right.png') no-repeat right 15px center;
+                }
+
+                &.active {
+                    background: darken($colorFiord, 7%) url('../img/arrow-down.png') no-repeat right 15px center;
+                }
+            }
+        }
+    }
+
+    .sub-menu {
+        display: none;
+
+        &.active {
+            display: block;
+        }
+
+        > li {
+            > a {
+                @include font-size(13px);
+
+                padding: 10px 15px 10px 45px;
+                background: darken($colorFiord, 3%);
+                font-family: 'Open Sans Semibold', sans-serif;
+                text-transform: capitalize;
+            }
+        }
+    }
+}
