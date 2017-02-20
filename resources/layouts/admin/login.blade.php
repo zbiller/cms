@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    @include('layouts::admin.partials._head')
+</head>
+<body>
+    @include('layouts::admin.partials._flash')
+
+    <main>
+        <section class="login">
+            @yield('content')
+        </section>
+    </main>
+
+    @include('layouts::admin.partials._footer')
+</body>
+</html>

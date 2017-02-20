@@ -1,0 +1,1 @@
+{{ Html::script('/build/admin/js/super.min.js') }}

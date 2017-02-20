@@ -1,0 +1,1 @@
+{{--Placeholder for the header view composer implementation--}}
