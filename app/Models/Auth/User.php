@@ -91,12 +91,11 @@ class User extends Authenticatable
 
     /**
      * @param string $token
-     * @param string $route
      */
     public function sendPasswordResetNotification($token)
     {
-        $route = 'admin.password.change';
-
-        $this->notify(new ResetPasswordNotification($token, $route));
+        $this->notify(new ResetPasswordNotification(
+            $token, (str_contains(request()->url(), 'admin') ? 'admin.' : '') . 'password.change'
+        ));
     }
 }
