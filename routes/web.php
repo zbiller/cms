@@ -29,3 +29,7 @@ Route::group([
         Route::post('reset-password', ['as' => 'admin.password.reset', 'uses' => 'ResetPasswordController@reset']);
     });
 });
+
+Route::get('/', function () {
+    return '';
+})->name('home');
