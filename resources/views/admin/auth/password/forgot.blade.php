@@ -6,11 +6,10 @@
     </div>
     <div class="content">
         {!! Form::open(['url' => request()->url()]) !!}
-        {!! Form::text('username', null, ['placeholder' => 'Username']) !!}
-        {!! Form::password('password', ['placeholder' => 'Password']) !!}
-        {!! Form::submit('Sign in') !!}
+        {!! Form::text('email', null, ['placeholder' => 'Email']) !!}
+        {!! Form::submit('Recover Password') !!}
         {!! Form::close() !!}
-        <a href="{{ route('admin.password.forgot') }}">I forgot my password</a>
+        <a href="{{ route('admin.login') }}">Back to login</a>
     </div>
 
     @if (count($errors) > 0)
