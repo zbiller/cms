@@ -11,6 +11,15 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::group([
+    'prefix' => 'admin',
+    'namespace' => 'Admin',
+], function () {
+    Route::group([
+        'namespace' => 'Auth'
+    ], function () {
+        Route::get('login', ['as' => 'admin.show', 'uses' => 'LoginController@show']);
+        Route::post('login', ['as' => 'admin.login', 'uses' => 'LoginController@login']);
+        Route::post('logout', ['as' => 'admin.logout', 'uses' => 'LoginController@logout']);
+    });
 });
