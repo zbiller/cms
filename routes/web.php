@@ -16,7 +16,8 @@ Route::group([
     'namespace' => 'Admin',
 ], function () {
     Route::group([
-        'namespace' => 'Auth'
+        'namespace' => 'Auth',
+        'middleware' => 'not.authenticated:admin'
     ], function () {
         Route::get('login', ['as' => 'admin.login', 'uses' => 'LoginController@show']);
         Route::post('login', ['uses' => 'LoginController@login']);
@@ -28,7 +29,21 @@ Route::group([
         Route::get('reset-password/{token}', ['as' => 'admin.password.change', 'uses' => 'ResetPasswordController@show']);
         Route::post('reset-password', ['as' => 'admin.password.reset', 'uses' => 'ResetPasswordController@reset']);
     });
+
+    Route::group([
+        'middleware' => ['authenticated:admin.login', 'check.roles:admin', 'check.permissions']
+    ], function () {
+        Route::group([
+            'namespace' => 'Home'
+        ], function () {
+            Route::get('', ['as' => 'admin', 'uses' => 'DashboardController@index']);
+        });
+    });
 });
+
+
+
+
 
 Route::get('/', function () {
     return '';
