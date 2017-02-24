@@ -4,7 +4,7 @@ use App\Models\Auth\Person;
 use App\Models\Auth\User;
 use Illuminate\Database\Seeder;
 
-class AdminUsersSeeder extends Seeder
+class UsersSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,13 +15,15 @@ class AdminUsersSeeder extends Seeder
     {
         DB::table('users')->delete();
 
+        /**
+         * Create the developer admin user.
+         */
         $user = User::create([
             'username' => 'developer',
             'password' => bcrypt('iwtfki01'),
         ]);
 
-        $person = Person::create([
-            'user_id' => $user->id,
+        $user->person()->create([
             'first_name' => 'Developer',
             'last_name' => 'User',
             'email' => 'zbiller@gmail.com',
