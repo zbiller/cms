@@ -10,7 +10,6 @@
 
     <main>
         @yield('content')
-        @yield('footer')
     </main>
 
     @include('layouts::admin.partials._footer')

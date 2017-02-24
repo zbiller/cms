@@ -4,3 +4,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
 {{ Html::style('/build/admin/css/super.min.css') }}
+
+@section('top_styles') @show
+@section('top_scripts') @show
