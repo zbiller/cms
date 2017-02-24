@@ -2,6 +2,7 @@
 
 namespace App\Models\Auth;
 
+use App\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\ResetPassword as ResetPasswordNotification;
@@ -9,27 +10,23 @@ use App\Notifications\ResetPassword as ResetPasswordNotification;
 class User extends Authenticatable
 {
     use Notifiable;
+    use HasRoles;
 
     /**
-     * The database table.
-     *
      * @var string
      */
     protected $table = 'users';
 
     /**
-     * The attributes that are mass assignable.
-     *
      * @var array
      */
     protected $fillable = [
         'username',
         'password',
+        'email',
     ];
 
     /**
-     * The attributes that should be hidden for arrays.
-     *
      * @var array
      */
     protected $hidden = [
@@ -38,8 +35,6 @@ class User extends Authenticatable
     ];
 
     /**
-     * Eager load relations by default.
-     *
      * @var array
      */
     protected $with = [
