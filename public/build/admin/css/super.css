@@ -4742,7 +4742,7 @@ main section {
   border-bottom: 1px solid #EAEAEA;
 }
 
-a.btn {
+.btn {
   font-size: 12px;
   font-size: 0.75rem;
   -webkit-transition: background 0.3s ease;
@@ -4754,13 +4754,15 @@ a.btn {
   float: left;
   margin: 15px 5px;
   padding: 7px 10px;
+  border: 0;
   background: #B0BEC5;
   color: #FFFFFF;
   font-family: 'Open Sans Bold', sans-serif;
   text-transform: uppercase;
+  cursor: pointer;
 }
 @media only screen and (max-width: 767px) {
-  a.btn {
+  .btn {
     font-size: 14px;
     font-size: 0.875rem;
     box-sizing: border-box;
@@ -4772,63 +4774,63 @@ a.btn {
   }
 }
 @media only screen and (max-width: 767px) {
-  a.btn > i {
+  .btn > i {
     text-indent: 0;
     float: left;
   }
 }
-a.btn:hover {
+.btn:hover {
   background: #93a6af;
 }
-a.btn.no-margin {
+.btn.no-margin {
   margin: 0;
 }
-a.btn.no-margin-top {
+.btn.no-margin-top {
   margin-top: 0;
 }
-a.btn.no-margin-bottom {
+.btn.no-margin-bottom {
   margin-bottom: 0;
 }
-a.btn.no-margin-right {
+.btn.no-margin-right {
   margin-right: 0;
 }
-a.btn.no-margin-left {
+.btn.no-margin-left {
   margin-left: 0;
 }
-a.btn.gray {
+.btn.gray {
   background: #cdd6db;
 }
-a.btn.gray:hover {
+.btn.gray:hover {
   background: #B0BEC5;
 }
-a.btn.blue {
+.btn.blue {
   background: #4AAEE3;
 }
-a.btn.blue:hover {
+.btn.blue:hover {
   background: #2199d9;
 }
-a.btn.green {
+.btn.green {
   background: #55D98D;
 }
-a.btn.green:hover {
+.btn.green:hover {
   background: #2ecd71;
 }
-a.btn.red {
+.btn.red {
   background: #DD7467;
 }
-a.btn.red:hover {
+.btn.red:hover {
   background: #d44e3d;
 }
-a.btn.yellow {
+.btn.yellow {
   background: #FFC65D;
 }
-a.btn.yellow:hover {
+.btn.yellow:hover {
   background: #ffb42a;
 }
-a.btn.dark-blue {
+.btn.dark-blue {
   background: #45576D;
 }
-a.btn.dark-blue:hover {
+.btn.dark-blue:hover {
   background: #313e4e;
 }
 

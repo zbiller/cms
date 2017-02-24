@@ -24,7 +24,7 @@ main {
     }
 }
 
-a.btn {
+.btn {
     @include font-size(12px);
     @include transition(background 0.3s ease);
 
@@ -32,10 +32,12 @@ a.btn {
     float: left;
     margin: 15px 5px;
     padding: 7px 10px;
+    border: 0;
     background: $colorTowerGray;
     color: $colorWhite;
     font-family: 'Open Sans Bold', sans-serif;
     text-transform: uppercase;
+    cursor: pointer;
 
     @include media-query('tablet') {
         @include font-size(14px);
