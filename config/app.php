@@ -181,6 +181,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         App\Providers\ViewServiceProvider::class,
         App\Providers\ComposerServiceProvider::class,
+        App\Providers\AclServiceProvider::class,
 
     ],
 
