@@ -12,7 +12,7 @@ trait HasPermissions
      * @param string|array|Permission|Collection $permissions
      * @return HasPermissions
      */
-    public function grantPermissionTo($permissions)
+    public function grantPermission($permissions)
     {
         try {
             if ($permissions instanceof Permission) {
@@ -24,9 +24,11 @@ trait HasPermissions
                     })->all()
                 );
             }
+
+            $this->forgetCache();
         } catch (QueryException $e) {
-            $this->revokePermissionTo($permissions);
-            $this->grantPermissionTo($permissions);
+            $this->revokePermission($permissions);
+            $this->grantPermission($permissions);
         }
 
         return $this;
@@ -36,7 +38,7 @@ trait HasPermissions
      * @param string|array|Permission|Collection $permissions
      * @return $this
      */
-    public function revokePermissionTo($permissions)
+    public function revokePermission($permissions)
     {
         if ($permissions instanceof Permission) {
             $this->permissions()->detach($permissions);
@@ -48,6 +50,8 @@ trait HasPermissions
             );
         }
 
+        $this->forgetCache();
+
         return $this;
     }
 
@@ -58,7 +62,7 @@ trait HasPermissions
     public function syncPermissions($permissions)
     {
         $this->permissions()->detach();
-        $this->grantPermissionTo($permissions);
+        $this->grantPermission($permissions);
 
         return $this;
     }

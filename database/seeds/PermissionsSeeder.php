@@ -64,6 +64,6 @@ class PermissionsSeeder extends Seeder
          * Assign all Admin permissions to the Admin role.
          */
         $role = Role::findByName('admin');
-        $role->grantPermissionTo($this->adminPermissions);
+        $role->grantPermission($this->adminPermissions);
     }
 }
