@@ -5,11 +5,13 @@ namespace App\Models\Auth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Traits\HasPermissions;
+use App\Traits\RefreshesCache;
 use App\Contracts\Role as RoleContract;
 
 class Role extends Model implements RoleContract
 {
     use HasPermissions;
+    use RefreshesCache;
 
     /**
      * @var string
@@ -21,6 +23,13 @@ class Role extends Model implements RoleContract
      */
     protected $guarded = [
         'id'
+    ];
+
+    /**
+     * @var array
+     */
+    protected $cache = [
+        'key' => 'acl'
     ];
 
     /**

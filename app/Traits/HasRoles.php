@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
 trait HasRoles
 {
     use HasPermissions;
+    use RefreshesCache;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -71,6 +72,8 @@ trait HasRoles
                         return $this->getRole($role);
                     })->all()
                 );
+
+                $this->forgetCache();
             }
         } catch (QueryException $e) {
             $this->removeRoles($roles);
@@ -173,12 +176,12 @@ trait HasRoles
     public function hasAnyPermission($permissions)
     {
         foreach ($permissions as $permission) {
-            if ($this->hasPermission($permission)) {
-                return true;
+            if (!$this->hasPermission($permission)) {
+                return false;
             }
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -197,8 +200,6 @@ trait HasRoles
     }
 
     /**
-     * Return all the permissions the user has, both directly and via roles.
-     *
      * @return \Illuminate\Support\Collection
      */
     public function getPermissions()

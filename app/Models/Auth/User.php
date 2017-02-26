@@ -42,6 +42,13 @@ class User extends Authenticatable
     ];
 
     /**
+     * @var array
+     */
+    protected $cache = [
+        'key' => 'acl'
+    ];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function person()
