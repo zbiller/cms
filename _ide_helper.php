@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.4.13 on 2017-02-26.
+ * Generated for Laravel 5.4.13 on 2017-03-01.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -12855,9 +12855,11 @@ namespace App\Facades {
         /**
          * 
          *
+         * @param \Closure|null $callback
+         * @return $this 
          * @static 
          */
-        public static function filter($callback)
+        public static function filter($callback = null)
         {
             return \App\Helpers\Menu\Menu::filter($callback);
         }
@@ -12883,6 +12885,100 @@ namespace App\Facades {
         public static function child($parent, $callback)
         {
             return \App\Helpers\Menu\Menu::child($parent, $callback);
+        }
+        
+        /**
+         * 
+         *
+         * @return \App\Helpers\Menu\Collection 
+         * @static 
+         */
+        public static function roots()
+        {
+            return \App\Helpers\Menu\Menu::roots();
+        }
+        
+        /**
+         * 
+         *
+         * @param \App\Helpers\Menu\Item $parent
+         * @return \App\Helpers\Menu\Collection 
+         * @static 
+         */
+        public static function children($parent)
+        {
+            return \App\Helpers\Menu\Menu::children($parent);
+        }
+        
+    }         
+
+    class Pagination {
+        
+        /**
+         * 
+         *
+         * @param \App\Helpers\LengthAwarePaginator $items
+         * @param string $view
+         * @param array $data
+         * @return string 
+         * @static 
+         */
+        public static function render($items, $view, $data = array())
+        {
+            return \App\Helpers\Pagination::render($items, $view, $data);
+        }
+        
+    }         
+
+    class Button {
+        
+        /**
+         * 
+         *
+         * @return \Illuminate\View\View 
+         * @static 
+         */
+        public static function update()
+        {
+            return \App\Helpers\Button::update();
+        }
+        
+        /**
+         * 
+         *
+         * @param string $route
+         * @return \Illuminate\View\View 
+         * @static 
+         */
+        public static function add($route)
+        {
+            return \App\Helpers\Button::add($route);
+        }
+        
+        /**
+         * 
+         *
+         * @param string $route
+         * @param array $parameters
+         * @return \Illuminate\View\View 
+         * @static 
+         */
+        public static function edit($route, $parameters = array())
+        {
+            return \App\Helpers\Button::edit($route, $parameters);
+        }
+        
+        /**
+         * 
+         *
+         * @param string $route
+         * @param array $parameters
+         * @return \Illuminate\View\View 
+         * @static 
+         */
+        public static function delete($route, $parameters = array())
+        {
+            return \App\Helpers\Button::delete($route, $parameters);
         }
         
     }         
@@ -14897,6 +14993,10 @@ namespace {
     class Html extends \Collective\Html\HtmlFacade {}
     
     class Menu extends \App\Facades\Menu {}
+    
+    class Pagination extends \App\Facades\Pagination {}
+    
+    class Button extends \App\Facades\Button {}
     
 }
 
