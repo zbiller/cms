@@ -2,9 +2,10 @@
 
 namespace App\Providers;
 
+use App\Helpers\Button;
 use Schema;
 use App\Helpers\Menu\Menu;
-use Illuminate\View\Compilers\BladeCompiler;
+use App\Helpers\Pagination;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -34,6 +35,11 @@ class AppServiceProvider extends ServiceProvider
             return new Menu($app);
         });
 
+        $this->app->singleton('Pagination', function ($app) {
+            return new Pagination($app);
+        });
+
         $this->app->alias('menu', Menu::class);
+        $this->app->alias('pagination', Pagination::class);
     }
 }

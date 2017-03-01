@@ -246,6 +246,7 @@ return [
          * Application Facades
          */
         'Menu' => App\Facades\Menu::class,
+        'Pagination' => App\Facades\Pagination::class,
     ],
 
 ];
