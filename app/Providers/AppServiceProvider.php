@@ -39,7 +39,12 @@ class AppServiceProvider extends ServiceProvider
             return new Pagination($app);
         });
 
+        $this->app->singleton('Button', function ($app) {
+            return new Button($app);
+        });
+
         $this->app->alias('menu', Menu::class);
         $this->app->alias('pagination', Pagination::class);
+        $this->app->alias('button', Button::class);
     }
 }

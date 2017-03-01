@@ -247,6 +247,7 @@ return [
          */
         'Menu' => App\Facades\Menu::class,
         'Pagination' => App\Facades\Pagination::class,
+        'Button' => App\Facades\Button::class,
     ],
 
 ];

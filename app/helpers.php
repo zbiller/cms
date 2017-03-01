@@ -19,3 +19,13 @@ if (!function_exists('pagination')) {
         return app(Pagination::class);
     }
 }
+
+if (!function_exists('button')) {
+    /**
+     * @return \App\Helpers\Button
+     */
+    function button()
+    {
+        return app(Button::class);
+    }
+}
