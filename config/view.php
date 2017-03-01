@@ -16,6 +16,7 @@ return [
     'paths' => [
         'views' => realpath(base_path('resources/views')),
         'layouts' => realpath(base_path('resources/layouts')),
+        'helpers' => realpath(base_path('resources/helpers')),
     ],
 
     /*
