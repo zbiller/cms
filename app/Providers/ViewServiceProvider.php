@@ -12,8 +12,8 @@ class ViewServiceProvider extends ServiceProvider
     public function boot()
     {
         if (!app()->runningInConsole()) {
-            /* Define layouts view namespace */
             view()->addNamespace('layouts', config('view.paths.layouts'));
+            view()->addNamespace('helpers', config('view.paths.helpers'));
         }
     }
 }
