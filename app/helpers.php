@@ -1,5 +1,15 @@
 <?php
 
+if (!function_exists('form')) {
+    /**
+     * @return \Collective\Html\FormBuilder
+     */
+    function form()
+    {
+        return app(\Collective\Html\FormBuilder::class);
+    }
+}
+
 if (!function_exists('menu')) {
     /**
      * @return \App\Helpers\Menu\Menu
