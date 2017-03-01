@@ -5,6 +5,7 @@ $(function () {
     filter();
     sort();
     tabs();
+    pagination();
     setups();
 });
 
@@ -178,11 +179,17 @@ function tabs() {
     });
 }
 
+function pagination() {
+    //disable click on inactive buttons
+    $('section.pagination a.inactive').click(function (e) {
+        e.preventDefault();
+    });
+}
+
 /**
  * @return void
  */
-function setups()
-{
+function setups() {
     //TinyMCE setup
     tinymce.init({
         selector: "textarea.editor",
@@ -250,8 +257,7 @@ function setups()
  * @returns {Array}
  * @private
  */
-function _getParams()
-{
+function _getParams() {
     var vars = [], hash;
     var hashes = window.location.search ?
         window.location.href.slice(window.location.href.indexOf('?') + 1).split('&') :
