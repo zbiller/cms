@@ -57,4 +57,20 @@ class Button
     {
         return view('helpers::button.update');
     }
+
+    /**
+     * @return \Illuminate\View\View
+     */
+    public function filter()
+    {
+        return view('helpers::button.filter');
+    }
+
+    /**
+     * @return \Illuminate\View\View
+     */
+    public function clear()
+    {
+        return view('helpers::button.clear');
+    }
 }
