@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.4.13 on 2017-03-01.
+ * Generated for Laravel 5.4.13 on 2017-03-07.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -12917,7 +12917,7 @@ namespace App\Facades {
         /**
          * 
          *
-         * @param \App\Helpers\LengthAwarePaginator $items
+         * @param \App\Helpers\View\LengthAwarePaginator $items
          * @param string $view
          * @param array $data
          * @return string 
@@ -12925,23 +12925,12 @@ namespace App\Facades {
          */
         public static function render($items, $view, $data = array())
         {
-            return \App\Helpers\Pagination::render($items, $view, $data);
+            return \App\Helpers\View\Pagination::render($items, $view, $data);
         }
         
     }         
 
     class Button {
-        
-        /**
-         * 
-         *
-         * @return \Illuminate\View\View 
-         * @static 
-         */
-        public static function update()
-        {
-            return \App\Helpers\Button::update();
-        }
         
         /**
          * 
@@ -12952,7 +12941,7 @@ namespace App\Facades {
          */
         public static function add($route)
         {
-            return \App\Helpers\Button::add($route);
+            return \App\Helpers\View\Button::add($route);
         }
         
         /**
@@ -12965,7 +12954,7 @@ namespace App\Facades {
          */
         public static function edit($route, $parameters = array())
         {
-            return \App\Helpers\Button::edit($route, $parameters);
+            return \App\Helpers\View\Button::edit($route, $parameters);
         }
         
         /**
@@ -12978,7 +12967,52 @@ namespace App\Facades {
          */
         public static function delete($route, $parameters = array())
         {
-            return \App\Helpers\Button::delete($route, $parameters);
+            return \App\Helpers\View\Button::delete($route, $parameters);
+        }
+        
+        /**
+         * 
+         *
+         * @param string $route
+         * @return \Illuminate\View\View 
+         * @static 
+         */
+        public static function cancel($route)
+        {
+            return \App\Helpers\View\Button::cancel($route);
+        }
+        
+        /**
+         * 
+         *
+         * @return \Illuminate\View\View 
+         * @static 
+         */
+        public static function update()
+        {
+            return \App\Helpers\View\Button::update();
+        }
+        
+        /**
+         * 
+         *
+         * @return \Illuminate\View\View 
+         * @static 
+         */
+        public static function filter()
+        {
+            return \App\Helpers\View\Button::filter();
+        }
+        
+        /**
+         * 
+         *
+         * @return \Illuminate\View\View 
+         * @static 
+         */
+        public static function clear()
+        {
+            return \App\Helpers\View\Button::clear();
         }
         
     }         
