@@ -5,10 +5,10 @@
         Zbiller
     </div>
     <div class="content">
-        {!! Form::open(['url' => request()->url()]) !!}
-        {!! Form::text('email', null, ['placeholder' => 'Email']) !!}
-        {!! Form::submit('Recover Password') !!}
-        {!! Form::close() !!}
+        {!! form()->open(['url' => request()->url()]) !!}
+        {!! form()->text('email', null, ['placeholder' => 'Email']) !!}
+        {!! form()->submit('Recover Password') !!}
+        {!! form()->close() !!}
         <a href="{{ route('admin.login') }}">Back to login</a>
     </div>
 

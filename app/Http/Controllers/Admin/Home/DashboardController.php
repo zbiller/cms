@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Admin\Home;
 
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\Controller;
 
-class DashboardController extends AdminController
+class DashboardController extends Controller
 {
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View

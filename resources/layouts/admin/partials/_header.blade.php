@@ -3,8 +3,8 @@
         <button>
             <i class="fa fa-bars"></i>
         </button>
-        {!! Form::open(['url' => route('admin.logout'), 'method' => 'post']) !!}
-        {!! Form::button('<i class="fa fa-power-off"></i>&nbsp; Logout', ['type' => 'submit', 'class' => 'btn right']) !!}
-        {!! Form::close() !!}
+        {!! form()->open(['url' => route('admin.logout'), 'method' => 'post']) !!}
+        {!! form()->button('<i class="fa fa-power-off"></i>&nbsp; Logout', ['type' => 'submit', 'class' => 'btn right']) !!}
+        {!! form()->close() !!}
     @show
 </header>

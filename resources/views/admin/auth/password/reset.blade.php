@@ -5,14 +5,14 @@
         Zbiller
     </div>
     <div class="content">
-        {!! Form::open(['url' => route('admin.password.reset')]) !!}
-        {!! Form::hidden('token', $token) !!}
-        {!! Form::text('email', $email or old('email'), ['placeholder' => 'Email']) !!}
-        {!! Form::password('password', ['placeholder' => 'Password']) !!}
-        {!! Form::password('password_confirmation', ['placeholder' => 'Confirm password']) !!}
-        {!! Form::submit('Reset Password') !!}
-        {!! Form::close() !!}
-        {{--<a href="{{ route('admin.login') }}">Back to login</a>--}}
+        {!! form()->open(['url' => route('admin.password.reset')]) !!}
+        {!! form()->hidden('token', $token) !!}
+        {!! form()->text('email', $email or old('email'), ['placeholder' => 'Email']) !!}
+        {!! form()->password('password', ['placeholder' => 'Password']) !!}
+        {!! form()->password('password_confirmation', ['placeholder' => 'Confirm password']) !!}
+        {!! form()->submit('Reset Password') !!}
+        {!! form()->close() !!}
+        <a href="{{ route('admin.login') }}">Back to login</a>
     </div>
 
     @if (count($errors) > 0)

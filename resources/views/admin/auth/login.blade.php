@@ -5,11 +5,11 @@
         Zbiller
     </div>
     <div class="content">
-        {!! Form::open(['url' => request()->url()]) !!}
-        {!! Form::text('username', null, ['placeholder' => 'Username']) !!}
-        {!! Form::password('password', ['placeholder' => 'Password']) !!}
-        {!! Form::submit('Sign in') !!}
-        {!! Form::close() !!}
+        {!! form()->open(['url' => request()->url()]) !!}
+        {!! form()->text('username', null, ['placeholder' => 'Username']) !!}
+        {!! form()->password('password', ['placeholder' => 'Password']) !!}
+        {!! form()->submit('Sign in') !!}
+        {!! form()->close() !!}
         <a href="{{ route('admin.password.forgot') }}">I forgot my password</a>
     </div>
 
