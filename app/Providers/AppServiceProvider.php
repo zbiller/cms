@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Helpers\Button;
 use Schema;
 use App\Helpers\Menu\Menu;
-use App\Helpers\Pagination;
+use App\Helpers\View\Pagination;
+use App\Helpers\View\Button;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
