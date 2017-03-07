@@ -12,12 +12,8 @@
         </select>
     </fieldset>
     <div>
-        <a class="btn blue filter no-margin-top no-margin-bottom no-margin-left">
-            <i class="fa fa-filter"></i>&nbsp; Filter
-        </a>
-        <a class="btn gray clear no-margin-top no-margin-bottom no-margin-right">
-            <i class="fa fa-ban"></i>&nbsp; Clear
-        </a>
+        {!! button()->filter() !!}
+        {!! button()->clear() !!}
     </div>
     {!! form()->close() !!}
 </section>
