@@ -22,9 +22,17 @@ class MenuComposer
                 $access = $item->name('Access Control')->data('icon', 'fa-sign-in')->active('admin/admin-users');
 
                 $menu->child($access, function ($item) {
-                    $item->name('Admin Users')->url(route('admin.admin.users'))->permissions('admin-users-list')->active('admin/admin-users');
+                    $item->name('Admin Users')->url(route('admin.admin.users.index'))->permissions('admin-users-list')->active('admin/admin-users');
                 });
             });*/
+
+            $menu->add(function ($item) use ($menu) {
+                $test = $item->name('Test')->data('icon', 'fa-text-width')->active('admin/test/*');
+
+                $menu->child($test, function ($item) {
+                    $item->name('Test')->url(route('admin.test.index'))->active('admin/test/*');
+                });
+            });
         })->filter(function ($item) use ($user) {
             return $user->hasAnyPermission($item->permissions());
         });

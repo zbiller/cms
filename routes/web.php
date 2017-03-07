@@ -12,8 +12,8 @@
 */
 
 Route::group([
-    'prefix' => 'admin',
     'namespace' => 'Admin',
+    'prefix' => 'admin',
 ], function () {
     Route::group([
         'namespace' => 'Auth',
@@ -34,16 +34,24 @@ Route::group([
         'middleware' => ['authenticated:admin.login', 'check.roles:admin', 'check.permissions']
     ], function () {
         Route::group([
-            'namespace' => 'Home'
+            'namespace' => 'Home',
         ], function () {
             Route::get('', ['as' => 'admin', 'uses' => 'DashboardController@index']);
         });
+
+        Route::group([
+            'namespace' => 'Test',
+            'prefix' => 'test',
+        ], function () {
+            Route::get('/', ['as' => 'admin.test.index', 'uses' => 'TestController@index']);
+            Route::get('create', ['as' => 'admin.test.create', 'uses' => 'TestController@create']);
+            Route::get('edit/{id}', ['as' => 'admin.test.edit', 'uses' => 'TestController@edit']);
+            Route::post('store', ['as' => 'admin.test.store', 'uses' => 'TestController@store']);
+            Route::put('update/{id}', ['as' => 'admin.test.update', 'uses' => 'TestController@update']);
+            Route::delete('destroy/{id}', ['as' => 'admin.test.destroy', 'uses' => 'TestController@destroy']);
+        });
     });
 });
-
-
-
-
 
 Route::get('/', function () {
     return '';
