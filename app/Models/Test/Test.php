@@ -4,10 +4,11 @@ namespace App\Models\Test;
 
 use App\Models\Model;
 use App\Traits\CanFilter;
+use App\Traits\CanSort;
 
 class Test extends Model
 {
-    use CanFilter;
+    use CanFilter, CanSort;
 
     /**
      * The database table.
@@ -23,5 +24,6 @@ class Test extends Model
      */
     protected $fillable = [
         'name',
+        'type',
     ];
 }
