@@ -2,11 +2,12 @@
 
 namespace App\Models\Auth;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Traits\HasPermissions;
 use App\Traits\RefreshesCache;
 use App\Contracts\Role as RoleContract;
+use App\Options\RefreshCacheOptions;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Role extends Model implements RoleContract
 {
@@ -23,13 +24,6 @@ class Role extends Model implements RoleContract
      */
     protected $guarded = [
         'id'
-    ];
-
-    /**
-     * @var array
-     */
-    protected $cache = [
-        'key' => 'acl'
     ];
 
     /**
@@ -60,5 +54,14 @@ class Role extends Model implements RoleContract
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Role "' . $name . '" does not exist!');
         }
+    }
+
+    /**
+     * @return RefreshCacheOptions
+     */
+    public function getRefreshCacheOptions(): RefreshCacheOptions
+    {
+        return RefreshCacheOptions::instance()
+            ->setKey('acl');
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models\Auth;
 
 use App\Traits\HasRoles;
+use App\Options\RefreshCacheOptions;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\ResetPassword as ResetPasswordNotification;
@@ -39,13 +40,6 @@ class User extends Authenticatable
      */
     protected $with = [
         'person',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $cache = [
-        'key' => 'acl'
     ];
 
     /**
@@ -99,5 +93,14 @@ class User extends Authenticatable
         $this->notify(new ResetPasswordNotification(
             $token, (str_contains(request()->url(), 'admin') ? 'admin.' : '') . 'password.change'
         ));
+    }
+
+    /**
+     * @return RefreshCacheOptions
+     */
+    public function getRefreshCacheOptions(): RefreshCacheOptions
+    {
+        return RefreshCacheOptions::instance()
+            ->setKey('acl');
     }
 }

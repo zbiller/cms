@@ -256,7 +256,7 @@ trait CanCrud
         if (!($this->crudOptions->model instanceof Model)) {
             throw new CrudException(
                 'You must set the model via the getCrudOptions() method from controller.' . PHP_EOL .
-                'Use the setModel() method from the App\Options\CrudOptions class'
+                'Use the setModel() method from the App\Options\CrudOptions class.'
             );
         }
     }
@@ -272,7 +272,7 @@ trait CanCrud
         if (!$this->crudOptions->listRoute || !$this->crudOptions->addRoute || !$this->crudOptions->editRoute) {
             throw new CrudException(
                 'You must set the listRoute, addRoute, editRoute via the getCrudOptions() method from controller.' . PHP_EOL .
-                'Use the setListRoute(), setAddRoute(), setEditRoute() method from the App\Options\CrudOptions class'
+                'Use the setListRoute(), setAddRoute(), setEditRoute() methods from the App\Options\CrudOptions class.'
             );
         }
     }
@@ -288,7 +288,7 @@ trait CanCrud
         if (!$this->crudOptions->listView || !$this->crudOptions->addView || !$this->crudOptions->editView) {
             throw new CrudException(
                 'You must set the listView, addView, editView via the getCrudOptions() method from controller.' . PHP_EOL .
-                'Use the setListView(), setAddView(), setEditView() method from the App\Options\CrudOptions class'
+                'Use the setListView(), setAddView(), setEditView() methods from the App\Options\CrudOptions class.'
             );
         }
     }

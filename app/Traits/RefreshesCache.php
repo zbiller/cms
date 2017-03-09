@@ -2,18 +2,28 @@
 
 namespace App\Traits;
 
-use Cache;
 use App\Exceptions\CacheException;
+use App\Options\RefreshCacheOptions;
 
 trait RefreshesCache
 {
     /**
-     * The options necessary for the trait to work.
-     * This property should be declared on the models using this trait.
+     * The container for all the options necessary for this trait.
+     * Options can be viewed in the App\Options\RefreshCacheOptions file.
      *
-     * @var array
+     * @var RefreshCacheOptions
      */
-    protected $cache = [];
+    protected $refreshCacheOptions;
+
+    /**
+     * The method used for setting the refresh cache options.
+     * This method should be called inside the model using this trait.
+     * Inside the method, you should set all the refresh cache options.
+     * This can be achieved using the methods from App\Options\RefreshCacheOptions.
+     *
+     * @return RefreshCacheOptions
+     */
+    abstract public function getRefreshCacheOptions(): RefreshCacheOptions;
 
     /**
      * On every database change, attempt to clear the cache.
@@ -45,7 +55,7 @@ trait RefreshesCache
     {
         $this->checkKey();
 
-        cache()->forget($this->cache['key']);
+        cache()->forget($this->refreshCacheOptions->key);
     }
 
     /**
@@ -56,11 +66,11 @@ trait RefreshesCache
      */
     private function checkKey()
     {
-        if (!$this->cache || !isset($this->cache['key'])) {
+        if (!$this->refreshCacheOptions->key) {
             throw new CacheException(
                 'Model ' . get_class($this) . ' uses the RefreshesCache trait. ' . PHP_EOL .
-                'You have to define a "protected property $cache" (array) on that model. ' . PHP_EOL .
-                'The property should contain at least: ["key" => "your cache key name"]'
+                'You must set the key via the getRefreshCacheOptions() method from model.' . PHP_EOL .
+                'Use the setKey() method from the App\Options\RefreshCacheOptions class.'
             );
         }
     }

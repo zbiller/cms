@@ -3,9 +3,10 @@
 namespace App\Models\Auth;
 
 use App\Traits\RefreshesCache;
+use App\Options\RefreshCacheOptions;
+use App\Contracts\Permission as PermissionContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use App\Contracts\Permission as PermissionContract;
 
 class Permission extends Model implements PermissionContract
 {
@@ -21,13 +22,6 @@ class Permission extends Model implements PermissionContract
      */
     protected $guarded = [
         'id'
-    ];
-
-    /**
-     * @var array
-     */
-    protected $cache = [
-        'key' => 'acl'
     ];
 
     /**
@@ -57,5 +51,14 @@ class Permission extends Model implements PermissionContract
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Permission "' . $name . '" does not exist!');
         }
+    }
+
+    /**
+     * @return RefreshCacheOptions
+     */
+    public function getRefreshCacheOptions(): RefreshCacheOptions
+    {
+        return RefreshCacheOptions::instance()
+            ->setKey('acl');
     }
 }

@@ -6,18 +6,40 @@ use App\Models\Model;
 
 class CrudOptions
 {
+    /**
+     * The instantiated model to work with.
+     *
+     * @var Model
+     */
     public $model;
 
+    /**
+     * The list route and view as strings.
+     *
+     * @var
+     */
     public $listRoute;
     public $listView;
 
+    /**
+     * The add route and view as strings.
+     *
+     * @var
+     */
     public $addRoute;
     public $addView;
 
+    /**
+     * The edit route and view as strings.
+     *
+     * @var
+     */
     public $editRoute;
     public $editView;
 
     /**
+     * Get a fresh instance of this class.
+     *
      * @return CrudOptions
      */
     public static function instance(): CrudOptions
@@ -26,6 +48,8 @@ class CrudOptions
     }
 
     /**
+     * Set the model to work with in the App\Traits\CanCrud trait.
+     *
      * @param Model $model
      * @return CrudOptions
      */
@@ -37,6 +61,8 @@ class CrudOptions
     }
 
     /**
+     * Set the list route to work with in the App\Traits\CanCrud trait.
+     *
      * @param string $route
      * @return CrudOptions
      */
@@ -48,6 +74,8 @@ class CrudOptions
     }
 
     /**
+     * Set the list view to work with in the App\Traits\CanCrud trait.
+     *
      * @param string $view
      * @return CrudOptions
      */
@@ -59,6 +87,8 @@ class CrudOptions
     }
 
     /**
+     * Set the add route to work with in the App\Traits\CanCrud trait.
+     *
      * @param string $route
      * @return CrudOptions
      */
@@ -70,6 +100,8 @@ class CrudOptions
     }
 
     /**
+     * Set the add view to work with in the App\Traits\CanCrud trait.
+     *
      * @param string $view
      * @return CrudOptions
      */
@@ -81,6 +113,8 @@ class CrudOptions
     }
 
     /**
+     * Set the edit route to work with in the App\Traits\CanCrud trait.
+     *
      * @param string $route
      * @return CrudOptions
      */
@@ -92,6 +126,8 @@ class CrudOptions
     }
 
     /**
+     * Set the edit view to work with in the App\Traits\CanCrud trait.
+     *
      * @param string $view
      * @return CrudOptions
      */
