@@ -9,18 +9,19 @@ use Exception;
 use App\Models\Model;
 use App\Http\Requests\Request;
 use App\Exceptions\CrudException;
+use App\Options\CrudOptions;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 trait CanCrud
 {
     /**
-     * The model class name.
-     * This same property should be defined on the controller.
+     * The container for all the options necessary for this trait.
+     * Options can be viewed in the App\Options\CrudOptions file.
      *
-     * @var Model
+     * @var CrudOptions
      */
-    protected $model;
+    protected $crudOptions;
 
     /**
      * The collection of existing records from the database.
@@ -47,33 +48,6 @@ trait CanCrud
     protected $vars = [];
 
     /**
-     * Options for the list.
-     * Should be an array containing the "route" and "view" for listing the entity.
-     * Setting the $list should be done at controller level, via $list property.
-     *
-     * @var array
-     */
-    protected $list = [];
-
-    /**
-     * Options for the add.
-     * Should be an array containing the "route" and "view" for adding the entity.
-     * Setting the $add should be done at controller level, via $add property.
-     *
-     * @var array
-     */
-    protected $add = [];
-
-    /**
-     * Options for the edit.
-     * Should be an array containing the "route" and "view" for editing the entity.
-     * Setting the $edit should be done at controller level, via $edit property.
-     *
-     * @var array
-     */
-    protected $edit = [];
-
-    /**
      * Mapping of action => method.
      * Used to verify if a CRUD system respects the standards.
      *
@@ -89,27 +63,36 @@ trait CanCrud
     ];
 
     /**
+     * The method used for setting the crud options.
+     * This method should be called inside the controller using this trait.
+     * Inside the method, you should set all the crud options.
+     * This can be achieved using the methods from App\Options\CrudOptions.
+     *
+     * @return CrudOptions
+     */
+    abstract public function getCrudOptions(): CrudOptions;
+
+    /**
+     * Instantiate the crudOptions property with the necessary crud properties.
      * Make necessary checks.
-     * Instantiate the model class.
      *
      * @set $model
      * @throws CrudException
      */
-    public function __construct()
+    public function bootCanCrud()
     {
-        $this->checkMethod();
-        $this->checkModel();
-        $this->checkRoutesAndViews();
+        $this->crudOptions = $this->getCrudOptions();
 
-        if (!$this->model instanceof Model) {
-            $this->model = app($this->model);
-        }
+        $this->checkCrudMethod();
+        $this->checkCrudModel();
+        $this->checkCrudRoutes();
+        $this->checkCrudViews();
     }
 
     /**
      * This method should be called inside the controller's index() method.
      * The closure should at least set the $items collection.
-     * $this->items = $this->model->get();
+     * $this->items = Model::get();
      *
      * @param Closure|null $function
      * @return \Illuminate\View\View
@@ -122,7 +105,7 @@ trait CanCrud
 
         $this->vars['items'] = $this->items;
 
-        return view($this->list['view'])->with($this->vars);
+        return view($this->crudOptions->listView)->with($this->vars);
     }
 
     /**
@@ -140,13 +123,13 @@ trait CanCrud
             call_user_func($function);
         }
 
-        return view($this->add['view'])->with($this->vars);
+        return view($this->crudOptions->addView)->with($this->vars);
     }
 
     /**
      * This method should be called inside the controller's store() method.
      * The closure should at least create the database record.
-     * $this->item = $this->model->create($request()->all());
+     * $this->item = Model::create($request()->all());
      *
      * @param Closure|null $function
      * @param Request|null $request
@@ -160,7 +143,7 @@ trait CanCrud
             }
 
             session()->flash('flash_success', 'The record was successfully created!');
-            return redirect()->route($this->list['route']);
+            return redirect()->route($this->crudOptions->listRoute);
         } catch (Exception $e) {
             session()->flash('flash_error', 'The record could not be created! Please try again.');
             return redirect()->back()->withInput($request->all());
@@ -170,7 +153,7 @@ trait CanCrud
     /**
      * This method should be called inside the controller's edit() method.
      * The closure should at least attempt to find the record in the database.
-     * $this->item = $this->model->findOrFail($id);
+     * $this->item = Model::findOrFail($id);
      *
      * @param Closure|null $function
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
@@ -184,17 +167,17 @@ trait CanCrud
 
             $this->vars['item'] = $this->item;
 
-            return view($this->edit['view'])->with($this->vars);
+            return view($this->crudOptions->editView)->with($this->vars);
         } catch (ModelNotFoundException $e) {
             session()->flash('flash_error', 'You are trying to access a record that does not exist!');
-            return redirect()->route($this->list['route']);
+            return redirect()->route($this->crudOptions->listRoute);
         }
     }
 
     /**
      * This method should be called inside the controller's update() method.
      * The closure should at least attempt to find and update the record in the database.
-     * $this->item = $this->model->findOrFail($id)->update($request->all());
+     * $this->item = Model::findOrFail($id)->update($request->all());
      *
      * @param Closure|null $function
      * @param Request|null $request
@@ -208,10 +191,10 @@ trait CanCrud
             }
 
             session()->flash('flash_success', 'The record was successfully updated!');
-            return redirect()->route($this->list['route']);
+            return redirect()->route($this->crudOptions->listRoute);
         } catch (ModelNotFoundException $e) {
             session()->flash('flash_error', 'You are trying to update a record that does not exist!');
-            return redirect()->route($this->list['route']);
+            return redirect()->route($this->crudOptions->listRoute);
         } catch (Exception $e) {
             session()->flash('flash_error', 'The record could not be updated! Please try again.');
             return redirect()->back()->withInput($request->all());
@@ -221,7 +204,7 @@ trait CanCrud
     /**
      * This method should be called inside the controller's destroy() method.
      * The closure should at least attempt to find and delete the record from the database.
-     * $this->item = $this->model->findOrFail($id)->delete();
+     * $this->item = Model::findOrFail($id)->delete();
      *
      * @param Closure|null $function
      * @return \Illuminate\Http\RedirectResponse
@@ -234,10 +217,10 @@ trait CanCrud
             }
 
             session()->flash('flash_success', 'The record was successfully deleted!');
-            return redirect()->route($this->list['route']);
+            return redirect()->route($this->crudOptions->listRoute);
         } catch (ModelNotFoundException $e) {
             session()->flash('flash_error', 'You are trying to delete a record that does not exist!');
-            return redirect()->route($this->list['route']);
+            return redirect()->route($this->crudOptions->listRoute);
         } catch (Exception $e) {
             session()->flash('flash_error', 'The record could not be deleted! Please try again.');
             return redirect()->back();
@@ -249,7 +232,7 @@ trait CanCrud
      *
      * @throws CrudException
      */
-    private function checkMethod()
+    private function checkCrudMethod()
     {
         list($controller, $action) = explode('@', Route::getCurrentRoute()->getActionName());
 
@@ -268,38 +251,44 @@ trait CanCrud
      *
      * @throws CrudException
      */
-    private function checkModel()
+    private function checkCrudModel()
     {
-        if ($this->model === null) {
+        if (!($this->crudOptions->model instanceof Model)) {
             throw new CrudException(
-                get_class($this) . ' must have the protected property $model (string) !'
+                'You must set the model via the getCrudOptions() method from controller.' . PHP_EOL .
+                'Use the setModel() method from the App\Options\CrudOptions class'
             );
         }
     }
 
     /**
-     * Verify if the $list, $add, $edit have been properly set on the controller.
-     * Each of these properties should be an array containing 2 keys: route and view.
+     * Verify if the list|add|edit routes have been properly set on the controller.
+     * These 3 properties should be set inside the getCrudOptions method.
      *
      * @throws CrudException
      */
-    private function checkRoutesAndViews()
+    private function checkCrudRoutes()
     {
-        if (!isset($this->list['route']) || !isset($this->list['view'])) {
+        if (!$this->crudOptions->listRoute || !$this->crudOptions->addRoute || !$this->crudOptions->editRoute) {
             throw new CrudException(
-                get_class($this) . ' must have the protected property $list (array -> route & view)!'
+                'You must set the listRoute, addRoute, editRoute via the getCrudOptions() method from controller.' . PHP_EOL .
+                'Use the setListRoute(), setAddRoute(), setEditRoute() method from the App\Options\CrudOptions class'
             );
         }
+    }
 
-        if (!isset($this->add['route']) || !isset($this->add['view'])) {
+    /**
+     * Verify if the list|add|edit views have been properly set on the controller.
+     * These 3 properties should be set inside the getCrudOptions method.
+     *
+     * @throws CrudException
+     */
+    private function checkCrudViews()
+    {
+        if (!$this->crudOptions->listView || !$this->crudOptions->addView || !$this->crudOptions->editView) {
             throw new CrudException(
-                get_class($this) . ' must have the protected property $add (array -> route & view)!'
-            );
-        }
-
-        if (!isset($this->edit['route']) || !isset($this->edit['view'])) {
-            throw new CrudException(
-                get_class($this) . ' must have the protected property $edit (array -> route & view)!'
+                'You must set the listView, addView, editView via the getCrudOptions() method from controller.' . PHP_EOL .
+                'Use the setListView(), setAddView(), setEditView() method from the App\Options\CrudOptions class'
             );
         }
     }
