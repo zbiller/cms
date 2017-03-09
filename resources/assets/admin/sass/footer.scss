@@ -4,6 +4,7 @@ footer {
     @include calc(width, "100% - 250px");
     @include clear-padding();
 
+    display: none;
     z-index: z-index('footer');
     position: fixed;
     bottom: 0;

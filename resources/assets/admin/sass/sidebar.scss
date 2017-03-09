@@ -1,6 +1,7 @@
 @import 'init';
 
 nav {
+    display: none;
     z-index: z-index('menu');
     position: fixed;
     left: 0;

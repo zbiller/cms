@@ -1,4 +1,5 @@
-$(function () {
+$(window).load(function(){
+    load();
     flash();
     menu();
     buttons();
@@ -8,6 +9,15 @@ $(function () {
     pagination();
     setups();
 });
+
+/**
+ * @return void
+ */
+function load()
+{
+    $('#loading').hide();
+    $('header, nav, main, footer').fadeIn();
+}
 
 /**
  * @return void

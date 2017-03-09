@@ -4491,6 +4491,7 @@ header {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
+  display: none;
   z-index: 3;
   position: fixed;
   top: 0;
@@ -4535,6 +4536,7 @@ header h1 {
 /*# sourceMappingURL=header.css.map */
 
 nav {
+  display: none;
   z-index: 4;
   position: fixed;
   left: 0;
@@ -4617,6 +4619,7 @@ footer {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
+  display: none;
   z-index: 2;
   position: fixed;
   bottom: 0;
@@ -4716,12 +4719,20 @@ section.actions {
 
 /*# sourceMappingURL=footer.css.map */
 
+#loading {
+  z-index: 1;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: url("../img/loading.gif") no-repeat center;
+}
+
 main {
   width: -moz-calc(100% - 250px);
   width: -webkit-calc(100% - 250px);
   width: calc(100% - 250px);
   z-index: 1;
-  display: block;
+  display: none;
   float: right;
   margin: 82px 0;
 }

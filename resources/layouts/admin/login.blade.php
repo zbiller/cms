@@ -4,6 +4,8 @@
     @include('layouts::admin.partials._head')
 </head>
 <body>
+    <div id="loading"></div>
+
     @include('layouts::admin.partials._flash')
 
     <main>
