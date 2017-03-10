@@ -22883,7 +22883,7 @@ $(window).load(function(){
  */
 function load()
 {
-    $('#loading').hide();
+    $('#loading').fadeOut();
     $('header, nav, main, footer').fadeIn();
 }
 

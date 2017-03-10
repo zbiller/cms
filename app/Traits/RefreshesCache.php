@@ -53,6 +53,8 @@ trait RefreshesCache
      */
     public function forgetCache()
     {
+        $this->refreshCacheOptions = $this->getRefreshCacheOptions();
+
         $this->checkKey();
 
         cache()->forget($this->refreshCacheOptions->key);
