@@ -26,4 +26,44 @@ class Test extends Model
         'name',
         'type',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function testHasOne1()
+    {
+        return $this->hasOne(TestHasOne1::class, 'test_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function testHasOne2()
+    {
+        return $this->hasOne(TestHasOne2::class, 'test_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function testHasHasMany1()
+    {
+        return $this->hasMany(TestHasMany1::class, 'test_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function testHasHasMany2()
+    {
+        return $this->hasMany(TestHasMany2::class, 'test_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function testHabtm()
+    {
+        return $this->belongsToMany(TestHabtm::class, 'test_test_habtm_ring', 'test_id', 'test_habtm_id');
+    }
 }
