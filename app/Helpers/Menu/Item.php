@@ -115,10 +115,9 @@ class Item
     public function active($active = null)
     {
         if (!$active) {
-            return (bool)preg_match(
-                "@^" . ltrim(preg_replace('/\/\*/', '(/.*)?', $this->active), '/') . "\z@",
-                request()->path()
-            );
+            return str_contains($this->active, '*') ?
+                starts_with(request()->path(), trim($this->active, '*/')) :
+                request()->path() == $this->active;
         }
 
         $this->active = $active;
