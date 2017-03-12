@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Helpers\View\AdminForm;
 use Schema;
 use App\Helpers\Menu\Menu;
 use App\Helpers\View\Pagination;
@@ -43,8 +44,13 @@ class AppServiceProvider extends ServiceProvider
             return new Button($app);
         });
 
+        $this->app->singleton('AdminForm', function ($app) {
+            return new AdminForm($app);
+        });
+
         $this->app->alias('menu', Menu::class);
         $this->app->alias('pagination', Pagination::class);
         $this->app->alias('button', Button::class);
+        $this->app->alias('adminform', Button::class);
     }
 }

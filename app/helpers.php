@@ -10,6 +10,16 @@ if (!function_exists('form')) {
     }
 }
 
+if (!function_exists('adminform')) {
+    /**
+     * @return \App\Helpers\View\AdminForm
+     */
+    function adminform()
+    {
+        return app(AdminForm::class);
+    }
+}
+
 if (!function_exists('menu')) {
     /**
      * @return \App\Helpers\Menu\Menu
@@ -22,7 +32,7 @@ if (!function_exists('menu')) {
 
 if (!function_exists('pagination')) {
     /**
-     * @return \App\Helpers\Pagination
+     * @return \App\Helpers\View\Pagination
      */
     function pagination()
     {
@@ -32,7 +42,7 @@ if (!function_exists('pagination')) {
 
 if (!function_exists('button')) {
     /**
-     * @return \App\Helpers\Button
+     * @return \App\Helpers\View\Button
      */
     function button()
     {
