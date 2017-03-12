@@ -12936,7 +12936,7 @@ namespace App\Facades {
          */
         public static function wrap($input, $label)
         {
-            return \App\Helpers\View\AdminForm::wrap($input, $label);
+            return \App\Helpers\Form\Admin::wrap($input, $label);
         }
         
         /**
@@ -12949,7 +12949,7 @@ namespace App\Facades {
          */
         public static function submit($value = null, $options = array())
         {
-            return \App\Helpers\View\AdminForm::submit($value, $options);
+            return \App\Helpers\Form\Admin::submit($value, $options);
         }
         
         /**
@@ -12962,7 +12962,7 @@ namespace App\Facades {
          */
         public static function reset($value = null, $options = array())
         {
-            return \App\Helpers\View\AdminForm::reset($value, $options);
+            return \App\Helpers\Form\Admin::reset($value, $options);
         }
         
         /**
@@ -12975,7 +12975,7 @@ namespace App\Facades {
          */
         public static function button($value = null, $options = array())
         {
-            return \App\Helpers\View\AdminForm::button($value, $options);
+            return \App\Helpers\Form\Admin::button($value, $options);
         }
         
         /**
@@ -12989,7 +12989,7 @@ namespace App\Facades {
          */
         public static function hidden($name, $value = null, $options = array())
         {
-            return \App\Helpers\View\AdminForm::hidden($name, $value, $options);
+            return \App\Helpers\Form\Admin::hidden($name, $value, $options);
         }
         
         /**
@@ -13004,7 +13004,7 @@ namespace App\Facades {
          */
         public static function text($name, $label = null, $value = null, $options = array())
         {
-            return \App\Helpers\View\AdminForm::text($name, $label, $value, $options);
+            return \App\Helpers\Form\Admin::text($name, $label, $value, $options);
         }
         
         /**
@@ -13019,7 +13019,7 @@ namespace App\Facades {
          */
         public static function textarea($name, $label = null, $value = null, $options = array())
         {
-            return \App\Helpers\View\AdminForm::textarea($name, $label, $value, $options);
+            return \App\Helpers\Form\Admin::textarea($name, $label, $value, $options);
         }
         
         /**
@@ -13035,7 +13035,7 @@ namespace App\Facades {
          */
         public static function select($name, $label = null, $list = array(), $selected = null, $options = array())
         {
-            return \App\Helpers\View\AdminForm::select($name, $label, $list, $selected, $options);
+            return \App\Helpers\Form\Admin::select($name, $label, $list, $selected, $options);
         }
         
         /**
@@ -13049,7 +13049,7 @@ namespace App\Facades {
          */
         public static function password($name, $label = null, $options = array())
         {
-            return \App\Helpers\View\AdminForm::password($name, $label, $options);
+            return \App\Helpers\Form\Admin::password($name, $label, $options);
         }
         
         /**
@@ -13064,7 +13064,7 @@ namespace App\Facades {
          */
         public static function number($name, $value = null, $label = null, $options = array())
         {
-            return \App\Helpers\View\AdminForm::number($name, $value, $label, $options);
+            return \App\Helpers\Form\Admin::number($name, $value, $label, $options);
         }
         
         /**
@@ -13079,7 +13079,7 @@ namespace App\Facades {
          */
         public static function email($name, $value = null, $label = null, $options = array())
         {
-            return \App\Helpers\View\AdminForm::email($name, $value, $label, $options);
+            return \App\Helpers\Form\Admin::email($name, $value, $label, $options);
         }
         
         /**
@@ -13094,7 +13094,7 @@ namespace App\Facades {
          */
         public static function phone($name, $value = null, $label = null, $options = array())
         {
-            return \App\Helpers\View\AdminForm::phone($name, $value, $label, $options);
+            return \App\Helpers\Form\Admin::phone($name, $value, $label, $options);
         }
         
         /**
@@ -13110,7 +13110,7 @@ namespace App\Facades {
          */
         public static function checkbox($name, $label = null, $value = 1, $checked = null, $options = array())
         {
-            return \App\Helpers\View\AdminForm::checkbox($name, $label, $value, $checked, $options);
+            return \App\Helpers\Form\Admin::checkbox($name, $label, $value, $checked, $options);
         }
         
         /**
@@ -13126,7 +13126,7 @@ namespace App\Facades {
          */
         public static function radio($name, $label = null, $value = 1, $checked = null, $options = array())
         {
-            return \App\Helpers\View\AdminForm::radio($name, $label, $value, $checked, $options);
+            return \App\Helpers\Form\Admin::radio($name, $label, $value, $checked, $options);
         }
         
         /**
@@ -13141,7 +13141,7 @@ namespace App\Facades {
          */
         public static function editor($name, $label = null, $value = null, $options = array())
         {
-            return \App\Helpers\View\AdminForm::editor($name, $label, $value, $options);
+            return \App\Helpers\Form\Admin::editor($name, $label, $value, $options);
         }
         
         /**
@@ -13156,7 +13156,7 @@ namespace App\Facades {
          */
         public static function calendar($name, $label = null, $value = null, $options = array())
         {
-            return \App\Helpers\View\AdminForm::calendar($name, $label, $value, $options);
+            return \App\Helpers\Form\Admin::calendar($name, $label, $value, $options);
         }
         
         /**
@@ -13171,7 +13171,7 @@ namespace App\Facades {
          */
         public static function time($name, $label = null, $value = null, $options = array())
         {
-            return \App\Helpers\View\AdminForm::time($name, $label, $value, $options);
+            return \App\Helpers\Form\Admin::time($name, $label, $value, $options);
         }
         
         /**
@@ -13186,7 +13186,7 @@ namespace App\Facades {
          */
         public static function color($name, $label = null, $value = null, $options = array())
         {
-            return \App\Helpers\View\AdminForm::color($name, $label, $value, $options);
+            return \App\Helpers\Form\Admin::color($name, $label, $value, $options);
         }
         
         /**
@@ -13203,7 +13203,7 @@ namespace App\Facades {
          */
         public static function selectRange($name, $label = null, $start = 0, $end = 0, $selected = null, $options = array())
         {
-            return \App\Helpers\View\AdminForm::selectRange($name, $label, $start, $end, $selected, $options);
+            return \App\Helpers\Form\Admin::selectRange($name, $label, $start, $end, $selected, $options);
         }
         
         /**
@@ -13220,7 +13220,7 @@ namespace App\Facades {
          */
         public static function selectYear($name, $label = null, $start = null, $end = null, $selected = null, $options = array())
         {
-            return \App\Helpers\View\AdminForm::selectYear($name, $label, $start, $end, $selected, $options);
+            return \App\Helpers\Form\Admin::selectYear($name, $label, $start, $end, $selected, $options);
         }
         
         /**
@@ -13236,7 +13236,7 @@ namespace App\Facades {
          */
         public static function selectMonth($name, $label = null, $selected = null, $options = array(), $format = '%B')
         {
-            return \App\Helpers\View\AdminForm::selectMonth($name, $label, $selected, $options, $format);
+            return \App\Helpers\Form\Admin::selectMonth($name, $label, $selected, $options, $format);
         }
         
     }         

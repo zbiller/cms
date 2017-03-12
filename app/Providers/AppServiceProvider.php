@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
+use App\Helpers\Form\Admin;
+use App\Helpers\Form\Form;
 use App\Helpers\Message\Flash;
-use App\Helpers\View\AdminForm;
 use Schema;
 use App\Helpers\Menu\Menu;
 use App\Helpers\View\Pagination;
@@ -34,7 +35,7 @@ class AppServiceProvider extends ServiceProvider
     protected function registerFacades()
     {
         $this->app->singleton('AdminForm', function ($app) {
-            return new AdminForm($app);
+            return new Admin($app);
         });
 
         $this->app->singleton('Menu', function ($app) {
@@ -53,7 +54,7 @@ class AppServiceProvider extends ServiceProvider
             return new Flash($app);
         });
 
-        $this->app->alias('adminform', Button::class);
+        $this->app->alias('adminform', Admin::class);
         $this->app->alias('menu', Menu::class);
         $this->app->alias('pagination', Pagination::class);
         $this->app->alias('button', Button::class);

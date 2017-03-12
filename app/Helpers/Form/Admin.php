@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Helpers\View;
+namespace App\Helpers\Form;
 
 use Collective\Html\FormFacade;
 
-class AdminForm
+class Admin
 {
     /**
      * The instance of the form facade.

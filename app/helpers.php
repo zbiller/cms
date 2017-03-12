@@ -2,7 +2,7 @@
 
 if (!function_exists('form')) {
     /**
-     * @return \Collective\Html\FormBuilder
+     * @return \App\Helpers\Form\Form
      */
     function form()
     {
@@ -12,7 +12,7 @@ if (!function_exists('form')) {
 
 if (!function_exists('adminform')) {
     /**
-     * @return \App\Helpers\View\AdminForm
+     * @return \App\Helpers\Form\Admin
      */
     function adminform()
     {
