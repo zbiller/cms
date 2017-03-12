@@ -49,3 +49,13 @@ if (!function_exists('button')) {
         return app(Button::class);
     }
 }
+
+if (!function_exists('flash')) {
+    /**
+     * @return \App\Helpers\Message\Flash
+     */
+    function flash()
+    {
+        return app(Flash::class);
+    }
+}

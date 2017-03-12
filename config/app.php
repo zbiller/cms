@@ -245,10 +245,11 @@ return [
         /**
          * Application Facades
          */
+        'AdminForm' => App\Facades\AdminForm::class,
         'Menu' => App\Facades\Menu::class,
         'Pagination' => App\Facades\Pagination::class,
         'Button' => App\Facades\Button::class,
-        'AdminForm' => App\Facades\AdminForm::class,
+        'Flash' => App\Facades\Flash::class,
     ],
 
 ];
