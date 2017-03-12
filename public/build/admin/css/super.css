@@ -4491,7 +4491,7 @@ header {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  display: none;
+  display: block;
   z-index: 3;
   position: fixed;
   top: 0;
@@ -4536,7 +4536,7 @@ header h1 {
 /*# sourceMappingURL=header.css.map */
 
 nav {
-  display: none;
+  display: block;
   z-index: 4;
   position: fixed;
   left: 0;
@@ -4619,7 +4619,7 @@ footer {
   box-sizing: border-box;
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
-  display: none;
+  display: block;
   z-index: 2;
   position: fixed;
   bottom: 0;
@@ -4720,11 +4720,11 @@ section.actions {
 /*# sourceMappingURL=footer.css.map */
 
 #loading {
-  z-index: 1;
+  /*z-index: 1;
   position: fixed;
   width: 100%;
   height: 100%;
-  background: #FFFFFF url("../img/loading.gif") no-repeat center;
+  background: $colorWhite url('../img/loading.gif') no-repeat center;*/
 }
 
 main {
@@ -4732,7 +4732,7 @@ main {
   width: -webkit-calc(100% - 250px);
   width: calc(100% - 250px);
   z-index: 1;
-  display: none;
+  display: block;
   float: right;
   margin: 82px 0;
 }
@@ -4861,6 +4861,9 @@ main section {
 .flash.error {
   background: #DD7467;
 }
+.flash.alert {
+  background: #FFC65D;
+}
 .flash a {
   position: fixed;
   top: 45px;
@@ -4981,6 +4984,7 @@ section.filters {
   padding: 0 5px;
 }
 section.filters form fieldset {
+  width: 200px;
   float: left;
   margin: 15px 10px;
 }
@@ -5255,6 +5259,40 @@ div.tab.active {
 @media only screen and (max-width: 639px) {
   .form .mce-tinymce {
     width: 100%;
+  }
+}
+.form table {
+  width: 100%;
+  color: #7E8890;
+  border-top: 1px solid #EAEAEA;
+  border-right: 1px solid #EAEAEA;
+}
+.form table thead > tr {
+  font-size: 12px;
+  font-size: 0.75rem;
+  background: #FFFFFF;
+  font-family: 'Open Sans Bold', sans-serif;
+  text-transform: uppercase;
+}
+.form table tbody > tr {
+  font-size: 13px;
+  font-size: 0.8125rem;
+  font-family: 'Open Sans', sans-serif;
+}
+.form table tbody > tr.odd {
+  background: #FFFFFF;
+}
+.form table tbody > tr.even {
+  background: #FCFCFC;
+}
+.form table tr > td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #EAEAEA;
+  border-left: 1px solid #EAEAEA;
+}
+@media only screen and (max-width: 767px) {
+  .form table tr > td {
+    display: table-cell;
   }
 }
 

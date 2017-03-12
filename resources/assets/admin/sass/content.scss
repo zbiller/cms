@@ -1,18 +1,18 @@
 @import 'init';
 
 #loading {
-    z-index: 1;
+    /*z-index: 1;
     position: fixed;
     width: 100%;
     height: 100%;
-    background: $colorWhite url('../img/loading.gif') no-repeat center;
+    background: $colorWhite url('../img/loading.gif') no-repeat center;*/
 }
 
 main {
     @include calc(width, '100% - 250px');
 
     z-index: z-index('content');
-    display: none;
+    display: block;
     float: right;
     margin: 82px 0;
 
@@ -152,6 +152,10 @@ main {
 
     &.error {
         background: $colorJaponica;
+    }
+
+    &.alert {
+        background: $colorGoldenTainoi;
     }
 
     a {

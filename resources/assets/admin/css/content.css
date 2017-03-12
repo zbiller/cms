@@ -1,9 +1,9 @@
 #loading {
-  z-index: 1;
+  /*z-index: 1;
   position: fixed;
   width: 100%;
   height: 100%;
-  background: #FFFFFF url("../img/loading.gif") no-repeat center;
+  background: $colorWhite url('../img/loading.gif') no-repeat center;*/
 }
 
 main {
@@ -11,7 +11,7 @@ main {
   width: -webkit-calc(100% - 250px);
   width: calc(100% - 250px);
   z-index: 1;
-  display: none;
+  display: block;
   float: right;
   margin: 82px 0;
 }
@@ -139,6 +139,9 @@ main section {
 }
 .flash.error {
   background: #DD7467;
+}
+.flash.alert {
+  background: #FFC65D;
 }
 .flash a {
   position: fixed;

@@ -1,5 +1,5 @@
 $(window).load(function(){
-    load();
+    //load();
     flash();
     menu();
     buttons();
@@ -8,6 +8,7 @@ $(window).load(function(){
     tabs();
     pagination();
     setups();
+    helpers();
 });
 
 /**
@@ -77,12 +78,29 @@ function menu() {
  * @return void
  */
 function buttons () {
+    //update button
     var updateButton = $('a.update');
 
-    //update button
-    updateButton.click(function () {
+    updateButton.click(function (e) {
+        e.preventDefault();
         location.reload();
-    })
+    });
+
+    //save button
+    var saveButton = $('a.save');
+
+    saveButton.click(function (e) {
+        e.preventDefault();
+        $('.form').submit();
+    });
+
+    //save stay button
+    var saveStayButton = $('a.save-stay');
+
+    saveStayButton.click(function (e) {
+        e.preventDefault();
+        $('.form').append('<input type="hidden" name="save_stay" value="1" />').submit();
+    });
 }
 
 /**
@@ -189,6 +207,9 @@ function tabs() {
     });
 }
 
+/**
+ * @return void
+ */
 function pagination() {
     //disable click on inactive buttons
     $('section.pagination a.inactive').click(function (e) {
@@ -260,6 +281,20 @@ function setups() {
         }
     }).bind('keyup', function(){
         $(this).ColorPickerSetColor(this.value);
+    });
+}
+
+/**
+ * @return void
+ */
+function helpers()
+{
+    //check/uncheck all checkboxes
+    $('input[type="checkbox"][name="dummy"]').click(function () {
+        var column = $(this).closest('td').parent().children().index($(this).closest('td'));
+        var checkboxes = $('table > tbody td:nth-child(' + (column + 1) + ') input[type="checkbox"]');
+
+        checkboxes.prop('checked', $(this).prop('checked'));
     });
 }
 

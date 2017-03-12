@@ -116,5 +116,39 @@ div.tab.active {
     width: 100%;
   }
 }
+.form table {
+  width: 100%;
+  color: #7E8890;
+  border-top: 1px solid #EAEAEA;
+  border-right: 1px solid #EAEAEA;
+}
+.form table thead > tr {
+  font-size: 12px;
+  font-size: 0.75rem;
+  background: #FFFFFF;
+  font-family: 'Open Sans Bold', sans-serif;
+  text-transform: uppercase;
+}
+.form table tbody > tr {
+  font-size: 13px;
+  font-size: 0.8125rem;
+  font-family: 'Open Sans', sans-serif;
+}
+.form table tbody > tr.odd {
+  background: #FFFFFF;
+}
+.form table tbody > tr.even {
+  background: #FCFCFC;
+}
+.form table tr > td {
+  padding: 10px 15px;
+  border-bottom: 1px solid #EAEAEA;
+  border-left: 1px solid #EAEAEA;
+}
+@media only screen and (max-width: 767px) {
+  .form table tr > td {
+    display: table-cell;
+  }
+}
 
 /*# sourceMappingURL=view.css.map */

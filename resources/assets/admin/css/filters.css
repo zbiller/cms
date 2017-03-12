@@ -3,6 +3,7 @@ section.filters {
   padding: 0 5px;
 }
 section.filters form fieldset {
+  width: 200px;
   float: left;
   margin: 15px 10px;
 }

@@ -116,4 +116,43 @@ div.tab {
             width: 100%;
         }
     }
+
+    table {
+        width: 100%;
+        color: $colorOsloGray;
+        border-top: 1px solid $colorGallery;
+        border-right: 1px solid $colorGallery;
+
+        thead > tr {
+            @include font-size(12px);
+
+            background: $colorWhite;
+            font-family: 'Open Sans Bold', sans-serif;
+            text-transform: uppercase;
+        }
+
+        tbody > tr {
+            @include font-size(13px);
+
+            font-family: 'Open Sans', sans-serif;
+
+            &.odd {
+                background: $colorWhite;
+            }
+
+            &.even {
+                background: $colorAlabaster;
+            }
+        }
+
+        tr > td {
+            padding: 10px 15px;
+            border-bottom: 1px solid $colorGallery;
+            border-left: 1px solid $colorGallery;
+
+            @include media-query('tablet') {
+                display: table-cell;
+            }
+        }
+    }
 }

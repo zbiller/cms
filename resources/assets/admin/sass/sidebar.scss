@@ -1,7 +1,7 @@
 @import 'init';
 
 nav {
-    display: none;
+    display: block;
     z-index: z-index('menu');
     position: fixed;
     left: 0;
