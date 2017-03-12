@@ -1031,7 +1031,7 @@ a.ui-button:active,
 .ui-widget-content .ui-state-error,
 .ui-widget-header .ui-state-error {
 	border: 1px solid #e69700;
-	background: #fff url("../../img/jquery/ui-bg_diagonals-thick_20_fff_40x40.png") 50% 50% repeat;
+	background: #fff url("../img/jquery/ui-bg_diagonals-thick_20_fff_40x40.png") 50% 50% repeat;
 	color: #ffffff;
 }
 .ui-state-error a,
@@ -1077,31 +1077,31 @@ a.ui-button:active,
 }
 .ui-icon,
 .ui-widget-content .ui-icon {
-	background-image: url("../../img/jquery/ui-icons_4AAEE3_256x240.png");
+	background-image: url("../img/jquery/ui-icons_4AAEE3_256x240.png");
 }
 .ui-widget-header .ui-icon {
-	background-image: url("../../img/jquery/ui-icons_4AAEE3_256x240.png");
+	background-image: url("../img/jquery/ui-icons_4AAEE3_256x240.png");
 }
 .ui-state-hover .ui-icon,
 .ui-state-focus .ui-icon,
 .ui-button:hover .ui-icon,
 .ui-button:focus .ui-icon {
-	background-image: url("../../img/jquery/ui-icons_4AAEE3_256x240.png");
+	background-image: url("../img/jquery/ui-icons_4AAEE3_256x240.png");
 }
 .ui-state-active .ui-icon,
 .ui-button:active .ui-icon {
-	background-image: url("../../img/jquery/ui-icons_4AAEE3_256x240.png");
+	background-image: url("../img/jquery/ui-icons_4AAEE3_256x240.png");
 }
 .ui-state-highlight .ui-icon,
 .ui-button .ui-state-highlight.ui-icon {
-	background-image: url("../../img/jquery/ui-icons_fff_256x240.png");
+	background-image: url("../img/jquery/ui-icons_fff_256x240.png");
 }
 .ui-state-error .ui-icon,
 .ui-state-error-text .ui-icon {
-	background-image: url("../../img/jquery/ui-icons_ffffff_256x240.png");
+	background-image: url("../img/jquery/ui-icons_ffffff_256x240.png");
 }
 .ui-button .ui-icon {
-	background-image: url("../../img/jquery/ui-icons_fff_256x240.png");
+	background-image: url("../img/jquery/ui-icons_fff_256x240.png");
 }
 
 /* positioning */
@@ -3803,7 +3803,7 @@ nav:hover > .nano-pane, .nano-pane.active, .nano-pane.flashed {
   display: block;
   width: 12px;
   height: 12px;
-  background: url('../../img/chosen/chosen-sprite.png') -42px 1px no-repeat;
+  background: url('../img/chosen/chosen-sprite.png') -42px 1px no-repeat;
   font-size: 1px;
 }
 .chosen-container-single .chosen-single abbr:hover {
@@ -3824,7 +3824,7 @@ nav:hover > .nano-pane, .nano-pane.active, .nano-pane.flashed {
   display: block;
   width: 100%;
   height: 100%;
-  background: url('../../img/chosen/chosen-sprite.png') no-repeat 0px 2px;
+  background: url('../img/chosen/chosen-sprite.png') no-repeat 0px 2px;
 }
 .chosen-container-single .chosen-search {
   position: relative;
@@ -3957,7 +3957,7 @@ nav:hover > .nano-pane, .nano-pane.active, .nano-pane.flashed {
   display: block;
   width: 12px;
   height: 12px;
-  background: url('../../img/chosen/chosen-sprite.png') -42px 1px no-repeat;
+  background: url('../img/chosen/chosen-sprite.png') -42px 1px no-repeat;
   font-size: 1px;
 }
 .chosen-container-multi .chosen-choices li.search-choice .search-choice-close:hover {
@@ -4079,12 +4079,12 @@ nav:hover > .nano-pane, .nano-pane.active, .nano-pane.flashed {
 }
 .chosen-rtl .chosen-search input[type="text"] {
   padding: 4px 5px 4px 20px;
-  background: white url('../../img/chosen/chosen-sprite.png') no-repeat -30px -20px;
-  background: url('../../img/chosen/chosen-sprite.png') no-repeat -30px -20px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff));
-  background: url('../../img/chosen/chosen-sprite.png') no-repeat -30px -20px, -webkit-linear-gradient(#eeeeee 1%, #ffffff 15%);
-  background: url('../../img/chosen/chosen-sprite.png') no-repeat -30px -20px, -moz-linear-gradient(#eeeeee 1%, #ffffff 15%);
-  background: url('../../img/chosen/chosen-sprite.png') no-repeat -30px -20px, -o-linear-gradient(#eeeeee 1%, #ffffff 15%);
-  background: url('../../img/chosen/chosen-sprite.png') no-repeat -30px -20px, linear-gradient(#eeeeee 1%, #ffffff 15%);
+  background: white url('../img/chosen/chosen-sprite.png') no-repeat -30px -20px;
+  background: url('../img/chosen/chosen-sprite.png') no-repeat -30px -20px, -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff));
+  background: url('../img/chosen/chosen-sprite.png') no-repeat -30px -20px, -webkit-linear-gradient(#eeeeee 1%, #ffffff 15%);
+  background: url('../img/chosen/chosen-sprite.png') no-repeat -30px -20px, -moz-linear-gradient(#eeeeee 1%, #ffffff 15%);
+  background: url('../img/chosen/chosen-sprite.png') no-repeat -30px -20px, -o-linear-gradient(#eeeeee 1%, #ffffff 15%);
+  background: url('../img/chosen/chosen-sprite.png') no-repeat -30px -20px, linear-gradient(#eeeeee 1%, #ffffff 15%);
   direction: rtl;
 }
 .chosen-rtl.chosen-container-single .chosen-single div b {
@@ -4104,7 +4104,7 @@ nav:hover > .nano-pane, .nano-pane.active, .nano-pane.flashed {
   .chosen-container-multi .chosen-choices .search-choice .search-choice-close,
   .chosen-container .chosen-results-scroll-down span,
   .chosen-container .chosen-results-scroll-up span {
-    background-image: url('../../img/chosenchosen-sprite@2x.png') !important;
+    background-image: url('../img/chosenchosen-sprite@2x.png') !important;
     background-size: 52px 37px !important;
     background-repeat: no-repeat !important;
   }
@@ -4177,7 +4177,7 @@ nav:hover > .nano-pane, .nano-pane.active, .nano-pane.flashed {
 	height: 176px;
 	overflow: hidden;
 	position: absolute;
-	background: url(../../img/colorpicker/colorpicker_background2.png);
+	background: url(../img/colorpicker/colorpicker_background2.png);
 	font-family: 'Open Sans', sans-serif;
 	display: none;
 	z-index: 99999;
@@ -4198,7 +4198,7 @@ nav:hover > .nano-pane, .nano-pane.active, .nano-pane.flashed {
 	left: 0;
 	width: 150px;
 	height: 150px;
-	background: url(../../img/colorpicker/colorpicker_overlay.png);
+	background: url(../img/colorpicker/colorpicker_overlay.png);
 }
 .colorpicker_color div div {
 	position: absolute;
@@ -4207,7 +4207,7 @@ nav:hover > .nano-pane, .nano-pane.active, .nano-pane.flashed {
 	width: 11px;
 	height: 11px;
 	overflow: hidden;
-	background: url(../../img/colorpicker/colorpicker_select.gif);
+	background: url(../img/colorpicker/colorpicker_select.gif);
 	margin: -5px 0 0 -5px;
 }
 .colorpicker_hue {
@@ -4223,7 +4223,7 @@ nav:hover > .nano-pane, .nano-pane.active, .nano-pane.flashed {
 	width: 35px;
 	height: 9px;
 	overflow: hidden;
-	background: url(../../img/colorpicker/colorpicker_indic1.gif) left top;
+	background: url(../img/colorpicker/colorpicker_indic1.gif) left top;
 	margin: -4px 0 0 0;
 	left: 0px;
 }
@@ -4261,7 +4261,7 @@ nav:hover > .nano-pane, .nano-pane.active, .nano-pane.flashed {
 	position: absolute;
 	width: 72px;
 	height: 22px;
-	background: url(../../img/colorpicker/colorpicker_hex2.png) top;
+	background: url(../img/colorpicker/colorpicker_hex2.png) top;
 	left: 212px;
 	top: 143px;
 }
@@ -4285,32 +4285,32 @@ nav:hover > .nano-pane, .nano-pane.active, .nano-pane.flashed {
 	cursor: n-resize;
 }
 .colorpicker_rgb_r {
-	background-image: url(../../img/colorpicker/colorpicker_rgb_r1.png);
+	background-image: url(../img/colorpicker/colorpicker_rgb_r1.png);
 	top: 52px;
 	left: 212px;
 }
 .colorpicker_rgb_g {
-	background-image: url(../../img/colorpicker/colorpicker_rgb_g1.png);
+	background-image: url(../img/colorpicker/colorpicker_rgb_g1.png);
 	top: 82px;
 	left: 212px;
 }
 .colorpicker_rgb_b {
-	background-image: url(../../img/colorpicker/colorpicker_rgb_b1.png);
+	background-image: url(../img/colorpicker/colorpicker_rgb_b1.png);
 	top: 112px;
 	left: 212px;
 }
 .colorpicker_hsb_h {
-	background-image: url(../../img/colorpicker/colorpicker_hsb_h1.png);
+	background-image: url(../img/colorpicker/colorpicker_hsb_h1.png);
 	top: 52px;
 	left: 282px;
 }
 .colorpicker_hsb_s {
-	background-image: url(../../img/colorpicker/colorpicker_hsb_s1.png);
+	background-image: url(../img/colorpicker/colorpicker_hsb_s1.png);
 	top: 82px;
 	left: 282px;
 }
 .colorpicker_hsb_b {
-	background-image: url(../../img/colorpicker/colorpicker_hsb_b1.png);
+	background-image: url(../img/colorpicker/colorpicker_hsb_b1.png);
 	top: 112px;
 	left: 282px;
 }
@@ -4318,7 +4318,7 @@ nav:hover > .nano-pane, .nano-pane.active, .nano-pane.flashed {
 	position: absolute;
 	width: 22px;
 	height: 22px;
-	background: url(../../img/colorpicker/colorpicker_submit1.png) top;
+	background: url(../img/colorpicker/colorpicker_submit1.png) top;
 	left: 322px;
 	top: 142px;
 	overflow: hidden;
@@ -5151,6 +5151,11 @@ div.tab.active {
   display: block;
 }
 
+.form {
+  /**
+  * Fix TinyMCE width for admin.
+  */
+}
 .form fieldset {
   display: block;
   float: left;
@@ -5226,6 +5231,20 @@ div.tab.active {
 }
 .form textarea:focus {
   border-right: 1px solid #4AAEE3;
+}
+.form .mce-tinymce {
+  width: 80%;
+  float: right;
+}
+@media only screen and (max-width: 1247px) {
+  .form .mce-tinymce {
+    width: 73%;
+  }
+}
+@media only screen and (max-width: 639px) {
+  .form .mce-tinymce {
+    width: 100%;
+  }
 }
 
 /*# sourceMappingURL=view.css.map */

@@ -87,4 +87,20 @@ div.tab {
             border-right: 1px solid $colorPictonBlue;
         }
     }
+
+    /**
+    * Fix TinyMCE width for admin.
+    */
+    .mce-tinymce{
+        width: 80%;
+        float: right;
+
+        @include media-query('desktop') {
+            width: 73%;
+        }
+
+        @include media-query('tablet-small') {
+            width: 100%;
+        }
+    }
 }

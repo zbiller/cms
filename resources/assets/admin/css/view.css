@@ -10,6 +10,11 @@ div.tab.active {
   display: block;
 }
 
+.form {
+  /**
+  * Fix TinyMCE width for admin.
+  */
+}
 .form fieldset {
   display: block;
   float: left;
@@ -85,6 +90,20 @@ div.tab.active {
 }
 .form textarea:focus {
   border-right: 1px solid #4AAEE3;
+}
+.form .mce-tinymce {
+  width: 80%;
+  float: right;
+}
+@media only screen and (max-width: 1247px) {
+  .form .mce-tinymce {
+    width: 73%;
+  }
+}
+@media only screen and (max-width: 639px) {
+  .form .mce-tinymce {
+    width: 100%;
+  }
 }
 
 /*# sourceMappingURL=view.css.map */
