@@ -5,6 +5,8 @@ namespace App\Traits;
 use App\Http\Sorts\Sort;
 use App\Exceptions\SortException;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 trait CanSort
 {
@@ -60,10 +62,48 @@ trait CanSort
                     $this->sortQuery->inRandomOrder();
                     break;
                 default:
-                    $this->sortQuery->orderBy(request($this->sortField), request($this->sortDirection));
+                    if ($this->shouldSortByRelation()) {
+                        $this->sortByRelation();
+                    } else {
+                        $this->sortNormally();
+                    }
+
                     break;
             }
         }
+    }
+
+    /**
+     * Sort model records using columns from the model relation's table.
+     *
+     * @return void
+     */
+    private function sortByRelation()
+    {
+        $relation = explode('.', request($this->sortField))[0];
+        $field = explode('.', request($this->sortField))[1];
+
+        $this->checkRelationToSortBy($relation);
+
+        $modelTable = $this->getTable();
+        $relationTable = $this->{$relation}()->getModel()->getTable();
+        $foreignKey = $this->{$relation}() instanceof HasOne ?
+            $this->{$relation}()->getForeignKeyName() :
+            $this->{$relation}()->getForeignKey();
+
+        $this->sortQuery->join(
+            $relationTable, $modelTable . '.id', '=', $relationTable . '.' . $foreignKey
+        )->orderBy($relationTable . '.' . $field, request($this->sortDirection));
+    }
+
+    /**
+     * Sort model records using columns from the model's table itself.
+     *
+     * @return void
+     */
+    private function sortNormally()
+    {
+        $this->sortQuery->orderBy(request($this->sortField), request($this->sortDirection));
     }
 
     /**
@@ -91,6 +131,14 @@ trait CanSort
     }
 
     /**
+     * @return bool
+     */
+    private function shouldSortByRelation()
+    {
+        return str_contains(request($this->sortField), '.');
+    }
+
+    /**
      * Verify if the direction provided in the request matches one of the directions from:
      * App\Http\Sorts\Sort::$directions.
      *
@@ -103,6 +151,20 @@ trait CanSort
                 'Invalid sorting direction.' . PHP_EOL .
                 'You provided the direction: "' . request($this->sortDirection) . '".' . PHP_EOL .
                 'Please provide one of these directions: ' . implode('|', Sort::$directions) . '.'
+            );
+        }
+    }
+
+    /**
+     * @param string $relation
+     * @throws SortException
+     */
+    private function checkRelationToSortBy($relation)
+    {
+        if (!($this->{$relation}() instanceof HasOne) && !($this->{$relation}() instanceof BelongsTo)) {
+            throw new SortException(
+                'You can only sort records by the following relations: HasOne, BelongsTo.' . PHP_EOL .
+                'The relation "' . $relation . '" is of type ' . get_class($this->{$relation}()) . ' and cannot be sorted by.'
             );
         }
     }
