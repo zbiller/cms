@@ -73,4 +73,20 @@ class Button
     {
         return view('helpers::button.clear');
     }
+
+    /**
+     * @return \Illuminate\View\View
+     */
+    public function save()
+    {
+        return view('helpers::button.save');
+    }
+
+    /**
+     * @return \Illuminate\View\View
+     */
+    public function saveStay()
+    {
+        return view('helpers::button.save_stay');
+    }
 }
