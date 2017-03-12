@@ -141,30 +141,32 @@ trait CanFilter
     protected function filter()
     {
         $this->filterQuery->{$this->filterMorph}(function ($query) {
-            if ($this->shouldFilterByRelation()) {
-                $this->filterByRelation($query);
-            } else {
-                $this->filterNormally($query);
+            foreach (explode(',', trim($this->filterColumns, ',')) as $column) {
+                if ($this->shouldFilterByRelation($column)) {
+                    $this->filterByRelation($query, $column);
+                } else {
+                    $this->filterNormally($query, $column);
+                }
             }
         });
     }
 
     /**
+     * Filter model records based on a relation defined.
+     * Relation can be hasOne, hasMany, belongsTo or hasAndBelongsToMany.
+     *
      * @param Builder $query
+     * @param string $column
      * @return void
      */
-    private function filterByRelation(Builder $query)
+    private function filterByRelation(Builder $query, $column)
     {
-        $columns = explode(',', trim($this->filterColumns, ','));
         $options = [];
+        $arguments = explode('.', $column);
+        $relation = camel_case($arguments[0]);
+        $column = $arguments[1];
 
-        foreach ($columns as $arguments) {
-            $arguments = explode('.', $arguments);
-            $relation = camel_case($arguments[0]);
-            $column = $arguments[1];
-
-            $options[$relation][] = $column;
-        }
+        $options[$relation][] = $column;
 
         foreach ($options as $relation => $columns) {
             $query->{$this->filterHaving}($relation, function ($q) use ($columns) {
@@ -182,19 +184,20 @@ trait CanFilter
     }
 
     /**
+     * Filter model records using columns from the model's table itself.
+     *
      * @param Builder $query
+     * @param string $column
      * @return void
      */
-    private function filterNormally(Builder $query)
+    private function filterNormally(Builder $query, $column)
     {
-        $columns = explode(',', trim($this->filterColumns, ','));
-
-        foreach ($columns as $column) {
-            $this->filterIndividually($query, $this->filterMethod, $column);
-        }
+        $this->filterIndividually($query, $this->filterMethod, $column);
     }
 
     /**
+     * Abstraction of filtering to use in filtering by relations or normally.
+     *
      * @param Builder $query
      * @param string $method
      * @param string $column
@@ -234,11 +237,12 @@ trait CanFilter
     }
 
     /**
+     * @param string $column
      * @return bool
      */
-    private function shouldFilterByRelation()
+    private function shouldFilterByRelation($column)
     {
-        return str_contains($this->filterColumns, '.');
+        return str_contains($column, '.');
     }
 
     /**
