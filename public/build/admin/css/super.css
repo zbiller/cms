@@ -5127,7 +5127,7 @@ section.list table tr > td {
   }
 }
 section.list table tr > td:last-of-type {
-  width: 155px;
+  width: 158px;
   padding: 10px;
 }
 @media only screen and (max-width: 767px) {
@@ -5220,6 +5220,17 @@ div.tab.active {
   .form input, .form select, .form textarea {
     width: 100%;
   }
+}
+.form input[type="checkbox"], .form input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  float: left;
+  cursor: pointer;
+  background: #FFFFFF;
+  border: 1px solid #e2e2e2;
+}
+.form input[type="checkbox"]:checked, .form input[type="radio"]:checked {
+  background: #e2e2e2;
 }
 .form select {
   padding: 5px 32px 5px 5px;

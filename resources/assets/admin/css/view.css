@@ -80,6 +80,17 @@ div.tab.active {
     width: 100%;
   }
 }
+.form input[type="checkbox"], .form input[type="radio"] {
+  width: 20px;
+  height: 20px;
+  float: left;
+  cursor: pointer;
+  background: #FFFFFF;
+  border: 1px solid #e2e2e2;
+}
+.form input[type="checkbox"]:checked, .form input[type="radio"]:checked {
+  background: #e2e2e2;
+}
 .form select {
   padding: 5px 32px 5px 5px;
   background: url("../img/select-dropdown-bg.png") no-repeat right 5px center;

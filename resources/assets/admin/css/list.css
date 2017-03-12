@@ -45,7 +45,7 @@ section.list table tr > td {
   }
 }
 section.list table tr > td:last-of-type {
-  width: 155px;
+  width: 158px;
   padding: 10px;
 }
 @media only screen and (max-width: 767px) {
