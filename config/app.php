@@ -171,6 +171,7 @@ return [
         GrahamCampbell\Exceptions\ExceptionsServiceProvider::class,
         Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
+        Proengsoft\JsValidation\JsValidationServiceProvider::class,
 
         /*
          * Application Service Providers
@@ -241,6 +242,7 @@ return [
         'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
+        'JsValidator' => Proengsoft\JsValidation\Facades\JsValidatorFacade::class,
 
         /**
          * Application Facades

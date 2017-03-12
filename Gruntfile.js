@@ -27,6 +27,7 @@ module.exports = function(grunt) {
                 src: [
                     'resources/assets/admin/js/libs/jquery.js',
                     'resources/assets/admin/js/libs/jquery-ui.js',
+                    'resources/assets/admin/js/libs/bootstrap.js',
                     'resources/assets/admin/js/libs/scroll.js',
                     'resources/assets/admin/js/libs/chosen.js',
                     'resources/assets/admin/js/libs/timepicker.js',

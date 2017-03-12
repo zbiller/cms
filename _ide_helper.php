@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.4.13 on 2017-03-07.
+ * Generated for Laravel 5.4.15 on 2017-03-12.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -9792,6 +9792,19 @@ namespace Illuminate\Support\Facades {
         }
         
         /**
+         * Set the given disk instance.
+         *
+         * @param string $name
+         * @param mixed $disk
+         * @return void 
+         * @static 
+         */
+        public static function set($name, $disk)
+        {
+            \Illuminate\Filesystem\FilesystemManager::set($name, $disk);
+        }
+        
+        /**
          * Get the default driver name.
          *
          * @return string 
@@ -9824,6 +9837,30 @@ namespace Illuminate\Support\Facades {
         public static function extend($driver, $callback)
         {
             return \Illuminate\Filesystem\FilesystemManager::extend($driver, $callback);
+        }
+        
+        /**
+         * Assert that the given file exists.
+         *
+         * @param string $path
+         * @return void 
+         * @static 
+         */
+        public static function assertExists($path)
+        {
+            \Illuminate\Filesystem\FilesystemAdapter::assertExists($path);
+        }
+        
+        /**
+         * Assert that the given file does not exist.
+         *
+         * @param string $path
+         * @return void 
+         * @static 
+         */
+        public static function assertMissing($path)
+        {
+            \Illuminate\Filesystem\FilesystemAdapter::assertMissing($path);
         }
         
         /**
@@ -12836,7 +12873,373 @@ namespace Collective\Html {
     }         
 }
     
+namespace Proengsoft\JsValidation\Facades {
+
+    class JsValidatorFacade {
+        
+        /**
+         * Creates JsValidator instance based on rules and message arrays.
+         *
+         * @param array $rules
+         * @param array $messages
+         * @param array $customAttributes
+         * @param null|string $selector
+         * @return \Proengsoft\JsValidation\JavascriptValidator 
+         * @static 
+         */
+        public static function make($rules, $messages = array(), $customAttributes = array(), $selector = null)
+        {
+            return \Proengsoft\JsValidation\JsValidatorFactory::make($rules, $messages, $customAttributes, $selector);
+        }
+        
+        /**
+         * Creates JsValidator instance based on FormRequest.
+         *
+         * @param $formRequest
+         * @param null $selector
+         * @return \Proengsoft\JsValidation\JavascriptValidator 
+         * @throws FormRequestArgumentException
+         * @static 
+         */
+        public static function formRequest($formRequest, $selector = null)
+        {
+            return \Proengsoft\JsValidation\JsValidatorFactory::formRequest($formRequest, $selector);
+        }
+        
+        /**
+         * Creates JsValidator instance based on Validator.
+         *
+         * @param \Illuminate\Validation\Validator $validator
+         * @param string|null $selector
+         * @return \Proengsoft\JsValidation\JavascriptValidator 
+         * @static 
+         */
+        public static function validator($validator, $selector = null)
+        {
+            return \Proengsoft\JsValidation\JsValidatorFactory::validator($validator, $selector);
+        }
+        
+    }         
+}
+    
 namespace App\Facades {
+
+    class AdminForm {
+        
+        /**
+         * Wraps the input field into html to match the admin layout.
+         *
+         * @param string $input
+         * @param string $label
+         * @return string 
+         * @static 
+         */
+        public static function wrap($input, $label)
+        {
+            return \App\Helpers\View\AdminForm::wrap($input, $label);
+        }
+        
+        /**
+         * Create a submit button element.
+         *
+         * @param string $value
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function submit($value = null, $options = array())
+        {
+            return \App\Helpers\View\AdminForm::submit($value, $options);
+        }
+        
+        /**
+         * Create a reset button element.
+         *
+         * @param string $value
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function reset($value = null, $options = array())
+        {
+            return \App\Helpers\View\AdminForm::reset($value, $options);
+        }
+        
+        /**
+         * Create a button element.
+         *
+         * @param string $value
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function button($value = null, $options = array())
+        {
+            return \App\Helpers\View\AdminForm::button($value, $options);
+        }
+        
+        /**
+         * Create a hidden input field.
+         *
+         * @param string $name
+         * @param string $value
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function hidden($name, $value = null, $options = array())
+        {
+            return \App\Helpers\View\AdminForm::hidden($name, $value, $options);
+        }
+        
+        /**
+         * Create a text input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param string|null $value
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function text($name, $label = null, $value = null, $options = array())
+        {
+            return \App\Helpers\View\AdminForm::text($name, $label, $value, $options);
+        }
+        
+        /**
+         * Create a textarea input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param string|null $value
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function textarea($name, $label = null, $value = null, $options = array())
+        {
+            return \App\Helpers\View\AdminForm::textarea($name, $label, $value, $options);
+        }
+        
+        /**
+         * Create a select input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param array $list
+         * @param string|null $selected
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function select($name, $label = null, $list = array(), $selected = null, $options = array())
+        {
+            return \App\Helpers\View\AdminForm::select($name, $label, $list, $selected, $options);
+        }
+        
+        /**
+         * Create a password input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function password($name, $label = null, $options = array())
+        {
+            return \App\Helpers\View\AdminForm::password($name, $label, $options);
+        }
+        
+        /**
+         * Create a number input field.
+         *
+         * @param string $name
+         * @param string|null $value
+         * @param string|null $label
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function number($name, $value = null, $label = null, $options = array())
+        {
+            return \App\Helpers\View\AdminForm::number($name, $value, $label, $options);
+        }
+        
+        /**
+         * Create an email input field.
+         *
+         * @param string $name
+         * @param string|null $value
+         * @param string|null $label
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function email($name, $value = null, $label = null, $options = array())
+        {
+            return \App\Helpers\View\AdminForm::email($name, $value, $label, $options);
+        }
+        
+        /**
+         * Create a phone input field.
+         *
+         * @param string $name
+         * @param string|null $value
+         * @param string|null $label
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function phone($name, $value = null, $label = null, $options = array())
+        {
+            return \App\Helpers\View\AdminForm::phone($name, $value, $label, $options);
+        }
+        
+        /**
+         * Create a checkbox input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param int|null|string $value
+         * @param bool|null $checked
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function checkbox($name, $label = null, $value = 1, $checked = null, $options = array())
+        {
+            return \App\Helpers\View\AdminForm::checkbox($name, $label, $value, $checked, $options);
+        }
+        
+        /**
+         * Create a radio input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param int|null|string $value
+         * @param bool|null $checked
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function radio($name, $label = null, $value = 1, $checked = null, $options = array())
+        {
+            return \App\Helpers\View\AdminForm::radio($name, $label, $value, $checked, $options);
+        }
+        
+        /**
+         * Create an editor field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param string|null $value
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function editor($name, $label = null, $value = null, $options = array())
+        {
+            return \App\Helpers\View\AdminForm::editor($name, $label, $value, $options);
+        }
+        
+        /**
+         * Create a calendar input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param string|null $value
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function calendar($name, $label = null, $value = null, $options = array())
+        {
+            return \App\Helpers\View\AdminForm::calendar($name, $label, $value, $options);
+        }
+        
+        /**
+         * Create a time input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param string|null $value
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function time($name, $label = null, $value = null, $options = array())
+        {
+            return \App\Helpers\View\AdminForm::time($name, $label, $value, $options);
+        }
+        
+        /**
+         * Create a color input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param string|null $value
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function color($name, $label = null, $value = null, $options = array())
+        {
+            return \App\Helpers\View\AdminForm::color($name, $label, $value, $options);
+        }
+        
+        /**
+         * Create a select input field for a range.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param int $start
+         * @param int $end
+         * @param string|null $selected
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function selectRange($name, $label = null, $start = 0, $end = 0, $selected = null, $options = array())
+        {
+            return \App\Helpers\View\AdminForm::selectRange($name, $label, $start, $end, $selected, $options);
+        }
+        
+        /**
+         * Create a select input field for years.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param int $start
+         * @param int $end
+         * @param string|null $selected
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function selectYear($name, $label = null, $start = null, $end = null, $selected = null, $options = array())
+        {
+            return \App\Helpers\View\AdminForm::selectYear($name, $label, $start, $end, $selected, $options);
+        }
+        
+        /**
+         * Create a select input field for months.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param string|null $selected
+         * @param array $options
+         * @param string $format
+         * @return string 
+         * @static 
+         */
+        public static function selectMonth($name, $label = null, $selected = null, $options = array(), $format = '%B')
+        {
+            return \App\Helpers\View\AdminForm::selectMonth($name, $label, $selected, $options, $format);
+        }
+        
+    }         
 
     class Menu {
         
@@ -13013,6 +13416,76 @@ namespace App\Facades {
         public static function clear()
         {
             return \App\Helpers\View\Button::clear();
+        }
+        
+        /**
+         * 
+         *
+         * @return \Illuminate\View\View 
+         * @static 
+         */
+        public static function save()
+        {
+            return \App\Helpers\View\Button::save();
+        }
+        
+        /**
+         * 
+         *
+         * @return \Illuminate\View\View 
+         * @static 
+         */
+        public static function saveStay()
+        {
+            return \App\Helpers\View\Button::saveStay();
+        }
+        
+    }         
+
+    class Flash {
+        
+        /**
+         * 
+         *
+         * @return string|null 
+         * @static 
+         */
+        public static function message()
+        {
+            return \App\Helpers\Message\Flash::message();
+        }
+        
+        /**
+         * 
+         *
+         * @return \Illuminate\View\View 
+         * @static 
+         */
+        public static function success()
+        {
+            return \App\Helpers\Message\Flash::success();
+        }
+        
+        /**
+         * 
+         *
+         * @return \Illuminate\View\View 
+         * @static 
+         */
+        public static function error()
+        {
+            return \App\Helpers\Message\Flash::error();
+        }
+        
+        /**
+         * 
+         *
+         * @return \Illuminate\View\View 
+         * @static 
+         */
+        public static function alert()
+        {
+            return \App\Helpers\Message\Flash::alert();
         }
         
     }         
@@ -15026,11 +15499,17 @@ namespace {
     
     class Html extends \Collective\Html\HtmlFacade {}
     
+    class JsValidator extends \Proengsoft\JsValidation\Facades\JsValidatorFacade {}
+    
+    class AdminForm extends \App\Facades\AdminForm {}
+    
     class Menu extends \App\Facades\Menu {}
     
     class Pagination extends \App\Facades\Pagination {}
     
     class Button extends \App\Facades\Button {}
+    
+    class Flash extends \App\Facades\Flash {}
     
 }
 

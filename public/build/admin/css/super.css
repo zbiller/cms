@@ -5169,6 +5169,22 @@ div.tab.active {
 .form fieldset:first-of-type {
   margin-top: 0;
 }
+.form fieldset span {
+  font-size: 13px;
+  font-size: 0.8125rem;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  float: right;
+  clear: both;
+  font-family: 'Open Sans', sans-serif;
+  color: #B0BEC5;
+}
+.form fieldset span.error {
+  color: #DD7467;
+}
 .form label {
   font-size: 12px;
   font-size: 0.75rem;
@@ -5215,6 +5231,9 @@ div.tab.active {
 .form input:focus, .form select:focus, .form textarea:focus {
   border-bottom: 1px solid #4AAEE3;
 }
+.form input.error, .form select.error, .form textarea.error {
+  border-bottom: 1px solid #DD7467;
+}
 @media only screen and (max-width: 1247px) {
   .form input, .form select, .form textarea {
     width: 73%;
@@ -5235,6 +5254,9 @@ div.tab.active {
 }
 .form input[type="checkbox"]:checked, .form input[type="radio"]:checked {
   background: #e2e2e2;
+}
+.form input[type="checkbox"].error, .form input[type="radio"].error {
+  border-bottom: 1px solid #DD7467;
 }
 .form select {
   padding: 5px 32px 5px 5px;

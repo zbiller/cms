@@ -23,6 +23,20 @@ div.tab {
         &:first-of-type {
             margin-top: 0;
         }
+
+        span {
+            @include font-size(13px);
+            @include transition(all 0.3s ease);
+
+            float: right;
+            clear: both;
+            font-family: 'Open Sans', sans-serif;
+            color: $colorTowerGray;
+
+            &.error {
+                color: $colorJaponica;
+            }
+        }
     }
 
     label {
@@ -65,6 +79,10 @@ div.tab {
             border-bottom: 1px solid $colorPictonBlue;
         }
 
+        &.error {
+            border-bottom: 1px solid $colorJaponica;
+        }
+
         @include media-query('desktop') {
             width: 73%;
         }
@@ -84,6 +102,10 @@ div.tab {
 
         &:checked {
             background: darken($colorGallery, 3%);
+        }
+
+        &.error {
+            border-bottom: 1px solid $colorJaponica;
         }
     }
 
