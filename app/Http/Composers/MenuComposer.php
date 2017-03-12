@@ -18,13 +18,22 @@ class MenuComposer
                 $item->name('Dashboard')->url(route('admin'))->data('icon', 'fa-home')->active('admin');
             });
 
-            /*$menu->add(function ($item) use ($menu) {
-                $access = $item->name('Access Control')->data('icon', 'fa-sign-in')->active('admin/admin-users');
+            $menu->add(function ($item) use ($menu) {
+                $access = $item->name('Access Control')->data('icon', 'fa-sign-in')->active('admin/admin*');
 
                 $menu->child($access, function ($item) {
-                    $item->name('Admin Users')->url(route('admin.admin.users.index'))->permissions('admin-users-list')->active('admin/admin-users');
+                    $item->name('Admin Groups')->url(route('admin.admin.groups.index'))->permissions('admin-groups-list')->active('admin/admin-groups/*');
                 });
-            });*/
+
+                $menu->child($access, function ($item) {
+                    $item->name('Admin Users')->url(route('admin.admin.users.index'))->permissions('admin-users-list')->active('admin/admin-users/*');
+                });
+            });
+
+
+
+
+
 
             $menu->add(function ($item) use ($menu) {
                 $test = $item->name('Test')->data('icon', 'fa-text-width')->active('admin/test/*');
@@ -34,7 +43,7 @@ class MenuComposer
                 });
             });
         })->filter(function ($item) use ($user) {
-            return $user->hasAnyPermission($item->permissions());
+            return $user->isSuper() || $user->hasAnyPermission($item->permissions());
         });
 
         $view->with('menu', $menu);

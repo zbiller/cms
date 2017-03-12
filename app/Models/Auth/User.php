@@ -2,6 +2,8 @@
 
 namespace App\Models\Auth;
 
+use App\Traits\CanFilter;
+use App\Traits\CanSort;
 use App\Traits\HasRoles;
 use App\Options\RefreshCacheOptions;
 use Illuminate\Notifications\Notifiable;
@@ -12,6 +14,8 @@ class User extends Authenticatable
 {
     use Notifiable;
     use HasRoles;
+    use CanFilter;
+    use CanSort;
 
     /**
      * @var string
@@ -30,6 +34,13 @@ class User extends Authenticatable
     /**
      * @var array
      */
+    protected $guarded = [
+        'super'
+    ];
+
+    /**
+     * @var array
+     */
     protected $hidden = [
         'password',
         'remember_token',
@@ -41,6 +52,12 @@ class User extends Authenticatable
     protected $with = [
         'person',
     ];
+
+    /**
+     * @const
+     */
+    const SUPER_NO = 0;
+    const SUPER_YES = 1;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
@@ -83,6 +100,14 @@ class User extends Authenticatable
             $this->person->first_name,
             $this->person->last_name,
         ]);
+    }
+
+    /**
+     * @return bool
+     */
+    public function isSuper()
+    {
+        return $this->super == self::SUPER_YES;
     }
 
     /**

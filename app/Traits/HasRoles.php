@@ -223,7 +223,7 @@ trait HasRoles
             }
         }
 
-        return $this->hasAllRoles($permission->roles);
+        return $permission->roles->count() > 0 && $this->hasAnyRole($permission->roles);
     }
 
     /**

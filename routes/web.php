@@ -11,10 +11,16 @@
 |
 */
 
+/**
+ * All of the admin routes.
+ */
 Route::group([
     'namespace' => 'Admin',
     'prefix' => 'admin',
 ], function () {
+    /**
+     * Admin routes that don't require authentication.
+     */
     Route::group([
         'namespace' => 'Auth',
         'middleware' => 'not.authenticated:admin'
@@ -30,14 +36,57 @@ Route::group([
         Route::post('reset-password', ['as' => 'admin.password.reset', 'uses' => 'ResetPasswordController@reset']);
     });
 
+    /**
+     * Admin routes that require authentication.
+     */
     Route::group([
         'middleware' => ['authenticated:admin.login', 'check.roles:admin', 'check.permissions']
     ], function () {
+        /**
+         * Dashboard.
+         */
         Route::group([
             'namespace' => 'Home',
         ], function () {
             Route::get('', ['as' => 'admin', 'uses' => 'DashboardController@index']);
         });
+
+        /**
+         * CRUD admin users.
+         */
+        Route::group([
+            'namespace' => 'Admin',
+        ], function () {
+            Route::group([
+                'prefix' => 'admin-groups',
+            ], function () {
+                Route::get('/', ['as' => 'admin.admin.groups.index', 'uses' => 'GroupsController@index', 'permissions' => 'admin-groups-list']);
+                Route::get('create', ['as' => 'admin.admin.groups.create', 'uses' => 'GroupsController@create', 'permissions' => 'admin-groups-add']);
+                Route::get('edit/{id}', ['as' => 'admin.admin.groups.edit', 'uses' => 'GroupsController@edit', 'permissions' => 'admin-groups-edit']);
+                Route::post('store', ['as' => 'admin.admin.groups.store', 'uses' => 'GroupsController@store', 'permissions' => 'admin-groups-add']);
+                Route::put('update/{id}', ['as' => 'admin.admin.groups.update', 'uses' => 'GroupsController@update', 'permissions' => 'admin-groups-edit']);
+                Route::delete('destroy/{id}', ['as' => 'admin.admin.groups.destroy', 'uses' => 'GroupsController@destroy', 'permissions' => 'admin-groups-delete']);
+            });
+
+            Route::group([
+                'prefix' => 'admin-users',
+            ], function () {
+                Route::get('/', ['as' => 'admin.admin.users.index', 'uses' => 'UsersController@index', 'permissions' => 'admin-users-list']);
+                Route::get('create', ['as' => 'admin.admin.users.create', 'uses' => 'UsersController@create', 'permissions' => 'admin-users-add']);
+                Route::get('edit/{id}', ['as' => 'admin.admin.users.edit', 'uses' => 'UsersController@edit', 'permissions' => 'admin-users-edit']);
+                Route::post('store', ['as' => 'admin.admin.users.store', 'uses' => 'UsersController@store', 'permissions' => 'admin-users-add']);
+                Route::put('update/{id}', ['as' => 'admin.admin.users.update', 'uses' => 'UsersController@update', 'permissions' => 'admin-users-edit']);
+                Route::delete('destroy/{id}', ['as' => 'admin.admin.users.destroy', 'uses' => 'UsersController@destroy', 'permissions' => 'admin-users-delete']);
+            });
+        });
+
+
+
+
+
+
+
+
 
         Route::group([
             'namespace' => 'Test',

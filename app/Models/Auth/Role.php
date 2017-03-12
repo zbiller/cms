@@ -2,17 +2,21 @@
 
 namespace App\Models\Auth;
 
+use App\Models\Model;
+use App\Traits\CanFilter;
+use App\Traits\CanSort;
 use App\Traits\HasPermissions;
 use App\Traits\RefreshesCache;
 use App\Contracts\Role as RoleContract;
 use App\Options\RefreshCacheOptions;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Role extends Model implements RoleContract
 {
     use HasPermissions;
     use RefreshesCache;
+    use CanFilter;
+    use CanSort;
 
     /**
      * @var string
@@ -22,8 +26,8 @@ class Role extends Model implements RoleContract
     /**
      * @var array
      */
-    protected $guarded = [
-        'id'
+    protected $fillable = [
+        'name'
     ];
 
     /**
@@ -40,6 +44,16 @@ class Role extends Model implements RoleContract
     public function permissions()
     {
         return $this->belongsToMany(Permission::class, 'role_permission');
+    }
+
+    /**
+     * @param $query
+     * @param array|string $roles
+     */
+    public function scopeExclude($query, $roles)
+    {
+        $query->whereNotIn('name', is_array($roles) ? $roles : explode(',', $roles));
+
     }
 
     /**

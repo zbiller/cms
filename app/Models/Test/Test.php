@@ -46,7 +46,7 @@ class Test extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function testHasHasMany1()
+    public function testHasMany1()
     {
         return $this->hasMany(TestHasMany1::class, 'test_id');
     }
@@ -54,7 +54,7 @@ class Test extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function testHasHasMany2()
+    public function testHasMany2()
     {
         return $this->hasMany(TestHasMany2::class, 'test_id');
     }

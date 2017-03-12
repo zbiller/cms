@@ -23,6 +23,7 @@ class CheckRoles
         $this->setRoles($roles, $request->route()->action);
 
         if (!auth()->user()->hasAllRoles($this->roles)) {
+            session()->flash('flash_error', 'You\'re not authorized to access that page!');
             return redirect()->route('home');
         }
 

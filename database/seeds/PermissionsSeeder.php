@@ -16,6 +16,28 @@ class PermissionsSeeder extends Seeder
      * @var array
      */
     private $adminMap = [
+        'Admin Groups' => [
+            'List' => [
+                'name' => 'admin-groups-list',
+                'group' => 'Admin Groups',
+                'label' => 'List',
+            ],
+            'Add' => [
+                'name' => 'admin-groups-add',
+                'group' => 'Admin Groups',
+                'label' => 'Add',
+            ],
+            'Edit' => [
+                'name' => 'admin-groups-edit',
+                'group' => 'Admin Groups',
+                'label' => 'Edit',
+            ],
+            'Delete' => [
+                'name' => 'admin-groups-delete',
+                'group' => 'Admin Groups',
+                'label' => 'Delete',
+            ],
+        ],
         'Admin Users' => [
             'List' => [
                 'name' => 'admin-users-list',
@@ -59,11 +81,5 @@ class PermissionsSeeder extends Seeder
                 $this->adminPermissions->push(Permission::create($data));
             }
         }
-
-        /**
-         * Assign all Admin permissions to the Admin role.
-         */
-        $role = Role::findByName('admin');
-        $role->grantPermission($this->adminPermissions);
     }
 }

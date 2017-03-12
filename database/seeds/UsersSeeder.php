@@ -21,6 +21,7 @@ class UsersSeeder extends Seeder
         $user = User::create([
             'username' => 'developer',
             'password' => bcrypt('iwtfki01'),
+            'super' => User::SUPER_YES,
         ]);
 
         $user->person()->create([

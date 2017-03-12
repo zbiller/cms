@@ -7,6 +7,7 @@ use App\Options\RefreshCacheOptions;
 use App\Contracts\Permission as PermissionContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Collection;
 
 class Permission extends Model implements PermissionContract
 {
@@ -38,6 +39,14 @@ class Permission extends Model implements PermissionContract
     public function roles()
     {
         return $this->belongsToMany(Role::class, 'role_permission');
+    }
+
+    /**
+     * @return Collection
+     */
+    public static function getGrouped()
+    {
+        return self::all()->groupBy('group');
     }
 
     /**

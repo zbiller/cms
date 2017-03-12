@@ -2,7 +2,7 @@
 
 namespace App\Http\Filters;
 
-class TestFilter extends Filter
+class AdminUserFilter extends Filter
 {
     /**
      * Get the main where condition between entire request fields.
@@ -22,10 +22,7 @@ class TestFilter extends Filter
     public function filters()
     {
         return [
-            'habtm' => 'operator:in|condition:or|columns:test_habtm.test_id',
-            'search' => 'operator:like|condition:or|columns:name,content',
-            'type' => 'operator:=|condition:or|columns:type',
-            'created_at' => 'operator:date|condition:and|columns:created_at,updated_at',
+            'search' => 'operator:like|condition:or|columns:username,person.first_name,person.last_name,person.email,person.phone',
         ];
     }
 }

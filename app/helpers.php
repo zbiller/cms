@@ -2,7 +2,7 @@
 
 if (!function_exists('form')) {
     /**
-     * @return \App\Helpers\Form\Form
+     * @return \Collective\Html\FormBuilder
      */
     function form()
     {

@@ -22,7 +22,8 @@ class CheckPermissions
     {
         $this->setPermissions($permissions, $request->route()->action);
 
-        if (!auth()->user()->hasAllPermissions($this->permissions)) {
+        if (!auth()->user()->isSuper() && !auth()->user()->hasAllPermissions($this->permissions)) {
+            session()->flash('flash_error', 'You don\'t have permission to access that page!');
             return redirect()->route('admin');
         }
 
