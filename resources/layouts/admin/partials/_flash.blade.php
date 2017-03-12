@@ -1,1 +1,1 @@
-{{--Placeholder for the flash message implementation--}}
+{!! flash()->message() !!}
