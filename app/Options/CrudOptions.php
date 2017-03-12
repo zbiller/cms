@@ -38,14 +38,6 @@ class CrudOptions
     public $editView;
 
     /**
-     * The edit route and view as strings.
-     *
-     * @var
-     */
-    public $deleteRoute;
-    public $deleteView;
-
-    /**
      * Get a fresh instance of this class.
      *
      * @return CrudOptions
@@ -142,32 +134,6 @@ class CrudOptions
     public function setEditView($view): CrudOptions
     {
         $this->editView = $view;
-
-        return $this;
-    }
-
-    /**
-     * Set the delete route to work with in the App\Traits\CanCrud trait.
-     *
-     * @param string $route
-     * @return CrudOptions
-     */
-    public function setDeleteRoute($route): CrudOptions
-    {
-        $this->deleteRoute = $route;
-
-        return $this;
-    }
-
-    /**
-     * Set the delete view to work with in the App\Traits\CanCrud trait.
-     *
-     * @param string $view
-     * @return CrudOptions
-     */
-    public function setDeleteView($view): CrudOptions
-    {
-        $this->deleteView = $view;
 
         return $this;
     }

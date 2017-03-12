@@ -87,9 +87,6 @@ trait CanCrud
         $this->checkCrudModel();
         $this->checkCrudRoutes();
         $this->checkCrudViews();
-
-        $this->assignCrudRoutes();
-        $this->assignCrudViews();
     }
 
     /**
@@ -146,7 +143,7 @@ trait CanCrud
             }
 
             session()->flash('flash_success', 'The record was successfully created!');
-            return redirect()->route($this->crudOptions->listRoute);
+            return redirect()->route($request->has('save_stay') ? $this->crudOptions->addRoute : $this->crudOptions->listRoute);
         } catch (Exception $e) {
             session()->flash('flash_error', 'The record could not be created! Please try again.');
             return redirect()->back()->withInput($request->all());
@@ -194,7 +191,7 @@ trait CanCrud
             }
 
             session()->flash('flash_success', 'The record was successfully updated!');
-            return redirect()->route($this->crudOptions->listRoute);
+            return redirect()->route($request->has('save_stay') ? $this->crudOptions->editRoute : $this->crudOptions->listRoute);
         } catch (ModelNotFoundException $e) {
             session()->flash('flash_error', 'You are trying to update a record that does not exist!');
             return redirect()->route($this->crudOptions->listRoute);
@@ -294,31 +291,5 @@ trait CanCrud
                 'Use the setListView(), setAddView(), setEditView() methods from the App\Options\CrudOptions class.'
             );
         }
-    }
-
-    /**
-     * Make the crud routes available in the blade view.
-     *
-     * @return void
-     */
-    private function assignCrudRoutes()
-    {
-        $this->vars['listRoute'] = $this->crudOptions->listRoute;
-        $this->vars['addRoute'] = $this->crudOptions->addRoute;
-        $this->vars['editRoute'] = $this->crudOptions->editRoute;
-        $this->vars['deleteRoute'] = $this->crudOptions->deleteRoute;
-    }
-
-    /**
-     * Make the crud views available in the blade view.
-     *
-     * @return void
-     */
-    private function assignCrudViews()
-    {
-        $this->vars['listView'] = $this->crudOptions->listView;
-        $this->vars['addView'] = $this->crudOptions->addView;
-        $this->vars['editView'] = $this->crudOptions->editView;
-        $this->vars['deleteView'] = $this->crudOptions->deleteView;
     }
 }
