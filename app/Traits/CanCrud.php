@@ -87,6 +87,9 @@ trait CanCrud
         $this->checkCrudModel();
         $this->checkCrudRoutes();
         $this->checkCrudViews();
+
+        $this->assignCrudRoutes();
+        $this->assignCrudViews();
     }
 
     /**
@@ -291,5 +294,31 @@ trait CanCrud
                 'Use the setListView(), setAddView(), setEditView() methods from the App\Options\CrudOptions class.'
             );
         }
+    }
+
+    /**
+     * Make the crud routes available in the blade view.
+     *
+     * @return void
+     */
+    private function assignCrudRoutes()
+    {
+        $this->vars['listRoute'] = $this->crudOptions->listRoute;
+        $this->vars['addRoute'] = $this->crudOptions->addRoute;
+        $this->vars['editRoute'] = $this->crudOptions->editRoute;
+        $this->vars['deleteRoute'] = $this->crudOptions->deleteRoute;
+    }
+
+    /**
+     * Make the crud views available in the blade view.
+     *
+     * @return void
+     */
+    private function assignCrudViews()
+    {
+        $this->vars['listView'] = $this->crudOptions->listView;
+        $this->vars['addView'] = $this->crudOptions->addView;
+        $this->vars['editView'] = $this->crudOptions->editView;
+        $this->vars['deleteView'] = $this->crudOptions->deleteView;
     }
 }
