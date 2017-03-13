@@ -31,7 +31,7 @@ div.tab {
             float: right;
             clear: both;
             font-family: 'Open Sans', sans-serif;
-            color: $colorTowerGray;
+            color: $colorOsloGray;
 
             &.error {
                 color: $colorJaponica;
@@ -75,6 +75,14 @@ div.tab {
         color: $colorOsloGray;
         font-family: 'Open Sans', sans-serif;
 
+        @include media-query('desktop') {
+            width: 73%;
+        }
+
+        @include media-query('tablet-small') {
+            width: 100%;
+        }
+
         &:focus {
             border-bottom: 1px solid $colorPictonBlue;
         }
@@ -83,12 +91,21 @@ div.tab {
             border-bottom: 1px solid $colorJaponica;
         }
 
-        @include media-query('desktop') {
-            width: 73%;
-        }
+        &.with-generate-button {
+            @include calc(width, '80% - 100px');
+            float: left;
 
-        @include media-query('tablet-small') {
-            width: 100%;
+            @include media-query('desktop') {
+                @include calc(width, '73% - 100px');
+            }
+
+            @include media-query('tablet') {
+                @include calc(width, '73% - 32px');
+            }
+
+            @include media-query('tablet-small') {
+                @include calc(width, '100% - 32px');
+            }
         }
     }
 

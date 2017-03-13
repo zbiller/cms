@@ -124,6 +124,35 @@ main section {
   background: #313e4e;
 }
 
+.validation p {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  font-size: 13px;
+  font-size: 0.8125rem;
+  display: block;
+  float: left;
+  width: 100%;
+  margin: 0 0 20px 0;
+  padding: 0 0 2px 0;
+  border-bottom: 1px solid #e2e2e2;
+  background: #FFFFFF;
+  color: #B0BEC5;
+  font-family: 'Open Sans', sans-serif;
+}
+.validation p.success {
+  color: #55D98D;
+  border-bottom: 1px solid #55D98D;
+}
+.validation p.error {
+  color: #DD7467;
+  border-bottom: 1px solid #DD7467;
+}
+.validation p.alert {
+  color: #FFC65D;
+  border-bottom: 1px solid #FFC65D;
+}
+
 .flash {
   opacity: 0.9;
   filter: alpha(opacity=90);
@@ -164,6 +193,31 @@ main section {
 
 .right {
   float: right !important;
+}
+
+#password-generate {
+  float: right;
+  margin: 0;
+  padding: 6px 10px;
+}
+@media only screen and (max-width: 767px) {
+  #password-generate {
+    font-size: 14px;
+    font-size: 0.875rem;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    padding: 7px 10px;
+    text-indent: -9999px;
+    width: 32px;
+    height: 30px;
+  }
+}
+@media only screen and (max-width: 767px) {
+  #password-generate > i {
+    text-indent: 0;
+    float: left;
+  }
 }
 
 /*# sourceMappingURL=content.css.map */

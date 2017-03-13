@@ -35,7 +35,7 @@ div.tab.active {
   float: right;
   clear: both;
   font-family: 'Open Sans', sans-serif;
-  color: #B0BEC5;
+  color: #7E8890;
 }
 .form fieldset span.error {
   color: #DD7467;
@@ -83,12 +83,6 @@ div.tab.active {
   color: #7E8890;
   font-family: 'Open Sans', sans-serif;
 }
-.form input:focus, .form select:focus, .form textarea:focus {
-  border-bottom: 1px solid #4AAEE3;
-}
-.form input.error, .form select.error, .form textarea.error {
-  border-bottom: 1px solid #DD7467;
-}
 @media only screen and (max-width: 1247px) {
   .form input, .form select, .form textarea {
     width: 73%;
@@ -97,6 +91,39 @@ div.tab.active {
 @media only screen and (max-width: 639px) {
   .form input, .form select, .form textarea {
     width: 100%;
+  }
+}
+.form input:focus, .form select:focus, .form textarea:focus {
+  border-bottom: 1px solid #4AAEE3;
+}
+.form input.error, .form select.error, .form textarea.error {
+  border-bottom: 1px solid #DD7467;
+}
+.form input.with-generate-button, .form select.with-generate-button, .form textarea.with-generate-button {
+  width: -moz-calc(80% - 100px);
+  width: -webkit-calc(80% - 100px);
+  width: calc(80% - 100px);
+  float: left;
+}
+@media only screen and (max-width: 1247px) {
+  .form input.with-generate-button, .form select.with-generate-button, .form textarea.with-generate-button {
+    width: -moz-calc(73% - 100px);
+    width: -webkit-calc(73% - 100px);
+    width: calc(73% - 100px);
+  }
+}
+@media only screen and (max-width: 767px) {
+  .form input.with-generate-button, .form select.with-generate-button, .form textarea.with-generate-button {
+    width: -moz-calc(73% - 32px);
+    width: -webkit-calc(73% - 32px);
+    width: calc(73% - 32px);
+  }
+}
+@media only screen and (max-width: 639px) {
+  .form input.with-generate-button, .form select.with-generate-button, .form textarea.with-generate-button {
+    width: -moz-calc(100% - 32px);
+    width: -webkit-calc(100% - 32px);
+    width: calc(100% - 32px);
   }
 }
 .form input[type="checkbox"], .form input[type="radio"] {

@@ -49,6 +49,10 @@
             &:focus {
                 border-bottom: 1px solid $colorPictonBlue;
             }
+
+            &.error {
+                border-bottom: 1px solid $colorJaponica;
+            }
         }
 
         input[type="submit"] {
@@ -64,6 +68,22 @@
 
             &:hover {
                 background: darken($colorPictonBlue, 10%);
+            }
+        }
+
+        span {
+            @include font-size(13px);
+            @include transition(all 0.3s ease);
+
+            float: left;
+            clear: both;
+            width: 100%;
+            margin: -15px 0 10px 0;
+            font-family: 'Open Sans', sans-serif;
+            color: $colorOsloGray;
+
+            &.error {
+                color: $colorJaponica;
             }
         }
 

@@ -4845,6 +4845,35 @@ main section {
   background: #313e4e;
 }
 
+.validation p {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  font-size: 13px;
+  font-size: 0.8125rem;
+  display: block;
+  float: left;
+  width: 100%;
+  margin: 0 0 20px 0;
+  padding: 0 0 2px 0;
+  border-bottom: 1px solid #e2e2e2;
+  background: #FFFFFF;
+  color: #B0BEC5;
+  font-family: 'Open Sans', sans-serif;
+}
+.validation p.success {
+  color: #55D98D;
+  border-bottom: 1px solid #55D98D;
+}
+.validation p.error {
+  color: #DD7467;
+  border-bottom: 1px solid #DD7467;
+}
+.validation p.alert {
+  color: #FFC65D;
+  border-bottom: 1px solid #FFC65D;
+}
+
 .flash {
   opacity: 0.9;
   filter: alpha(opacity=90);
@@ -4885,6 +4914,31 @@ main section {
 
 .right {
   float: right !important;
+}
+
+#password-generate {
+  float: right;
+  margin: 0;
+  padding: 6px 10px;
+}
+@media only screen and (max-width: 767px) {
+  #password-generate {
+    font-size: 14px;
+    font-size: 0.875rem;
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    padding: 7px 10px;
+    text-indent: -9999px;
+    width: 32px;
+    height: 30px;
+  }
+}
+@media only screen and (max-width: 767px) {
+  #password-generate > i {
+    text-indent: 0;
+    float: left;
+  }
 }
 
 /*# sourceMappingURL=content.css.map */
@@ -4945,6 +4999,9 @@ main section {
 .login > div input[type="text"]:focus, .login > div input[type="password"]:focus, .login > div input[type="submit"]:focus {
   border-bottom: 1px solid #4AAEE3;
 }
+.login > div input[type="text"].error, .login > div input[type="password"].error, .login > div input[type="submit"].error {
+  border-bottom: 1px solid #DD7467;
+}
 .login > div input[type="submit"] {
   width: auto;
   margin: 5px 0 0 0;
@@ -4958,6 +5015,24 @@ main section {
 }
 .login > div input[type="submit"]:hover {
   background: #2199d9;
+}
+.login > div span {
+  font-size: 13px;
+  font-size: 0.8125rem;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  float: left;
+  clear: both;
+  width: 100%;
+  margin: -15px 0 10px 0;
+  font-family: 'Open Sans', sans-serif;
+  color: #7E8890;
+}
+.login > div span.error {
+  color: #DD7467;
 }
 .login > div a {
   font-size: 13px;
@@ -5180,7 +5255,7 @@ div.tab.active {
   float: right;
   clear: both;
   font-family: 'Open Sans', sans-serif;
-  color: #B0BEC5;
+  color: #7E8890;
 }
 .form fieldset span.error {
   color: #DD7467;
@@ -5228,12 +5303,6 @@ div.tab.active {
   color: #7E8890;
   font-family: 'Open Sans', sans-serif;
 }
-.form input:focus, .form select:focus, .form textarea:focus {
-  border-bottom: 1px solid #4AAEE3;
-}
-.form input.error, .form select.error, .form textarea.error {
-  border-bottom: 1px solid #DD7467;
-}
 @media only screen and (max-width: 1247px) {
   .form input, .form select, .form textarea {
     width: 73%;
@@ -5242,6 +5311,39 @@ div.tab.active {
 @media only screen and (max-width: 639px) {
   .form input, .form select, .form textarea {
     width: 100%;
+  }
+}
+.form input:focus, .form select:focus, .form textarea:focus {
+  border-bottom: 1px solid #4AAEE3;
+}
+.form input.error, .form select.error, .form textarea.error {
+  border-bottom: 1px solid #DD7467;
+}
+.form input.with-generate-button, .form select.with-generate-button, .form textarea.with-generate-button {
+  width: -moz-calc(80% - 100px);
+  width: -webkit-calc(80% - 100px);
+  width: calc(80% - 100px);
+  float: left;
+}
+@media only screen and (max-width: 1247px) {
+  .form input.with-generate-button, .form select.with-generate-button, .form textarea.with-generate-button {
+    width: -moz-calc(73% - 100px);
+    width: -webkit-calc(73% - 100px);
+    width: calc(73% - 100px);
+  }
+}
+@media only screen and (max-width: 767px) {
+  .form input.with-generate-button, .form select.with-generate-button, .form textarea.with-generate-button {
+    width: -moz-calc(73% - 32px);
+    width: -webkit-calc(73% - 32px);
+    width: calc(73% - 32px);
+  }
+}
+@media only screen and (max-width: 639px) {
+  .form input.with-generate-button, .form select.with-generate-button, .form textarea.with-generate-button {
+    width: -moz-calc(100% - 32px);
+    width: -webkit-calc(100% - 32px);
+    width: calc(100% - 32px);
   }
 }
 .form input[type="checkbox"], .form input[type="radio"] {

@@ -296,6 +296,23 @@ function helpers()
 
         checkboxes.prop('checked', $(this).prop('checked'));
     });
+
+    //generate password
+    $('#password-generate').pGenerator({
+        'bind': 'click',
+        'passwordElement': 'input[name="password"]',
+        'passwordLength': 10,
+        'uppercase': true,
+        'lowercase': true,
+        'numbers':   true,
+        'specialChars': true,
+        'onPasswordGenerated': function(generatedPassword) {
+            copyToClipboard(generatedPassword);
+
+            $('input[type="password"][name="password_confirmation"]').val(generatedPassword);
+            alert('The generated password has been copied to your clipboard.');
+        }
+    });
 }
 
 /**
@@ -347,4 +364,48 @@ function _getParam(name) {
     }
 
     return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
+/**
+ * @param text
+ * @returns {*}
+ */
+function copyToClipboard(text) {
+    var targetId = "_hiddenCopyText_";
+
+    target = document.getElementById(targetId);
+
+    if (!target) {
+        var target = document.createElement("textarea");
+
+        target.style.position = "absolute";
+        target.style.left = "-9999px";
+        target.style.top = "0";
+        target.id = targetId;
+
+        document.body.appendChild(target);
+    }
+
+    target.textContent = text;
+
+    var currentFocus = document.activeElement;
+
+    target.focus();
+    target.setSelectionRange(0, target.value.length);
+
+    var succeed;
+
+    try {
+        succeed = document.execCommand("copy");
+    } catch(e) {
+        succeed = false;
+    }
+
+    if (currentFocus && typeof currentFocus.focus === "function") {
+        currentFocus.focus();
+    }
+
+    target.textContent = "";
+
+    return succeed;
 }

@@ -136,6 +136,38 @@ main {
     }
 }
 
+.validation {
+    p {
+        @include clear-padding();
+        @include font-size(13px);
+
+        display: block;
+        float: left;
+        width: 100%;
+        margin: 0 0 20px 0;
+        padding: 0 0 2px 0;
+        border-bottom: 1px solid darken($colorGallery, 3%);
+        background: $colorWhite;
+        color: $colorTowerGray;
+        font-family: 'Open Sans', sans-serif;
+
+        &.success {
+            color: $colorEmerald;
+            border-bottom: 1px solid $colorEmerald;
+        }
+
+        &.error {
+            color: $colorJaponica;
+            border-bottom: 1px solid $colorJaponica;
+        }
+
+        &.alert {
+            color: $colorGoldenTainoi;
+            border-bottom: 1px solid $colorGoldenTainoi;
+        }
+    }
+}
+
 .flash {
     @include opacity(0.9);
 
@@ -181,4 +213,27 @@ main {
 
 .right{
     float: right !important;
+}
+
+#password-generate {
+    float: right;
+    margin: 0;
+    padding: 6px 10px;
+
+    @include media-query('tablet') {
+        @include font-size(14px);
+        @include clear-padding();
+
+        padding: 7px 10px;
+        text-indent: -9999px;
+        width: 32px;
+        height: 30px;
+    }
+
+    > i {
+        @include media-query('tablet') {
+            text-indent: 0;
+            float: left;
+        }
+    }
 }

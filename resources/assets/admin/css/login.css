@@ -54,6 +54,9 @@
 .login > div input[type="text"]:focus, .login > div input[type="password"]:focus, .login > div input[type="submit"]:focus {
   border-bottom: 1px solid #4AAEE3;
 }
+.login > div input[type="text"].error, .login > div input[type="password"].error, .login > div input[type="submit"].error {
+  border-bottom: 1px solid #DD7467;
+}
 .login > div input[type="submit"] {
   width: auto;
   margin: 5px 0 0 0;
@@ -67,6 +70,24 @@
 }
 .login > div input[type="submit"]:hover {
   background: #2199d9;
+}
+.login > div span {
+  font-size: 13px;
+  font-size: 0.8125rem;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -ms-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+  float: left;
+  clear: both;
+  width: 100%;
+  margin: -15px 0 10px 0;
+  font-family: 'Open Sans', sans-serif;
+  color: #7E8890;
+}
+.login > div span.error {
+  color: #DD7467;
 }
 .login > div a {
   font-size: 13px;
