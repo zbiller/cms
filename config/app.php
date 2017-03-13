@@ -252,6 +252,7 @@ return [
         'Pagination' => App\Facades\Pagination::class,
         'Button' => App\Facades\Button::class,
         'Flash' => App\Facades\Flash::class,
+        'Validation' => App\Facades\Validation::class,
     ],
 
 ];

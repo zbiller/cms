@@ -59,3 +59,13 @@ if (!function_exists('flash')) {
         return app(Flash::class);
     }
 }
+
+if (!function_exists('validation')) {
+    /**
+     * @return \App\Helpers\View\Validation
+     */
+    function validation()
+    {
+        return app(Validation::class);
+    }
+}

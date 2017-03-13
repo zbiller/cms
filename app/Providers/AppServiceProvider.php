@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Helpers\Form\Admin;
 use App\Helpers\Form\Form;
 use App\Helpers\Message\Flash;
+use App\Helpers\View\Validation;
 use Schema;
 use App\Helpers\Menu\Menu;
 use App\Helpers\View\Pagination;
@@ -54,10 +55,15 @@ class AppServiceProvider extends ServiceProvider
             return new Flash($app);
         });
 
+        $this->app->singleton('Validation', function ($app) {
+            return new Validation($app);
+        });
+
         $this->app->alias('adminform', Admin::class);
         $this->app->alias('menu', Menu::class);
         $this->app->alias('pagination', Pagination::class);
         $this->app->alias('button', Button::class);
         $this->app->alias('flash', Flash::class);
+        $this->app->alias('validation', Validation::class);
     }
 }

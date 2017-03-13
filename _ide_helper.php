@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.4.15 on 2017-03-12.
+ * Generated for Laravel 5.4.15 on 2017-03-13.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -12940,6 +12940,42 @@ namespace App\Facades {
         }
         
         /**
+         * Create a new model based form builder.
+         *
+         * @param mixed $model
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function model($model, $options = array())
+        {
+            return \App\Helpers\Form\Admin::model($model, $options);
+        }
+        
+        /**
+         * Open up a new HTML form.
+         *
+         * @param array $options
+         * @return string 
+         * @static 
+         */
+        public static function open($options = array())
+        {
+            return \App\Helpers\Form\Admin::open($options);
+        }
+        
+        /**
+         * Close the current form.
+         *
+         * @return string 
+         * @static 
+         */
+        public static function close()
+        {
+            return \App\Helpers\Form\Admin::close();
+        }
+        
+        /**
          * Create a submit button element.
          *
          * @param string $value
@@ -13486,6 +13522,21 @@ namespace App\Facades {
         public static function alert()
         {
             return \App\Helpers\Message\Flash::alert();
+        }
+        
+    }         
+
+    class Validation {
+        
+        /**
+         * 
+         *
+         * @return \Illuminate\View\View 
+         * @static 
+         */
+        public static function errors()
+        {
+            return \App\Helpers\View\Validation::errors();
         }
         
     }         
@@ -15510,6 +15561,8 @@ namespace {
     class Button extends \App\Facades\Button {}
     
     class Flash extends \App\Facades\Flash {}
+    
+    class Validation extends \App\Facades\Validation {}
     
 }
 
