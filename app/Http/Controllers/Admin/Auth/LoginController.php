@@ -3,46 +3,15 @@
 namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Http\Request;
+use App\Options\AuthenticatesUsersOptions;
+use App\Traits\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
-    use AuthenticatesUsers {
-        logout as traitLogout;
-    };
+    use AuthenticatesUsers;
 
     /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/admin';
-
-    /**
-     * The number of tries a user is allowed to attempt login.
-     *
-     * @var int
-     */
-    protected $maxAttempts = 3;
-
-    /**
-     * The number of minutes to delay further login attempts.
-     *
-     * @var int
-     */
-    protected $lockoutTime = 15;
-
-    /**
-     * @return string
-     */
-    public function username()
-    {
-        return 'username';
-    }
-
-    /**
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @return \Illuminate\View\View
      */
     public function show()
     {
@@ -50,15 +19,15 @@ class LoginController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @return bool
+     * @return AuthenticatesUsersOptions
      */
-    protected function hasTooManyLoginAttempts(Request $request)
+    public function getAuthenticatesUsersOptions()
     {
-        return $this->limiter()->tooManyAttempts(
-            $this->throttleKey($request),
-            $this->maxAttempts,
-            $this->lockoutTime
-        );
+        return AuthenticatesUsersOptions::instance()
+            ->setUsernameField('username')
+            ->setLoginRedirectPath('/admin')
+            ->setLogoutRedirectPath('/admin/login')
+            ->setThrottleMaxLoginAttempts(3)
+            ->setThrottleLockoutTime(1);
     }
 }
