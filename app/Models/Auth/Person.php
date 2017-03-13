@@ -37,11 +37,8 @@ class Person extends Model
 
         static::saved(function ($model) {
             try {
-                $data = $model->attributes;
-                $user = User::findOrFail($data['user_id']);
-
-                $user->update([
-                    'email' => $data['email']
+                User::findOrFail($model->attributes['user_id'])->update([
+                    'email' => $model->attributes['email']
                 ]);
             } catch (ModelNotFoundException $e) {
                 throw new Exception('There is no user for the person you\'re trying to save');

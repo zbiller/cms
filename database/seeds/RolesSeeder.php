@@ -19,6 +19,7 @@ class RolesSeeder extends Seeder
     private $adminMap = [
         'Admin' => [
             'name' => 'admin',
+            'type' => Role::TYPE_ADMIN,
         ],
     ];
 

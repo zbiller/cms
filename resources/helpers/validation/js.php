@@ -6,11 +6,14 @@
             errorClass: 'error',
 
             errorPlacement: function(error, element) {
-                if (element.parent('.input-group').length ||
-                    element.prop('type') === 'checkbox' || element.prop('type') === 'radio') {
-                    error.insertAfter(element.parent());
+                if (element.prop('type') === 'checkbox' || element.prop('type') === 'radio') {
+                    error.appendTo(element.parent());
                 } else {
-                    error.insertAfter(element);
+                    if (element.parent().get(0).tagName.toLowerCase() == 'fieldset') {
+                        error.appendTo(element.parent());
+                    } else {
+                        error.insertAfter(element);
+                    }
                 }
             },
             highlight: function(element) {

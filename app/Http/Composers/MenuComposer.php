@@ -22,11 +22,11 @@ class MenuComposer
                 $access = $item->name('Access Control')->data('icon', 'fa-sign-in')->active('admin/admin*');
 
                 $menu->child($access, function ($item) {
-                    $item->name('Admin Groups')->url(route('admin.admin.groups.index'))->permissions('admin-groups-list')->active('admin/admin-groups/*');
+                    $item->name('Admin Roles')->url(route('admin.admin_roles.index'))->permissions('admin-roles-list')->active('admin/admin-roles/*');
                 });
 
                 $menu->child($access, function ($item) {
-                    $item->name('Admin Users')->url(route('admin.admin.users.index'))->permissions('admin-users-list')->active('admin/admin-users/*');
+                    $item->name('Admin Users')->url(route('admin.admin_users.index'))->permissions('admin-users-list')->active('admin/admin-users/*');
                 });
             });
 

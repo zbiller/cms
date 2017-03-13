@@ -10,6 +10,7 @@ use App\Traits\RefreshesCache;
 use App\Contracts\Role as RoleContract;
 use App\Options\RefreshCacheOptions;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Query\Builder;
 
 class Role extends Model implements RoleContract
 {
@@ -27,7 +28,22 @@ class Role extends Model implements RoleContract
      * @var array
      */
     protected $fillable = [
-        'name'
+        'name',
+        'type',
+    ];
+
+    /**
+     * @const
+     */
+    const TYPE_NORMAL = 1;
+    const TYPE_ADMIN = 2;
+
+    /**
+     * @var array
+     */
+    public static $types = [
+        self::TYPE_NORMAL => 'Normal',
+        self::TYPE_ADMIN => 'Admin',
     ];
 
     /**
@@ -47,7 +63,17 @@ class Role extends Model implements RoleContract
     }
 
     /**
-     * @param $query
+     * @param Builder $query
+     * @param array|int|string $types
+     */
+    public function scopeOnly($query, $types)
+    {
+        $query->whereIn('type', is_array($types) ? $types : explode(',', $types));
+
+    }
+
+    /**
+     * @param Builder $query
      * @param array|string $roles
      */
     public function scopeExclude($query, $roles)

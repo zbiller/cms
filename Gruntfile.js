@@ -32,6 +32,7 @@ module.exports = function(grunt) {
                     'resources/assets/admin/js/libs/chosen.js',
                     'resources/assets/admin/js/libs/timepicker.js',
                     'resources/assets/admin/js/libs/colorpicker.js',
+                    'resources/assets/admin/js/libs/generator.js',
                     'resources/assets/admin/js/main.js'
                 ],
                 dest: 'public/build/admin/js/super.js'

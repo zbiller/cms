@@ -3,6 +3,7 @@
 namespace App\Helpers\Form;
 
 use Collective\Html\FormFacade;
+use Illuminate\Support\Collection;
 
 class Admin
 {
@@ -51,6 +52,42 @@ class Admin
     public function wrap($input, $label)
     {
         return "<fieldset><label>{$label}</label>{$input}</fieldset>";
+    }
+
+    /**
+     * Create a new model based form builder.
+     *
+     * @param  mixed  $model
+     * @param  array  $options
+     * @return string
+     */
+    public function model($model, array $options = array())
+    {
+        $this->model = $model;
+        $this->form->setModel($model);
+
+        return $this->open($options);
+    }
+
+    /**
+     * Open up a new HTML form.
+     *
+     * @param  array $options
+     * @return string
+     */
+    public function open(array $options = array())
+    {
+        return $this->form->open($options);
+    }
+
+    /**
+     * Close the current form.
+     *
+     * @return string
+     */
+    public function close()
+    {
+        return $this->form->close();
     }
 
     /**
@@ -146,8 +183,10 @@ class Admin
      * @param array $options
      * @return string
      */
-    public function select($name, $label = null, array $list = [], $selected = null, array $options = [])
+    public function select($name, $label = null, $list = [], $selected = null, array $options = [])
     {
+        $list = $list instanceof Collection ? $list->toArray() : $list;
+        $selected = $selected instanceof Collection ? $selected->toArray() : $selected;
         $options['class'] = 'chosen-select ' . (isset($options['class']) ? $options['class'] : '');
 
         return $this->wrap(
@@ -162,14 +201,22 @@ class Admin
      * @param string $name
      * @param string|null $label
      * @param array $options
+     * @param bool $generate
      * @return string
      */
-    public function password($name, $label = null, array $options = [])
+    public function password($name, $label = null, array $options = [], $generate = false)
     {
-        return $this->wrap(
-            $this->form->password($this->name($name), $options),
-            $this->label($name, $label)
-        );
+        if ($generate) {
+            $options['class'] = 'with-generate-button ' . (isset($options['class']) ? $options['class'] : '');
+        }
+
+        $input = $this->form->password($this->name($name), $options);
+
+        if ($generate) {
+            $input .= '<a href="#" id="password-generate" class="btn red"><i class="fa fa-random"></i>&nbsp; Generate</a>';
+        }
+
+        return $this->wrap($input, $this->label($name, $label));
     }
 
     /**

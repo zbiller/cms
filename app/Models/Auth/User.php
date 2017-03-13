@@ -2,10 +2,11 @@
 
 namespace App\Models\Auth;
 
+use App\Traits\HasRoles;
 use App\Traits\CanFilter;
 use App\Traits\CanSort;
-use App\Traits\HasRoles;
 use App\Options\RefreshCacheOptions;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use App\Notifications\ResetPassword as ResetPasswordNotification;
@@ -29,13 +30,6 @@ class User extends Authenticatable
         'username',
         'password',
         'email',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $guarded = [
-        'super'
     ];
 
     /**
@@ -68,11 +62,44 @@ class User extends Authenticatable
     }
 
     /**
+     * @param Builder $query
+     * @param array|string $roles
+     */
+    public function scopeOnly($query, $roles)
+    {
+        $query->role($roles);
+    }
+
+    /**
+     * @param Builder $query
+     */
+    public function scopeNotDeveloper($query)
+    {
+        $query->where('username', '!=', 'developer');
+    }
+
+    /**
+     * @param string $value
+     */
+    /*public function setPasswordAttribute($value)
+    {
+        if ($value) {
+            $this->attributes['password'] = bcrypt($value);
+        }
+    }*/
+
+    /**
      * @return mixed
      */
     public function getFirstNameAttribute()
     {
-        return $this->person->first_name;
+        if (isset($this->attributes['first_name'])) {
+            return $this->attributes['first_name'];
+        } elseif ($this->person) {
+            return $this->person->first_name;
+        }
+
+        return null;
     }
 
     /**
@@ -80,7 +107,13 @@ class User extends Authenticatable
      */
     public function getLastNameAttribute()
     {
-        return $this->person->last_name;
+        if (isset($this->attributes['last_name'])) {
+            return $this->attributes['last_name'];
+        } elseif ($this->person) {
+            return $this->person->last_name;
+        }
+
+        return null;
     }
 
     /**
@@ -88,7 +121,27 @@ class User extends Authenticatable
      */
     public function getPhoneAttribute()
     {
-        return $this->person->phone;
+        if (isset($this->attributes['phone'])) {
+            return $this->attributes['phone'];
+        } elseif ($this->person) {
+            return $this->person->phone;
+        }
+
+        return null;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEmailAttribute()
+    {
+        if (isset($this->attributes['email'])) {
+            return $this->attributes['email'];
+        } elseif ($this->email) {
+            return $this->person->email;
+        }
+
+        return null;
     }
 
     /**
@@ -96,10 +149,7 @@ class User extends Authenticatable
      */
     public function getFullNameAttribute()
     {
-        return implode(' ', [
-            $this->person->first_name,
-            $this->person->last_name,
-        ]);
+        return implode(' ', [$this->first_name, $this->last_name]);
     }
 
     /**
@@ -108,6 +158,16 @@ class User extends Authenticatable
     public function isSuper()
     {
         return $this->super == self::SUPER_YES;
+    }
+
+    /**
+     * Get the e-mail address where password reset links are sent.
+     *
+     * @return string
+     */
+    public function getEmailForPasswordReset()
+    {
+        return $this->person->email;
     }
 
     /**

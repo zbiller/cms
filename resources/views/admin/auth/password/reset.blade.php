@@ -5,6 +5,7 @@
         Zbiller
     </div>
     <div class="content">
+        {!! validation()->errors() !!}
         {!! form()->open(['url' => route('admin.password.reset')]) !!}
         {!! form()->hidden('token', $token) !!}
         {!! form()->text('email', $email or old('email'), ['placeholder' => 'Email']) !!}
@@ -14,14 +15,8 @@
         {!! form()->close() !!}
         <a href="{{ route('admin.login') }}">Back to login</a>
     </div>
-
-    @if (count($errors) > 0)
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 @endsection
+
+@section('bottom_scripts')
+    {!! JsValidator::formRequest(App\Http\Requests\ResetPasswordRequest::class) !!}
+@append

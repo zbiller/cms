@@ -16,25 +16,25 @@ class PermissionsSeeder extends Seeder
      * @var array
      */
     private $adminMap = [
-        'Admin Groups' => [
+        'Admin Roles' => [
             'List' => [
-                'name' => 'admin-groups-list',
-                'group' => 'Admin Groups',
+                'name' => 'admin-roles-list',
+                'group' => 'Admin Roles',
                 'label' => 'List',
             ],
             'Add' => [
-                'name' => 'admin-groups-add',
-                'group' => 'Admin Groups',
+                'name' => 'admin-roles-add',
+                'group' => 'Admin Roles',
                 'label' => 'Add',
             ],
             'Edit' => [
-                'name' => 'admin-groups-edit',
-                'group' => 'Admin Groups',
+                'name' => 'admin-roles-edit',
+                'group' => 'Admin Roles',
                 'label' => 'Edit',
             ],
             'Delete' => [
-                'name' => 'admin-groups-delete',
-                'group' => 'Admin Groups',
+                'name' => 'admin-roles-delete',
+                'group' => 'Admin Roles',
                 'label' => 'Delete',
             ],
         ],

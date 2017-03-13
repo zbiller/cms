@@ -7,9 +7,9 @@ use Route;
 use Closure;
 use Exception;
 use App\Models\Model;
-use App\Http\Requests\Request;
 use App\Exceptions\CrudException;
 use App\Options\CrudOptions;
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -22,6 +22,8 @@ trait CanCrud
      * @var CrudOptions
      */
     protected $crudOptions;
+
+    protected $request;
 
     /**
      * The collection of existing records from the database.
@@ -123,6 +125,8 @@ trait CanCrud
             call_user_func($function);
         }
 
+        $this->vars['item'] = $this->item ?: $this->crudOptions->model;
+
         return view($this->crudOptions->addView)->with($this->vars);
     }
 
@@ -138,6 +142,8 @@ trait CanCrud
     public function _store(Closure $function = null, Request $request = null)
     {
         try {
+            $this->request = $request;
+
             if ($function) {
                 DB::transaction($function);
             }
@@ -145,6 +151,7 @@ trait CanCrud
             session()->flash('flash_success', 'The record was successfully created!');
             return redirect()->route($request->has('save_stay') ? $this->crudOptions->addRoute : $this->crudOptions->listRoute);
         } catch (Exception $e) {
+            dd($e);
             session()->flash('flash_error', 'The record could not be created! Please try again.');
             return redirect()->back()->withInput($request->all());
         }
@@ -165,12 +172,12 @@ trait CanCrud
                 call_user_func($function);
             }
 
-            $this->vars['item'] = $this->item;
+            $this->vars['item'] = $this->item ?: $this->crudOptions->model;
 
             return view($this->crudOptions->editView)->with($this->vars);
         } catch (ModelNotFoundException $e) {
             session()->flash('flash_error', 'You are trying to access a record that does not exist!');
-            return redirect()->route($this->crudOptions->listRoute);
+            return redirect()->route($this->crudOptions->listRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
         }
     }
 
@@ -194,7 +201,7 @@ trait CanCrud
             return redirect()->route($request->has('save_stay') ? $this->crudOptions->editRoute : $this->crudOptions->listRoute);
         } catch (ModelNotFoundException $e) {
             session()->flash('flash_error', 'You are trying to update a record that does not exist!');
-            return redirect()->route($this->crudOptions->listRoute);
+            return redirect()->route($this->crudOptions->listRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
         } catch (Exception $e) {
             session()->flash('flash_error', 'The record could not be updated! Please try again.');
             return redirect()->back()->withInput($request->all());
@@ -217,7 +224,7 @@ trait CanCrud
             }
 
             session()->flash('flash_success', 'The record was successfully deleted!');
-            return redirect()->route($this->crudOptions->listRoute);
+            return redirect()->route($this->crudOptions->listRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
         } catch (ModelNotFoundException $e) {
             session()->flash('flash_error', 'You are trying to delete a record that does not exist!');
             return redirect()->route($this->crudOptions->listRoute);

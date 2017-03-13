@@ -5,6 +5,7 @@
         Zbiller
     </div>
     <div class="content">
+        {!! validation()->errors() !!}
         {!! form()->open(['url' => request()->url()]) !!}
         {!! form()->text('username', null, ['placeholder' => 'Username']) !!}
         {!! form()->password('password', ['placeholder' => 'Password']) !!}
@@ -12,14 +13,8 @@
         {!! form()->close() !!}
         <a href="{{ route('admin.password.forgot') }}">I forgot my password</a>
     </div>
-
-    @if (count($errors) > 0)
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 @endsection
+
+@section('bottom_scripts')
+    {{--{!! JsValidator::formRequest(App\Http\Requests\LoginRequest::class) !!}--}}
+@append
