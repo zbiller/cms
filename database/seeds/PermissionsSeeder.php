@@ -1,18 +1,21 @@
 <?php
 
 use App\Models\Auth\Permission;
-use App\Models\Auth\Role;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Collection;
 
 class PermissionsSeeder extends Seeder
 {
     /**
-     * @var
+     * Collection of admin permissions.
+     *
+     * @var Collection
      */
     private $adminPermissions;
 
     /**
+     * Mapping structure of admin permissions.
+     *
      * @var array
      */
     private $adminMap = [
@@ -71,9 +74,6 @@ class PermissionsSeeder extends Seeder
     {
         DB::table('permissions')->delete();
 
-        /**
-         * Create the Admin necessary permissions.
-         */
         $this->adminPermissions = new Collection();
 
         foreach ($this->adminMap as $group => $labels) {

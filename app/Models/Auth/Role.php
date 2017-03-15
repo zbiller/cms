@@ -3,28 +3,32 @@
 namespace App\Models\Auth;
 
 use App\Models\Model;
-use App\Traits\CanFilter;
-use App\Traits\CanSort;
 use App\Traits\HasPermissions;
-use App\Traits\RefreshesCache;
+use App\Traits\Cacheable;
+use App\Traits\Filterable;
+use App\Traits\Sortable;
+use App\Options\CacheableOptions;
 use App\Contracts\Role as RoleContract;
-use App\Options\RefreshCacheOptions;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Role extends Model implements RoleContract
 {
     use HasPermissions;
-    use RefreshesCache;
-    use CanFilter;
-    use CanSort;
+    use Cacheable;
+    use Filterable;
+    use Sortable;
 
     /**
+     * The database table
+     *
      * @var string
      */
     protected $table = 'roles';
 
     /**
+     * The attributes that are mass assignable.
+     *
      * @var array
      */
     protected $fillable = [
@@ -33,12 +37,16 @@ class Role extends Model implements RoleContract
     ];
 
     /**
+     * Role types.
+     *
      * @const
      */
     const TYPE_NORMAL = 1;
     const TYPE_ADMIN = 2;
 
     /**
+     * Get role types.
+     *
      * @var array
      */
     public static $types = [
@@ -47,6 +55,8 @@ class Role extends Model implements RoleContract
     ];
 
     /**
+     * Role has and belongs to many users.
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function users()
@@ -55,6 +65,8 @@ class Role extends Model implements RoleContract
     }
 
     /**
+     * Role has and belongs to many permissions.
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function permissions()
@@ -63,6 +75,9 @@ class Role extends Model implements RoleContract
     }
 
     /**
+     * Filter query results to show roles only of type.
+     * Param $types: single role type as string|int or multiple role types as an array.
+     *
      * @param Builder $query
      * @param array|int|string $types
      */
@@ -73,6 +88,9 @@ class Role extends Model implements RoleContract
     }
 
     /**
+     * Filter query results to exclude the given roles.
+     * Param $roles: single role as string or multiple roles as an array.
+     *
      * @param Builder $query
      * @param array|string $roles
      */
@@ -83,6 +101,8 @@ class Role extends Model implements RoleContract
     }
 
     /**
+     * Return the permission by it's name.
+     *
      * @param string $name
      * @throws ModelNotFoundException
      * @return Role
@@ -97,11 +117,13 @@ class Role extends Model implements RoleContract
     }
 
     /**
-     * @return RefreshCacheOptions
+     * Set the options necessary for the Cacheable trait.
+     *
+     * @return CacheableOptions
      */
-    public function getRefreshCacheOptions(): RefreshCacheOptions
+    public function getCacheableOptions(): CacheableOptions
     {
-        return RefreshCacheOptions::instance()
+        return CacheableOptions::instance()
             ->setKey('acl');
     }
 }

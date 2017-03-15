@@ -8,11 +8,15 @@ use Illuminate\Http\Request;
 class CheckRoles
 {
     /**
+     * The roles required for the user to have in order to continue.
+     *
      * @var
      */
     protected $roles;
 
     /**
+     * Handle the middleware's login.
+     *
      * @param Request $request
      * @param Closure $next
      * @param string ...$roles
@@ -22,7 +26,7 @@ class CheckRoles
     {
         $this->setRoles($roles, $request->route()->action);
 
-        if (!auth()->user()->hasAllRoles($this->roles)) {
+        if (!auth()->user()->isSuperUser() && !auth()->user()->hasAllRoles($this->roles)) {
             session()->flash('flash_error', 'You\'re not authorized to access that page!');
             return redirect()->route('home');
         }
@@ -31,6 +35,12 @@ class CheckRoles
     }
 
     /**
+     * Set the roles.
+     * Please note that this middleware supports roles to be passed in multiple ways.
+     * 1. As a middleware parameter, using the "," as delimiter.
+     * 2. As a route action custom parameter called "roles", using the "," as delimiter.
+     * In the end, roles from both assigning ways are merged.
+     *
      * @param array $roles
      * @param array $action
      */

@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Admin\Acl;
 
 use App\Http\Controllers\Controller;
-use App\Http\Filters\AdminGroupFilter;
-use App\Http\Requests\AdminGroupRequest;
-use App\Http\Sorts\AdminGroupSort;
-use App\Models\Auth\Permission;
 use App\Models\Auth\Role;
-use App\Options\CrudOptions;
+use App\Models\Auth\Permission;
 use App\Traits\CanCrud;
+use App\Options\CanCrudOptions;
+use App\Http\Requests\Crud\AdminRoleRequest;
+use App\Http\Filters\Admin\AdminRoleFilter;
+use App\Http\Sorts\Admin\AdminRoleSort;
 use Illuminate\Http\Request;
 
 class AdminRolesController extends Controller
@@ -17,11 +17,11 @@ class AdminRolesController extends Controller
     use CanCrud;
 
     /**
-     * @param AdminGroupFilter $filter
-     * @param AdminGroupSort $sort
+     * @param AdminRoleFilter $filter
+     * @param AdminRoleSort $sort
      * @return \Illuminate\View\View
      */
-    public function index(AdminGroupFilter $filter, AdminGroupSort $sort)
+    public function index(AdminRoleFilter $filter, AdminRoleSort $sort)
     {
         return $this->_index(function () use ($filter, $sort) {
             $this->items = Role::only(Role::TYPE_ADMIN)->exclude('admin')->filtered($filter)->sorted($sort)->paginate(10);
@@ -39,10 +39,10 @@ class AdminRolesController extends Controller
     }
 
     /**
-     * @param AdminGroupRequest $request
+     * @param AdminRoleRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(AdminGroupRequest $request)
+    public function store(AdminRoleRequest $request)
     {
         return $this->_store(function () use ($request) {
             $request = self::mergeRequest($request);
@@ -65,11 +65,11 @@ class AdminRolesController extends Controller
     }
 
     /**
-     * @param AdminGroupRequest $request
+     * @param AdminRoleRequest $request
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(AdminGroupRequest $request, $id)
+    public function update(AdminRoleRequest $request, $id)
     {
         return $this->_update(function () use ($request, $id) {
             $request = self::mergeRequest($request);
@@ -92,11 +92,11 @@ class AdminRolesController extends Controller
     }
 
     /**
-     * @return CrudOptions
+     * @return CanCrudOptions
      */
-    public function getCrudOptions()
+    public function getCanCrudOptions()
     {
-        return CrudOptions::instance()
+        return CanCrudOptions::instance()
             ->setModel(app(Role::class))
             ->setListRoute('admin.admin_roles.index')
             ->setListView('admin.acl.admin_roles.index')
@@ -112,7 +112,9 @@ class AdminRolesController extends Controller
      */
     protected static function mergeRequest(Request $request)
     {
-        $request->merge(['type' => Role::TYPE_ADMIN]);
+        $request->merge([
+            'type' => Role::TYPE_ADMIN
+        ]);
 
         return $request;
     }

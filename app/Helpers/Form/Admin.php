@@ -31,7 +31,7 @@ class Admin
 
     /**
      * If an unknown method has been invoked, call the method on the Collective\Html\FormFacade.
-     * If event the facade doesn't have that method, than it's __call() will be invoked.
+     * If event the facade does not have that method, than it's __call() will be invoked.
      *
      * @param string $method
      * @param array|null $arguments
@@ -57,13 +57,14 @@ class Admin
     /**
      * Create a new model based form builder.
      *
-     * @param  mixed  $model
-     * @param  array  $options
+     * @param mixed $model
+     * @param array $options
      * @return string
      */
-    public function model($model, array $options = array())
+    public function model($model, array $options = [])
     {
         $this->model = $model;
+
         $this->form->setModel($model);
 
         return $this->open($options);
@@ -72,10 +73,10 @@ class Admin
     /**
      * Open up a new HTML form.
      *
-     * @param  array $options
+     * @param array $options
      * @return string
      */
-    public function open(array $options = array())
+    public function open(array $options = [])
     {
         return $this->form->open($options);
     }
@@ -187,7 +188,7 @@ class Admin
     {
         $list = $list instanceof Collection ? $list->toArray() : $list;
         $selected = $selected instanceof Collection ? $selected->toArray() : $selected;
-        $options['class'] = 'chosen-select ' . (isset($options['class']) ? $options['class'] : '');
+        $options['class'] = 'select-input ' . (isset($options['class']) ? $options['class'] : '');
 
         return $this->wrap(
             $this->form->select($this->name($name), $list, $this->value($name, $selected), $options),
@@ -210,13 +211,9 @@ class Admin
             $options['class'] = 'with-generate-button ' . (isset($options['class']) ? $options['class'] : '');
         }
 
-        $input = $this->form->password($this->name($name), $options);
-
-        if ($generate) {
-            $input .= '<a href="#" id="password-generate" class="btn red"><i class="fa fa-random"></i>&nbsp; Generate</a>';
-        }
-
-        return $this->wrap($input, $this->label($name, $label));
+        return $this->wrap($this->form->password($this->name($name), $options) . (
+            $generate ? '<a href="#" id="password-generate" class="btn red"><i class="fa fa-random"></i>&nbsp; Generate</a>' : ''
+        ), $this->label($name, $label));
     }
 
     /**
@@ -317,7 +314,7 @@ class Admin
      */
     public function editor($name, $label = null, $value = null, array $options = [])
     {
-        $options['class'] = 'editor ' . (isset($options['class']) ? $options['class'] : '');
+        $options['class'] = 'editor-input ' . (isset($options['class']) ? $options['class'] : '');
 
         return $this->wrap(
             $this->form->textarea($this->name($name), $this->value($name, $value), $options),
@@ -395,7 +392,7 @@ class Admin
      */
     public function selectRange($name, $label = null, $start = 0, $end = 0, $selected = null, array $options = [])
     {
-        $options['class'] = 'chosen-select ' . (isset($options['class']) ? $options['class'] : '');
+        $options['class'] = 'select-input ' . (isset($options['class']) ? $options['class'] : '');
 
         return $this->wrap(
             $this->form->selectRange($this->name($name), $start, $end, $this->value($name, $selected), $options),
@@ -416,7 +413,7 @@ class Admin
      */
     public function selectYear($name, $label = null, $start = null, $end = null, $selected = null, array $options = [])
     {
-        $options['class'] = 'chosen-select ' . (isset($options['class']) ? $options['class'] : '');
+        $options['class'] = 'select-input ' . (isset($options['class']) ? $options['class'] : '');
 
         return $this->wrap(
             $this->form->selectYear($this->name($name), $start ?: 1970, $end ?: date('Y'), $this->value($name, $selected), $options),
@@ -436,7 +433,7 @@ class Admin
      */
     public function selectMonth($name, $label = null, $selected = null, array $options = [], $format = '%B')
     {
-        $options['class'] = 'chosen-select ' . (isset($options['class']) ? $options['class'] : '');
+        $options['class'] = 'select-input ' . (isset($options['class']) ? $options['class'] : '');
 
         return $this->wrap(
             $this->form->selectMonth($this->name($name), $this->value($name, $selected), $options, $format),
@@ -476,6 +473,6 @@ class Admin
      */
     protected function label($name, $label = null)
     {
-        return $label ? $label : ucfirst(preg_replace("/[^a-zA-Z0-9\s]/", " ", $name));
+        return $label ?: ucfirst(preg_replace("/[^a-zA-Z0-9\s]/", " ", $name));
     }
 }

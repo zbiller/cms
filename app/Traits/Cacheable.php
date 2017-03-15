@@ -2,28 +2,28 @@
 
 namespace App\Traits;
 
+use App\Options\CacheableOptions;
 use App\Exceptions\CacheException;
-use App\Options\RefreshCacheOptions;
 
-trait RefreshesCache
+trait Cacheable
 {
     /**
      * The container for all the options necessary for this trait.
-     * Options can be viewed in the App\Options\RefreshCacheOptions file.
+     * Options can be viewed in the App\Options\CacheableOptions file.
      *
-     * @var RefreshCacheOptions
+     * @var CacheableOptions
      */
-    protected $refreshCacheOptions;
+    protected $cacheableOptions;
 
     /**
      * The method used for setting the refresh cache options.
      * This method should be called inside the model using this trait.
      * Inside the method, you should set all the refresh cache options.
-     * This can be achieved using the methods from App\Options\RefreshCacheOptions.
+     * This can be achieved using the methods from App\Options\CacheableOptions.
      *
-     * @return RefreshCacheOptions
+     * @return CacheableOptions
      */
-    abstract public function getRefreshCacheOptions(): RefreshCacheOptions;
+    abstract public function getCacheableOptions(): CacheableOptions;
 
     /**
      * On every database change, attempt to clear the cache.
@@ -31,7 +31,7 @@ trait RefreshesCache
      *
      * @return void
      */
-    public static function bootRefreshesCache()
+    public static function bootCacheable()
     {
         static::created(function ($model) {
             $model->forgetCache();
@@ -53,11 +53,11 @@ trait RefreshesCache
      */
     public function forgetCache()
     {
-        $this->refreshCacheOptions = $this->getRefreshCacheOptions();
+        $this->cacheableOptions = $this->getCacheableOptions();
 
         $this->checkKey();
 
-        cache()->forget($this->refreshCacheOptions->key);
+        cache()->forget($this->cacheableOptions->key);
     }
 
     /**
@@ -68,11 +68,11 @@ trait RefreshesCache
      */
     private function checkKey()
     {
-        if (!$this->refreshCacheOptions->key) {
+        if (!$this->cacheableOptions->key) {
             throw new CacheException(
-                'Model ' . get_class($this) . ' uses the RefreshesCache trait. ' . PHP_EOL .
-                'You must set the key via the getRefreshCacheOptions() method from model.' . PHP_EOL .
-                'Use the setKey() method from the App\Options\RefreshCacheOptions class.'
+                'Model ' . get_class($this) . ' uses the Cacheable trait. ' . PHP_EOL .
+                'You must set the key via the getCacheableOptions() method from model.' . PHP_EOL .
+                'Use the setKey() method from the App\Options\CacheableOptions class.'
             );
         }
     }

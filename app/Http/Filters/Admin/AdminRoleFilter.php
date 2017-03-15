@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Filters;
+namespace App\Http\Filters\Admin;
 
-class AdminUserFilter extends Filter
+use App\Http\Filters\Filter;
+
+class AdminRoleFilter extends Filter
 {
     /**
      * Get the main where condition between entire request fields.
@@ -22,7 +24,7 @@ class AdminUserFilter extends Filter
     public function filters()
     {
         return [
-            'search' => 'operator:like|condition:or|columns:username,person.first_name,person.last_name,person.email,person.phone',
+            'search' => 'operator:like|condition:or|columns:name',
         ];
     }
 }

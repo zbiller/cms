@@ -4,7 +4,4 @@ namespace App\Exceptions;
 
 use Exception;
 
-class CacheException extends Exception
-{
-
-}
+class CacheException extends Exception {}

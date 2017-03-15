@@ -1,19 +1,22 @@
 <?php
 
-use App\Models\Auth\Person;
-use App\Models\Auth\Role;
 use App\Models\Auth\User;
-use Illuminate\Database\Eloquent\Collection;
+use App\Models\Auth\Role;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Eloquent\Collection;
 
 class RolesSeeder extends Seeder
 {
     /**
-     * @var
+     * Collection of admin roles.
+     *
+     * @var Collection
      */
     private $adminRoles;
 
     /**
+     * Mapping structure of admin roles.
+     *
      * @var array
      */
     private $adminMap = [
@@ -32,18 +35,12 @@ class RolesSeeder extends Seeder
     {
         DB::table('roles')->delete();
 
-        /**
-         * Create the necessary Admin roles.
-         */
         $this->adminRoles = new Collection();
 
         foreach ($this->adminMap as $role => $data) {
             $this->adminRoles->push(Role::create($data));
         }
 
-        /**
-         * Assign all Admin roles to the Developer user.
-         */
         $user = User::where('username', 'developer')->first();
         $user->assignRoles($this->adminRoles);
     }

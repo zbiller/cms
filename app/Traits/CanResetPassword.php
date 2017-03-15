@@ -8,49 +8,49 @@
 
 namespace App\Traits;
 
-use App\Http\Requests\ResetPasswordRequest;
-use App\Options\ResetsPasswordsOptions;
+use App\Http\Requests\Auth\ResetPasswordRequest;
+use App\Options\CanResetPasswordOptions;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
-use Illuminate\Foundation\Auth\ResetsPasswords as ResetsPasswordsBase;
+use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
 
-trait ResetsPasswords
+trait CanResetPassword
 {
-    use ResetsPasswordsBase {
+    use ResetsPasswords {
         sendResetResponse as baseSendResetResponse;
     }
 
     use SendsPasswordResetEmails {
         sendResetLinkResponse as baseSendResetLinkResponse;
-        ResetsPasswordsBase::broker insteadof SendsPasswordResetEmails;
+        ResetsPasswords::broker insteadof SendsPasswordResetEmails;
     }
 
     /**
      * The container for all the options necessary for this trait.
-     * Options can be viewed in the App\Options\ResetsPasswordsOptions file.
+     * Options can be viewed in the App\Options\CanResetPasswordOptions file.
      *
-     * @var ResetsPasswordsOptions
+     * @var CanResetPasswordOptions
      */
-    protected $resetsPasswordsOptions;
+    protected $canResetPasswordOptions;
 
     /**
      * The method used for setting the authentication options.
      * This method should be called inside the controller using this trait.
      * Inside the method, you should set all the authentication options.
-     * This can be achieved using the methods from App\Options\AuthenticatesUsersOptions.
+     * This can be achieved using the methods from App\Options\CanAuthenticateOptions.
      *
-     * @return ResetsPasswordsOptions
+     * @return CanResetPasswordOptions
      */
-    abstract public function getResetsPasswordsOptions(): ResetsPasswordsOptions;
+    abstract public function getCanResetPasswordOptions(): CanResetPasswordOptions;
 
     /**
-     * Instantiate the $authenticatesUsersOptions property with the necessary authentication properties.
+     * Instantiate the $CanAuthenticateOptions property with the necessary authentication properties.
      *
-     * @set $authenticatesUsersOptions
+     * @set $CanAuthenticateOptions
      */
-    public function bootResetsPasswords()
+    public function bootCanResetPassword()
     {
-        $this->resetsPasswordsOptions = $this->getResetsPasswordsOptions();
+        $this->canResetPasswordOptions = $this->getCanResetPasswordOptions();
     }
 
     /**
@@ -60,7 +60,7 @@ trait ResetsPasswords
      */
     public function redirectTo()
     {
-        return $this->resetsPasswordsOptions->redirectPath;
+        return $this->canResetPasswordOptions->redirectPath;
     }
 
     /**
@@ -82,7 +82,7 @@ trait ResetsPasswords
     protected function credentials(Request $request)
     {
         return $request->only(
-            $this->resetsPasswordsOptions->identifierField,
+            $this->canResetPasswordOptions->identifierField,
             'password', 'password_confirmation', 'token'
         );
     }
@@ -120,9 +120,9 @@ trait ResetsPasswords
      */
     protected function sendResetLinkResponse($response)
     {
-        if ($this->resetsPasswordsOptions->redirectPath) {
+        if ($this->canResetPasswordOptions->redirectPath) {
             session()->flash('flash_success', trans($response));
-            return redirect($this->resetsPasswordsOptions->redirectPath);
+            return redirect($this->canResetPasswordOptions->redirectPath);
         } else {
             session()->flash('flash_error', trans($response));
             return $this->baseSendResetLinkResponse($response);

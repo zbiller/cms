@@ -6,7 +6,7 @@ use App\Http\Filters\Filter;
 use App\Exceptions\FilterException;
 use Illuminate\Database\Eloquent\Builder;
 
-trait CanFilter
+trait Filterable
 {
     /**
      * The App\Http\Filters\Filter instance.

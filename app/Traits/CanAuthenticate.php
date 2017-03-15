@@ -8,42 +8,42 @@
 
 namespace App\Traits;
 
-use App\Options\AuthenticatesUsersOptions;
+use App\Options\CanAuthenticateOptions;
 use Illuminate\Http\Request;
-use Illuminate\Foundation\Auth\AuthenticatesUsers as AuthenticatesUsersBase;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
-trait AuthenticatesUsers
+trait CanAuthenticate
 {
-    use AuthenticatesUsersBase {
+    use AuthenticatesUsers {
         logout as baseLogout;
     }
 
     /**
      * The container for all the options necessary for this trait.
-     * Options can be viewed in the App\Options\AuthenticatesUsersOptions file.
+     * Options can be viewed in the App\Options\CanAuthenticateOptions file.
      *
-     * @var AuthenticatesUsersOptions
+     * @var CanAuthenticateOptions
      */
-    protected $authenticatesUsersOptions;
+    protected $canAuthenticateOptions;
 
     /**
      * The method used for setting the authentication options.
      * This method should be called inside the controller using this trait.
      * Inside the method, you should set all the authentication options.
-     * This can be achieved using the methods from App\Options\AuthenticatesUsersOptions.
+     * This can be achieved using the methods from App\Options\CanAuthenticateOptions.
      *
-     * @return AuthenticatesUsersOptions
+     * @return CanAuthenticateOptions
      */
-    abstract public function getAuthenticatesUsersOptions(): AuthenticatesUsersOptions;
+    abstract public function getCanAuthenticateOptions(): CanAuthenticateOptions;
 
     /**
-     * Instantiate the $authenticatesUsersOptions property with the necessary authentication properties.
+     * Instantiate the $CanAuthenticateOptions property with the necessary authentication properties.
      *
-     * @set $authenticatesUsersOptions
+     * @set $CanAuthenticateOptions
      */
     public function bootAuthenticatesUsers()
     {
-        $this->authenticatesUsersOptions = $this->getAuthenticatesUsersOptions();
+        $this->canAuthenticateOptions = $this->getCanAuthenticateOptions();
     }
 
     /**
@@ -53,7 +53,7 @@ trait AuthenticatesUsers
      */
     public function username()
     {
-        return $this->authenticatesUsersOptions->usernameField;
+        return $this->canAuthenticateOptions->usernameField;
     }
 
     /**
@@ -63,7 +63,7 @@ trait AuthenticatesUsers
      */
     public function redirectTo()
     {
-        return $this->authenticatesUsersOptions->loginRedirectPath;
+        return $this->canAuthenticateOptions->loginRedirectPath;
     }
 
     /**
@@ -76,7 +76,7 @@ trait AuthenticatesUsers
     {
         $this->baseLogout($request);
 
-        return redirect($this->authenticatesUsersOptions->logoutRedirectPath);
+        return redirect($this->canAuthenticateOptions->logoutRedirectPath);
     }
 
     /**
@@ -89,8 +89,8 @@ trait AuthenticatesUsers
     {
         return $this->limiter()->tooManyAttempts(
             $this->throttleKey($request),
-            $this->authenticatesUsersOptions->throttleMaxLoginAttempts,
-            $this->authenticatesUsersOptions->throttleLockoutTime
+            $this->canAuthenticateOptions->throttleMaxLoginAttempts,
+            $this->canAuthenticateOptions->throttleLockoutTime
         );
     }
 }

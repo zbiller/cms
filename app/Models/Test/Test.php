@@ -3,12 +3,12 @@
 namespace App\Models\Test;
 
 use App\Models\Model;
-use App\Traits\CanFilter;
-use App\Traits\CanSort;
+use App\Traits\Filterable;
+use App\Traits\Sortable;
 
 class Test extends Model
 {
-    use CanFilter, CanSort;
+    use Filterable, Sortable;
 
     /**
      * The database table.

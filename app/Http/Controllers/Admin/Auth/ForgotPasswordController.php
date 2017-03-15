@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Traits\ResetsPasswords;
-use App\Options\ResetsPasswordsOptions;
+use App\Traits\CanResetPassword;
+use App\Options\CanResetPasswordOptions;
 
 class ForgotPasswordController extends Controller
 {
-    use ResetsPasswords;
+    use CanResetPassword;
 
     /**
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -19,11 +19,11 @@ class ForgotPasswordController extends Controller
     }
 
     /**
-     * @return ResetsPasswordsOptions
+     * @return CanResetPasswordOptions
      */
-    public function getResetsPasswordsOptions()
+    public function getCanResetPasswordOptions()
     {
-        return ResetsPasswordsOptions::instance()
+        return CanResetPasswordOptions::instance()
             ->setRedirectPath('/admin/login');
     }
 }

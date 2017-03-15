@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin\Test;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\TestRequest;
-use App\Http\Filters\TestFilter;
-use App\Http\Sorts\TestSort;
+use App\Http\Requests\Crud\TestRequest;
+use App\Http\Filters\Admin\TestFilter;
+use App\Http\Sorts\Admin\TestSort;
 use App\Models\Test\Test;
-use App\Options\CrudOptions;
+use App\Options\CanCrudOptions;
 use App\Traits\CanCrud;
 
 class TestController extends Controller
@@ -80,11 +80,11 @@ class TestController extends Controller
     }
 
     /**
-     * @return CrudOptions
+     * @return CanCrudOptions
      */
-    public function getCrudOptions()
+    public function getCanCrudOptions()
     {
-        return CrudOptions::instance()
+        return CanCrudOptions::instance()
             ->setModel(app(Test::class))
             ->setListRoute('admin.test.index')
             ->setListView('admin.test.index')

@@ -2,7 +2,7 @@
 
 namespace App\Options;
 
-class RefreshCacheOptions
+class CacheableOptions
 {
     /**
      * The cache key in use.
@@ -14,20 +14,20 @@ class RefreshCacheOptions
     /**
      * Get a fresh instance of this class.
      *
-     * @return RefreshCacheOptions
+     * @return CacheableOptions
      */
-    public static function instance(): RefreshCacheOptions
+    public static function instance(): CacheableOptions
     {
         return new static();
     }
 
     /**
-     * Set the key to work with in the App\Traits\RefreshesCache trait.
+     * Set the key to work with in the App\Traits\Cacheable trait.
      *
      * @param string $key
-     * @return RefreshCacheOptions
+     * @return CacheableOptions
      */
-    public function setKey($key): RefreshCacheOptions
+    public function setKey($key): CacheableOptions
     {
         $this->key = $key;
 

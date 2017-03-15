@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.4.15 on 2017-03-13.
+ * Generated for Laravel 5.4.15 on 2017-03-15.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -13080,12 +13080,13 @@ namespace App\Facades {
          * @param string $name
          * @param string|null $label
          * @param array $options
+         * @param bool $generate
          * @return string 
          * @static 
          */
-        public static function password($name, $label = null, $options = array())
+        public static function password($name, $label = null, $options = array(), $generate = false)
         {
-            return \App\Helpers\Form\Admin::password($name, $label, $options);
+            return \App\Helpers\Form\Admin::password($name, $label, $options, $generate);
         }
         
         /**
@@ -13280,7 +13281,7 @@ namespace App\Facades {
     class Menu {
         
         /**
-         * 
+         * Generate a new menu.
          *
          * @param \Closure $callback
          * @return $this 
@@ -13292,7 +13293,7 @@ namespace App\Facades {
         }
         
         /**
-         * 
+         * Filter the menu items based on a callback.
          *
          * @param \Closure|null $callback
          * @return $this 
@@ -13304,7 +13305,10 @@ namespace App\Facades {
         }
         
         /**
+         * Add a new menu item via a callback.
          * 
+         * The callback should generate individual menu items.
+         * Setting the properties using methods from App\Helpers\Menu\Item
          *
          * @param \Closure $callback
          * @static 
@@ -13315,7 +13319,11 @@ namespace App\Facades {
         }
         
         /**
+         * Container for generating children menu items inside a parent node.
          * 
+         * Add a new child menu item via a callback for a parent node.
+         * The callback should generate individual menu items.
+         * Setting the properties using methods from App\Helpers\Menu\Item
          *
          * @param \App\Helpers\Menu\Item $parent
          * @param \Closure $callback
@@ -13327,7 +13335,7 @@ namespace App\Facades {
         }
         
         /**
-         * 
+         * Get all parent menu items.
          *
          * @return \App\Helpers\Menu\Collection 
          * @static 
@@ -13338,7 +13346,7 @@ namespace App\Facades {
         }
         
         /**
-         * 
+         * Get the children menu items corresponding to a parent.
          *
          * @param \App\Helpers\Menu\Item $parent
          * @return \App\Helpers\Menu\Collection 
@@ -13354,7 +13362,7 @@ namespace App\Facades {
     class Pagination {
         
         /**
-         * 
+         * Display the pagination view helper.
          *
          * @param \App\Helpers\View\LengthAwarePaginator $items
          * @param string $view
@@ -13372,7 +13380,7 @@ namespace App\Facades {
     class Button {
         
         /**
-         * 
+         * Render the add button view helper.
          *
          * @param string $route
          * @return \Illuminate\View\View 
@@ -13384,7 +13392,7 @@ namespace App\Facades {
         }
         
         /**
-         * 
+         * Render the edit button view helper.
          *
          * @param string $route
          * @param array $parameters
@@ -13397,7 +13405,7 @@ namespace App\Facades {
         }
         
         /**
-         * 
+         * Render the delete button view helper.
          *
          * @param string $route
          * @param array $parameters
@@ -13410,7 +13418,7 @@ namespace App\Facades {
         }
         
         /**
-         * 
+         * Render the cancel button view helper.
          *
          * @param string $route
          * @return \Illuminate\View\View 
@@ -13422,7 +13430,7 @@ namespace App\Facades {
         }
         
         /**
-         * 
+         * Render the update button view helper.
          *
          * @return \Illuminate\View\View 
          * @static 
@@ -13433,7 +13441,7 @@ namespace App\Facades {
         }
         
         /**
-         * 
+         * Render the filter button view helper.
          *
          * @return \Illuminate\View\View 
          * @static 
@@ -13444,7 +13452,7 @@ namespace App\Facades {
         }
         
         /**
-         * 
+         * Render the clear button view helper.
          *
          * @return \Illuminate\View\View 
          * @static 
@@ -13455,7 +13463,7 @@ namespace App\Facades {
         }
         
         /**
-         * 
+         * Render the save button view helper.
          *
          * @return \Illuminate\View\View 
          * @static 
@@ -13466,7 +13474,7 @@ namespace App\Facades {
         }
         
         /**
-         * 
+         * Render the save and stay button view helper.
          *
          * @return \Illuminate\View\View 
          * @static 
@@ -13481,7 +13489,7 @@ namespace App\Facades {
     class Flash {
         
         /**
-         * 
+         * Render any flash message if it's set.
          *
          * @return string|null 
          * @static 
@@ -13492,7 +13500,7 @@ namespace App\Facades {
         }
         
         /**
-         * 
+         * Render the success flash message.
          *
          * @return \Illuminate\View\View 
          * @static 
@@ -13503,7 +13511,7 @@ namespace App\Facades {
         }
         
         /**
-         * 
+         * Render the error flash message.
          *
          * @return \Illuminate\View\View 
          * @static 
@@ -13514,14 +13522,14 @@ namespace App\Facades {
         }
         
         /**
-         * 
+         * Render the warning flash message.
          *
          * @return \Illuminate\View\View 
          * @static 
          */
-        public static function alert()
+        public static function warning()
         {
-            return \App\Helpers\Message\Flash::alert();
+            return \App\Helpers\Message\Flash::warning();
         }
         
     }         
@@ -13529,7 +13537,7 @@ namespace App\Facades {
     class Validation {
         
         /**
-         * 
+         * Display the validation errors for a request.
          *
          * @return \Illuminate\View\View 
          * @static 

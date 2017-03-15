@@ -8,13 +8,15 @@ use Illuminate\Http\Request;
 class Authenticated
 {
     /**
+     * The request paths ignoring this middleware.
+     *
      * @var array
      */
-    protected $except = [
-
-    ];
+    protected $except = [];
 
     /**
+     * Handle the middleware's login.
+     *
      * @param Request $request
      * @param Closure $next
      * @param string $route
@@ -34,17 +36,15 @@ class Authenticated
     }
 
     /**
+     * Establish if request path is an exception or not.
+     *
      * @param  Request  $request
      * @return bool
      */
     protected function isException($request)
     {
         foreach ($this->except as $except) {
-            if ($except !== '/') {
-                $except = trim($except, '/');
-            }
-
-            if ($request->is($except)) {
+            if ($request->is($except == '/' ? $except : trim($except, '/'))) {
                 return true;
             }
         }

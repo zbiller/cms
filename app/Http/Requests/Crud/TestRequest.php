@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Crud;
 
-class ForgotPasswordRequest extends Request
+use App\Http\Requests\Request;
+
+class TestRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +24,7 @@ class ForgotPasswordRequest extends Request
     public function rules()
     {
         return [
-            'email' => 'required|email',
+            'name' => 'required|unique:test,name,' . $this->route('id'),
         ];
     }
 }

@@ -2,23 +2,27 @@
 
 namespace App\Models\Auth;
 
-use App\Traits\RefreshesCache;
-use App\Options\RefreshCacheOptions;
+use App\Traits\Cacheable;
+use App\Options\CacheableOptions;
 use App\Contracts\Permission as PermissionContract;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Permission extends Model implements PermissionContract
 {
-    use RefreshesCache;
+    use Cacheable;
 
     /**
+     * The database table.
+     *
      * @var string
      */
     protected $table = 'permissions';
 
     /**
+     * The attributes that are protected against mass assign.
+     *
      * @var array
      */
     protected $guarded = [
@@ -26,6 +30,8 @@ class Permission extends Model implements PermissionContract
     ];
 
     /**
+     * Permission has and belongs to many users.
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function users()
@@ -34,6 +40,8 @@ class Permission extends Model implements PermissionContract
     }
 
     /**
+     * Permission has and belongs to many roles.
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function roles()
@@ -42,6 +50,8 @@ class Permission extends Model implements PermissionContract
     }
 
     /**
+     * Get permissions as array grouped by the "group" column.
+     *
      * @return Collection
      */
     public static function getGrouped()
@@ -50,6 +60,8 @@ class Permission extends Model implements PermissionContract
     }
 
     /**
+     * Return the permission by it's name.
+     *
      * @param string $name
      * @throws ModelNotFoundException
      */
@@ -63,11 +75,13 @@ class Permission extends Model implements PermissionContract
     }
 
     /**
-     * @return RefreshCacheOptions
+     * Set the options necessary for the Cacheable trait.
+     *
+     * @return CacheableOptions
      */
-    public function getRefreshCacheOptions(): RefreshCacheOptions
+    public function getCacheableOptions(): CacheableOptions
     {
-        return RefreshCacheOptions::instance()
+        return CacheableOptions::instance()
             ->setKey('acl');
     }
 }

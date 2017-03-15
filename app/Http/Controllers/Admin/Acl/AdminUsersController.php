@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Admin\Acl;
 
 use App\Http\Controllers\Controller;
-use App\Http\Filters\AdminUserFilter;
-use App\Http\Requests\AdminUserRequest;
-use App\Http\Sorts\AdminUserSort;
-use App\Models\Auth\Role;
 use App\Models\Auth\User;
-use App\Options\CrudOptions;
+use App\Models\Auth\Role;
 use App\Traits\CanCrud;
+use App\Options\CanCrudOptions;
+use App\Http\Requests\Crud\AdminUserRequest;
+use App\Http\Filters\Admin\AdminUserFilter;
+use App\Http\Sorts\Admin\AdminUserSort;
 use Illuminate\Http\Request;
 
 class AdminUsersController extends Controller
@@ -94,11 +94,11 @@ class AdminUsersController extends Controller
     }
 
     /**
-     * @return CrudOptions
+     * @return CanCrudOptions
      */
-    public function getCrudOptions()
+    public function getCanCrudOptions()
     {
-        return CrudOptions::instance()
+        return CanCrudOptions::instance()
             ->setModel(app(Role::class))
             ->setListRoute('admin.admin_users.index')
             ->setListView('admin.acl.admin_users.index')

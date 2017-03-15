@@ -4,7 +4,4 @@ namespace App\Exceptions;
 
 use Exception;
 
-class SortException extends Exception
-{
-
-}
+class SortException extends Exception {}

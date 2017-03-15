@@ -5,6 +5,8 @@ namespace App\Helpers\View;
 class Button
 {
     /**
+     * Render the add button view helper.
+     *
      * @param string $route
      * @return \Illuminate\View\View
      */
@@ -16,6 +18,8 @@ class Button
     }
 
     /**
+     * Render the edit button view helper.
+     *
      * @param string $route
      * @param array $parameters
      * @return \Illuminate\View\View
@@ -28,6 +32,8 @@ class Button
     }
 
     /**
+     * Render the delete button view helper.
+     *
      * @param string $route
      * @param array $parameters
      * @return \Illuminate\View\View
@@ -40,6 +46,8 @@ class Button
     }
 
     /**
+     * Render the cancel button view helper.
+     *
      * @param string $route
      * @return \Illuminate\View\View
      */
@@ -51,6 +59,8 @@ class Button
     }
 
     /**
+     * Render the update button view helper.
+     *
      * @return \Illuminate\View\View
      */
     public function update()
@@ -59,6 +69,8 @@ class Button
     }
 
     /**
+     * Render the filter button view helper.
+     *
      * @return \Illuminate\View\View
      */
     public function filter()
@@ -67,6 +79,8 @@ class Button
     }
 
     /**
+     * Render the clear button view helper.
+     *
      * @return \Illuminate\View\View
      */
     public function clear()
@@ -75,6 +89,8 @@ class Button
     }
 
     /**
+     * Render the save button view helper.
+     *
      * @return \Illuminate\View\View
      */
     public function save()
@@ -83,6 +99,8 @@ class Button
     }
 
     /**
+     * Render the save and stay button view helper.
+     *
      * @return \Illuminate\View\View
      */
     public function saveStay()

@@ -2,8 +2,6 @@
 
 namespace App\Models\Auth;
 
-use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\Model;
 
 class Person extends Model
@@ -29,6 +27,8 @@ class Person extends Model
     ];
 
     /**
+     * Person belongs to user.
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

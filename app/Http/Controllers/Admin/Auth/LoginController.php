@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Options\AuthenticatesUsersOptions;
-use App\Traits\AuthenticatesUsers;
+use App\Traits\CanAuthenticate;
+use App\Options\CanAuthenticateOptions;
 
 class LoginController extends Controller
 {
-    use AuthenticatesUsers;
+    use CanAuthenticate;
 
     /**
      * @return \Illuminate\View\View
@@ -19,11 +19,11 @@ class LoginController extends Controller
     }
 
     /**
-     * @return AuthenticatesUsersOptions
+     * @return CanAuthenticateOptions
      */
-    public function getAuthenticatesUsersOptions()
+    public function getCanAuthenticateOptions()
     {
-        return AuthenticatesUsersOptions::instance()
+        return CanAuthenticateOptions::instance()
             ->setUsernameField('username')
             ->setLoginRedirectPath('/admin')
             ->setLogoutRedirectPath('/admin/login')

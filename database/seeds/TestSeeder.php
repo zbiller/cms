@@ -1,12 +1,12 @@
 <?php
 
+use Carbon\Carbon;
 use App\Models\Test\Test;
-use App\Models\Test\TestHabtm;
-use App\Models\Test\TestHasMany1;
-use App\Models\Test\TestHasMany2;
 use App\Models\Test\TestHasOne1;
 use App\Models\Test\TestHasOne2;
-use Carbon\Carbon;
+use App\Models\Test\TestHasMany1;
+use App\Models\Test\TestHasMany2;
+use App\Models\Test\TestHabtm;
 use Illuminate\Database\Seeder;
 
 class TestSeeder extends Seeder

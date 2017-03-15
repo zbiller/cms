@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Filters;
+namespace App\Http\Filters\Admin;
+
+use App\Http\Filters\Filter;
 
 class TestFilter extends Filter
 {

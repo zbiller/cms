@@ -2,22 +2,32 @@
 
 namespace App\Notifications;
 
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class ResetPassword extends Notification
+class ResetPassword extends Notification implements ShouldQueue
 {
+    use Queueable;
+
     /**
+     * The user's reset password token.
+     *
      * @var
      */
     public $token;
 
     /**
+     * The route to redirect the user when clicking to reset the password.
+     *
      * @var
      */
     public $route;
 
     /**
+     * Set the token and the route.
+     *
      * @param string $token
      * @param string $route
      */
@@ -28,7 +38,9 @@ class ResetPassword extends Notification
     }
 
     /**
-     * @param  mixed  $notifiable
+     * Establish the notification sending protocol.
+     *
+     * @param mixed $notifiable
      * @return array|string
      */
     public function via($notifiable)
@@ -39,7 +51,7 @@ class ResetPassword extends Notification
     }
 
     /**
-     * @param  mixed  $notifiable
+     * @param mixed $notifiable
      * @return \Illuminate\Notifications\Messages\MailMessage
      */
     public function toMail($notifiable)

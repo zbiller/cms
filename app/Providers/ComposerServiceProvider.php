@@ -7,10 +7,12 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 class ComposerServiceProvider extends ServiceProvider
 {
     /**
+     * Bootstrap any application services.
+     *
      * @return void
      */
     public function boot()
     {
-        view()->composer('layouts::admin.partials._menu', 'App\Http\Composers\MenuComposer');
+        view()->composer('layouts::admin.partials._menu', 'App\Http\Composers\MenuComposer@admin');
     }
 }

@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Auth;
 
-class ResetPasswordRequest extends Request
+use App\Http\Requests\Request;
+
+class ForgotPasswordRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,9 +24,7 @@ class ResetPasswordRequest extends Request
     public function rules()
     {
         return [
-            'token' => 'required',
-            'username' => 'required',
-            'password' => 'required|confirmed',
+            'email' => 'required|email',
         ];
     }
 }

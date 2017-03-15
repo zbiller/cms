@@ -40,13 +40,13 @@ if (!function_exists('pagination')) {
     }
 }
 
-if (!function_exists('button')) {
+if (!function_exists('validation')) {
     /**
-     * @return \App\Helpers\View\Button
+     * @return \App\Helpers\View\Validation
      */
-    function button()
+    function validation()
     {
-        return app(Button::class);
+        return app(Validation::class);
     }
 }
 
@@ -60,12 +60,12 @@ if (!function_exists('flash')) {
     }
 }
 
-if (!function_exists('validation')) {
+if (!function_exists('button')) {
     /**
-     * @return \App\Helpers\View\Validation
+     * @return \App\Helpers\View\Button
      */
-    function validation()
+    function button()
     {
-        return app(Validation::class);
+        return app(Button::class);
     }
 }

@@ -2,11 +2,12 @@
 
 namespace App\Models\Auth;
 
-use App\Scopes\UserWithPerson;
+use App\Scopes\SelectUser;
+use App\Scopes\JoinPerson;
 use App\Traits\HasRoles;
-use App\Traits\CanFilter;
-use App\Traits\CanSort;
-use App\Options\RefreshCacheOptions;
+use App\Traits\Filterable;
+use App\Traits\Sortable;
+use App\Options\CacheableOptions;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -16,15 +17,19 @@ class User extends Authenticatable
 {
     use Notifiable;
     use HasRoles;
-    use CanFilter;
-    use CanSort;
+    use Filterable;
+    use Sortable;
 
     /**
+     * The database table.
+     *
      * @var string
      */
     protected $table = 'users';
 
     /**
+     * The attributes that are mass assignable.
+     *
      * @var array
      */
     protected $fillable = [
@@ -34,6 +39,8 @@ class User extends Authenticatable
     ];
 
     /**
+     * The attributes that are excluded from json.
+     *
      * @var array
      */
     protected $hidden = [
@@ -42,6 +49,8 @@ class User extends Authenticatable
     ];
 
     /**
+     * The relations that are eager loaded.
+     *
      * @var array
      */
     protected $with = [
@@ -49,6 +58,8 @@ class User extends Authenticatable
     ];
 
     /**
+     * Super user.
+     *
      * @const
      */
     const SUPER_NO = 0;
@@ -63,10 +74,13 @@ class User extends Authenticatable
     {
         parent::boot();
 
-        static::addGlobalScope(new UserWithPerson);
+        static::addGlobalScope(new SelectUser);
+        static::addGlobalScope(new JoinPerson);
     }
 
     /**
+     * User has one person.
+     *
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function person()
@@ -75,6 +89,9 @@ class User extends Authenticatable
     }
 
     /**
+     * Filter query results to show users only with the given roles.
+     * Param $roles: single role type as model|string or multiple role types as a collection|array.
+     *
      * @param Builder $query
      * @param array|string $roles
      */
@@ -84,6 +101,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Exclude the "developer" user from the query results.
+     *
      * @param Builder $query
      */
     public function scopeNotDeveloper($query)
@@ -92,6 +111,18 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the user's full name.
+     *
+     * @return mixed
+     */
+    public function getFullNameAttribute()
+    {
+        return implode(' ', [$this->first_name, $this->last_name]);
+    }
+
+    /**
+     * Get the user's first name.
+     *
      * @return mixed
      */
     public function getFirstNameAttribute()
@@ -106,6 +137,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the user's last name.
+     *
      * @return mixed
      */
     public function getLastNameAttribute()
@@ -120,6 +153,8 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the user's phone.
+     *
      * @return mixed
      */
     public function getPhoneAttribute()
@@ -134,13 +169,15 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the user's email.
+     *
      * @return mixed
      */
     public function getEmailAttribute()
     {
         if (isset($this->attributes['email'])) {
             return $this->attributes['email'];
-        } elseif ($this->email) {
+        } elseif ($this->person->email) {
             return $this->person->email;
         }
 
@@ -148,22 +185,19 @@ class User extends Authenticatable
     }
 
     /**
-     * @return mixed
-     */
-    public function getFullNameAttribute()
-    {
-        return implode(' ', [$this->first_name, $this->last_name]);
-    }
-
-    /**
+     * Determine if the current user is a super user.
+     *
      * @return bool
      */
-    public function isSuper()
+    public function isSuperUser()
     {
         return $this->super == self::SUPER_YES;
     }
 
     /**
+     * Send the password reset email.
+     * Determine if user requesting the password is an admin or not.
+     *
      * @param string $token
      */
     public function sendPasswordResetNotification($token)
@@ -174,11 +208,13 @@ class User extends Authenticatable
     }
 
     /**
-     * @return RefreshCacheOptions
+     * Set the options necessary for the Cacheable trait.
+     *
+     * @return CacheableOptions
      */
-    public function getRefreshCacheOptions(): RefreshCacheOptions
+    public function getCacheableOptions(): CacheableOptions
     {
-        return RefreshCacheOptions::instance()
+        return CacheableOptions::instance()
             ->setKey('acl');
     }
 }

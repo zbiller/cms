@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Facade;
 class Flash extends Facade
 {
     /**
-     * Get the registered name of the component
+     * Get the registered name of the component.
      *
      * @return string
      */

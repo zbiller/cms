@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Crud;
 
-class AdminGroupRequest extends Request
+use App\Http\Requests\Request;
+
+class AdminRoleRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.

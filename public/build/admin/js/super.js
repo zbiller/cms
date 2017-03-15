@@ -25601,7 +25601,7 @@ function pagination() {
 function setups() {
     //TinyMCE setup
     tinymce.init({
-        selector: "textarea.editor",
+        selector: "textarea.editor-input",
         plugins: [
             "advlist autolink lists link image charmap print preview anchor",
             "searchreplace visualblocks code fullscreen",
@@ -25612,7 +25612,7 @@ function setups() {
     });
 
     //Chosen setup
-    var chosen = $('.chosen-select'),
+    var select = $('.select-input'),
         width = '80%';
 
     if ($(window).width() < 1248) {
@@ -25623,7 +25623,7 @@ function setups() {
         width = '100%';
     }
 
-    chosen.chosen({
+    select.chosen({
         width: width,
         no_results_text: "Nothing found for",
         allow_single_deselect: true

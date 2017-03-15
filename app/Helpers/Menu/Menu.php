@@ -8,11 +8,15 @@ use Illuminate\Support\Collection;
 class Menu
 {
     /**
+     * The menu items.
+     *
      * @var Collection
      */
     protected $items;
 
     /**
+     * Generate a new menu.
+     *
      * @param Closure $callback
      * @return $this
      */
@@ -26,6 +30,8 @@ class Menu
     }
 
     /**
+     * Filter the menu items based on a callback.
+     *
      * @param Closure|null $callback
      * @return $this
      */
@@ -37,6 +43,10 @@ class Menu
     }
 
     /**
+     * Add a new menu item via a callback.
+     * The callback should generate individual menu items.
+     * Setting the properties using methods from App\Helpers\Menu\Item
+     *
      * @param Closure $callback
      */
     public function add(Closure $callback)
@@ -49,6 +59,11 @@ class Menu
     }
 
     /**
+     * Container for generating children menu items inside a parent node.
+     * Add a new child menu item via a callback for a parent node.
+     * The callback should generate individual menu items.
+     * Setting the properties using methods from App\Helpers\Menu\Item
+     *
      * @param Item $parent
      * @param Closure $callback
      */
@@ -63,6 +78,8 @@ class Menu
     }
 
     /**
+     * Get all parent menu items.
+     *
      * @return Collection
      */
     public function roots()
@@ -73,6 +90,8 @@ class Menu
     }
 
     /**
+     * Get the children menu items corresponding to a parent.
+     *
      * @param Item $parent
      * @return Collection
      */

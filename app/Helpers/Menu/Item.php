@@ -5,41 +5,57 @@ namespace App\Helpers\Menu;
 class Item
 {
     /**
+     * The id of the menu item.
+     *
      * @var
      */
     public $id;
 
     /**
+     * The parent item for a menu item.
+     *
      * @var
      */
     public $parent;
 
     /**
+     * The name of a menu item.
+     *
      * @var
      */
     public $name;
 
     /**
+     * The url of a menu item.
+     *
      * @var
      */
     public $url;
 
     /**
+     * The active identifier for a menu item.
+     *
      * @var
      */
     public $active;
 
     /**
+     * The permissions that a menu item requires met for it to dislpay.
+     *
      * @var array
      */
     public $permissions = [];
 
     /**
+     * Container for additional menu item properties.
+     *
      * @var array
      */
     public $data = [];
 
     /**
+     * Set an id for the current menu item.
+     *
      * @set $id
      */
     public function __construct()
@@ -48,6 +64,8 @@ class Item
     }
 
     /**
+     * Set|Get the name property for the current menu item.
+     *
      * @param string|null $name
      * @return $this|string
      */
@@ -63,6 +81,8 @@ class Item
     }
 
     /**
+     * Set|Get the url property for the current menu item.
+     *
      * @param string|null $url
      * @return $this|string
      */
@@ -78,6 +98,8 @@ class Item
     }
 
     /**
+     * Set|Get the permissions property for the current menu item.
+     *
      * @param array|null $permissions
      * @return $this|array
      */
@@ -93,6 +115,8 @@ class Item
     }
 
     /**
+     * Set|Get the data property for the current menu item.
+     *
      * @param string|null $key
      * @param string|null $value
      * @return $this|array|string
@@ -109,6 +133,8 @@ class Item
     }
 
     /**
+     * Set|Get the active property for the current menu item.
+     *
      * @param string|null $active
      * @return $this|bool
      */

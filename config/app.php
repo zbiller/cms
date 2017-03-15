@@ -104,7 +104,6 @@ return [
     */
 
     'key' => env('APP_KEY'),
-
     'cipher' => 'AES-256-CBC',
 
     /*
@@ -121,7 +120,6 @@ return [
     */
 
     'log' => env('APP_LOG', 'single'),
-
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
     /*
@@ -180,9 +178,9 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\AclServiceProvider::class,
         App\Providers\ViewServiceProvider::class,
         App\Providers\ComposerServiceProvider::class,
-        App\Providers\AclServiceProvider::class,
 
     ],
 
@@ -239,10 +237,10 @@ return [
         /**
          * Package Facades
          */
-        'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'JsValidator' => Proengsoft\JsValidation\Facades\JsValidatorFacade::class,
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
 
         /**
          * Application Facades
@@ -250,9 +248,9 @@ return [
         'AdminForm' => App\Facades\AdminForm::class,
         'Menu' => App\Facades\Menu::class,
         'Pagination' => App\Facades\Pagination::class,
-        'Button' => App\Facades\Button::class,
-        'Flash' => App\Facades\Flash::class,
         'Validation' => App\Facades\Validation::class,
+        'Flash' => App\Facades\Flash::class,
+        'Button' => App\Facades\Button::class,
     ],
 
 ];

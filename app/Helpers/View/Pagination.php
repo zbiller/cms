@@ -7,6 +7,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class Pagination
 {
     /**
+     * Display the pagination view helper.
+     *
      * @param LengthAwarePaginator $items
      * @param string $view
      * @param array $data

@@ -2,7 +2,7 @@
 
 namespace App\Options;
 
-class ResetsPasswordsOptions
+class CanResetPasswordOptions
 {
     /**
      * The path to redirect after successfully performed the password reset email sending.
@@ -21,20 +21,20 @@ class ResetsPasswordsOptions
     /**
      * Get a fresh instance of this class.
      *
-     * @return ResetsPasswordsOptions
+     * @return CanResetPasswordOptions
      */
-    public static function instance(): ResetsPasswordsOptions
+    public static function instance(): CanResetPasswordOptions
     {
         return new static();
     }
 
     /**
-     * Set the $successRedirectPath to work with in the App\Traits\ResetsPasswords trait.
+     * Set the $successRedirectPath to work with in the App\Traits\CanResetPassword trait.
      *
      * @param string $path
-     * @return ResetsPasswordsOptions
+     * @return CanResetPasswordOptions
      */
-    public function setRedirectPath($path): ResetsPasswordsOptions
+    public function setRedirectPath($path): CanResetPasswordOptions
     {
         $this->redirectPath = $path;
 
@@ -42,12 +42,12 @@ class ResetsPasswordsOptions
     }
 
     /**
-     * Set the $identifierField to work with in the App\Traits\ResetsPasswords trait.
+     * Set the $identifierField to work with in the App\Traits\CanResetPassword trait.
      *
      * @param string $name
-     * @return ResetsPasswordsOptions
+     * @return CanResetPasswordOptions
      */
-    public function setIdentifierField($name): ResetsPasswordsOptions
+    public function setIdentifierField($name): CanResetPasswordOptions
     {
         $this->identifierField = $name;
 

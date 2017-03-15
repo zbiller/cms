@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Crud;
+
+use App\Http\Requests\Request;
 
 class AdminUserRequest extends Request
 {
@@ -22,12 +24,12 @@ class AdminUserRequest extends Request
     public function rules()
     {
         return [
-            'roles' => 'required|array|exists:roles,id',
             'username' => 'required|unique:users,username,' . $this->route('id'),
             'password' => 'confirmed',
+            'roles' => 'required|array|exists:roles,id',
             'person.first_name' => 'required|min:3',
             'person.last_name' => 'required|min:3',
-            'person.email' => 'required|email|unique:persons,email,' . $this->route('id'),
+            'person.email' => 'required|email|unique:persons,email,' . $this->route('id') . ',user_id',
         ];
     }
 

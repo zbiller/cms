@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 class NotAuthenticated
 {
     /**
+     * The request paths ignoring this middleware.
+     *
      * @var array
      */
     protected $except = [
@@ -15,6 +17,8 @@ class NotAuthenticated
     ];
 
     /**
+     * Handle the middleware's login.
+     *
      * @param Request $request
      * @param Closure $next
      * @param string $route
@@ -34,6 +38,8 @@ class NotAuthenticated
     }
 
     /**
+     * Establish if request path is an exception or not.
+     *
      * @param  Request  $request
      * @return bool
      */

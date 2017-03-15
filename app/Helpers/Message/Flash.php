@@ -5,6 +5,8 @@ namespace App\Helpers\Message;
 class Flash
 {
     /**
+     * Render any flash message if it's set.
+     *
      * @return string|null
      */
     public function message()
@@ -16,8 +18,8 @@ class Flash
             case session()->has('flash_error');
                 return $this->error();
                 break;
-            case session()->has('flash_alert');
-                return $this->alert();
+            case session()->has('flash_warning');
+                return $this->warning();
                 break;
         }
 
@@ -25,6 +27,8 @@ class Flash
     }
 
     /**
+     * Render the success flash message.
+     *
      * @return \Illuminate\View\View
      */
     public function success()
@@ -33,6 +37,8 @@ class Flash
     }
 
     /**
+     * Render the error flash message.
+     *
      * @return \Illuminate\View\View
      */
     public function error()
@@ -41,14 +47,18 @@ class Flash
     }
 
     /**
+     * Render the warning flash message.
+     *
      * @return \Illuminate\View\View
      */
-    public function alert()
+    public function warning()
     {
-        return $this->show('alert', session()->get('flash_alert'));
+        return $this->show('warning', session()->get('flash_warning'));
     }
 
     /**
+     * Render the actual view helper that displays flash messages.
+     *
      * @param string $type
      * @param string $message
      * @return \Illuminate\View\View

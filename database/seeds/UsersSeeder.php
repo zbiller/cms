@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Auth\Person;
 use App\Models\Auth\User;
 use Illuminate\Database\Seeder;
 

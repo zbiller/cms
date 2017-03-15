@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Traits\ResetsPasswords;
-use App\Options\ResetsPasswordsOptions;
+use App\Traits\CanResetPassword;
+use App\Options\CanResetPasswordOptions;
 use Illuminate\Http\Request;
 
 class ResetPasswordController extends Controller
 {
-    use ResetsPasswords;
+    use CanResetPassword;
 
     /**
      * @param Request $request
@@ -25,11 +25,11 @@ class ResetPasswordController extends Controller
     }
 
     /**
-     * @return ResetsPasswordsOptions
+     * @return CanResetPasswordOptions
      */
-    public function getResetsPasswordsOptions()
+    public function getCanResetPasswordOptions()
     {
-        return ResetsPasswordsOptions::instance()
+        return CanResetPasswordOptions::instance()
             ->setIdentifierField('username')
             ->setRedirectPath('/admin');
     }

@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Auth;
 
-class TestRequest extends Request
+use App\Http\Requests\Request;
+
+class ResetPasswordRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +24,9 @@ class TestRequest extends Request
     public function rules()
     {
         return [
-            'name' => 'required|unique:test,name,' . $this->route('id'),
+            'token' => 'required',
+            'username' => 'required',
+            'password' => 'required|confirmed',
         ];
     }
 }

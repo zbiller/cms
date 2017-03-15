@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Http\Sorts;
+namespace App\Http\Sorts\Admin;
 
-class AdminGroupSort extends Sort
+use App\Http\Sorts\Sort;
+
+class AdminUserSort extends Sort
 {
     /**
      * Get the request field name to sort by.
