@@ -41,7 +41,7 @@ trait CanAuthenticate
      *
      * @set $CanAuthenticateOptions
      */
-    public function bootAuthenticatesUsers()
+    public function bootCanAuthenticate()
     {
         $this->canAuthenticateOptions = $this->getCanAuthenticateOptions();
     }
@@ -63,6 +63,10 @@ trait CanAuthenticate
      */
     public function redirectTo()
     {
+        if (session()->has('login_intended_redirect_url')) {
+            return session('login_intended_redirect_url');
+        }
+
         return $this->canAuthenticateOptions->loginRedirectPath;
     }
 
