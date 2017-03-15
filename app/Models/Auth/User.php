@@ -2,6 +2,7 @@
 
 namespace App\Models\Auth;
 
+use App\Scopes\UserWithPerson;
 use App\Traits\HasRoles;
 use App\Traits\CanFilter;
 use App\Traits\CanSort;
@@ -54,6 +55,18 @@ class User extends Authenticatable
     const SUPER_YES = 1;
 
     /**
+     * The "booting" method of the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::addGlobalScope(new UserWithPerson);
+    }
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
     public function person()
@@ -77,16 +90,6 @@ class User extends Authenticatable
     {
         $query->where('username', '!=', 'developer');
     }
-
-    /**
-     * @param string $value
-     */
-    /*public function setPasswordAttribute($value)
-    {
-        if ($value) {
-            $this->attributes['password'] = bcrypt($value);
-        }
-    }*/
 
     /**
      * @return mixed
@@ -158,16 +161,6 @@ class User extends Authenticatable
     public function isSuper()
     {
         return $this->super == self::SUPER_YES;
-    }
-
-    /**
-     * Get the e-mail address where password reset links are sent.
-     *
-     * @return string
-     */
-    public function getEmailForPasswordReset()
-    {
-        return $this->person->email;
     }
 
     /**
