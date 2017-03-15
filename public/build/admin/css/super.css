@@ -4505,6 +4505,9 @@ header {
     width: 100%;
   }
 }
+header form {
+  float: right;
+}
 header button {
   display: none;
 }
@@ -4521,6 +4524,10 @@ header button {
     background: #45576D;
     color: #FFFFFF;
   }
+}
+header button.logout {
+  width: 90px;
+  height: 32px;
 }
 header h1 {
   font-size: 12px;
@@ -4779,15 +4786,15 @@ main section {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
-    text-indent: -9999px;
-    width: 32px;
-    height: 30px;
+    text-indent: -9999px !important;
+    width: 32px !important;
+    height: 30px !important;
   }
 }
 @media only screen and (max-width: 767px) {
   .btn > i {
-    text-indent: 0;
-    float: left;
+    text-indent: 0 !important;
+    float: left !important;
   }
 }
 .btn:hover {

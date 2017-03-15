@@ -51,15 +51,15 @@ main {
         @include font-size(14px);
         @include clear-padding();
 
-        text-indent: -9999px;
-        width: 32px;
-        height: 30px;
+        text-indent: -9999px !important;
+        width: 32px !important;
+        height: 30px !important;
     }
 
     > i {
         @include media-query('tablet') {
-            text-indent: 0;
-            float: left;
+            text-indent: 0 !important;
+            float: left !important;
         }
     }
 

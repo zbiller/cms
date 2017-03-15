@@ -17,6 +17,10 @@ header {
         width: 100%;
     }
 
+    form {
+        float: right;
+    }
+
     button {
         display: none;
 
@@ -31,6 +35,13 @@ header {
             outline: none;
             background: $colorFiord;
             color: $colorWhite;
+        }
+
+        &.logout {
+            width: 90px;
+            height: 32px;
+
+
         }
     }
 
