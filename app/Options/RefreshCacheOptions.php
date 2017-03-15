@@ -2,8 +2,6 @@
 
 namespace App\Options;
 
-use App\Models\Model;
-
 class RefreshCacheOptions
 {
     /**
