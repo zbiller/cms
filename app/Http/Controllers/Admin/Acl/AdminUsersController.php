@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Acl;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Crud\AdminUserWithoutPasswordRequest;
 use App\Models\Auth\User;
 use App\Models\Auth\Role;
 use App\Traits\CanCrud;
@@ -66,11 +67,11 @@ class AdminUsersController extends Controller
     }
 
     /**
-     * @param AdminUserRequest $request
+     * @param AdminUserWithoutPasswordRequest $request
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(AdminUserRequest $request, $id)
+    public function update(AdminUserWithoutPasswordRequest $request, $id)
     {
         return $this->_update(function () use ($request, $id) {
             $request = self::mergeRequest($request);

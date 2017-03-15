@@ -4,7 +4,7 @@ namespace App\Http\Requests\Crud;
 
 use App\Http\Requests\Request;
 
-class AdminUserRequest extends Request
+class AdminUserWithoutPasswordRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class AdminUserRequest extends Request
     {
         return [
             'username' => 'required|unique:users,username,' . $this->route('id'),
-            'password' => 'required|confirmed',
+            'password' => 'confirmed',
             'roles' => 'required|array|exists:roles,id',
             'person.first_name' => 'required|min:3',
             'person.last_name' => 'required|min:3',

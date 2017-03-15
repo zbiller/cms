@@ -5,7 +5,7 @@ return array(
     /*
      * Default view used to render Javascript validation code
      */
-    'view' => 'helpers::validation.js',
+    'view' => 'helpers::validation.trigger',
 
     /*
      * Default JQuery selector find the form to be validated.
