@@ -29,26 +29,6 @@ class Person extends Model
     ];
 
     /**
-     * @return void
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        static::saved(function ($model) {
-            try {
-                User::findOrFail($model->attributes['user_id'])->update([
-                    'email' => $model->attributes['email']
-                ]);
-            } catch (ModelNotFoundException $e) {
-                throw new Exception('There is no user for the person you\'re trying to save');
-            }
-
-            return true;
-        });
-    }
-
-    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

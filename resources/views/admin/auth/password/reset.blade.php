@@ -6,13 +6,15 @@
     </div>
     <div class="content">
         {!! validation()->errors() !!}
+
         {!! form()->open(['url' => route('admin.password.reset')]) !!}
         {!! form()->hidden('token', $token) !!}
-        {!! form()->text('email', $email or old('email'), ['placeholder' => 'Email']) !!}
+        {!! form()->text('username', $username or old('username'), ['placeholder' => 'Username']) !!}
         {!! form()->password('password', ['placeholder' => 'Password']) !!}
         {!! form()->password('password_confirmation', ['placeholder' => 'Confirm password']) !!}
         {!! form()->submit('Reset Password') !!}
         {!! form()->close() !!}
+
         <a href="{{ route('admin.login') }}">Back to login</a>
     </div>
 @endsection

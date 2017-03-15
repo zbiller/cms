@@ -27,7 +27,7 @@ class AdminUserRequest extends Request
             'password' => 'confirmed',
             'person.first_name' => 'required|min:3',
             'person.last_name' => 'required|min:3',
-            'person.email' => 'required|email|unique:users,email,' . $this->route('id'),
+            'person.email' => 'required|email|unique:persons,email,' . $this->route('id'),
         ];
     }
 

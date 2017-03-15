@@ -6,6 +6,7 @@
     </div>
     <div class="content">
         {!! validation()->errors() !!}
+
         {!! form()->open(['url' => request()->url()]) !!}
         {!! form()->text('email', null, ['placeholder' => 'Email']) !!}
         {!! form()->submit('Recover Password') !!}

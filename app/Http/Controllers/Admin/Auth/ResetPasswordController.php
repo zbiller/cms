@@ -3,19 +3,13 @@
 namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\ResetsPasswords;
+use App\Traits\ResetsPasswords;
+use App\Options\ResetsPasswordsOptions;
 use Illuminate\Http\Request;
 
 class ResetPasswordController extends Controller
 {
     use ResetsPasswords;
-
-    /**
-     * Where to redirect users after password reset.
-     *
-     * @var string
-     */
-    protected $redirectTo = '/admin/login';
 
     /**
      * @param Request $request
@@ -25,8 +19,18 @@ class ResetPasswordController extends Controller
     public function show(Request $request, $token = null)
     {
         return view('admin.auth.password.reset')->with([
+            'username' => $request->username,
             'token' => $token,
-            'email' => $request->email
         ]);
+    }
+
+    /**
+     * @return ResetsPasswordsOptions
+     */
+    public function getResetsPasswordsOptions()
+    {
+        return ResetsPasswordsOptions::instance()
+            ->setIdentifierField('username')
+            ->setRedirectPath('/admin');
     }
 }

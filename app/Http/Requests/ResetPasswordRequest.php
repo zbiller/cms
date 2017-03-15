@@ -23,7 +23,7 @@ class ResetPasswordRequest extends Request
     {
         return [
             'token' => 'required',
-            'email' => 'required|email',
+            'username' => 'required',
             'password' => 'required|confirmed',
         ];
     }
