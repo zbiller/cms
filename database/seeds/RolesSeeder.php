@@ -1,7 +1,7 @@
 <?php
 
-use App\Models\Auth\User;
 use App\Models\Auth\Role;
+use App\Models\Auth\Permission;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -24,6 +24,10 @@ class RolesSeeder extends Seeder
             'name' => 'admin',
             'type' => Role::TYPE_ADMIN,
         ],
+        'Owner' => [
+            'name' => 'owner',
+            'type' => Role::TYPE_ADMIN,
+        ],
     ];
 
     /**
@@ -41,7 +45,10 @@ class RolesSeeder extends Seeder
             $this->adminRoles->push(Role::create($data));
         }
 
-        $user = User::where('username', 'developer')->first();
-        $user->assignRoles($this->adminRoles);
+        /**
+         * Assign all permissions to the "owner" role.
+         */
+        $role = Role::findByName('owner');
+        $role->grantPermission(Permission::all());
     }
 }

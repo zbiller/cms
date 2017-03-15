@@ -78,7 +78,7 @@ class PermissionsSeeder extends Seeder
 
         foreach ($this->adminMap as $group => $labels) {
             foreach ($labels as $label => $data) {
-                $this->adminPermissions->push(Permission::create($data));
+                Permission::create($data);
             }
         }
     }
