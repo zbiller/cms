@@ -91,9 +91,11 @@ trait CanSort
             $this->{$relation}()->getForeignKeyName() :
             $this->{$relation}()->getForeignKey();
 
-        $this->sortQuery->join(
-            $relationTable, $modelTable . '.id', '=', $relationTable . '.' . $foreignKey
-        )->orderBy($relationTable . '.' . $field, request($this->sortDirection));
+        if (!$this->joinAlreadyExists($relationTable)) {
+            $this->sortQuery->join($relationTable, $modelTable . '.id', '=', $relationTable . '.' . $foreignKey);
+        }
+
+        $this->sortQuery->orderBy($relationTable . '.' . $field, request($this->sortDirection));
     }
 
     /**
@@ -136,6 +138,15 @@ trait CanSort
     private function shouldSortByRelation()
     {
         return str_contains(request($this->sortField), '.');
+    }
+
+    /**
+     * @param string $table
+     * @return bool
+     */
+    private function joinAlreadyExists($table)
+    {
+        return str_contains($this->sortQuery->toSql(), '`' . $table . '`');
     }
 
     /**
