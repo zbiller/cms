@@ -12,7 +12,7 @@
     </section>
 
     <section class="view">
-        {!! adminform()->open(['url' => route('admin.admin_roles.store'), 'method' => 'POST', 'class' => 'form']) !!}
+        {!! adminform()->open(['url' => route('admin.admin_roles.store'), 'method' => 'POST', 'class' => 'form', 'files' => true]) !!}
             @include('admin.acl.admin_roles._form')
         {!! form()->close() !!}
     </section>

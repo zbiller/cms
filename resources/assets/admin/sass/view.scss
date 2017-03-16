@@ -57,6 +57,43 @@ div.tab {
         @include media-query('tablet-small') {
             width: 100%;
         }
+
+        &.file-input {
+            @include clear-padding();
+
+            float: right;
+            cursor: pointer;
+            width: 80%;
+            height: 32px;
+            margin: 0;
+            padding: 5px;
+            border-bottom: 1px solid darken($colorGallery, 3%);
+            background: url('../img/input-file-bg.png') bottom 0 left 0 no-repeat !important;
+            background-color: $colorWhite;
+            text-transform: none;
+
+            span {
+                @include font-size(13px);
+
+                float: left;
+                clear: none;
+                margin-top: 2px;
+                margin-left: 89px;
+            }
+
+            @include media-query('desktop') {
+                width: 73%;
+            }
+
+            @include media-query('tablet-small') {
+                width: 100%;
+            }
+
+            input[type="file"] {
+                position: fixed;
+                top: -10000px;
+            }
+        }
     }
 
     input, select, textarea {
@@ -91,6 +128,23 @@ div.tab {
             border-bottom: 1px solid $colorJaponica;
         }
 
+        &[type="checkbox"], &[type="radio"] {
+            width: 20px;
+            height: 20px;
+            float: left;
+            cursor: pointer;
+            background: $colorWhite;
+            border: 1px solid darken($colorGallery, 3%);
+
+            &:checked {
+                background: darken($colorGallery, 3%);
+            }
+
+            &.error {
+                border-bottom: 1px solid $colorJaponica;
+            }
+        }
+
         &.with-generate-button {
             @include calc(width, '80% - 100px');
             float: left;
@@ -106,23 +160,6 @@ div.tab {
             @include media-query('tablet-small') {
                 @include calc(width, '100% - 32px');
             }
-        }
-    }
-
-    input[type="checkbox"], input[type="radio"] {
-        width: 20px;
-        height: 20px;
-        float: left;
-        cursor: pointer;
-        background: $colorWhite;
-        border: 1px solid darken($colorGallery, 3%);
-
-        &:checked {
-            background: darken($colorGallery, 3%);
-        }
-
-        &.error {
-            border-bottom: 1px solid $colorJaponica;
         }
     }
 

@@ -61,6 +61,43 @@ div.tab.active {
     width: 100%;
   }
 }
+.form label.file-input {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  float: right;
+  cursor: pointer;
+  width: 80%;
+  height: 32px;
+  margin: 0;
+  padding: 5px;
+  border-bottom: 1px solid #e2e2e2;
+  background: url("../img/input-file-bg.png") bottom 0 left 0 no-repeat !important;
+  background-color: #FFFFFF;
+  text-transform: none;
+}
+.form label.file-input span {
+  font-size: 13px;
+  font-size: 0.8125rem;
+  float: left;
+  clear: none;
+  margin-top: 2px;
+  margin-left: 89px;
+}
+@media only screen and (max-width: 1247px) {
+  .form label.file-input {
+    width: 73%;
+  }
+}
+@media only screen and (max-width: 639px) {
+  .form label.file-input {
+    width: 100%;
+  }
+}
+.form label.file-input input[type="file"] {
+  position: fixed;
+  top: -10000px;
+}
 .form input, .form select, .form textarea {
   font-size: 13px;
   font-size: 0.8125rem;
@@ -99,6 +136,20 @@ div.tab.active {
 .form input.error, .form select.error, .form textarea.error {
   border-bottom: 1px solid #DD7467;
 }
+.form input[type="checkbox"], .form input[type="radio"], .form select[type="checkbox"], .form select[type="radio"], .form textarea[type="checkbox"], .form textarea[type="radio"] {
+  width: 20px;
+  height: 20px;
+  float: left;
+  cursor: pointer;
+  background: #FFFFFF;
+  border: 1px solid #e2e2e2;
+}
+.form input[type="checkbox"]:checked, .form input[type="radio"]:checked, .form select[type="checkbox"]:checked, .form select[type="radio"]:checked, .form textarea[type="checkbox"]:checked, .form textarea[type="radio"]:checked {
+  background: #e2e2e2;
+}
+.form input[type="checkbox"].error, .form input[type="radio"].error, .form select[type="checkbox"].error, .form select[type="radio"].error, .form textarea[type="checkbox"].error, .form textarea[type="radio"].error {
+  border-bottom: 1px solid #DD7467;
+}
 .form input.with-generate-button, .form select.with-generate-button, .form textarea.with-generate-button {
   width: -moz-calc(80% - 100px);
   width: -webkit-calc(80% - 100px);
@@ -125,20 +176,6 @@ div.tab.active {
     width: -webkit-calc(100% - 32px);
     width: calc(100% - 32px);
   }
-}
-.form input[type="checkbox"], .form input[type="radio"] {
-  width: 20px;
-  height: 20px;
-  float: left;
-  cursor: pointer;
-  background: #FFFFFF;
-  border: 1px solid #e2e2e2;
-}
-.form input[type="checkbox"]:checked, .form input[type="radio"]:checked {
-  background: #e2e2e2;
-}
-.form input[type="checkbox"].error, .form input[type="radio"].error {
-  border-bottom: 1px solid #DD7467;
 }
 .form select {
   padding: 5px 32px 5px 5px;

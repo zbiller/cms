@@ -25381,6 +25381,7 @@ $(window).load(function(){
     flash();
     menu();
     buttons();
+    inputs();
     filter();
     sort();
     tabs();
@@ -25455,7 +25456,7 @@ function menu() {
 /**
  * @return void
  */
-function buttons () {
+function buttons() {
     //update button
     var updateButton = $('a.update');
 
@@ -25478,6 +25479,16 @@ function buttons () {
     saveStayButton.click(function (e) {
         e.preventDefault();
         $('.form').append('<input type="hidden" name="save_stay" value="1" />').submit();
+    });
+}
+
+/**
+ * @return void
+ */
+function inputs() {
+    //set file input display file name
+    $('label.file-input > input[type="file"]').change(function (){
+        $(this).next().html($(this).val().split('\\').pop());
     });
 }
 
