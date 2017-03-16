@@ -217,6 +217,22 @@ class Admin
     }
 
     /**
+     * Create a file input field.
+     *
+     * @param string $name
+     * @param string|null $label
+     * @param array $options
+     * @return string
+     */
+    public function file($name, $label = null, array $options = [])
+    {
+        return $this->wrap(
+            '<label class="file-input">' . $this->form->file($this->name($name), $options) . '<span>No file chosen</span></label>',
+            $this->label($name, $label)
+        );
+    }
+
+    /**
      * Create a number input field.
      *
      * @param string $name
