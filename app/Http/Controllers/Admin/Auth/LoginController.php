@@ -15,9 +15,7 @@ class LoginController extends Controller
      */
     public function show()
     {
-        if (str_contains(url()->previous(), '/admin')) {
-            session()->flash('login_intended_redirect_url', url()->previous());
-        }
+        $this->setIntendedRedirectUrl();
 
         return view('admin.auth.login');
     }

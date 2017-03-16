@@ -63,8 +63,8 @@ trait CanAuthenticate
      */
     public function redirectTo()
     {
-        if (session()->has('login_intended_redirect_url')) {
-            return session('login_intended_redirect_url');
+        if ($this->hasIntendedRedirectUrl()) {
+            return $this->getIntendedRedirectUrl();
         }
 
         return $this->canAuthenticateOptions->loginRedirectPath;
@@ -96,5 +96,37 @@ trait CanAuthenticate
             $this->canAuthenticateOptions->throttleMaxLoginAttempts,
             $this->canAuthenticateOptions->throttleLockoutTime
         );
+    }
+
+    /**
+     * Set the intended url to redirect after successful login.
+     *
+     * @return void
+     */
+    protected function setIntendedRedirectUrl()
+    {
+        if (str_contains(url()->previous(), $this->canAuthenticateOptions->loginRedirectPath)) {
+            session()->flash('intended_redirect', url()->previous());
+        }
+    }
+
+    /**
+     * Get the intended url to redirect after successful login.
+     *
+     * @return string
+     */
+    protected function getIntendedRedirectUrl()
+    {
+        return session('intended_redirect');
+    }
+
+    /**
+     * Verify if an intended redirect url exists.
+     *
+     * @return string
+     */
+    protected function hasIntendedRedirectUrl()
+    {
+        return session()->has('intended_redirect');
     }
 }
