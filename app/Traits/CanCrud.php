@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Exceptions\UploadException;
 use DB, Route, Closure, Exception;
 use App\Models\Model;
 use App\Options\CanCrudOptions;
@@ -133,6 +134,7 @@ trait CanCrud
      * @param Closure|null $function
      * @param Request|null $request
      * @return \Illuminate\Http\RedirectResponse
+     * @throws Exception
      */
     public function _store(Closure $function = null, Request $request = null)
     {
@@ -145,10 +147,16 @@ trait CanCrud
 
             session()->flash('flash_success', 'The record was successfully created!');
             return redirect()->route($request->has('save_stay') ? $this->canCrudOptions->addRoute : $this->canCrudOptions->listRoute);
-        } catch (Exception $e) {
-            dd($e);
-            session()->flash('flash_error', 'The record could not be created! Please try again.');
+        } catch (CrudException $e) {
+            session()->flash('flash_error', $e->getMessage());
             return redirect()->back()->withInput($request->all());
+        } catch (Exception $e) {
+            if (env('APP_ENV') == 'development') {
+                throw new Exception($e->getMessage());
+            } else {
+                session()->flash('flash_error', 'The record could not be created! Please try again.');
+                return redirect()->back()->withInput($request->all());
+            }
         }
     }
 
@@ -184,6 +192,7 @@ trait CanCrud
      * @param Closure|null $function
      * @param Request|null $request
      * @return \Illuminate\Http\RedirectResponse
+     * @throws Exception
      */
     public function _update(Closure $function = null, Request $request = null)
     {
@@ -197,9 +206,16 @@ trait CanCrud
         } catch (ModelNotFoundException $e) {
             session()->flash('flash_error', 'You are trying to update a record that does not exist!');
             return redirect()->route($this->canCrudOptions->listRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
-        } catch (Exception $e) {
-            session()->flash('flash_error', 'The record could not be updated! Please try again.');
+        } catch (CrudException $e) {
+            session()->flash('flash_error', $e->getMessage());
             return redirect()->back()->withInput($request->all());
+        } catch (Exception $e) {
+            if (env('APP_ENV') == 'development') {
+                throw new Exception($e->getMessage());
+            } else {
+                session()->flash('flash_error', 'The record could not be updated! Please try again.');
+                return redirect()->back()->withInput($request->all());
+            }
         }
     }
 
@@ -210,6 +226,7 @@ trait CanCrud
      *
      * @param Closure|null $function
      * @return \Illuminate\Http\RedirectResponse
+     * @throws Exception
      */
     public function _destroy(Closure $function = null)
     {
@@ -223,9 +240,16 @@ trait CanCrud
         } catch (ModelNotFoundException $e) {
             session()->flash('flash_error', 'You are trying to delete a record that does not exist!');
             return redirect()->route($this->canCrudOptions->listRoute);
-        } catch (Exception $e) {
-            session()->flash('flash_error', 'The record could not be deleted! Please try again.');
+        } catch (CrudException $e) {
+            session()->flash('flash_error', $e->getMessage());
             return redirect()->back();
+        } catch (Exception $e) {
+            if (env('APP_ENV') == 'development') {
+                throw new Exception($e->getMessage());
+            } else {
+                session()->flash('flash_error', 'The record could not be deleted! Please try again.');
+                return redirect()->back();
+            }
         }
     }
 
