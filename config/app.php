@@ -171,6 +171,7 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Proengsoft\JsValidation\JsValidationServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
 
         /*
          * Application Service Providers
@@ -238,11 +239,12 @@ return [
         /**
          * Package Facades
          */
+        'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
-        'JsValidator' => Proengsoft\JsValidation\Facades\JsValidatorFacade::class,
-        'Debugbar' => Barryvdh\Debugbar\Facade::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'JsValidator' => Proengsoft\JsValidation\Facades\JsValidatorFacade::class,
+        'FFMpeg' => Pbmedia\LaravelFFMpeg\FFMpegFacade::class,
 
         /**
          * Application Facades
