@@ -3,7 +3,7 @@ namespace PHPSTORM_META {
 
    /**
     * PhpStorm Meta file, to provide autocomplete information for PhpStorm
-    * Generated on 2017-03-13.
+    * Generated on 2017-03-19.
     *
     * @author Barry vd. Heuvel <barryvdh@gmail.com>
     * @see https://github.com/barryvdh/laravel-ide-helper
@@ -49,8 +49,9 @@ namespace PHPSTORM_META {
             'AdminForm' instanceof \App\Helpers\Form\Admin,
             'Menu' instanceof \App\Helpers\Menu\Menu,
             'Pagination' instanceof \App\Helpers\View\Pagination,
-            'Button' instanceof \App\Helpers\View\Button,
+            'Validation' instanceof \App\Helpers\View\Validation,
             'Flash' instanceof \App\Helpers\Message\Flash,
+            'Button' instanceof \App\Helpers\View\Button,
             'blade.compiler' instanceof \Illuminate\View\Compilers\BladeCompiler,
             'validation.presence' instanceof \Illuminate\Validation\DatabasePresenceVerifier,
             'translation.loader' instanceof \Illuminate\Translation\FileLoader,
@@ -183,8 +184,9 @@ namespace PHPSTORM_META {
             'AdminForm' instanceof \App\Helpers\Form\Admin,
             'Menu' instanceof \App\Helpers\Menu\Menu,
             'Pagination' instanceof \App\Helpers\View\Pagination,
-            'Button' instanceof \App\Helpers\View\Button,
+            'Validation' instanceof \App\Helpers\View\Validation,
             'Flash' instanceof \App\Helpers\Message\Flash,
+            'Button' instanceof \App\Helpers\View\Button,
             'blade.compiler' instanceof \Illuminate\View\Compilers\BladeCompiler,
             'validation.presence' instanceof \Illuminate\Validation\DatabasePresenceVerifier,
             'translation.loader' instanceof \Illuminate\Translation\FileLoader,
@@ -317,8 +319,9 @@ namespace PHPSTORM_META {
             'AdminForm' instanceof \App\Helpers\Form\Admin,
             'Menu' instanceof \App\Helpers\Menu\Menu,
             'Pagination' instanceof \App\Helpers\View\Pagination,
-            'Button' instanceof \App\Helpers\View\Button,
+            'Validation' instanceof \App\Helpers\View\Validation,
             'Flash' instanceof \App\Helpers\Message\Flash,
+            'Button' instanceof \App\Helpers\View\Button,
             'blade.compiler' instanceof \Illuminate\View\Compilers\BladeCompiler,
             'validation.presence' instanceof \Illuminate\Validation\DatabasePresenceVerifier,
             'translation.loader' instanceof \Illuminate\Translation\FileLoader,
@@ -451,8 +454,9 @@ namespace PHPSTORM_META {
             'AdminForm' instanceof \App\Helpers\Form\Admin,
             'Menu' instanceof \App\Helpers\Menu\Menu,
             'Pagination' instanceof \App\Helpers\View\Pagination,
-            'Button' instanceof \App\Helpers\View\Button,
+            'Validation' instanceof \App\Helpers\View\Validation,
             'Flash' instanceof \App\Helpers\Message\Flash,
+            'Button' instanceof \App\Helpers\View\Button,
             'blade.compiler' instanceof \Illuminate\View\Compilers\BladeCompiler,
             'validation.presence' instanceof \Illuminate\Validation\DatabasePresenceVerifier,
             'translation.loader' instanceof \Illuminate\Translation\FileLoader,
