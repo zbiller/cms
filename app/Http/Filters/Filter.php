@@ -95,18 +95,18 @@ abstract class Filter
     ];
 
     /**
-     * Get the main where condition between entire request fields.
-     * This method should be implemented in this class' children.
-     *
-     * @return string
-     */
-    abstract public function morph();
-
-    /**
      * Get the filters that apply to the request.
      * This method should be implemented in this class' children.
      *
      * @return array
      */
     abstract public function filters();
+
+    /**
+     * Get the main where condition between entire request fields.
+     * This method should be implemented in this class' children.
+     *
+     * @return string
+     */
+    abstract public function morph();
 }

@@ -2,16 +2,16 @@
 
 namespace App\Models\Auth;
 
-use App\Traits\Cacheable;
-use App\Options\CacheableOptions;
-use App\Contracts\Permission as PermissionContract;
+use App\Traits\CanCache;
+use App\Options\CanCacheOptions;
+use App\Contracts\PermissionContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Permission extends Model implements PermissionContract
 {
-    use Cacheable;
+    use CanCache;
 
     /**
      * The database table.
@@ -75,13 +75,13 @@ class Permission extends Model implements PermissionContract
     }
 
     /**
-     * Set the options necessary for the Cacheable trait.
+     * Set the options necessary for the CanCache trait.
      *
-     * @return CacheableOptions
+     * @return CanCacheOptions
      */
-    public function getCacheableOptions(): CacheableOptions
+    public function getCanCacheOptions(): CanCacheOptions
     {
-        return CacheableOptions::instance()
+        return CanCacheOptions::instance()
             ->setKey('acl');
     }
 }

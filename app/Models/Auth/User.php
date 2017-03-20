@@ -2,23 +2,23 @@
 
 namespace App\Models\Auth;
 
-use App\Scopes\SelectUser;
-use App\Scopes\JoinPerson;
 use App\Traits\HasRoles;
-use App\Traits\Filterable;
-use App\Traits\Sortable;
-use App\Options\CacheableOptions;
+use App\Traits\CanFilter;
+use App\Traits\CanSort;
+use App\Scopes\SelectUserScope;
+use App\Scopes\JoinPersonScope;
+use App\Options\CanCacheOptions;
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Notifications\ResetPassword as ResetPasswordNotification;
 
 class User extends Authenticatable
 {
     use Notifiable;
     use HasRoles;
-    use Filterable;
-    use Sortable;
+    use CanFilter;
+    use CanSort;
 
     /**
      * The database table.
@@ -74,8 +74,8 @@ class User extends Authenticatable
     {
         parent::boot();
 
-        static::addGlobalScope(new SelectUser);
-        static::addGlobalScope(new JoinPerson);
+        static::addGlobalScope(new SelectUserScope);
+        static::addGlobalScope(new JoinPersonScope);
     }
 
     /**
@@ -208,13 +208,13 @@ class User extends Authenticatable
     }
 
     /**
-     * Set the options necessary for the Cacheable trait.
+     * Set the options necessary for the CanCache trait.
      *
-     * @return CacheableOptions
+     * @return CanCacheOptions
      */
-    public function getCacheableOptions(): CacheableOptions
+    public function getCanCacheOptions(): CanCacheOptions
     {
-        return CacheableOptions::instance()
+        return CanCacheOptions::instance()
             ->setKey('acl');
     }
 }

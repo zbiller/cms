@@ -2,8 +2,8 @@
 
 namespace App\Http\Composers;
 
-use App\Helpers\Menu\Item;
 use App\Helpers\Menu\Menu;
+use App\Helpers\Menu\Item;
 use Illuminate\View\View;
 
 class MenuComposer

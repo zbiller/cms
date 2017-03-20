@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-trait Sortable
+trait CanSort
 {
     /**
      * The App\Http\Sorts\Sort instance.

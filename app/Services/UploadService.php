@@ -2,14 +2,13 @@
 
 namespace App\Services;
 
-use DB, Storage, FFMpeg, Exception, Carbon\Carbon;
+use DB, Storage, Image, FFMpeg, Exception, Carbon\Carbon;
 use App\Models\Model;
-use App\Configs\Upload as UploadConfig;
+use App\Configs\UploadConfig;
 use App\Exceptions\UploadException;
 use Illuminate\Http\UploadedFile;
-use Image;
 
-class Upload
+class UploadService
 {
     /**
      * The corresponding table field name for the upload.

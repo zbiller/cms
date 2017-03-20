@@ -7,16 +7,6 @@ use App\Http\Filters\Filter;
 class AdminRoleFilter extends Filter
 {
     /**
-     * Get the main where condition between entire request fields.
-     *
-     * @return string
-     */
-    public function morph()
-    {
-        return 'and';
-    }
-
-    /**
      * Get the filters that apply to the request.
      *
      * @return array
@@ -26,5 +16,15 @@ class AdminRoleFilter extends Filter
         return [
             'search' => 'operator:like|condition:or|columns:name',
         ];
+    }
+
+    /**
+     * Get the main where condition between entire request fields.
+     *
+     * @return string
+     */
+    public function morph()
+    {
+        return 'and';
     }
 }

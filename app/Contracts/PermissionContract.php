@@ -2,7 +2,7 @@
 
 namespace App\Contracts;
 
-interface Permission
+interface PermissionContract
 {
     /**
      * Permission has and belongs to many roles.

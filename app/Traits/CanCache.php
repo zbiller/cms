@@ -2,28 +2,28 @@
 
 namespace App\Traits;
 
-use App\Options\CacheableOptions;
+use App\Options\CanCacheOptions;
 use App\Exceptions\CacheException;
 
-trait Cacheable
+trait CanCache
 {
     /**
      * The container for all the options necessary for this trait.
-     * Options can be viewed in the App\Options\CacheableOptions file.
+     * Options can be viewed in the App\Options\CanCacheOptions file.
      *
-     * @var CacheableOptions
+     * @var CanCacheOptions
      */
-    protected $cacheableOptions;
+    protected $canCacheOptions;
 
     /**
      * The method used for setting the refresh cache options.
      * This method should be called inside the model using this trait.
      * Inside the method, you should set all the refresh cache options.
-     * This can be achieved using the methods from App\Options\CacheableOptions.
+     * This can be achieved using the methods from App\Options\CanCacheOptions.
      *
-     * @return CacheableOptions
+     * @return CanCacheOptions
      */
-    abstract public function getCacheableOptions(): CacheableOptions;
+    abstract public function getCanCacheOptions(): CanCacheOptions;
 
     /**
      * On every database change, attempt to clear the cache.
@@ -31,7 +31,7 @@ trait Cacheable
      *
      * @return void
      */
-    public static function bootCacheable()
+    public static function bootCanCache()
     {
         static::created(function ($model) {
             $model->forgetCache();
@@ -53,11 +53,11 @@ trait Cacheable
      */
     public function forgetCache()
     {
-        $this->cacheableOptions = $this->getCacheableOptions();
+        $this->canCacheOptions = $this->getCanCacheOptions();
 
         $this->checkKey();
 
-        cache()->forget($this->cacheableOptions->key);
+        cache()->forget($this->canCacheOptions->key);
     }
 
     /**
@@ -68,11 +68,11 @@ trait Cacheable
      */
     private function checkKey()
     {
-        if (!$this->cacheableOptions->key) {
+        if (!$this->canCacheOptions->key) {
             throw new CacheException(
-                'Model ' . get_class($this) . ' uses the Cacheable trait. ' . PHP_EOL .
-                'You must set the key via the getCacheableOptions() method from model.' . PHP_EOL .
-                'Use the setKey() method from the App\Options\CacheableOptions class.'
+                'Model ' . get_class($this) . ' uses the CanCache trait. ' . PHP_EOL .
+                'You must set the key via the getCanCacheOptions() method from model.' . PHP_EOL .
+                'Use the setKey() method from the App\Options\CanCacheOptions class.'
             );
         }
     }

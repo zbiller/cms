@@ -5,7 +5,7 @@ namespace App\Configs;
 use Schema;
 use App\Exceptions\ConfigException;
 
-class Upload
+class UploadConfig
 {
     /**
      * The config properties.
