@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.4.15 on 2017-03-19.
+ * Generated for Laravel 5.4.15 on 2017-03-20.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -12981,6 +12981,43 @@ namespace Proengsoft\JsValidation\Facades {
     }         
 }
     
+namespace Pbmedia\LaravelFFMpeg {
+
+    class FFMpegFacade {
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function getFilesystems()
+        {
+            return \Pbmedia\LaravelFFMpeg\FFMpeg::getFilesystems();
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function fromDisk($diskName)
+        {
+            return \Pbmedia\LaravelFFMpeg\FFMpeg::fromDisk($diskName);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function open($path)
+        {
+            return \Pbmedia\LaravelFFMpeg\FFMpeg::open($path);
+        }
+        
+    }         
+}
+    
 namespace App\Facades {
 
     class AdminForm {
@@ -15634,6 +15671,8 @@ namespace {
     class Image extends \Intervention\Image\Facades\Image {}
     
     class JsValidator extends \Proengsoft\JsValidation\Facades\JsValidatorFacade {}
+    
+    class FFMpeg extends \Pbmedia\LaravelFFMpeg\FFMpegFacade {}
     
     class AdminForm extends \App\Facades\AdminForm {}
     
