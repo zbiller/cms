@@ -2,29 +2,42 @@
 
 namespace App\Services;
 
-use DB;
-use Storage;
-use Exception;
-use Carbon\Carbon;
+use DB, Storage, FFMpeg, Exception, Carbon\Carbon;
+use App\Models\Model;
 use App\Configs\Upload as UploadConfig;
 use App\Exceptions\UploadException;
 use Illuminate\Http\UploadedFile;
+use Image;
 
 class Upload
 {
+    /**
+     * The corresponding table field name for the upload.
+     *
+     * @var string
+     */
+    protected $field;
+
     /**
      * The file instance coming from request()->file().
      *
      * @var UploadedFile
      */
-    public $file;
+    protected $file;
+
+    /**
+     * The corresponding model class for the upload.
+     *
+     * @var Model
+     */
+    protected $model;
 
     /**
      * The config options from config/upload.php
      *
      * @var array
      */
-    public $config;
+    protected $config;
 
     /**
      * The filesystem disk used to store the uploaded files.
@@ -159,8 +172,6 @@ class Upload
         'mp3',
         'aac',
         'wav',
-        'ogg',
-        '3gp',
         'aa',
         'aax',
         'act',
@@ -183,7 +194,6 @@ class Upload
         'oga',
         'opus',
         'ra',
-        'rm',
         'raw',
         'sln',
         'tta',
@@ -197,11 +207,38 @@ class Upload
      * In order for this to happen, don't instantiate this normally using "new".
      * Use app(Upload::class) instead.
      *
+     * @param string $field
+     * @param UploadedFile $file
+     * @param Model $model
      * @param UploadConfig $config
      */
-    public function __construct(UploadConfig $config)
+    public function __construct($field, UploadedFile $file, Model $model, UploadConfig $config)
     {
-        $this->config = $config->config;
+        $this->setField($field)->setFile($file)->setModel($model)->setConfig($config);
+        $this->setDisk()->setPath()->setName()->setExtension()->setSize();
+    }
+
+    /**
+     * Set the field name to work with.
+     *
+     * @param string $field
+     * @return $this
+     */
+    public function setField($field)
+    {
+        $this->field = $field;
+
+        return $this;
+    }
+
+    /**
+     * Get the field name.
+     *
+     * @return string
+     */
+    public function getField()
+    {
+        return $this->field;
     }
 
     /**
@@ -225,6 +262,63 @@ class Upload
     public function getFile()
     {
         return $this->file;
+    }
+
+    /**
+     * Set the model class to work with.
+     *
+     * @param Model $model
+     * @return $this
+     */
+    public function setModel(Model $model)
+    {
+        $this->model = $model;
+
+        return $this;
+    }
+
+    /**
+     * Get the model class.
+     *
+     * @return Model
+     */
+    public function getModel()
+    {
+        return $this->model;
+    }
+
+    /**
+     * Set the appropriate config to work with.
+     * The config here will be fully/partially overwritten by the getUploadConfig() method from child model class.
+     *
+     * @param UploadConfig $config
+     * @return $this
+     */
+    public function setConfig(UploadConfig $config)
+    {
+        $this->config = $config->config;
+
+        return $this;
+    }
+
+    /**
+     * Get the concatenated configuration for this particular upload.
+     *
+     * @return Model
+     */
+    public function getConfig($key = null)
+    {
+        if (!$key) {
+            return $this->config;
+        }
+
+        if (str_contains($key, '.')) {
+            return eval(
+                'return $this->config["' . implode('"]["', explode('.', $key)) . '"];'
+            );
+        }
+
+        return $this->config[$key];
     }
 
     /**
@@ -310,7 +404,7 @@ class Upload
      */
     public function setExtension()
     {
-        $this->extension = $this->file->getClientOriginalExtension();
+        $this->extension = strtolower($this->file->getClientOriginalExtension());
 
         return $this;
     }
@@ -423,39 +517,89 @@ class Upload
     }
 
     /**
-     * @param UploadedFile $file
      * @return string
      * @throws UploadException
      */
-    public function upload(UploadedFile $file)
+    public function upload()
     {
-        $this->setFile($file)->setDisk();
-        $this->setPath()->setName()->setExtension()->setSize();
-
         try {
             switch ($this->file) {
                 case $this->isImage():
-                    //$this->storeImageToDisk();
+                    $this->storeImageToDisk();
                     break;
                 case $this->isVideo():
-                    //$this->storeVideoToDisk();
+                    $this->storeVideoToDisk();
                     break;
                 case $this->isAudio():
-                    //$this->storeAudioToDisk();
+                    $this->storeAudioToDisk();
                     break;
                 case $this->isFile():
                     $this->storeFileToDisk();
                     break;
             }
 
-            $this->saveFileToDatabase();
+            $this->saveUploadToDatabase();
 
             return $this->name;
         } catch (UploadException $e) {
-            $this->removeFromDisk();
+            $this->removeUploadFromDisk();
 
             throw new UploadException($e->getMessage());
         }
+    }
+
+    protected function storeImageToDisk()
+    {
+        $this->setType(self::TYPE_IMAGE);
+
+        $this->guardAgainstMaxSize('images');
+        $this->guardAgainstAllowedExtensions('images');
+
+        return $this->attemptStoringToDisk(function () {
+            $image = $this->storeToDisk();
+
+            $this->generateStylesForImage($image);
+
+            return $image;
+        });
+    }
+
+    /**
+     * @return false|string
+     * @throws UploadException
+     */
+    protected function storeVideoToDisk()
+    {
+        $this->setType(self::TYPE_VIDEO);
+
+        $this->guardAgainstMaxSize('videos');
+        $this->guardAgainstAllowedExtensions('videos');
+
+        return $this->attemptStoringToDisk(function () {
+            $video = $this->storeToDisk();
+
+            $this->generateThumbnailsForVideo($video);
+
+            return $video;
+        });
+
+    }
+
+    /**
+     * @return false|string
+     * @throws UploadException
+     */
+    protected function storeAudioToDisk()
+    {
+        $this->setType(self::TYPE_AUDIO);
+
+        $this->guardAgainstMaxSize('audios');
+        $this->guardAgainstAllowedExtensions('audios');
+
+        return $this->attemptStoringToDisk(function () {
+            return $this->storeToDisk();
+        });
+
     }
 
     /**
@@ -466,8 +610,11 @@ class Upload
     {
         $this->setType(self::TYPE_FILE);
 
+        $this->guardAgainstMaxSize('files');
+        $this->guardAgainstAllowedExtensions('files');
+
         return $this->attemptStoringToDisk(function () {
-            return $this->uploadSimple();
+            return $this->storeToDisk();
         });
     }
 
@@ -478,7 +625,7 @@ class Upload
      *
      * @return false|string
      */
-    protected function uploadSimple()
+    protected function storeToDisk()
     {
         return $this->file->storePubliclyAs(
             $this->path, $this->name, $this->disk
@@ -492,11 +639,19 @@ class Upload
      */
     protected function attemptStoringToDisk(callable $callback)
     {
-        $upload = call_user_func($callback);
+        try {
+            $upload = call_user_func($callback);
 
-        if (!$upload) {
+            if (!$upload) {
+                throw new UploadException(
+                    'Failed uploading file(s)! Please try again.'
+                );
+            }
+        } catch (Exception $e) {
             throw new UploadException(
-                'Failed uploading file(s)! Please try again.'
+                $e instanceof UploadException ?
+                    $e->getMessage() :
+                    'Something went wrong when attempting the upload! Please try again.'
             );
         }
 
@@ -504,36 +659,21 @@ class Upload
     }
 
     /**
-     * Remove a failed upload from disk.
+     * Remove a previously stored uploaded file from disk.
+     * Also remove it's dependencies (thumbnails, additional styles, etc.).
      *
      * @return void
      */
-    protected function removeFromDisk()
+    protected function removeUploadFromDisk()
     {
-        switch ($this->file) {
-            case $this->isImage():
-                //$this->removeImageFromDisk();
-                break;
-            case $this->isVideo():
-                //$this->removeVideoFromDisk();
-                break;
-            case $this->isAudio():
-                //$this->removeAudioFromDisk();
-                break;
-            case $this->isFile():
-                $this->removeFileFromDisk();
-                break;
-        }
-    }
+        $matches = preg_grep(
+            '~^' . $this->path . '/' . substr($this->name, 0, strpos($this->name, '.')) . '.*~',
+            Storage::disk($this->disk)->files($this->path)
+        );
 
-    /**
-     * Remove a previously stored file from disk.
-     *
-     * @return void
-     */
-    protected function removeFileFromDisk()
-    {
-        Storage::disk($this->disk)->delete($this->path . '/' . $this->name);
+        foreach ($matches as $file) {
+            Storage::disk($this->disk)->delete($file);
+        }
     }
 
     /**
@@ -545,7 +685,7 @@ class Upload
      * @return bool
      * @throws UploadException
      */
-    protected function saveFileToDatabase()
+    protected function saveUploadToDatabase()
     {
         if ($this->config['database']['save'] !== true) {
             return true;
@@ -553,14 +693,14 @@ class Upload
 
         try {
             $result = DB::table($this->config['database']['table'])->insert([
-                'namasae' => $this->getName(),
+                'name' => $this->name,
                 'original_name' => $this->file->getClientOriginalName(),
-                'path' => $this->getName(),
-                'full_path' => $this->getPath() . '/' . $this->getName(),
-                'extension' => $this->file->getExtension(),
-                'size' => $this->getFile()->getClientSize(),
+                'path' => $this->path,
+                'full_path' => $this->path . '/' . $this->name,
+                'extension' => $this->extension,
+                'size' => $this->size,
                 'mime' => $this->file->getMimeType(),
-                'type' => $this->getType(),
+                'type' => $this->type,
                 'created_at' => Carbon::now()
             ]);
 
@@ -575,5 +715,121 @@ class Upload
                 'Failed saving the uploaded file to the database! Please try again.'
             ) ;
         }
+    }
+
+    protected function generateStylesForImage($path)
+    {
+        try {
+            if (!Storage::disk($this->getDisk())->exists($path)) {
+                throw new UploadException(
+                    'Could not create image styles because the file ' . $path . ' does not exist!'
+                );
+            }
+
+            $original = Storage::disk($this->getDisk())->get($path);
+
+            foreach ($this->getConfig('images.styles') as $field => $styles) {
+                if ($field == $this->getField()) {
+                    foreach ($styles as $name => $style) {
+                        $styleName = $this->getPath() . '/' . substr_replace($this->getName(), '_' . $name, strpos($this->getName(), '.' . $this->getExtension()), 0);
+                        $styleImage = Image::make($original);
+
+                        if (isset($style['ratio']) && $style['ratio'] === true) {
+                            $styleImage->fit($style['width'], $style['height']);
+                        } else {
+                            $styleImage->resize($style['width'], $style['height']);
+                        }
+
+                        Storage::disk($this->getDisk())->put(
+                            $styleName, $styleImage->stream(null, (int)$this->getConfig('images.quality') ?: 90)->__toString()
+                        );
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            throw new UploadException(
+                'Styles generation for the uploaded image failed! Please try again.'
+            );
+        }
+    }
+
+
+    /**
+     * Try generating the video thumbnails.
+     * The generation is done according to the config properties from config/upload.php:
+     * videos.generate_thumbnails and videos.thumbnails_number
+     *
+     * @param string $path
+     * @throws UploadException
+     */
+    protected function generateThumbnailsForVideo($path)
+    {
+        try {
+            $generateThumbnails = $this->config['videos']['generate_thumbnails'];
+            $thumbnailsNumber = (int)$this->config['videos']['thumbnails_number'];
+
+            if ($generateThumbnails === true && $thumbnailsNumber > 0) {
+                $uploadedVideo = FFMpeg::fromDisk($this->disk)->open($path);
+                $videoDuration = $uploadedVideo->getDurationInSeconds();
+
+                for ($i = 1; $i <= $thumbnailsNumber; $i++) {
+                    $thumbnailName = str_replace('.' . $this->extension, '', $path) . '_thumbnail_' . $i . '.jpg';
+
+                    $uploadedVideo
+                        ->getFrameFromSeconds(floor(($videoDuration * $i) / $thumbnailsNumber))
+                        ->export()->toDisk($this->disk)->save($thumbnailName);
+                }
+            }
+        } catch (Exception $e) {
+            throw new UploadException(
+                'Thumbnail generation for the uploaded video failed! Please try again.'
+            );
+        }
+    }
+
+    /**
+     * Verify if the uploaded file's size is bigger than the maximum size allowed.
+     * The maximum size allowed is specified in config/upload.php -> images|videos|audios|files.max_size
+     *
+     * @param string $type
+     * @return bool
+     * @throws UploadException
+     */
+    protected function guardAgainstMaxSize($type)
+    {
+        $maxSize = (float)$this->config[$type]['max_size'];
+
+        if ($maxSize > 0 && $maxSize * pow(1024, 2) < $this->size) {
+            throw new UploadException(
+                "The uploaded {$type} size exceeds the maximum allowed for audio files. ({$maxSize}MB)"
+            );
+        }
+
+        return true;
+    }
+
+    /**
+     * Verify if the uploaded file's extension matches the allowed file extensions.
+     * The allowed file extensions are specified in config/upload.php -> images|videos|audios|files.allowed_extensions
+     *
+     * @param string $type
+     * @return bool
+     * @throws UploadException
+     */
+    protected function guardAgainstAllowedExtensions($type)
+    {
+        $allowedExtensions = $this->config[$type]['allowed_extensions'];
+
+        if ($allowedExtensions) {
+            $extensions = is_array($allowedExtensions) ? $allowedExtensions : explode(',', $allowedExtensions);
+
+            if (!in_array($this->extension, array_map('strtolower', $extensions))) {
+                throw new UploadException(
+                    "The {$type} extension is not allowed! The extensions allowed are: " . implode(', ', $extensions)
+                );
+            }
+        }
+
+        return true;
     }
 }
