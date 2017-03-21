@@ -2,7 +2,13 @@
 
 namespace App\Services;
 
-use DB, Storage, Image, FFMpeg, Exception, Carbon\Carbon;
+use DB;
+use Storage;
+use Image;
+use Closure;
+use Exception;
+use FFMpeg;
+use Carbon\Carbon;
 use App\Models\Model;
 use App\Configs\UploadConfig;
 use App\Exceptions\UploadException;
@@ -303,6 +309,7 @@ class UploadService
     /**
      * Get the concatenated configuration for this particular upload.
      *
+     * @param string|null $key
      * @return Model
      */
     public function getConfig($key = null)
@@ -522,7 +529,7 @@ class UploadService
     public function upload()
     {
         try {
-            switch ($this->file) {
+            switch ($this->getFile()) {
                 case $this->isImage():
                     $this->storeImageToDisk();
                     break;
@@ -538,8 +545,9 @@ class UploadService
             }
 
             $this->saveUploadToDatabase();
+            $this->forgetOldUpload();
 
-            return $this->name;
+            return $this->getName();
         } catch (UploadException $e) {
             $this->removeUploadFromDisk();
 
@@ -547,6 +555,12 @@ class UploadService
         }
     }
 
+    /**
+     * Store to disk a specific 'image' file type.
+     *
+     * @return false|string
+     * @throws UploadException
+     */
     protected function storeImageToDisk()
     {
         $this->setType(self::TYPE_IMAGE);
@@ -564,6 +578,8 @@ class UploadService
     }
 
     /**
+     * Store to disk a specific 'video' file type.
+     *
      * @return false|string
      * @throws UploadException
      */
@@ -585,6 +601,8 @@ class UploadService
     }
 
     /**
+     * Store to disk a specific 'audio' file type.
+     *
      * @return false|string
      * @throws UploadException
      */
@@ -602,6 +620,8 @@ class UploadService
     }
 
     /**
+     * Store to disk a specific 'file' file type.
+     *
      * @return false|string
      * @throws UploadException
      */
@@ -626,17 +646,17 @@ class UploadService
      */
     protected function storeToDisk()
     {
-        return $this->file->storePubliclyAs(
-            $this->path, $this->name, $this->disk
+        return $this->getFile()->storePubliclyAs(
+            $this->getPath(), $this->getName(), $this->getDisk()
         );
     }
 
     /**
-     * @param callable $callback
+     * @param Closure $callback
      * @return mixed
      * @throws UploadException
      */
-    protected function attemptStoringToDisk(callable $callback)
+    protected function attemptStoringToDisk(Closure $callback)
     {
         try {
             $upload = call_user_func($callback);
@@ -658,24 +678,6 @@ class UploadService
     }
 
     /**
-     * Remove a previously stored uploaded file from disk.
-     * Also remove it's dependencies (thumbnails, additional styles, etc.).
-     *
-     * @return void
-     */
-    protected function removeUploadFromDisk()
-    {
-        $matches = preg_grep(
-            '~^' . $this->path . '/' . substr($this->name, 0, strpos($this->name, '.')) . '.*~',
-            Storage::disk($this->disk)->files($this->path)
-        );
-
-        foreach ($matches as $file) {
-            Storage::disk($this->disk)->delete($file);
-        }
-    }
-
-    /**
      * Save details about the newly uploaded file into the database.
      * The details will be saved into the corresponding uploads database column.
      * The table where to save the file's details, can be set in config/upload.php -> database.table key.
@@ -686,20 +688,20 @@ class UploadService
      */
     protected function saveUploadToDatabase()
     {
-        if ($this->config['database']['save'] !== true) {
+        if ($this->getConfig('database.save') !== true) {
             return true;
         }
 
         try {
-            $result = DB::table($this->config['database']['table'])->insert([
-                'name' => $this->name,
-                'original_name' => $this->file->getClientOriginalName(),
-                'path' => $this->path,
-                'full_path' => $this->path . '/' . $this->name,
-                'extension' => $this->extension,
-                'size' => $this->size,
-                'mime' => $this->file->getMimeType(),
-                'type' => $this->type,
+            $result = DB::table($this->getConfig('database.table'))->insert([
+                'name' => $this->getName(),
+                'original_name' => $this->getFile()->getClientOriginalName(),
+                'path' => $this->getPath(),
+                'full_path' => $this->getPath() . '/' . $this->getName(),
+                'extension' => $this->getExtension(),
+                'size' => $this->getSize(),
+                'mime' => $this->getFile()->getMimeType(),
+                'type' => $this->getType(),
                 'created_at' => Carbon::now()
             ]);
 
@@ -716,6 +718,69 @@ class UploadService
         }
     }
 
+    /**
+     * Remove a previously stored uploaded file from disk.
+     * Also remove it's dependencies (thumbnails, additional styles, etc.).
+     *
+     * @return void
+     */
+    protected function removeUploadFromDisk()
+    {
+        $matchingFiles = preg_grep(
+            '~^' . $this->getPath() . '/' . substr($this->getName(), 0, strpos($this->getName(), '.')) . '.*~',
+            Storage::disk($this->getDisk())->files($this->getPath())
+        );
+
+        foreach ($matchingFiles as $file) {
+            Storage::disk($this->getDisk())->delete($file);
+        }
+    }
+
+    /**
+     * Try removing old
+     *
+     * @throws UploadException
+     */
+    protected function forgetOldUpload()
+    {
+        if ($this->getConfig('storage.keep_old') === true) {
+            return true;
+        }
+
+        $oldFile = $this->getModel()->getOriginal($this->getField());
+
+        if (!$oldFile) {
+            return true;
+        }
+
+        $matchingFiles = preg_grep(
+            '~^' . $this->getPath() . '/' . substr($oldFile, 0, strpos($oldFile, '.')) . '.*~',
+            Storage::disk($this->getDisk())->files($this->getPath())
+        );
+
+        try {
+            DB::table($this->getConfig('database.table'))->where('name', '=', $oldFile)->delete();
+
+            foreach ($matchingFiles as $file) {
+                Storage::disk($this->getDisk())->delete($file);
+            }
+
+            return true;
+        } catch (Exception $e) {
+            throw new UploadException(
+                'Failed removing old uploads from disk and/or database! Please try again.'
+            );
+        }
+    }
+
+    /**
+     * Try generating styles for the original uploaded image.
+     * The styles are defined in the config/upload.php (images -> styles), or overwritten in the model via the getUploadConfig() method.
+     * Also, when creating the styles, the "quality" configuration option is taken into consideration.
+     *
+     * @param string $path
+     * @throws UploadException
+     */
     protected function generateStylesForImage($path)
     {
         try {
@@ -733,7 +798,7 @@ class UploadService
                         $styleName = $this->getPath() . '/' . substr_replace($this->getName(), '_' . $name, strpos($this->getName(), '.' . $this->getExtension()), 0);
                         $styleImage = Image::make($original);
 
-                        if (isset($style['ratio']) && $style['ratio'] === true) {
+                        if (!isset($style['ratio']) || $style['ratio'] === true) {
                             $styleImage->fit($style['width'], $style['height']);
                         } else {
                             $styleImage->resize($style['width'], $style['height']);
@@ -764,19 +829,19 @@ class UploadService
     protected function generateThumbnailsForVideo($path)
     {
         try {
-            $generateThumbnails = $this->config['videos']['generate_thumbnails'];
-            $thumbnailsNumber = (int)$this->config['videos']['thumbnails_number'];
+            $generateThumbnails = $this->getConfig('videos.generate_thumbnails');
+            $thumbnailsNumber = (int)$this->getConfig('videos.thumbnails_number');
 
             if ($generateThumbnails === true && $thumbnailsNumber > 0) {
-                $uploadedVideo = FFMpeg::fromDisk($this->disk)->open($path);
+                $uploadedVideo = FFMpeg::fromDisk($this->getDisk())->open($path);
                 $videoDuration = $uploadedVideo->getDurationInSeconds();
 
                 for ($i = 1; $i <= $thumbnailsNumber; $i++) {
-                    $thumbnailName = str_replace('.' . $this->extension, '', $path) . '_thumbnail_' . $i . '.jpg';
+                    $thumbnailName = str_replace('.' . $this->getExtension(), '', $path) . '_thumbnail_' . $i . '.jpg';
 
                     $uploadedVideo
                         ->getFrameFromSeconds(floor(($videoDuration * $i) / $thumbnailsNumber))
-                        ->export()->toDisk($this->disk)->save($thumbnailName);
+                        ->export()->toDisk($this->getDisk())->save($thumbnailName);
                 }
             }
         } catch (Exception $e) {
@@ -796,9 +861,9 @@ class UploadService
      */
     protected function guardAgainstMaxSize($type)
     {
-        $maxSize = (float)$this->config[$type]['max_size'];
+        $maxSize = (float)$this->getConfig($type . '.max_size');
 
-        if ($maxSize > 0 && $maxSize * pow(1024, 2) < $this->size) {
+        if ($maxSize > 0 && $maxSize * pow(1024, 2) < $this->getSize()) {
             throw new UploadException(
                 "The uploaded {$type} size exceeds the maximum allowed for audio files. ({$maxSize}MB)"
             );
@@ -817,12 +882,12 @@ class UploadService
      */
     protected function guardAgainstAllowedExtensions($type)
     {
-        $allowedExtensions = $this->config[$type]['allowed_extensions'];
+        $allowedExtensions = $this->getConfig($type . '.allowed_extensions');
 
         if ($allowedExtensions) {
             $extensions = is_array($allowedExtensions) ? $allowedExtensions : explode(',', $allowedExtensions);
 
-            if (!in_array($this->extension, array_map('strtolower', $extensions))) {
+            if (!in_array($this->getExtension(), array_map('strtolower', $extensions))) {
                 throw new UploadException(
                     "The {$type} extension is not allowed! The extensions allowed are: " . implode(', ', $extensions)
                 );

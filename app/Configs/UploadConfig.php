@@ -49,13 +49,19 @@ class UploadConfig
     {
         if (!isset($this->config['storage']['disk']) || !$this->config['storage']['disk']) {
             throw new ConfigException(
-                'The property "storage.disk" does not exist in ' . $this->path . '.'
+                "The key 'storage.disk' does not exist in {$this->path}."
             );
         }
 
         if (!config('filesystems.disks.' . $this->config['storage']['disk'])) {
             throw new ConfigException(
-                'The disk "' . $this->config['storage']['disk'] . '" does not exist in config/filesystems.php'
+                "The disk '{$this->config['storage']['disk']}' does not exist in config/filesystems.php"
+            );
+        }
+
+        if (!isset($this->config['storage']['keep_old'])) {
+            throw new ConfigException(
+                "The key 'storage.keep_old' does not exist in {$this->path}."
             );
         }
     }
@@ -73,21 +79,21 @@ class UploadConfig
     {
         if (!isset($this->config['database']['save'])) {
             throw new ConfigException(
-                'The property "database.save" does not exist in ' . $this->path . '.'
+                "The key 'database.save' does not exist in {$this->path}."
             );
         }
 
         if ($this->config['database']['save'] === true) {
             if (!isset($this->config['database']['table']) || !$this->config['database']['table']) {
                 throw new ConfigException(
-                    'The property "database.save" is true in ' . $this->path . '.' . PHP_EOL .
-                    'You must also specify a "database.table" where to store the saved records.'
+                    "The key 'database.save' is true in {$this->path}." . PHP_EOL .
+                    "You must also specify a 'database.table' key where to store the saved records."
                 );
             }
 
             if (!Schema::hasTable($this->config['database']['table'])) {
                 throw new ConfigException(
-                    'The table defined in ' . $this->path . ' does not exist.'
+                    "The table defined in {$this->path} does not exist."
                 );
             }
         }
@@ -105,25 +111,25 @@ class UploadConfig
     {
         if (!array_key_exists('max_size', $this->config['images'])) {
             throw new ConfigException(
-                'The images.max_size key from ' . $this->path . ' is not specified.'
+                "The key 'images.max_size' does not exist in {$this->path}."
             );
         }
 
         if (!array_key_exists('allowed_extensions', $this->config['images'])) {
             throw new ConfigException(
-                'The images.allowed_extensions key from ' . $this->path . ' is not specified.'
+                "The key 'images.allowed_extensions' does not exist in {$this->path}."
             );
         }
 
         if (!array_key_exists('quality', $this->config['images'])) {
             throw new ConfigException(
-                'The images.quality key from ' . $this->path . ' is not specified.'
+                "The key 'images.quality' does not exist in {$this->path}."
             );
         }
 
         if (!array_key_exists('styles', $this->config['images'])) {
             throw new ConfigException(
-                'The images.styles key from ' . $this->path . ' is not specified.'
+                "The key 'images.styles' does not exist in {$this->path}."
             );
         }
 
@@ -150,25 +156,25 @@ class UploadConfig
     {
         if (!array_key_exists('max_size', $this->config['videos'])) {
             throw new ConfigException(
-                'The videos.max_size key from ' . $this->path . ' is not specified.'
+                "The key 'videos.max_size' does not exist in {$this->path}."
             );
         }
 
         if (!array_key_exists('allowed_extensions', $this->config['videos'])) {
             throw new ConfigException(
-                'The videos.allowed_extensions key from ' . $this->path . ' is not specified.'
+                "The key 'videos.allowed_extensions' does not exist in {$this->path}."
             );
         }
 
         if (!array_key_exists('generate_thumbnails', $this->config['videos'])) {
             throw new ConfigException(
-                'The videos.generate_thumbnails key from ' . $this->path . ' is not specified.'
+                "The key 'videos.generate_thumbnails' does not exist in {$this->path}."
             );
         }
 
         if (!array_key_exists('thumbnails_number', $this->config['videos'])) {
             throw new ConfigException(
-                'The videos.thumbnails_number key from ' . $this->path . ' is not specified.'
+                "The key 'videos.thumbnails_number' does not exist in {$this->path}."
             );
         }
     }
@@ -185,13 +191,13 @@ class UploadConfig
     {
         if (!array_key_exists('max_size', $this->config['audios'])) {
             throw new ConfigException(
-                'The audios.max_size key from ' . $this->path . ' is not specified.'
+                "The key 'audio.max_size' does not exist in {$this->path}."
             );
         }
 
         if (!array_key_exists('allowed_extensions', $this->config['audios'])) {
             throw new ConfigException(
-                'The audios.allowed_extensions key from ' . $this->path . ' is not specified.'
+                "The key 'audio.allowed_extensions' does not exist in {$this->path}."
             );
         }
     }
@@ -208,13 +214,13 @@ class UploadConfig
     {
         if (!array_key_exists('max_size', $this->config['files'])) {
             throw new ConfigException(
-                'The files.max_size key from ' . $this->path . ' is not specified.'
+                "The key 'files.max_size' does not exist in {$this->path}."
             );
         }
 
         if (!array_key_exists('allowed_extensions', $this->config['files'])) {
             throw new ConfigException(
-                'The files.allowed_extensions key from ' . $this->path . ' is not specified.'
+                "The key 'files.allowed_extensions' does not exist in {$this->path}."
             );
         }
     }

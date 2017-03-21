@@ -22,6 +22,16 @@ return [
          */
         'disk' => 'uploads',
 
+        /**
+         * Flag indicating that on record upload, to keep or remove both old uploaded file (and it's dependencies) and database record.
+         *
+         * Set this to true in order to keep old files and database records when uploading a new file for the same model entity field.
+         * Set this to false in order to remove old files from disk and also delete the database record for the old file.
+         *
+         * Notice: setting this to false is discouraged.
+         */
+        'keep_old' => true,
+
     ],
 
     /**
@@ -88,25 +98,22 @@ return [
          * You can specify multiple styles, as array.
          *
          * Specify the "ratio" = true individually on each style, to let the uploader know you want to preserve the original ratio.
+         *
          * If ratio preserving is enabled, the image will first be re-sized and the cropped.
          * If ratio preserving is disabled, the image will only be re-sized at the width and height specified.
+         *
+         * Also, not specifying the ratio for a style, is like the ratio is enabled.
+         * The only way to disable the ratio, is to set it to false.
+         *
+         * IMPORTANT
+         * ------------------------------------------------------------------------------------------------------------------------
+         * You should specify this option in the model, using the HasUploads trait method: getUploadConfig().
+         * Note that the getUploadConfig() method is capable of overwriting the config values from this file.
+         * With that said, keep in mind that you can specify other options, not just the image styles.
+         *
+         * To specify the image styles, return an array like: [images => [styles => [field => [name] => [width, height, ratio]]]]
          */
-        'styles' => [
-            /*'sample_table_name' => [
-                'sample_table_field' => [
-                    'sample_style_one' => [
-                        'width' => '200',
-                        'height' => '100',
-                        'ratio' => true,
-                    ],
-                    'sample_style_two' => [
-                        'width' => '100',
-                        'height' => '200',
-                        'ratio' => false,
-                    ]
-                ]
-            ]*/
-        ]
+        'styles' => []
     ],
 
     /**
