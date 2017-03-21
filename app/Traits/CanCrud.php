@@ -2,8 +2,10 @@
 
 namespace App\Traits;
 
-use App\Exceptions\UploadException;
-use DB, Route, Closure, Exception;
+use DB;
+use Route;
+use Closure;
+use Exception;
 use App\Models\Model;
 use App\Options\CanCrudOptions;
 use App\Exceptions\CrudException;

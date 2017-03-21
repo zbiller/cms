@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Test;
 
+use App\Exceptions\CrudException;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Crud\TestRequest;
 use App\Http\Filters\Admin\TestFilter;

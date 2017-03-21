@@ -3,12 +3,14 @@
 namespace App\Models\Test;
 
 use App\Models\Model;
-use App\Traits\Filterable;
-use App\Traits\Sortable;
+use App\Options\HasUploadsOptions;
+use App\Traits\CanFilter;
+use App\Traits\HasUploads;
+use App\Traits\CanSort;
 
 class Test extends Model
 {
-    use Filterable, Sortable;
+    use CanFilter, CanSort, HasUploads;
 
     /**
      * The database table.
@@ -25,6 +27,9 @@ class Test extends Model
     protected $fillable = [
         'name',
         'type',
+        'image',
+        'video',
+        'file',
     ];
 
     /**
@@ -65,5 +70,61 @@ class Test extends Model
     public function testHabtm()
     {
         return $this->belongsToMany(TestHabtm::class, 'test_test_habtm_ring', 'test_id', 'test_habtm_id');
+    }
+
+
+
+    /*public function getHasUploadsOptions()
+    {
+        return HasUploadsOptions::instance()
+            ->setStorageDisk('uploads');
+
+        return HasUploadsOptions::instance()
+            ->setStorageDisk()
+            ->setDatabaseSave()
+            ->setDatabaseTable()
+            ->setImageMaxSize()
+            ->setImageAllowedExtensions()
+            ->setImageStyles()
+            ->setVideosMaxSize()
+            ->setVideoAllowedExtensions()
+            ->setVideoGenerateThumbnails()
+            ->setVideoThumbnailsNumber()
+            ->setAudioMaxSize()
+            ->setAudioAllowedExtensions()
+            ->setFileMaxSize()
+            ->setFileAllowedExtensions();
+
+    }*/
+
+
+
+    public function getUploadConfig()
+    {
+        return [];
+
+        return [
+            'images' => [
+                'styles' => [
+                    'image' => [
+                        'portrait' => [
+                            'width' => '600',
+                            'height' => '1080',
+                            'ratio' => true,
+                        ],
+                        'landscape' => [
+                            'width' => '600',
+                            'height' => '200',
+                            'ratio' => true,
+                        ],
+                        'square' => [
+                            'width' => '400',
+                            'height' => '400',
+                            'ratio' => true,
+                        ]
+                    ]
+                ]
+            ]
+        ];
     }
 }
