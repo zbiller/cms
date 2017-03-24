@@ -3,6 +3,7 @@
 namespace App\Models\Upload;
 
 use App\Models\Model;
+use Illuminate\Database\Schema\Blueprint;
 
 class Upload extends Model
 {
@@ -32,5 +33,17 @@ class Upload extends Model
         parent::__construct($attributes);
 
         $this->setTable(config('upload.database.table'));
+    }
+
+    /**
+     * Create a fully qualified upload column in a database table.
+     *
+     * @param string $name
+     * @param Blueprint $table
+     */
+    public static function column($name, Blueprint $table)
+    {
+        $table->string($name)->nullable();
+        $table->foreign($name)->references('full_path')->on(config('upload.database.table'))->onDelete('set null');
     }
 }
