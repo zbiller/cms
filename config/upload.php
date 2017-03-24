@@ -91,7 +91,7 @@ return [
          * Here you can specify an integer value between 1 and 100.
          * If no value is specified (eg. null), then tha uploaded image's quality will be set to 90.
          */
-        'quality' => 100,
+        'quality' => 75,
 
         /**
          * The styles to create from the original uploaded image.
