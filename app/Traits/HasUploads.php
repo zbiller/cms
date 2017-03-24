@@ -2,11 +2,12 @@
 
 namespace App\Traits;
 
+use Storage;
 use App\Models\Model;
 use App\Services\UploadService;
-use App\Configs\UploadConfig;
-use App\Exceptions\CrudException;
+use App\Helpers\UploadHelper;
 use App\Exceptions\UploadException;
+use App\Exceptions\CrudException;
 use Illuminate\Http\UploadedFile;
 
 trait HasUploads
@@ -32,14 +33,11 @@ trait HasUploads
     {
         static::saving(function (Model $model) {
             foreach (request()->allFiles() as $name => $file) {
-                if ($model->isFillable($name) && self::isValidUpload($file)) {
+                if ($model->isFillable($name) && $file instanceof UploadedFile) {
                     try {
-                        $config = new UploadConfig($model->getUploadConfig());
-                        $upload = new UploadService($name, $file, $model, $config);
-
-                        $model->attributes[$name] = $upload->upload();
+                        $model->attributes[$name] = (new UploadService($file, $model, $name))->upload();
                     } catch (UploadException $e) {
-                        throw new CrudException($e->getMessage());
+                        throw new CrudException($e->getMessage(), $e->getCode(), $e);
                     }
                 }
             }
@@ -47,13 +45,27 @@ trait HasUploads
     }
 
     /**
-     * Verify if the file provided for uploaded is a valid one.
+     * Get the upload attribute as an upload helper instance.
+     * To achieve this, call the respective upload field property prefixed with an underscore "_".
+     * The script will look to see if it's meant for an upload and it will return the helper.
+     * The returned helper instance will contain the upload file coming from database field, without the underscore "_".
+     * Afterwards, you can call App\Helpers\UploadHelper methods directly on the attribute.
      *
-     * @param UploadedFile $file
-     * @return bool
+     * @param string $key
+     * @return UploadHelper|mixed
      */
-    protected static function isValidUpload(UploadedFile $file)
+    public function getAttribute($key)
     {
-        return $file instanceof UploadedFile && $file->getPath() != '';
+        if (starts_with($key, '_')) {
+            $key = ltrim($key, '_');
+
+            if (Storage::disk(config('upload.storage.disk'))->exists($this->{$key})) {
+                return new UploadHelper($this->{$key});
+            }
+
+            return parent::getAttribute('_' . $key);
+        }
+
+        return parent::getAttribute($key);
     }
 }
