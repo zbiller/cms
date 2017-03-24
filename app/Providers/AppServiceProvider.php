@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Schema;
+use App\Helpers\UploadHelper;
 use App\Helpers\Form\Admin;
 use App\Helpers\Menu\Menu;
 use App\Helpers\View\Pagination;

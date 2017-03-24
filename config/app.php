@@ -180,6 +180,7 @@ return [
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\ConfigServiceProvider::class,
         App\Providers\AclServiceProvider::class,
         App\Providers\ViewServiceProvider::class,
         App\Providers\ComposerServiceProvider::class,

@@ -1,5 +1,16 @@
 <?php
 
+if (!function_exists('upload')) {
+    /**
+     * @param string $file
+     * @return \App\Helpers\UploadHelper
+     */
+    function upload($file)
+    {
+        return new \App\Helpers\UploadHelper($file);
+    }
+}
+
 if (!function_exists('form')) {
     /**
      * @return \Collective\Html\FormBuilder
