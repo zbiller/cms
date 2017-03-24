@@ -2,14 +2,13 @@
 
 namespace App\Services;
 
-use DB;
 use Storage;
 use Image;
 use Closure;
 use Exception;
 use FFMpeg;
-use Carbon\Carbon;
 use App\Models\Model;
+use App\Models\Upload\Upload;
 use App\Configs\UploadConfig;
 use App\Exceptions\UploadException;
 use Illuminate\Http\UploadedFile;
@@ -208,18 +207,15 @@ class UploadService
     ];
 
     /**
-     * Resolve dependencies automatically.
-     * In order for this to happen, don't instantiate this normally using "new".
-     * Use app(Upload::class) instead.
+     * Build a fully configured UploadService instance.
      *
-     * @param string $field
      * @param UploadedFile $file
      * @param Model $model
-     * @param UploadConfig $config
+     * @param string $field
      */
-    public function __construct($field, UploadedFile $file, Model $model, UploadConfig $config)
+    public function __construct(UploadedFile $file, Model $model, $field)
     {
-        $this->setField($field)->setFile($file)->setModel($model)->setConfig($config);
+        $this->setField($field)->setFile($file)->setModel($model)->setConfig($model);
         $this->setDisk()->setPath()->setName()->setExtension()->setSize();
     }
 
@@ -296,12 +292,16 @@ class UploadService
      * Set the appropriate config to work with.
      * The config here will be fully/partially overwritten by the getUploadConfig() method from child model class.
      *
-     * @param UploadConfig $config
+     * @param Model $model
      * @return $this
      */
-    public function setConfig(UploadConfig $config)
+    public function setConfig(Model $model)
     {
-        $this->config = $config->config;
+        if (method_exists($model, 'getUploadConfig')) {
+            $this->config = array_replace_recursive(config('upload'), $model->getUploadConfig());
+        } else {
+            $this->config = upload('config');
+        }
 
         return $this;
     }
@@ -387,7 +387,7 @@ class UploadService
      */
     public function setPath()
     {
-        $this->path = date('Y') . '/' . date('n') . '/' . date('j');
+        $this->path = date('Y') . '/' . date('m') . '/' . date('j');
 
         return $this;
     }
@@ -547,7 +547,7 @@ class UploadService
             $this->saveUploadToDatabase();
             $this->forgetOldUpload();
 
-            return $this->getName();
+            return $this->getPath() . '/' . $this->getName();
         } catch (UploadException $e) {
             $this->removeUploadFromDisk();
 
@@ -668,8 +668,7 @@ class UploadService
             }
         } catch (Exception $e) {
             throw new UploadException(
-                $e instanceof UploadException ?
-                    $e->getMessage() :
+                $e instanceof UploadException ? $e->getMessage() :
                     'Something went wrong when attempting the upload! Please try again.'
             );
         }
@@ -683,17 +682,16 @@ class UploadService
      * The table where to save the file's details, can be set in config/upload.php -> database.table key.
      * Please note that the saving will be made only if the database.save key is set to true.
      *
-     * @return bool
      * @throws UploadException
      */
     protected function saveUploadToDatabase()
     {
         if ($this->getConfig('database.save') !== true) {
-            return true;
+            return;
         }
 
         try {
-            $result = DB::table($this->getConfig('database.table'))->insert([
+            Upload::create([
                 'name' => $this->getName(),
                 'original_name' => $this->getFile()->getClientOriginalName(),
                 'path' => $this->getPath(),
@@ -702,19 +700,11 @@ class UploadService
                 'size' => $this->getSize(),
                 'mime' => $this->getFile()->getMimeType(),
                 'type' => $this->getType(),
-                'created_at' => Carbon::now()
             ]);
-
-
-            if (!$result) {
-                throw new Exception;
-            }
-
-            return true;
         } catch (Exception $e) {
             throw new UploadException(
                 'Failed saving the uploaded file to the database! Please try again.'
-            ) ;
+            );
         }
     }
 
@@ -737,20 +727,20 @@ class UploadService
     }
 
     /**
-     * Try removing old
+     * Try removing old upload from disk when uploading a new one.
      *
      * @throws UploadException
      */
     protected function forgetOldUpload()
     {
         if ($this->getConfig('storage.keep_old') === true) {
-            return true;
+            return;
         }
 
-        $oldFile = $this->getModel()->getOriginal($this->getField());
+        $oldFile = last(explode('/', $this->getModel()->getOriginal($this->getField())));
 
         if (!$oldFile) {
-            return true;
+            return;
         }
 
         $matchingFiles = preg_grep(
@@ -759,13 +749,13 @@ class UploadService
         );
 
         try {
-            DB::table($this->getConfig('database.table'))->where('name', '=', $oldFile)->delete();
+            Upload::where([
+                'full_path' => $this->getModel()->getOriginal($this->getField())
+            ])->delete();
 
             foreach ($matchingFiles as $file) {
                 Storage::disk($this->getDisk())->delete($file);
             }
-
-            return true;
         } catch (Exception $e) {
             throw new UploadException(
                 'Failed removing old uploads from disk and/or database! Please try again.'
@@ -783,31 +773,30 @@ class UploadService
      */
     protected function generateStylesForImage($path)
     {
-        try {
-            if (!Storage::disk($this->getDisk())->exists($path)) {
-                throw new UploadException(
-                    'Could not create image styles because the file ' . $path . ' does not exist!'
-                );
-            }
+        if (!$this->getConfig('images.styles')) {
+            return;
+        }
 
+        if (!Storage::disk($this->getDisk())->exists($path)) {
+            throw new UploadException(
+                'Could not create image styles because the image "' . $path . '" does not exist!'
+            );
+        }
+
+        try {
             $original = Storage::disk($this->getDisk())->get($path);
 
             foreach ($this->getConfig('images.styles') as $field => $styles) {
-                if ($field == $this->getField()) {
-                    foreach ($styles as $name => $style) {
-                        $styleName = $this->getPath() . '/' . substr_replace($this->getName(), '_' . $name, strpos($this->getName(), '.' . $this->getExtension()), 0);
-                        $styleImage = Image::make($original);
+                if ($field != $this->getField()) {
+                    continue;
+                }
 
-                        if (!isset($style['ratio']) || $style['ratio'] === true) {
-                            $styleImage->fit($style['width'], $style['height']);
-                        } else {
-                            $styleImage->resize($style['width'], $style['height']);
-                        }
-
-                        Storage::disk($this->getDisk())->put(
-                            $styleName, $styleImage->stream(null, (int)$this->getConfig('images.quality') ?: 90)->__toString()
-                        );
-                    }
+                foreach ($styles as $name => $style) {
+                    Storage::disk($this->getDisk())->put(
+                        $this->getPath() . '/' . substr_replace($this->getName(), '_' . $name, strpos($this->getName(), '.' . $this->getExtension()), 0),
+                        Image::make($original)->{!isset($style['ratio']) || $style['ratio'] === true ? 'fit' : 'resize'}($style['width'], $style['height'])
+                            ->stream(null, (int)$this->getConfig('images.quality') ?: 90)->__toString()
+                    );
                 }
             }
         } catch (Exception $e) {
@@ -828,21 +817,23 @@ class UploadService
      */
     protected function generateThumbnailsForVideo($path)
     {
+        $generate = $this->getConfig('videos.generate_thumbnails');
+        $number = (int)$this->getConfig('videos.thumbnails_number');
+
+        if (!$generate || !$number) {
+            return;
+        }
+
         try {
-            $generateThumbnails = $this->getConfig('videos.generate_thumbnails');
-            $thumbnailsNumber = (int)$this->getConfig('videos.thumbnails_number');
+            $video = FFMpeg::fromDisk($this->getDisk())->open($path);
+            $duration = $video->getDurationInSeconds();
 
-            if ($generateThumbnails === true && $thumbnailsNumber > 0) {
-                $uploadedVideo = FFMpeg::fromDisk($this->getDisk())->open($path);
-                $videoDuration = $uploadedVideo->getDurationInSeconds();
+            for ($i = 1; $i <= $number; $i++) {
+                $thumbnailName = str_replace('.' . $this->getExtension(), '', $path) . '_thumbnail_' . $i . '.jpg';
 
-                for ($i = 1; $i <= $thumbnailsNumber; $i++) {
-                    $thumbnailName = str_replace('.' . $this->getExtension(), '', $path) . '_thumbnail_' . $i . '.jpg';
-
-                    $uploadedVideo
-                        ->getFrameFromSeconds(floor(($videoDuration * $i) / $thumbnailsNumber))
-                        ->export()->toDisk($this->getDisk())->save($thumbnailName);
-                }
+                $video
+                    ->getFrameFromSeconds(floor(($duration * $i) / $number))
+                    ->export()->toDisk($this->getDisk())->save($thumbnailName);
             }
         } catch (Exception $e) {
             throw new UploadException(
@@ -856,20 +847,21 @@ class UploadService
      * The maximum size allowed is specified in config/upload.php -> images|videos|audios|files.max_size
      *
      * @param string $type
-     * @return bool
      * @throws UploadException
      */
     protected function guardAgainstMaxSize($type)
     {
-        $maxSize = (float)$this->getConfig($type . '.max_size');
+        $size = (float)$this->getConfig($type . '.max_size');
 
-        if ($maxSize > 0 && $maxSize * pow(1024, 2) < $this->getSize()) {
-            throw new UploadException(
-                "The uploaded {$type} size exceeds the maximum allowed for audio files. ({$maxSize}MB)"
-            );
+        if (!$size) {
+            return;
         }
 
-        return true;
+        if ($size * pow(1024, 2) < $this->getSize()) {
+            throw new UploadException(
+                'The uploaded "' . $type . '" size exceeds the maximum allowed for audio files. (' . $size . 'MB)'
+            );
+        }
     }
 
     /**
@@ -882,16 +874,18 @@ class UploadService
      */
     protected function guardAgainstAllowedExtensions($type)
     {
-        $allowedExtensions = $this->getConfig($type . '.allowed_extensions');
+        $allowed = $this->getConfig($type . '.allowed_extensions');
 
-        if ($allowedExtensions) {
-            $extensions = is_array($allowedExtensions) ? $allowedExtensions : explode(',', $allowedExtensions);
+        if (!$allowed) {
+            return;
+        }
 
-            if (!in_array($this->getExtension(), array_map('strtolower', $extensions))) {
-                throw new UploadException(
-                    "The {$type} extension is not allowed! The extensions allowed are: " . implode(', ', $extensions)
-                );
-            }
+        $extensions = is_array($allowed) ? $allowed : explode(',', $allowed);
+
+        if (!in_array($this->getExtension(), array_map('strtolower', $extensions))) {
+            throw new UploadException(
+                'The "' . $type . '" extension is not allowed! The extensions allowed are: ' . implode(', ', $extensions)
+            );
         }
 
         return true;
