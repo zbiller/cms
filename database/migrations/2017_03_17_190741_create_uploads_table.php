@@ -15,15 +15,16 @@ class CreateUploadsTable extends Migration
     {
         Schema::create('uploads', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name')->unsinged()->unique();
+            $table->string('name');
             $table->string('original_name');
             $table->string('path');
-            $table->string('full_path');
+            $table->string('full_path')->index()->unique();
             $table->string('extension');
             $table->integer('size');
             $table->string('mime');
             $table->tinyInteger('type')->default(0);
-            $table->timestamp('created_at')->nullable();
+
+            $table->timestamps();
         });
     }
 
