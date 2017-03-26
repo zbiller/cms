@@ -13502,7 +13502,7 @@ namespace App\Facades {
         
     }         
 
-    class Flash {
+    class FlashFacade {
         
         /**
          * Render any flash message if it's set.
@@ -13512,7 +13512,7 @@ namespace App\Facades {
          */
         public static function message()
         {
-            return \App\Helpers\Message\Flash::message();
+            return \App\Helpers\FlashHelper::message();
         }
         
         /**
@@ -13523,7 +13523,7 @@ namespace App\Facades {
          */
         public static function success()
         {
-            return \App\Helpers\Message\Flash::success();
+            return \App\Helpers\FlashHelper::success();
         }
         
         /**
@@ -13534,7 +13534,7 @@ namespace App\Facades {
          */
         public static function error()
         {
-            return \App\Helpers\Message\Flash::error();
+            return \App\Helpers\FlashHelper::error();
         }
         
         /**
@@ -13545,7 +13545,7 @@ namespace App\Facades {
          */
         public static function warning()
         {
-            return \App\Helpers\Message\Flash::warning();
+            return \App\Helpers\FlashHelper::warning();
         }
         
     }         
@@ -15719,7 +15719,7 @@ namespace {
     
     class Validation extends \App\Facades\Validation {}
     
-    class Flash extends \App\Facades\Flash {}
+    class Flash extends \App\Facades\FlashFacade {}
     
     class Button extends \App\Facades\Button {}
     

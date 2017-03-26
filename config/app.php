@@ -254,7 +254,7 @@ return [
         'Menu' => App\Facades\MenuFacade::class,
         'Pagination' => App\Facades\Pagination::class,
         'Validation' => App\Facades\Validation::class,
-        'Flash' => App\Facades\Flash::class,
+        'Flash' => App\Facades\FlashFacade::class,
         'Button' => App\Facades\Button::class,
     ],
 

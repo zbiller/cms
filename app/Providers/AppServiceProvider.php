@@ -3,11 +3,11 @@
 namespace App\Providers;
 
 use App\Helpers\MenuHelper;
+use App\Helpers\FlashHelper;
 use Schema;
 use App\Helpers\FormAdminHelper;
 use App\Helpers\View\Pagination;
 use App\Helpers\View\Validation;
-use App\Helpers\Message\Flash;
 use App\Helpers\View\Button;
 use Illuminate\Support\ServiceProvider;
 
@@ -57,7 +57,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton('Flash', function ($app) {
-            return new Flash($app);
+            return new FlashHelper($app);
         });
 
         $this->app->singleton('Button', function ($app) {
@@ -68,7 +68,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->alias('menu', MenuHelper::class);
         $this->app->alias('pagination', Pagination::class);
         $this->app->alias('validation', Validation::class);
-        $this->app->alias('flash', Flash::class);
+        $this->app->alias('flash', FlashHelper::class);
         $this->app->alias('button', Button::class);
     }
 }

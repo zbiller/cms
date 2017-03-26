@@ -63,7 +63,7 @@ if (!function_exists('validation')) {
 
 if (!function_exists('flash')) {
     /**
-     * @return \App\Helpers\Message\Flash
+     * @return \App\Helpers\FlashHelper
      */
     function flash()
     {

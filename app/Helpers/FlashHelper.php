@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Helpers\Message;
+namespace App\Helpers;
 
-class Flash
+class FlashHelper
 {
     /**
      * Render any flash message if it's set.
