@@ -94,6 +94,24 @@ return [
         'quality' => 75,
 
         /**
+         * Flag that on image upload to generate one thumbnail as well (true | false).
+         *
+         * This generated thumbnail will interlace with the image's styles.
+         * So be careful not to override it by defining an image style called "thumbnail".
+         */
+        'generate_thumbnail' => true,
+
+        /**
+         * The size at which the generated thumbnail will be saved.
+         * Please note that the thumbnail will be automatically fitted, keeping the ratio of the original image.
+         * Not specifying this option's width and height will force the generated thumbnail to resize itself to 100x100px.
+         */
+        'thumbnail_style' => [
+            'width' => 60,
+            'height' => 60
+        ],
+
+        /**
          * The styles to create from the original uploaded image.
          * You can specify multiple styles, as array.
          *
@@ -141,7 +159,7 @@ return [
         ],
 
         /**
-         * Flag that on video upload to generate thumbnails as well or not (true | false).
+         * Flag that on video upload to generate thumbnails as well (true | false).
          *
          * Thumbnail will be generated from the first second of the uploaded video.
          * All thumbnails will be stored as images having the name {video_file}_thumbnail.jpg.
