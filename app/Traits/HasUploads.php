@@ -59,13 +59,9 @@ trait HasUploads
     public function getAttribute($key)
     {
         if (starts_with($key, '_')) {
-            $key = ltrim($key, '_');
-
-            if (Storage::disk(config('upload.storage.disk'))->exists($this->{$key})) {
-                return new UploadHelper($this->{$key});
+            if (Storage::disk(config('upload.storage.disk'))->exists($this->{ltrim($key, '_')})) {
+                return new UploadHelper($this->{ltrim($key, '_')});
             }
-
-            return parent::getAttribute('_' . $key);
         }
 
         return parent::getAttribute($key);
