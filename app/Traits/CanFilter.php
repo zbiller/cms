@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Http\Filters\Filter;
 use App\Exceptions\FilterException;
 use Carbon\Carbon;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 
 trait CanFilter
@@ -314,7 +315,19 @@ trait CanFilter
      */
     private function setValueToFilterBy()
     {
-        $this->filterValue = request($this->filterField);
+        if (
+            method_exists($this->filterInstance, 'modifiers') &&
+            array_key_exists($this->filterField, $this->filterInstance->modifiers())
+        ) {
+            foreach ($this->filterInstance->modifiers() as $field => $value) {
+                if ($field == $this->filterField) {
+                    $this->filterValue = $value instanceof Closure ? $value(null) : $value;
+                    break;
+                }
+            }
+        } else {
+            $this->filterValue = request($this->filterField);
+        }
 
         switch ($operator = strtolower($this->filterOperator)) {
             case str_contains($operator, Filter::OPERATOR_LIKE):

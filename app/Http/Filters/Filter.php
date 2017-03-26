@@ -95,6 +95,14 @@ abstract class Filter
     ];
 
     /**
+     * Get the main where condition between entire request fields.
+     * This method should be implemented in this class' children.
+     *
+     * @return string
+     */
+    abstract public function morph();
+
+    /**
      * Get the filters that apply to the request.
      * This method should be implemented in this class' children.
      *
@@ -103,10 +111,12 @@ abstract class Filter
     abstract public function filters();
 
     /**
-     * Get the main where condition between entire request fields.
+     * Get the modified value of a request filter field.
      * This method should be implemented in this class' children.
+     * This method should return an array containing key => closure.
+     * The filtering functionality will use the result returned from the closure, instead of the original request.
      *
-     * @return string
+     * @return array
      */
-    abstract public function morph();
+    abstract public function modifiers();
 }
