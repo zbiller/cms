@@ -12,6 +12,7 @@ use App\Http\Sorts\Admin\LibrarySort;
 use App\Exceptions\UploadException;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Storage;
 
 class LibraryController extends Controller
 {
@@ -90,7 +91,21 @@ class LibraryController extends Controller
         try {
             return (new UploadService(Upload::findOrFail($id)->full_path))->download();
         } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', 'You are trying to download file that does not exist!');
+            session()->flash('flash_error', 'You are trying to download a file that does not exist!');
+            return redirect()->route('admin.library.index');
+        }
+    }
+
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function show($id)
+    {
+        try {
+            return (new UploadService(Upload::findOrFail($id)->full_path))->show();
+        } catch (ModelNotFoundException $e) {
+            session()->flash('flash_error', 'You are trying to view a record that does not exist!');
             return redirect()->route('admin.library.index');
         }
     }
