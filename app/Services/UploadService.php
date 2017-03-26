@@ -21,13 +21,6 @@ use Validator;
 class UploadService
 {
     /**
-     * The corresponding table field name for the upload.
-     *
-     * @var string
-     */
-    protected $field;
-
-    /**
      * The file instance coming from request()->file().
      *
      * @var UploadedFile
@@ -40,6 +33,13 @@ class UploadService
      * @var Model
      */
     protected $model;
+
+    /**
+     * The corresponding table field name for the upload.
+     *
+     * @var string
+     */
+    protected $field;
 
     /**
      * The config options from config/upload.php
@@ -90,6 +90,31 @@ class UploadService
      * @var int
      */
     protected $type;
+
+    /**
+     * Flag to determine if only a basic upload will happen for the uploaded file, or the full process.
+     * To specify if a simple upload should occur, just don't specify the $model and $field in the constructor.
+     *
+     * Basic upload consists only of:
+     * uploading the original file to disk;
+     *
+     * Full upload consist of:
+     * uploading the original file to disk;
+     * generating styles for an uploaded image if enabled in config;
+     * generating thumbnails for an uploaded video if enabled in config;
+     * saving the upload to database if enabled in config;
+     * removing old uploads both from database and storage if enabled in config;
+     *
+     * @var bool
+     */
+    protected $simple = false;
+
+    /**
+     * The original record from the database.
+     *
+     * @var Upload
+     */
+    protected static $original;
 
     /**
      * The types a file can have.
@@ -212,27 +237,9 @@ class UploadService
     ];
 
     /**
-     * Flag to determine if only a basic upload will happen for the uploaded file, or the full process.
-     * To specify if a simple upload should occur, just don't specify the $model and $field in the constructor.
-     *
-     * Basic upload consists only of:
-     * uploading the original file to disk;
-     *
-     * Full upload consist of:
-     * uploading the original file to disk;
-     * generating styles for an uploaded image if enabled in config;
-     * generating thumbnails for an uploaded video if enabled in config;
-     * saving the upload to database if enabled in config;
-     * removing old uploads both from database and storage if enabled in config;
-     *
-     * @var bool
-     */
-    protected $simple = false;
-
-    /**
      * Build a fully configured UploadService instance.
      *
-     * @param UploadedFile $file
+     * @param UploadedFile|array|string $file
      * @param Model $model
      * @param string $field
      */
@@ -513,6 +520,34 @@ class UploadService
     }
 
     /**
+     * Set the original loaded model for the file.
+     *
+     * @param Upload|string|null $file
+     */
+    public static function setOriginal($file = null)
+    {
+        if ($file instanceof Upload) {
+            self::$original = $file;
+        } else {
+            try {
+                self::$original = Upload::findByFullPath($file);
+            } catch (Exception $e) {
+                self::$original = null;
+            }
+        }
+    }
+
+    /**
+     * Get the original loaded model for the file.
+     *
+     * @return Upload
+     */
+    public static function getOriginal()
+    {
+        return self::$original;
+    }
+
+    /**
      * Establish if only a basic upload will happen for the uploaded file, or the full process.
      *
      * @return bool
@@ -572,6 +607,16 @@ class UploadService
     }
 
     /**
+     * Manage uploading of files.
+     *
+     * The uploading will be done based on the file type: image|video|audio|file.
+     * Every uploading type has custom logic applicable only for that type.
+     *
+     * If saving to database is enabled in config/upload.php, that will be done too.
+     * If forgetting old uploads is enabled in config/upload.php, that will be done too.
+     *
+     * If anything fails with the uploading process, restore everything and throw a specific error.
+     *
      * @return string
      * @throws UploadException
      */
@@ -603,6 +648,34 @@ class UploadService
         } catch (UploadException $e) {
             $this->removeUploadFromDisk();
 
+            throw new UploadException($e->getMessage());
+        }
+    }
+
+    /**
+     * Manage deleting and removing files.
+     *
+     * Remove the original file and all it's dependencies from storage.
+     * Also, if saving to database is enabled in config/upload.php, the given file will be removed from database too.
+     *
+     * @throws UploadException
+     */
+    public function unload()
+    {
+        try {
+            if (config('upload.database.save') === true) {
+                self::getOriginal()->delete();
+            }
+
+            $matchingFiles = preg_grep(
+                '~^' . self::getOriginal()->path . '/' . substr(self::getOriginal()->name, 0, strpos(self::getOriginal()->name, '.')) . '.*~',
+                Storage::disk(config('upload.storage.disk'))->files(self::getOriginal()->path)
+            );
+
+            foreach ($matchingFiles as $file) {
+                Storage::disk(config('upload.storage.disk'))->delete($file);
+            }
+        } catch (UploadException $e) {
             throw new UploadException($e->getMessage());
         }
     }
@@ -967,7 +1040,6 @@ class UploadService
      * The allowed file extensions are specified in config/upload.php -> images|videos|audios|files.allowed_extensions
      *
      * @param string $type
-     * @return bool
      * @throws UploadException
      */
     protected function guardAgainstAllowedExtensions($type)
@@ -985,8 +1057,6 @@ class UploadService
                 'The "' . $type . '" extension is not allowed! The extensions allowed are: ' . implode(', ', $extensions)
             );
         }
-
-        return true;
     }
 
     /**
@@ -1027,7 +1097,9 @@ class UploadService
     private static function createFromString($file = '')
     {
         try {
-            $file = Upload::where('full_path', '=', $file)->firstOrFail();
+            self::setOriginal($file);
+
+            $file = Upload::findByFullPath($file);
             $disk = config('upload.storage.disk');
             $path = config('filesystems.disks.' . $disk . '.root') . DIRECTORY_SEPARATOR;
 
