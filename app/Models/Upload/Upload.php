@@ -68,26 +68,32 @@ class Upload extends Model
     }
 
     /**
+     * Get the size in megabytes.
+     *
+     * @return string
+     */
+    public function getSizeAttribute()
+    {
+        return number_format($this->attributes['size'] / pow(1024, 2), 2);
+    }
+
+    /**
+     * Get the size in megabytes.
+     *
+     * @return string
+     */
+    public function getTypeIconAttribute()
+    {
+        return asset('/build/admin/img/' . strtolower(self::$types[$this->attributes['type']]) . '-icon.png');
+    }
+
+    /**
      * @param Builder $query
      * @param $fullPath
      */
     public function scopeWhereFullPath($query, $fullPath)
     {
         $query->where('full_path', '=', $fullPath);
-    }
-
-
-
-
-
-
-
-
-    public function thumbnail()
-    {
-        return Storage::disk(config('upload.storage.disk'))->url(
-            substr_replace($this->full_path, '_thumbnail', strpos($this->full_path, '.' . $this->extension), 0)
-        );
     }
 
     /**
