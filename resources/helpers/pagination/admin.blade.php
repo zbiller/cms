@@ -37,8 +37,17 @@
 
     <div class="jump">
         {!! form()->open(['url' => request()->url(), 'method' => 'GET']) !!}
-        {!! form()->number('page', null, ['placeholder' => 'Page']) !!}
-        {!! form()->submit('Go') !!}
+            @foreach(request()->input() as $key => $value)
+                @if(is_array($value))
+                    @foreach($value as $index => $val)
+                        {!! form()->hidden("{$key}[{$index}]", $val) !!}
+                    @endforeach
+                @else
+                    {!! form()->hidden($key, $value) !!}
+                @endif
+            @endforeach
+            {!! form()->number('page', null, ['placeholder' => 'Page']) !!}
+            {!! form()->submit('Go') !!}
         {!! form()->close() !!}
     </div>
 </section>
