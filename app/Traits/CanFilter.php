@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Http\Filters\Filter;
 use App\Exceptions\FilterException;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
 trait CanFilter
@@ -97,7 +98,7 @@ trait CanFilter
         foreach ($this->filterInstance->filters() as $field => $options) {
             $this->filterField = $field;
 
-            if (request()->isMethod('get') && $this->isValidFilterField()) {
+            if (request()->isMethod('get') && $this->isValidFilterField() && !$this->isNullableFilterField()) {
                 $this->setOperatorForFiltering($options);
                 $this->setConditionToFilterBy($options);
                 $this->setColumnsToFilterIn($options);
@@ -227,16 +228,40 @@ trait CanFilter
     }
 
     /**
+     * Verify if the request field has a valid value.
+     *
      * @return bool
      */
     private function isValidFilterField()
     {
-        return
-            request()->has($this->filterField) ||
-            in_array($this->filterField, Filter::$fields);
+        return request()->has($this->filterField) || in_array($this->filterField, Filter::$fields);
     }
 
     /**
+     * Verify if the entire request array consists only of null values or not.
+     *
+     * @return bool
+     */
+    private function isNullableFilterField()
+    {
+        if (is_array(request($this->filterField))) {
+            $count = 0;
+
+            foreach (request($this->filterField) as $value) {
+                if ($value === null) {
+                    $count++;
+                }
+            }
+
+            return $count == count(request($this->filterField));
+        } else {
+            return is_null(request($this->filterField));
+        }
+    }
+
+    /**
+     * Determine if filtering should focus on a subsequent relationship.
+     *
      * @param string $column
      * @return bool
      */
