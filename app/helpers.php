@@ -80,3 +80,24 @@ if (!function_exists('button')) {
         return app(Button::class);
     }
 }
+
+if (!function_exists('force_redirect')) {
+    /**
+     * @param string $url
+     * @param int $code
+     */
+    function force_redirect($url, $code = 302)
+    {
+        try {
+            app()->abort($code, '', [
+                'Location' => $url
+            ]);
+        } catch (\Exception $e) {
+            $handler = set_exception_handler(function () {});
+
+            restore_error_handler();
+            call_user_func($handler, $e);
+            die;
+        }
+    }
+}
