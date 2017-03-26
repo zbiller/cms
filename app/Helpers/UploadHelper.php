@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use Storage;
+use App\Models\Upload\Upload;
 use App\Services\UploadService;
 
 class UploadHelper
@@ -120,11 +121,17 @@ class UploadHelper
      * The $number parameter is used to specify which video thumbnail to identify: 1st, 2nd, 3rd, etc.
      * Keep in mind that this method will only have an effect on video type files.
      *
-     * @param int $number
+     * @param int|null $number
      * @return $this
      */
-    public function thumbnail($number = 1)
+    public function thumbnail($number = null)
     {
+        if ($this->type == self::TYPE_IMAGE) {
+            $this->file = substr_replace(
+                preg_replace('/\..+$/', '.' . $this->extension, $this->file), '_thumbnail', strpos($this->file, '.'), 0
+            );
+        }
+
         if ($this->type == self::TYPE_VIDEO) {
             $this->file = substr_replace(
                 preg_replace('/\..+$/', '.jpg', $this->file), '_thumbnail_' . $number, strpos($this->file, '.'), 0
@@ -144,7 +151,7 @@ class UploadHelper
      */
     public function url($style = null)
     {
-        if ($style && $this->type == self::TYPE_IMAGE) {
+        if ($style && ($this->type == self::TYPE_IMAGE || $this->type == self::TYPE_VIDEO)) {
             $this->file = substr_replace(
                 $this->file, '_' . $style, strpos($this->file, '.'), 0
             );
@@ -154,28 +161,22 @@ class UploadHelper
     }
 
     /**
-     * Download a uploaded file.
-     * This method should be returned in a controller method, so no content buffer exists.
+     * Get the Upload instance representing the field's upload.
      *
-     * @param int|string|null $style
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     * @return Upload|null
      */
-    public function download($style = null)
+    public function load()
     {
-        if (is_string($style) && $this->type == self::TYPE_IMAGE) {
-            $this->file = substr_replace(
-                $this->file, '_' . $style, strpos($this->file, '.'), 0
-            );
-        }
+        return config('upload.database.save') ? Upload::whereFullPath($this->file)->first() : null;
+    }
 
-        if (is_numeric($style) && $this->type == self::TYPE_VIDEO) {
-            $this->file = substr_replace(
-                preg_replace('/\..+$/', '.jpg', $this->file), '_thumbnail_' . $style, strpos($this->file, '.'), 0
-            );
-        }
-
-        return response()->download(
-            Storage::disk($this->disk)->getDriver()->getAdapter()->applyPathPrefix($this->file)
-        );
+    /**
+     * Check if the given file exists in storage.
+     *
+     * @return bool
+     */
+    public function exists()
+    {
+        return Storage::disk($this->disk)->exists($this->file);
     }
 }
