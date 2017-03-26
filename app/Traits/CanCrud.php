@@ -148,16 +148,16 @@ trait CanCrud
             }
 
             session()->flash('flash_success', 'The record was successfully created!');
-            return redirect()->route($request->has('save_stay') ? $this->canCrudOptions->addRoute : $this->canCrudOptions->listRoute);
+            return request()->has('save_stay') ? back() : redirect()->route($this->canCrudOptions->listRoute);
         } catch (CrudException $e) {
             session()->flash('flash_error', $e->getMessage());
-            return redirect()->back()->withInput($request->all());
+            return back()->withInput($request->all());
         } catch (Exception $e) {
-            if (env('APP_ENV') == 'development') {
+            if (app()->environment() == 'development') {
                 throw new Exception($e->getMessage());
             } else {
                 session()->flash('flash_error', 'The record could not be created! Please try again.');
-                return redirect()->back()->withInput($request->all());
+                return back()->withInput($request->all());
             }
         }
     }
@@ -204,19 +204,19 @@ trait CanCrud
             }
 
             session()->flash('flash_success', 'The record was successfully updated!');
-            return redirect()->route($request->has('save_stay') ? $this->canCrudOptions->editRoute : $this->canCrudOptions->listRoute);
+            return request()->has('save_stay') ? back() : redirect()->route($this->canCrudOptions->listRoute);
         } catch (ModelNotFoundException $e) {
             session()->flash('flash_error', 'You are trying to update a record that does not exist!');
             return redirect()->route($this->canCrudOptions->listRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
         } catch (CrudException $e) {
             session()->flash('flash_error', $e->getMessage());
-            return redirect()->back()->withInput($request->all());
+            return back()->withInput($request->all());
         } catch (Exception $e) {
-            if (env('APP_ENV') == 'development') {
+            if (app()->environment() == 'development') {
                 throw new Exception($e->getMessage());
             } else {
                 session()->flash('flash_error', 'The record could not be updated! Please try again.');
-                return redirect()->back()->withInput($request->all());
+                return back()->withInput($request->all());
             }
         }
     }
@@ -244,13 +244,13 @@ trait CanCrud
             return redirect()->route($this->canCrudOptions->listRoute);
         } catch (CrudException $e) {
             session()->flash('flash_error', $e->getMessage());
-            return redirect()->back();
+            return back();
         } catch (Exception $e) {
-            if (env('APP_ENV') == 'development') {
+            if (app()->environment() == 'development') {
                 throw new Exception($e->getMessage());
             } else {
                 session()->flash('flash_error', 'The record could not be deleted! Please try again.');
-                return redirect()->back();
+                return back();
             }
         }
     }
