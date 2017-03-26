@@ -48,6 +48,15 @@ section.list table tr > td:last-of-type {
   width: 158px;
   padding: 10px;
 }
+section.list table tr > td:last-of-type.actions-big {
+  width: 200px;
+}
+@media only screen and (max-width: 767px) {
+  section.list table tr > td:last-of-type.actions-big {
+    display: table-cell;
+    width: 78px;
+  }
+}
 @media only screen and (max-width: 767px) {
   section.list table tr > td:last-of-type {
     display: table-cell;

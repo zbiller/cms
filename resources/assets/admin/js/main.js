@@ -266,7 +266,7 @@ function setups() {
     var date = $('.date-input');
 
     date.datepicker({
-        dateFormat: 'dd M, yy'
+        dateFormat: 'yy-mm-dd'
     });
 
     //TimePicker setup

@@ -16,6 +16,7 @@ module.exports = function(grunt) {
                     'resources/assets/admin/css/content.css': 'resources/assets/admin/sass/content.scss',
                     'resources/assets/admin/css/login.css': 'resources/assets/admin/sass/login.scss',
                     'resources/assets/admin/css/filters.css': 'resources/assets/admin/sass/filters.scss',
+                    'resources/assets/admin/css/upload.css': 'resources/assets/admin/sass/upload.scss',
                     'resources/assets/admin/css/tabs.css': 'resources/assets/admin/sass/tabs.scss',
                     'resources/assets/admin/css/list.css': 'resources/assets/admin/sass/list.scss',
                     'resources/assets/admin/css/view.css': 'resources/assets/admin/sass/view.scss'
@@ -33,6 +34,7 @@ module.exports = function(grunt) {
                     'resources/assets/admin/js/libs/timepicker.js',
                     'resources/assets/admin/js/libs/colorpicker.js',
                     'resources/assets/admin/js/libs/generator.js',
+                    'resources/assets/admin/js/libs/dropzone.js',
                     'resources/assets/admin/js/main.js',
                     'public/vendor/jsvalidation/js/jsvalidation.js'
                 ],
@@ -46,6 +48,7 @@ module.exports = function(grunt) {
                     'resources/assets/admin/css/libs/chosen.css',
                     'resources/assets/admin/css/libs/timepicker.css',
                     'resources/assets/admin/css/libs/colorpicker.css',
+                    'resources/assets/admin/css/libs/dropzone.css',
                     'resources/assets/admin/css/fonts.css',
                     'resources/assets/admin/css/helpers.css',
                     'resources/assets/admin/css/general.css',
@@ -55,6 +58,7 @@ module.exports = function(grunt) {
                     'resources/assets/admin/css/content.css',
                     'resources/assets/admin/css/login.css',
                     'resources/assets/admin/css/filters.css',
+                    'resources/assets/admin/css/upload.css',
                     'resources/assets/admin/css/tabs.css',
                     'resources/assets/admin/css/list.css',
                     'resources/assets/admin/css/view.css'

@@ -56,6 +56,15 @@ section.list {
                 width: 158px;
                 padding: 10px;
 
+                &.actions-big {
+                    width: 200px;
+
+                    @include media-query('tablet') {
+                        display: table-cell;
+                        width: 78px;
+                    }
+                }
+
                 @include media-query('tablet') {
                     display: table-cell;
                     width: 78px;

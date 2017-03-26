@@ -1,0 +1,7 @@
+{
+"version": 3,
+"mappings": "AAEA,cAAe;EACX,MAAM,EAAE,UAAU",
+"sources": ["../sass/upload.scss"],
+"names": [],
+"file": "upload.css"
+}
