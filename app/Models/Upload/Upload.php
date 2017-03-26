@@ -2,16 +2,13 @@
 
 namespace App\Models\Upload;
 
-use App\Exceptions\UploadException;
-use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\UploadedFile;
 use Storage;
 use App\Models\Model;
 use App\Services\UploadService;
 use App\Traits\CanFilter;
 use App\Traits\CanSort;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Upload extends Model
 {
@@ -68,18 +65,6 @@ class Upload extends Model
         parent::__construct($attributes);
 
         $this->setTable(config('upload.database.table'));
-    }
-
-    /**
-     * Download the loaded upload model's original file.
-     *
-     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
-     */
-    public function download()
-    {
-        return response()->download(
-            Storage::disk(config('upload.storage.disk'))->getDriver()->getAdapter()->applyPathPrefix($this->full_path)
-        );
     }
 
 

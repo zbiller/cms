@@ -14,6 +14,7 @@ use App\Models\Model;
 use App\Models\Upload\Upload;
 use App\Exceptions\UploadException;
 use Illuminate\Http\UploadedFile;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeExtensionGuesser;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
 use Validator;
@@ -658,6 +659,9 @@ class UploadService
      * Remove the original file and all it's dependencies from storage.
      * Also, if saving to database is enabled in config/upload.php, the given file will be removed from database too.
      *
+     * To apply this method properly, pass in this class' constructor, just the first parameter.
+     * The parameter's value should be the full path of an existing file in the database's table set in config/upload.php
+     *
      * @throws UploadException
      */
     public function unload()
@@ -681,12 +685,32 @@ class UploadService
     }
 
     /**
+     * Download an existing file by it's full path.
+     *
+     * To apply this method properly, pass in this class' constructor, just the first parameter.
+     * The parameter's value should be the full path of an existing file in the database's table set in config/upload.php
+     *
+     * @return BinaryFileResponse
+     * @throws UploadException
+     */
+    public function download()
+    {
+        try {
+            return response()->download(
+                Storage::disk($this->getDisk())->getDriver()->getAdapter()->applyPathPrefix(self::getOriginal()->full_path)
+            );
+        } catch (UploadException $e) {
+            throw new UploadException($e->getMessage());
+        }
+    }
+
+    /**
      * Store to disk a specific 'image' file type.
      *
      * @return false|string
      * @throws UploadException
      */
-    public function storeImageToDisk()
+    protected function storeImageToDisk()
     {
         $this->guardAgainstMaxSize('images');
         $this->guardAgainstAllowedExtensions('images');
