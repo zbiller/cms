@@ -698,6 +698,26 @@ class UploadService
     }
 
     /**
+     * Display an existing file by it's full path.
+     *
+     * To apply this method properly, pass in this class' constructor, just the first parameter.
+     * The parameter's value should be the full path of an existing file in the database's table set in config/upload.php
+     *
+     * @return BinaryFileResponse
+     * @throws UploadException
+     */
+    public function show()
+    {
+        try {
+            return response()->file(
+                Storage::disk($this->getDisk())->getDriver()->getAdapter()->applyPathPrefix(self::getOriginal()->full_path)
+            );
+        } catch (UploadException $e) {
+            throw new UploadException($e->getMessage());
+        }
+    }
+
+    /**
      * Store to disk a specific 'image' file type.
      *
      * @return false|string
