@@ -56,7 +56,7 @@ Route::group([
             'namespace' => 'Acl',
         ], function () {
             /**
-             * CRUD admin groups.
+             * CRUD Admin Groups.
              */
             Route::group([
                 'prefix' => 'admin-roles',
@@ -70,7 +70,7 @@ Route::group([
             });
 
             /**
-             * CRUD admin users
+             * CRUD Admin Users
              */
             Route::group([
                 'prefix' => 'admin-users',
@@ -81,6 +81,30 @@ Route::group([
                 Route::post('store', ['as' => 'admin.admin_users.store', 'uses' => 'AdminUsersController@store', 'permissions' => 'admin-users-add']);
                 Route::put('update/{id}', ['as' => 'admin.admin_users.update', 'uses' => 'AdminUsersController@update', 'permissions' => 'admin-users-edit']);
                 Route::delete('destroy/{id}', ['as' => 'admin.admin_users.destroy', 'uses' => 'AdminUsersController@destroy', 'permissions' => 'admin-users-delete']);
+            });
+        });
+
+        /**
+         * Manage Content.
+         */
+        Route::group([
+            'namespace' => 'Cms',
+        ], function () {
+            /**
+             * CRUD Library
+             */
+            Route::group([
+                'prefix' => 'library',
+            ], function () {
+                Route::get('/', ['as' => 'admin.library.index', 'uses' => 'LibraryController@index', 'permissions' => 'library-list']);
+                Route::post('store', ['as' => 'admin.library.store', 'uses' => 'LibraryController@store', 'permissions' => 'library-add']);
+                Route::get('download/{id}', ['as' => 'admin.library.download', 'uses' => 'LibraryController@download', 'permissions' => 'library-edit']);
+                Route::delete('destroy/{id}', ['as' => 'admin.library.destroy', 'uses' => 'LibraryController@destroy', 'permissions' => 'library-delete']);
+
+                /*Route::get('edit/{id}', ['as' => 'admin.admin_users.edit', 'uses' => 'AdminUsersController@edit', 'permissions' => 'admin-users-edit']);
+                Route::post('store', ['as' => 'admin.admin_users.store', 'uses' => 'AdminUsersController@store', 'permissions' => 'admin-users-add']);
+                Route::put('update/{id}', ['as' => 'admin.admin_users.update', 'uses' => 'AdminUsersController@update', 'permissions' => 'admin-users-edit']);
+                Route::delete('destroy/{id}', ['as' => 'admin.admin_users.destroy', 'uses' => 'AdminUsersController@destroy', 'permissions' => 'admin-users-delete']);*/
             });
         });
 
