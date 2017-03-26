@@ -141,8 +141,6 @@ trait CanCrud
     public function _store(Closure $function = null, Request $request = null)
     {
         try {
-            $this->request = $request;
-
             if ($function) {
                 DB::transaction($function);
             }

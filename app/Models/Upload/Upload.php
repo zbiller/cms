@@ -71,87 +71,6 @@ class Upload extends Model
     }
 
     /**
-     * @param UploadedFile|string $upload
-     * @return $this
-     */
-    public function withUpload($upload)
-    {
-        $this->upload = new UploadService($upload);
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     */
-    public function storeToDisk()
-    {
-        $this->upload->upload();
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     * @throws UploadException
-     */
-    public function removeFromDisk()
-    {
-        $this->upload->removeUploadFromDisk();
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     * @throws UploadException
-     */
-    public function saveToDatabase()
-    {
-        $this->upload->saveUploadToDatabase();
-
-        return $this;
-    }
-
-    /**
-     * @return $this
-     * @throws Exception
-     */
-    public function deleteFromDatabase()
-    {
-        $this->delete();
-
-        return $this;
-    }
-
-
-
-
-
-
-
-
-
-    /**
-     * Remove all the loaded upload model's files from storage.
-     *
-     * @return $this
-     */
-    public function remove()
-    {
-        $matchingFiles = preg_grep(
-            '~^' . $this->path . '/' . substr($this->name, 0, strpos($this->name, '.')) . '.*~',
-            Storage::disk(config('upload.storage.disk'))->files($this->path)
-        );
-
-        foreach ($matchingFiles as $file) {
-            Storage::disk(config('upload.storage.disk'))->delete($file);
-        }
-
-        return $this;
-    }
-
-    /**
      * Download the loaded upload model's original file.
      *
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
@@ -162,15 +81,6 @@ class Upload extends Model
             Storage::disk(config('upload.storage.disk'))->getDriver()->getAdapter()->applyPathPrefix($this->full_path)
         );
     }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -196,5 +106,20 @@ class Upload extends Model
     {
         $table->string($name)->nullable();
         $table->foreign($name)->references('full_path')->on(config('upload.database.table'))->onDelete('restrict');
+    }
+
+    /**
+     * Get an upload record by it's full path.
+     *
+     * @param string $path
+     * @return mixed
+     */
+    public static function findByFullPath($path)
+    {
+        try {
+            return Upload::where('full_path', '=', $path)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            throw new ModelNotFoundException;
+        }
     }
 }
