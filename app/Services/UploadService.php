@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Http\Requests\UploadRequest;
+use DB;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
 use Storage;
@@ -527,15 +528,7 @@ class UploadService
      */
     public static function setOriginal($file = null)
     {
-        if ($file instanceof Upload) {
-            self::$original = $file;
-        } else {
-            try {
-                self::$original = Upload::findByFullPath($file);
-            } catch (Exception $e) {
-                self::$original = null;
-            }
-        }
+        self::$original = $file instanceof Upload ? $file : Upload::whereFullPath($file)->first();
     }
 
     /**
@@ -915,14 +908,20 @@ class UploadService
         );
 
         try {
+            DB::statement('SET FOREIGN_KEY_CHECKS=0');
+
             Upload::where([
                 'full_path' => $this->getModel()->getOriginal($this->getField())
             ])->delete();
+
+            DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
             foreach ($matchingFiles as $file) {
                 Storage::disk($this->getDisk())->delete($file);
             }
         } catch (Exception $e) {
+            dd($e);
+
             throw new UploadException(
                 'Failed removing old uploads from disk and/or database! Please try again.'
             );
@@ -1174,7 +1173,7 @@ class UploadService
         try {
             self::setOriginal($file);
 
-            $file = Upload::findByFullPath($file);
+            $file = Upload::whereFullPath($file)->firstOrFail();
             $disk = config('upload.storage.disk');
             $path = config('filesystems.disks.' . $disk . '.root') . DIRECTORY_SEPARATOR;
 
