@@ -27,7 +27,7 @@ class CheckRoles
         $this->setRoles($roles, $request->route()->action);
 
         if (!auth()->user()->isSuperUser() && !auth()->user()->hasAllRoles($this->roles)) {
-            session()->flash('flash_error', 'You\'re not authorized to access that page!');
+            session()->flash('flash_error', 'Not authorized!');
             return redirect()->route('home');
         }
 
