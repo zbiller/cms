@@ -33,9 +33,11 @@ trait HasUploads
     {
         static::saving(function (Model $model) {
             foreach (request()->allFiles() as $name => $file) {
-                if ($model->isFillable($name) && $file instanceof UploadedFile) {
+                if ($model->isFillable($name) && request()->file($name)->isValid() && $file instanceof UploadedFile) {
                     try {
-                        $model->attributes[$name] = (new UploadService($file, $model, $name))->upload();
+                        $upload = (new UploadService($file, $model, $name))->upload();
+
+                        $model->attributes[$name] = $upload->getPath() . '/' . $upload->getName();
                     } catch (UploadException $e) {
                         throw new CrudException($e->getMessage(), $e->getCode(), $e);
                     }
