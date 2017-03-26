@@ -1,5 +1,5 @@
 {!! form()->open(['url' => route('admin.library.store'), 'method' => 'POST', 'id' => 'library', 'class' => 'dropzone', 'files' => true]) !!}
-    <div class="ddTitle">
+    <div class="ddTitle" style="width: 358px;">
         Drag & drop files or click the area to upload
     </div>
 {!! form()->close() !!}

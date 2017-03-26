@@ -4520,7 +4520,7 @@ nav:hover > .nano-pane, .nano-pane.active, .nano-pane.flashed {
   cursor: pointer;
   margin: 18px 15px;}
 .dropzone.dz-clickable * {
-  cursor: default; }
+  cursor: pointer; }
 .dropzone.dz-clickable .dz-message, .dropzone.dz-clickable .dz-message * {
   cursor: pointer; }
 .dropzone.dz-started .dz-message {
@@ -4960,6 +4960,7 @@ nav:hover > .nano-pane, .nano-pane.active, .nano-pane.flashed {
   font-size: 0.875em;
   text-transform: uppercase;
   color: #9AADB6;
+  margin: 0 auto;
 margin-top: 14px;}
 
 .ddSubtitle {
@@ -5441,7 +5442,7 @@ span.extra-currency {
   cursor: pointer; }
 
 .dropzone.dz-clickable * {
-  cursor: default; }
+  cursor: pointer; }
 
 .dropzone.dz-clickable .dz-message, .dropzone.dz-clickable .dz-message * {
   cursor: pointer; }
