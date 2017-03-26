@@ -2,6 +2,9 @@
 
 namespace App\Services;
 
+use App\Http\Requests\UploadRequest;
+use Illuminate\Support\Arr;
+use Illuminate\Validation\ValidationException;
 use Storage;
 use Image;
 use Closure;
@@ -9,9 +12,11 @@ use Exception;
 use FFMpeg;
 use App\Models\Model;
 use App\Models\Upload\Upload;
-use App\Configs\UploadConfig;
 use App\Exceptions\UploadException;
 use Illuminate\Http\UploadedFile;
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeExtensionGuesser;
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
+use Validator;
 
 class UploadService
 {
@@ -207,50 +212,59 @@ class UploadService
     ];
 
     /**
+     * Flag to determine if only a basic upload will happen for the uploaded file, or the full process.
+     * To specify if a simple upload should occur, just don't specify the $model and $field in the constructor.
+     *
+     * Basic upload consists only of:
+     * uploading the original file to disk;
+     *
+     * Full upload consist of:
+     * uploading the original file to disk;
+     * generating styles for an uploaded image if enabled in config;
+     * generating thumbnails for an uploaded video if enabled in config;
+     * saving the upload to database if enabled in config;
+     * removing old uploads both from database and storage if enabled in config;
+     *
+     * @var bool
+     */
+    protected $simple = false;
+
+    /**
      * Build a fully configured UploadService instance.
      *
      * @param UploadedFile $file
      * @param Model $model
      * @param string $field
      */
-    public function __construct(UploadedFile $file, Model $model, $field)
+    public function __construct($file, Model $model = null, $field = null)
     {
-        $this->setField($field)->setFile($file)->setModel($model)->setConfig($model);
-        $this->setDisk()->setPath()->setName()->setExtension()->setSize();
-    }
+        if ($model === null && $field === null) {
+            $this->simple = true;
+        }
 
-    /**
-     * Set the field name to work with.
-     *
-     * @param string $field
-     * @return $this
-     */
-    public function setField($field)
-    {
-        $this->field = $field;
+        $this->setFile($file)->setField($field)->setModel($model)->setConfig($model);
+        $this->setDisk()->setPath()->setName()->setExtension()->setSize()->setType();
 
-        return $this;
-    }
-
-    /**
-     * Get the field name.
-     *
-     * @return string
-     */
-    public function getField()
-    {
-        return $this->field;
     }
 
     /**
      * Set the file to work with.
      *
-     * @param UploadedFile $file
+     * @param UploadedFile|array|string $file
      * @return $this
      */
-    public function setFile(UploadedFile $file)
+    public function setFile($file)
     {
-        $this->file = $file;
+        switch ($file) {
+            case is_string($file):
+                $this->file = self::createFromString($file);
+                break;
+            case is_array($file):
+                $this->file = self::createFromArray($file);
+                break;
+            default:
+                $this->file = self::createFromObject($file);
+        }
 
         return $this;
     }
@@ -271,7 +285,7 @@ class UploadService
      * @param Model $model
      * @return $this
      */
-    public function setModel(Model $model)
+    public function setModel(Model $model = null)
     {
         $this->model = $model;
 
@@ -289,18 +303,41 @@ class UploadService
     }
 
     /**
+     * Set the field name to work with.
+     *
+     * @param string $field
+     * @return $this
+     */
+    public function setField($field = null)
+    {
+        $this->field = $field;
+
+        return $this;
+    }
+
+    /**
+     * Get the field name.
+     *
+     * @return string
+     */
+    public function getField()
+    {
+        return $this->field;
+    }
+
+    /**
      * Set the appropriate config to work with.
      * The config here will be fully/partially overwritten by the getUploadConfig() method from child model class.
      *
      * @param Model $model
      * @return $this
      */
-    public function setConfig(Model $model)
+    public function setConfig(Model $model = null)
     {
         if (method_exists($model, 'getUploadConfig')) {
             $this->config = array_replace_recursive(config('upload'), $model->getUploadConfig());
         } else {
-            $this->config = upload('config');
+            $this->config = config('upload');
         }
 
         return $this;
@@ -314,17 +351,7 @@ class UploadService
      */
     public function getConfig($key = null)
     {
-        if (!$key) {
-            return $this->config;
-        }
-
-        if (str_contains($key, '.')) {
-            return eval(
-                'return $this->config["' . implode('"]["', explode('.', $key)) . '"];'
-            );
-        }
-
-        return $this->config[$key];
+        return Arr::get($this->config, $key);
     }
 
     /**
@@ -453,12 +480,24 @@ class UploadService
      * The file type can be one of the following constants defined in this class.
      * TYPE_IMAGE | TYPE_VIDEO | TYPE_AUDIO | TYPE_FILE
      *
-     * @param int $type
      * @return $this
      */
-    public function setType($type)
+    public function setType()
     {
-        $this->type = $type;
+        switch ($this) {
+            case $this->isImage():
+                $this->type = self::TYPE_IMAGE;
+                break;
+            case $this->isVideo():
+                $this->type = self::TYPE_VIDEO;
+                break;
+            case $this->isAudio():
+                $this->type = self::TYPE_AUDIO;
+                break;
+            case $this->isFile():
+                $this->type = self::TYPE_FILE;
+                break;
+        }
 
         return $this;
     }
@@ -471,6 +510,16 @@ class UploadService
     public function getType()
     {
         return $this->type;
+    }
+
+    /**
+     * Establish if only a basic upload will happen for the uploaded file, or the full process.
+     *
+     * @return bool
+     */
+    public function isSimpleUpload()
+    {
+        return $this->simple === true;
     }
 
     /**
@@ -545,9 +594,12 @@ class UploadService
             }
 
             $this->saveUploadToDatabase();
-            $this->forgetOldUpload();
 
-            return $this->getPath() . '/' . $this->getName();
+            if (!$this->isSimpleUpload()) {
+                $this->forgetOldUpload();
+            }
+
+            return $this;
         } catch (UploadException $e) {
             $this->removeUploadFromDisk();
 
@@ -561,17 +613,19 @@ class UploadService
      * @return false|string
      * @throws UploadException
      */
-    protected function storeImageToDisk()
+    public function storeImageToDisk()
     {
-        $this->setType(self::TYPE_IMAGE);
-
         $this->guardAgainstMaxSize('images');
         $this->guardAgainstAllowedExtensions('images');
 
         return $this->attemptStoringToDisk(function () {
             $image = $this->storeToDisk();
 
-            $this->generateStylesForImage($image);
+            if (!$this->isSimpleUpload()) {
+                $this->generateStylesForImage($image);
+            }
+
+            $this->generateThumbnailForImage($image);
 
             return $image;
         });
@@ -585,8 +639,6 @@ class UploadService
      */
     protected function storeVideoToDisk()
     {
-        $this->setType(self::TYPE_VIDEO);
-
         $this->guardAgainstMaxSize('videos');
         $this->guardAgainstAllowedExtensions('videos');
 
@@ -608,8 +660,6 @@ class UploadService
      */
     protected function storeAudioToDisk()
     {
-        $this->setType(self::TYPE_AUDIO);
-
         $this->guardAgainstMaxSize('audios');
         $this->guardAgainstAllowedExtensions('audios');
 
@@ -627,8 +677,6 @@ class UploadService
      */
     protected function storeFileToDisk()
     {
-        $this->setType(self::TYPE_FILE);
-
         $this->guardAgainstMaxSize('files');
         $this->guardAgainstAllowedExtensions('files');
 
@@ -691,7 +739,7 @@ class UploadService
         }
 
         try {
-            Upload::create([
+            $data = [
                 'name' => $this->getName(),
                 'original_name' => $this->getFile()->getClientOriginalName(),
                 'path' => $this->getPath(),
@@ -700,7 +748,21 @@ class UploadService
                 'size' => $this->getSize(),
                 'mime' => $this->getFile()->getMimeType(),
                 'type' => $this->getType(),
-            ]);
+            ];
+
+            $validator = Validator::make(
+                $data, (new UploadRequest)->rules()
+            );
+
+            if ($validator->fails()) {
+                throw new ValidationException($validator);
+            }
+
+            Upload::create($data);
+        } catch (ValidationException $e) {
+            throw new UploadException(
+                'Uploader did not pass the validation system! The uploaded file might be corrupted.'
+            );
         } catch (Exception $e) {
             throw new UploadException(
                 'Failed saving the uploaded file to the database! Please try again.'
@@ -806,6 +868,42 @@ class UploadService
         }
     }
 
+    /**
+     * Try generating thumbnail for the original uploaded image.
+     * The thumbnail generation flag and size are defined in the config/upload.php (images -> generate_thumbnail | thumbnail_style).
+     * Also, when creating the image thumbnail, the "quality" configuration option is taken into consideration.
+     *
+     * @param string $path
+     * @throws UploadException
+     */
+    protected function generateThumbnailForImage($path)
+    {
+        if (!$this->getConfig('images.generate_thumbnail')) {
+            return;
+        }
+
+        if (!Storage::disk($this->getDisk())->exists($path)) {
+            throw new UploadException(
+                'Could not create image thumbnail because the image "' . $path . '" does not exist!'
+            );
+        }
+
+        try {
+            $original = Storage::disk($this->getDisk())->get($path);
+            $width = (int)$this->getConfig('images.thumbnail_style.width') ?: 100;
+            $height = (int)$this->getConfig('images.thumbnail_style.height') ?: 100;
+
+            Storage::disk($this->getDisk())->put(
+                $this->getPath() . '/' . substr_replace($this->getName(), '_thumbnail', strpos($this->getName(), '.' . $this->getExtension()), 0),
+                Image::make($original)->fit($width, $height)->stream(null, (int)$this->getConfig('images.quality') ?: 90)->__toString()
+            );
+        } catch (Exception $e) {
+            throw new UploadException(
+                'Thumbnail generation for the uploaded image failed! Please try again.'
+            );
+        }
+    }
+
 
     /**
      * Try generating the video thumbnails.
@@ -889,5 +987,105 @@ class UploadService
         }
 
         return true;
+    }
+
+    /**
+     * @param object $file
+     * @return UploadedFile
+     * @throws UploadException
+     */
+    private static function createFromObject($file)
+    {
+        if (!($file instanceof UploadedFile)) {
+            throw new UploadException('Invalid file!');
+        }
+
+        return $file;
+    }
+
+    /**
+     * @param array $file
+     * @return UploadedFile
+     * @throws UploadException
+     */
+    private static function createFromArray(array $file = [])
+    {
+        if (!isset($file['name']) || !isset($file['tmp_name']) || !isset($file['type']) || !isset($file['size']) || !isset($file['error'])) {
+            throw new UploadException('Invalid file!');
+        }
+
+        return new UploadedFile(
+            $file['tmp_name'], $file['name'], $file['type'], $file['size'], $file['error']
+        );
+    }
+
+    /**
+     * @param string $file
+     * @return UploadedFile
+     * @throws UploadException
+     */
+    private static function createFromString($file = '')
+    {
+        try {
+            $file = Upload::where('full_path', '=', $file)->firstOrFail();
+            $disk = config('upload.storage.disk');
+            $path = config('filesystems.disks.' . $disk . '.root') . DIRECTORY_SEPARATOR;
+
+            return new UploadedFile(
+                $path . $file->full_path, $file->original_name, $file->mime, $file->size
+            );
+        } catch (Exception $e) {
+            if (filter_var($file, FILTER_VALIDATE_URL)) {
+                return self::createFromUrl($file);
+            }
+
+            throw new UploadException('Invalid file!');
+        }
+    }
+
+    /**
+     * @param string $file
+     * @return UploadedFile
+     * @throws UploadException
+     */
+    private static function createFromUrl($file = '')
+    {
+        try {
+            $ch = curl_init($file);
+
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+
+            $raw = curl_exec($ch);
+            $size = curl_getinfo($ch, CURLINFO_CONTENT_LENGTH_DOWNLOAD);
+
+            curl_close($ch);
+
+            if (strpos($file, '?') !== false) {
+                list($file, $query) = explode('?', $file);
+            }
+
+            $info = pathinfo($file);
+            $name = $info['basename'];
+            $path = sys_get_temp_dir() . '/' . $name;
+
+            file_put_contents($path, $raw);
+
+            $mime = MimeTypeGuesser::getInstance()->guess($path);
+
+            if (empty($info['extension'])) {
+                $extension = (new MimeTypeExtensionGuesser())->guess($mime);
+
+                unlink($path);
+                $path = sys_get_temp_dir(). '/' . $name. '.' . $extension;
+                file_put_contents($path, $raw);
+            }
+
+            return new UploadedFile($path, $name, $mime, $size);
+        } catch (Exception $e) {
+            throw new UploadException('Invalid file!');
+        }
     }
 }
