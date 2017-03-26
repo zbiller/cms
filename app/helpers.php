@@ -21,13 +21,13 @@ if (!function_exists('form')) {
     }
 }
 
-if (!function_exists('adminform')) {
+if (!function_exists('form_admin')) {
     /**
-     * @return \App\Helpers\Form\Admin
+     * @return \App\Helpers\FormAdminHelper
      */
-    function adminform()
+    function form_admin()
     {
-        return app(AdminForm::class);
+        return app(FormAdmin::class);
     }
 }
 

@@ -3,7 +3,7 @@
 @section('header')
     @parent
 
-    <h1>Library Files</h1>
+    <h1>Library</h1>
 @endsection
 
 @section('content')

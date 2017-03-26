@@ -1,7 +1,7 @@
 {!! validation()->errors() !!}
 
 <div id="tab-1" class="tab">
-    {!! adminform()->text('name') !!}
+    {!! form_admin()->text('name') !!}
     <br /><br /><br /><br />
     <table id="permissions" cellspacing="0" cellpadding="0" border="0">
         <thead>

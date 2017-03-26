@@ -12,9 +12,9 @@
     </section>
 
     <section class="view">
-        {!! adminform()->model($item, ['url' => route('admin.admin_users.update', ['id' => $item->id]), 'method' => 'PUT', 'class' => 'form', 'files' => true]) !!}
+        {!! form_admin()->model($item, ['url' => route('admin.admin_users.update', ['id' => $item->id]), 'method' => 'PUT', 'class' => 'form', 'files' => true]) !!}
             @include('admin.acl.admin_users._form')
-        {!! adminform()->close() !!}
+        {!! form_admin()->close() !!}
 </section>
 @endsection
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.4.15 on 2017-03-25.
+ * Generated for Laravel 5.4.15 on 2017-03-26.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -13020,7 +13020,7 @@ namespace Pbmedia\LaravelFFMpeg {
     
 namespace App\Facades {
 
-    class AdminForm {
+    class FormAdmin {
         
         /**
          * Wraps the input field into html to match the admin layout.
@@ -13032,7 +13032,7 @@ namespace App\Facades {
          */
         public static function wrap($input, $label)
         {
-            return \App\Helpers\Form\Admin::wrap($input, $label);
+            return \App\Helpers\FormAdminHelper::wrap($input, $label);
         }
         
         /**
@@ -13045,7 +13045,7 @@ namespace App\Facades {
          */
         public static function model($model, $options = array())
         {
-            return \App\Helpers\Form\Admin::model($model, $options);
+            return \App\Helpers\FormAdminHelper::model($model, $options);
         }
         
         /**
@@ -13057,7 +13057,7 @@ namespace App\Facades {
          */
         public static function open($options = array())
         {
-            return \App\Helpers\Form\Admin::open($options);
+            return \App\Helpers\FormAdminHelper::open($options);
         }
         
         /**
@@ -13068,7 +13068,7 @@ namespace App\Facades {
          */
         public static function close()
         {
-            return \App\Helpers\Form\Admin::close();
+            return \App\Helpers\FormAdminHelper::close();
         }
         
         /**
@@ -13081,7 +13081,7 @@ namespace App\Facades {
          */
         public static function submit($value = null, $options = array())
         {
-            return \App\Helpers\Form\Admin::submit($value, $options);
+            return \App\Helpers\FormAdminHelper::submit($value, $options);
         }
         
         /**
@@ -13094,7 +13094,7 @@ namespace App\Facades {
          */
         public static function reset($value = null, $options = array())
         {
-            return \App\Helpers\Form\Admin::reset($value, $options);
+            return \App\Helpers\FormAdminHelper::reset($value, $options);
         }
         
         /**
@@ -13107,7 +13107,7 @@ namespace App\Facades {
          */
         public static function button($value = null, $options = array())
         {
-            return \App\Helpers\Form\Admin::button($value, $options);
+            return \App\Helpers\FormAdminHelper::button($value, $options);
         }
         
         /**
@@ -13121,7 +13121,7 @@ namespace App\Facades {
          */
         public static function hidden($name, $value = null, $options = array())
         {
-            return \App\Helpers\Form\Admin::hidden($name, $value, $options);
+            return \App\Helpers\FormAdminHelper::hidden($name, $value, $options);
         }
         
         /**
@@ -13136,7 +13136,7 @@ namespace App\Facades {
          */
         public static function text($name, $label = null, $value = null, $options = array())
         {
-            return \App\Helpers\Form\Admin::text($name, $label, $value, $options);
+            return \App\Helpers\FormAdminHelper::text($name, $label, $value, $options);
         }
         
         /**
@@ -13151,7 +13151,7 @@ namespace App\Facades {
          */
         public static function textarea($name, $label = null, $value = null, $options = array())
         {
-            return \App\Helpers\Form\Admin::textarea($name, $label, $value, $options);
+            return \App\Helpers\FormAdminHelper::textarea($name, $label, $value, $options);
         }
         
         /**
@@ -13167,7 +13167,7 @@ namespace App\Facades {
          */
         public static function select($name, $label = null, $list = array(), $selected = null, $options = array())
         {
-            return \App\Helpers\Form\Admin::select($name, $label, $list, $selected, $options);
+            return \App\Helpers\FormAdminHelper::select($name, $label, $list, $selected, $options);
         }
         
         /**
@@ -13182,7 +13182,7 @@ namespace App\Facades {
          */
         public static function password($name, $label = null, $options = array(), $generate = false)
         {
-            return \App\Helpers\Form\Admin::password($name, $label, $options, $generate);
+            return \App\Helpers\FormAdminHelper::password($name, $label, $options, $generate);
         }
         
         /**
@@ -13196,7 +13196,7 @@ namespace App\Facades {
          */
         public static function file($name, $label = null, $options = array())
         {
-            return \App\Helpers\Form\Admin::file($name, $label, $options);
+            return \App\Helpers\FormAdminHelper::file($name, $label, $options);
         }
         
         /**
@@ -13211,7 +13211,7 @@ namespace App\Facades {
          */
         public static function number($name, $value = null, $label = null, $options = array())
         {
-            return \App\Helpers\Form\Admin::number($name, $value, $label, $options);
+            return \App\Helpers\FormAdminHelper::number($name, $value, $label, $options);
         }
         
         /**
@@ -13226,7 +13226,7 @@ namespace App\Facades {
          */
         public static function email($name, $value = null, $label = null, $options = array())
         {
-            return \App\Helpers\Form\Admin::email($name, $value, $label, $options);
+            return \App\Helpers\FormAdminHelper::email($name, $value, $label, $options);
         }
         
         /**
@@ -13241,7 +13241,7 @@ namespace App\Facades {
          */
         public static function phone($name, $value = null, $label = null, $options = array())
         {
-            return \App\Helpers\Form\Admin::phone($name, $value, $label, $options);
+            return \App\Helpers\FormAdminHelper::phone($name, $value, $label, $options);
         }
         
         /**
@@ -13257,7 +13257,7 @@ namespace App\Facades {
          */
         public static function checkbox($name, $label = null, $value = 1, $checked = null, $options = array())
         {
-            return \App\Helpers\Form\Admin::checkbox($name, $label, $value, $checked, $options);
+            return \App\Helpers\FormAdminHelper::checkbox($name, $label, $value, $checked, $options);
         }
         
         /**
@@ -13273,7 +13273,7 @@ namespace App\Facades {
          */
         public static function radio($name, $label = null, $value = 1, $checked = null, $options = array())
         {
-            return \App\Helpers\Form\Admin::radio($name, $label, $value, $checked, $options);
+            return \App\Helpers\FormAdminHelper::radio($name, $label, $value, $checked, $options);
         }
         
         /**
@@ -13288,7 +13288,7 @@ namespace App\Facades {
          */
         public static function editor($name, $label = null, $value = null, $options = array())
         {
-            return \App\Helpers\Form\Admin::editor($name, $label, $value, $options);
+            return \App\Helpers\FormAdminHelper::editor($name, $label, $value, $options);
         }
         
         /**
@@ -13303,7 +13303,7 @@ namespace App\Facades {
          */
         public static function calendar($name, $label = null, $value = null, $options = array())
         {
-            return \App\Helpers\Form\Admin::calendar($name, $label, $value, $options);
+            return \App\Helpers\FormAdminHelper::calendar($name, $label, $value, $options);
         }
         
         /**
@@ -13318,7 +13318,7 @@ namespace App\Facades {
          */
         public static function time($name, $label = null, $value = null, $options = array())
         {
-            return \App\Helpers\Form\Admin::time($name, $label, $value, $options);
+            return \App\Helpers\FormAdminHelper::time($name, $label, $value, $options);
         }
         
         /**
@@ -13333,7 +13333,7 @@ namespace App\Facades {
          */
         public static function color($name, $label = null, $value = null, $options = array())
         {
-            return \App\Helpers\Form\Admin::color($name, $label, $value, $options);
+            return \App\Helpers\FormAdminHelper::color($name, $label, $value, $options);
         }
         
         /**
@@ -13350,7 +13350,7 @@ namespace App\Facades {
          */
         public static function selectRange($name, $label = null, $start = 0, $end = 0, $selected = null, $options = array())
         {
-            return \App\Helpers\Form\Admin::selectRange($name, $label, $start, $end, $selected, $options);
+            return \App\Helpers\FormAdminHelper::selectRange($name, $label, $start, $end, $selected, $options);
         }
         
         /**
@@ -13367,7 +13367,7 @@ namespace App\Facades {
          */
         public static function selectYear($name, $label = null, $start = null, $end = null, $selected = null, $options = array())
         {
-            return \App\Helpers\Form\Admin::selectYear($name, $label, $start, $end, $selected, $options);
+            return \App\Helpers\FormAdminHelper::selectYear($name, $label, $start, $end, $selected, $options);
         }
         
         /**
@@ -13383,7 +13383,7 @@ namespace App\Facades {
          */
         public static function selectMonth($name, $label = null, $selected = null, $options = array(), $format = '%B')
         {
-            return \App\Helpers\Form\Admin::selectMonth($name, $label, $selected, $options, $format);
+            return \App\Helpers\FormAdminHelper::selectMonth($name, $label, $selected, $options, $format);
         }
         
     }         
@@ -13556,12 +13556,13 @@ namespace App\Facades {
          * Render the add button view helper.
          *
          * @param string $route
+         * @param array $attributes
          * @return \Illuminate\View\View 
          * @static 
          */
-        public static function add($route)
+        public static function add($route, $attributes = array())
         {
-            return \App\Helpers\View\Button::add($route);
+            return \App\Helpers\View\Button::add($route, $attributes);
         }
         
         /**
@@ -13569,12 +13570,13 @@ namespace App\Facades {
          *
          * @param string $route
          * @param array $parameters
+         * @param array $attributes
          * @return \Illuminate\View\View 
          * @static 
          */
-        public static function edit($route, $parameters = array())
+        public static function edit($route, $parameters = array(), $attributes = array())
         {
-            return \App\Helpers\View\Button::edit($route, $parameters);
+            return \App\Helpers\View\Button::edit($route, $parameters, $attributes);
         }
         
         /**
@@ -13582,57 +13584,62 @@ namespace App\Facades {
          *
          * @param string $route
          * @param array $parameters
+         * @param array $attributes
          * @return \Illuminate\View\View 
          * @static 
          */
-        public static function delete($route, $parameters = array())
+        public static function delete($route, $parameters = array(), $attributes = array())
         {
-            return \App\Helpers\View\Button::delete($route, $parameters);
+            return \App\Helpers\View\Button::delete($route, $parameters, $attributes);
         }
         
         /**
          * Render the cancel button view helper.
          *
          * @param string $route
+         * @param array $attributes
          * @return \Illuminate\View\View 
          * @static 
          */
-        public static function cancel($route)
+        public static function cancel($route, $attributes = array())
         {
-            return \App\Helpers\View\Button::cancel($route);
+            return \App\Helpers\View\Button::cancel($route, $attributes);
         }
         
         /**
          * Render the update button view helper.
          *
+         * @param array $attributes
          * @return \Illuminate\View\View 
          * @static 
          */
-        public static function update()
+        public static function update($attributes = array())
         {
-            return \App\Helpers\View\Button::update();
+            return \App\Helpers\View\Button::update($attributes);
         }
         
         /**
          * Render the filter button view helper.
          *
+         * @param array $attributes
          * @return \Illuminate\View\View 
          * @static 
          */
-        public static function filter()
+        public static function filter($attributes = array())
         {
-            return \App\Helpers\View\Button::filter();
+            return \App\Helpers\View\Button::filter($attributes);
         }
         
         /**
          * Render the clear button view helper.
          *
+         * @param array $attributes
          * @return \Illuminate\View\View 
          * @static 
          */
-        public static function clear()
+        public static function clear($attributes = array())
         {
-            return \App\Helpers\View\Button::clear();
+            return \App\Helpers\View\Button::clear($attributes);
         }
         
         /**
@@ -13640,34 +13647,51 @@ namespace App\Facades {
          *
          * @param string $route
          * @param array $parameters
+         * @param array $attributes
          * @return \Illuminate\View\View 
          * @static 
          */
-        public static function download($route, $parameters = array())
+        public static function view($route, $parameters = array(), $attributes = array())
         {
-            return \App\Helpers\View\Button::download($route, $parameters);
+            return \App\Helpers\View\Button::view($route, $parameters, $attributes);
+        }
+        
+        /**
+         * Render the clear button view helper.
+         *
+         * @param string $route
+         * @param array $parameters
+         * @param array $attributes
+         * @return \Illuminate\View\View 
+         * @static 
+         */
+        public static function download($route, $parameters = array(), $attributes = array())
+        {
+            return \App\Helpers\View\Button::download($route, $parameters, $attributes);
         }
         
         /**
          * Render the save button view helper.
          *
+         * @param array $attributes
          * @return \Illuminate\View\View 
          * @static 
          */
-        public static function save()
+        public static function save($attributes = array())
         {
-            return \App\Helpers\View\Button::save();
+            return \App\Helpers\View\Button::save($attributes);
         }
         
         /**
          * Render the save and stay button view helper.
          *
+         * @param array $attributes
          * @return \Illuminate\View\View 
          * @static 
          */
-        public static function saveStay()
+        public static function saveStay($attributes = array())
         {
-            return \App\Helpers\View\Button::saveStay();
+            return \App\Helpers\View\Button::saveStay($attributes);
         }
         
     }         
@@ -15687,7 +15711,7 @@ namespace {
     
     class FFMpeg extends \Pbmedia\LaravelFFMpeg\FFMpegFacade {}
     
-    class AdminForm extends \App\Facades\AdminForm {}
+    class FormAdmin extends \App\Facades\FormAdmin {}
     
     class Menu extends \App\Facades\Menu {}
     

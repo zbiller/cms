@@ -3,8 +3,7 @@
 namespace App\Providers;
 
 use Schema;
-use App\Helpers\UploadHelper;
-use App\Helpers\Form\Admin;
+use App\Helpers\FormAdminHelper;
 use App\Helpers\Menu\Menu;
 use App\Helpers\View\Pagination;
 use App\Helpers\View\Validation;
@@ -41,8 +40,8 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function registerFacades()
     {
-        $this->app->singleton('AdminForm', function ($app) {
-            return new Admin($app);
+        $this->app->singleton('FormAdmin', function ($app) {
+            return new FormAdminHelper($app);
         });
 
         $this->app->singleton('Menu', function ($app) {
@@ -65,7 +64,7 @@ class AppServiceProvider extends ServiceProvider
             return new Button($app);
         });
 
-        $this->app->alias('adminform', Admin::class);
+        $this->app->alias('form_admin', FormAdminHelper::class);
         $this->app->alias('menu', Menu::class);
         $this->app->alias('pagination', Pagination::class);
         $this->app->alias('validation', Validation::class);

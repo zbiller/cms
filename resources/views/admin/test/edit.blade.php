@@ -12,7 +12,7 @@
     </section>
 
     <section class="view">
-        {!! adminform()->model($item, ['url' => route('admin.test.update', ['id' => $item->id]), 'method' => 'PUT', 'class' => 'form', 'files' => true]) !!}
+        {!! form_admin()->model($item, ['url' => route('admin.test.update', ['id' => $item->id]), 'method' => 'PUT', 'class' => 'form', 'files' => true]) !!}
         @include('admin.test._form')
         {!! form()->close() !!}
     </section>

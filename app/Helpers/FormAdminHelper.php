@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Helpers\Form;
+namespace App\Helpers;
 
 use Collective\Html\FormFacade;
 use Illuminate\Support\Collection;
 
-class Admin
+class FormAdminHelper
 {
     /**
      * The instance of the form facade.
