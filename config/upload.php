@@ -113,14 +113,14 @@ return [
 
         /**
          * The styles to create from the original uploaded image.
-         * You can specify multiple styles, as array.
+         * You can specify multiple styles, as an array.
          *
          * Specify the "ratio" = true individually on each style, to let the uploader know you want to preserve the original ratio.
          *
          * If ratio preserving is enabled, the image will first be re-sized and the cropped.
          * If ratio preserving is disabled, the image will only be re-sized at the width and height specified.
          *
-         * Also, not specifying the ratio for a style, is like the ratio is enabled.
+         * Also, not specifying the ratio for a style, it will consider the ratio as enabled.
          * The only way to disable the ratio, is to set it to false.
          *
          * IMPORTANT
@@ -173,6 +173,20 @@ return [
          * This is happening regardless the "generate_thumbnails" options.
          */
         'thumbnails_number' => 3,
+
+        /**
+         * The styles to create from the original uploaded video.
+         * You can specify multiple styles, as an array.
+         *
+         * IMPORTANT
+         * ------------------------------------------------------------------------------------------------------------------------
+         * You should specify this option in the model, using the HasUploads trait method: getUploadConfig().
+         * Note that the getUploadConfig() method is capable of overwriting the config values from this file.
+         * With that said, keep in mind that you can specify other options, not just the video styles.
+         *
+         * To specify the video styles, return an array like: [videos => [styles => [field => [name] => [width, height]]]]
+         */
+        'styles' => []
 
     ],
 

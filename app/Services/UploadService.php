@@ -694,11 +694,11 @@ class UploadService
         return $this->attemptStoringToDisk(function () {
             $image = $this->storeToDisk();
 
+            $this->generateThumbnailForImage($image);
+
             if (!$this->isSimpleUpload()) {
                 $this->generateStylesForImage($image);
             }
-
-            $this->generateThumbnailForImage($image);
 
             return $image;
         });
@@ -716,9 +716,16 @@ class UploadService
         $this->guardAgainstAllowedExtensions('videos');
 
         return $this->attemptStoringToDisk(function () {
+            set_time_limit(3600);
+            ini_set('max_execution_time', 3600);
+
             $video = $this->storeToDisk();
 
             $this->generateThumbnailsForVideo($video);
+
+            if (!$this->isSimpleUpload()) {
+                $this->generateStylesForVideo($video);
+            }
 
             return $video;
         });
@@ -899,6 +906,42 @@ class UploadService
     }
 
     /**
+     * Try generating thumbnail for the original uploaded image.
+     * The thumbnail generation flag and size are defined in the config/upload.php (images -> generate_thumbnail | thumbnail_style).
+     * Also, when creating the image thumbnail, the "quality" configuration option is taken into consideration.
+     *
+     * @param string $path
+     * @throws UploadException
+     */
+    protected function generateThumbnailForImage($path)
+    {
+        if (!$this->getConfig('images.generate_thumbnail')) {
+            return;
+        }
+
+        if (!Storage::disk($this->getDisk())->exists($path)) {
+            throw new UploadException(
+                'Could not create image thumbnail because the image "' . $path . '" does not exist!'
+            );
+        }
+
+        try {
+            $original = Storage::disk($this->getDisk())->get($path);
+            $width = (int)$this->getConfig('images.thumbnail_style.width') ?: 100;
+            $height = (int)$this->getConfig('images.thumbnail_style.height') ?: 100;
+
+            Storage::disk($this->getDisk())->put(
+                $this->getPath() . '/' . substr_replace($this->getName(), '_thumbnail', strpos($this->getName(), '.' . $this->getExtension()), 0),
+                Image::make($original)->fit($width, $height)->stream(null, (int)$this->getConfig('images.quality') ?: 90)->__toString()
+            );
+        } catch (Exception $e) {
+            throw new UploadException(
+                'Thumbnail generation for the uploaded image failed! Please try again.'
+            );
+        }
+    }
+
+    /**
      * Try generating styles for the original uploaded image.
      * The styles are defined in the config/upload.php (images -> styles), or overwritten in the model via the getUploadConfig() method.
      * Also, when creating the styles, the "quality" configuration option is taken into consideration.
@@ -942,43 +985,6 @@ class UploadService
     }
 
     /**
-     * Try generating thumbnail for the original uploaded image.
-     * The thumbnail generation flag and size are defined in the config/upload.php (images -> generate_thumbnail | thumbnail_style).
-     * Also, when creating the image thumbnail, the "quality" configuration option is taken into consideration.
-     *
-     * @param string $path
-     * @throws UploadException
-     */
-    protected function generateThumbnailForImage($path)
-    {
-        if (!$this->getConfig('images.generate_thumbnail')) {
-            return;
-        }
-
-        if (!Storage::disk($this->getDisk())->exists($path)) {
-            throw new UploadException(
-                'Could not create image thumbnail because the image "' . $path . '" does not exist!'
-            );
-        }
-
-        try {
-            $original = Storage::disk($this->getDisk())->get($path);
-            $width = (int)$this->getConfig('images.thumbnail_style.width') ?: 100;
-            $height = (int)$this->getConfig('images.thumbnail_style.height') ?: 100;
-
-            Storage::disk($this->getDisk())->put(
-                $this->getPath() . '/' . substr_replace($this->getName(), '_thumbnail', strpos($this->getName(), '.' . $this->getExtension()), 0),
-                Image::make($original)->fit($width, $height)->stream(null, (int)$this->getConfig('images.quality') ?: 90)->__toString()
-            );
-        } catch (Exception $e) {
-            throw new UploadException(
-                'Thumbnail generation for the uploaded image failed! Please try again.'
-            );
-        }
-    }
-
-
-    /**
      * Try generating the video thumbnails.
      * The generation is done according to the config properties from config/upload.php:
      * videos.generate_thumbnails and videos.thumbnails_number
@@ -1000,15 +1006,60 @@ class UploadService
             $duration = $video->getDurationInSeconds();
 
             for ($i = 1; $i <= $number; $i++) {
-                $thumbnailName = str_replace('.' . $this->getExtension(), '', $path) . '_thumbnail_' . $i . '.jpg';
+                $thumbnail = str_replace('.' . $this->getExtension(), '', $path) . '_thumbnail_' . $i . '.jpg';
 
                 $video
                     ->getFrameFromSeconds(floor(($duration * $i) / $number))
-                    ->export()->toDisk($this->getDisk())->save($thumbnailName);
+                    ->export()->toDisk($this->getDisk())->save($thumbnail);
             }
         } catch (Exception $e) {
             throw new UploadException(
                 'Thumbnail generation for the uploaded video failed! Please try again.'
+            );
+        }
+    }
+
+    /**
+     * Try generating styles for the original uploaded video.
+     * The styles are defined in the config/upload.php (videos -> styles), or overwritten in the model via the getUploadConfig() method.
+     * Also, when creating the styles, please keep in mind that the newly generated videos will be WebM encoded for web pages.
+     *
+     * @param string $path
+     * @throws UploadException
+     */
+    protected function generateStylesForVideo($path)
+    {
+        if (!$this->getConfig('videos.styles')) {
+            return;
+        }
+
+        if (!Storage::disk($this->getDisk())->exists($path)) {
+            throw new UploadException(
+                'Could not create video styles because the video "' . $path . '" does not exist!'
+            );
+        }
+
+        try {
+            $original = FFMpeg::fromDisk($this->getDisk())->open($path);
+
+            foreach ($this->getConfig('videos.styles') as $field => $styles) {
+                if ($field != $this->getField()) {
+                    continue;
+                }
+
+                foreach ($styles as $name => $style) {
+                    $original->addFilter(function ($filters) use ($style) {
+                        $filters->resize(new FFMpeg\Coordinate\Dimension($style['width'], $style['height']));
+                    })->export()->toDisk($this->getDisk())->inFormat(new FFMpeg\Format\Video\WebM)->save(
+                        $this->getPath() . '/' . substr_replace($this->getName(), '_' . $name, strpos($this->getName(), '.' . $this->getExtension()), 0)
+                    );
+                }
+            }
+        } catch (Exception $e) {
+            dd($e);
+
+            throw new UploadException(
+                'Styles generation for the uploaded image failed! Please try again.'
             );
         }
     }
