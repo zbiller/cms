@@ -13487,7 +13487,7 @@ namespace App\Facades {
         
     }         
 
-    class Validation {
+    class ValidationFacade {
         
         /**
          * Display the validation errors for a request.
@@ -13497,7 +13497,7 @@ namespace App\Facades {
          */
         public static function errors()
         {
-            return \App\Helpers\View\Validation::errors();
+            return \App\Helpers\ValidationHelper::errors();
         }
         
     }         
@@ -15717,7 +15717,7 @@ namespace {
     
     class Pagination extends \App\Facades\PaginationFacade {}
     
-    class Validation extends \App\Facades\Validation {}
+    class Validation extends \App\Facades\ValidationFacade {}
     
     class Flash extends \App\Facades\FlashFacade {}
     

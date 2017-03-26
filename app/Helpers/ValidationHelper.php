@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Helpers\View;
+namespace App\Helpers;
 
-class Validation
+class ValidationHelper
 {
     /**
      * Display the validation errors for a request.

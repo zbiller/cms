@@ -4,7 +4,7 @@ namespace App\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class Validation extends Facade
+class ValidationFacade extends Facade
 {
     /**
      * Get the registered name of the component.

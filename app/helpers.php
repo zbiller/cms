@@ -21,16 +21,6 @@ if (!function_exists('form')) {
     }
 }
 
-if (!function_exists('form_admin')) {
-    /**
-     * @return \App\Helpers\FormAdminHelper
-     */
-    function form_admin()
-    {
-        return app(FormAdmin::class);
-    }
-}
-
 if (!function_exists('menu')) {
     /**
      * @return \App\Helpers\MenuHelper
@@ -53,11 +43,21 @@ if (!function_exists('pagination')) {
 
 if (!function_exists('validation')) {
     /**
-     * @return \App\Helpers\View\Validation
+     * @return \App\Helpers\ValidationHelper
      */
     function validation()
     {
         return app(Validation::class);
+    }
+}
+
+if (!function_exists('button')) {
+    /**
+     * @return \App\Helpers\ButtonHelper
+     */
+    function button()
+    {
+        return app(Button::class);
     }
 }
 
@@ -71,13 +71,13 @@ if (!function_exists('flash')) {
     }
 }
 
-if (!function_exists('button')) {
+if (!function_exists('form_admin')) {
     /**
-     * @return \App\Helpers\ButtonHelper
+     * @return \App\Helpers\FormAdminHelper
      */
-    function button()
+    function form_admin()
     {
-        return app(Button::class);
+        return app(FormAdmin::class);
     }
 }
 
