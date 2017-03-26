@@ -89,6 +89,20 @@ class Button
     }
 
     /**
+     * Render the clear button view helper.
+     *
+     * @param string $route
+     * @param array $parameters
+     * @return \Illuminate\View\View
+     */
+    public function download($route, array $parameters = [])
+    {
+        return view('helpers::button.download')->with([
+            'url' => route($route, $parameters)
+        ]);
+    }
+
+    /**
      * Render the save button view helper.
      *
      * @return \Illuminate\View\View
