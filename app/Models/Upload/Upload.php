@@ -7,8 +7,8 @@ use App\Models\Model;
 use App\Services\UploadService;
 use App\Traits\CanFilter;
 use App\Traits\CanSort;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Upload extends Model
 {
@@ -67,6 +67,15 @@ class Upload extends Model
         $this->setTable(config('upload.database.table'));
     }
 
+    /**
+     * @param Builder $query
+     * @param $fullPath
+     */
+    public function scopeWhereFullPath($query, $fullPath)
+    {
+        $query->where('full_path', '=', $fullPath);
+    }
+
 
 
 
@@ -91,20 +100,5 @@ class Upload extends Model
     {
         $table->string($name)->nullable();
         $table->foreign($name)->references('full_path')->on(config('upload.database.table'))->onDelete('restrict');
-    }
-
-    /**
-     * Get an upload record by it's full path.
-     *
-     * @param string $path
-     * @return mixed
-     */
-    public static function findByFullPath($path)
-    {
-        try {
-            return Upload::where('full_path', '=', $path)->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            throw new ModelNotFoundException;
-        }
     }
 }
