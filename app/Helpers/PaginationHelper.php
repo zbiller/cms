@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Helpers\View;
+namespace App\Helpers;
 
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class Pagination
+class PaginationHelper
 {
     /**
      * Display the pagination view helper.

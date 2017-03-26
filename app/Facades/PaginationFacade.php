@@ -4,7 +4,7 @@ namespace App\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class Pagination extends Facade
+class PaginationFacade extends Facade
 {
     /**
      * Get the registered name of the component.

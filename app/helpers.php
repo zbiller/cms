@@ -43,7 +43,7 @@ if (!function_exists('menu')) {
 
 if (!function_exists('pagination')) {
     /**
-     * @return \App\Helpers\View\Pagination
+     * @return \App\Helpers\PaginationHelper
      */
     function pagination()
     {

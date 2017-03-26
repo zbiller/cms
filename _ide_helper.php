@@ -13469,12 +13469,12 @@ namespace App\Facades {
         
     }         
 
-    class Pagination {
+    class PaginationFacade {
         
         /**
          * Display the pagination view helper.
          *
-         * @param \App\Helpers\View\LengthAwarePaginator $items
+         * @param \App\Helpers\LengthAwarePaginator $items
          * @param string $view
          * @param array $data
          * @return string 
@@ -13482,7 +13482,7 @@ namespace App\Facades {
          */
         public static function render($items, $view, $data = array())
         {
-            return \App\Helpers\View\Pagination::render($items, $view, $data);
+            return \App\Helpers\PaginationHelper::render($items, $view, $data);
         }
         
     }         
@@ -15715,7 +15715,7 @@ namespace {
     
     class Menu extends \App\Facades\MenuFacade {}
     
-    class Pagination extends \App\Facades\Pagination {}
+    class Pagination extends \App\Facades\PaginationFacade {}
     
     class Validation extends \App\Facades\Validation {}
     

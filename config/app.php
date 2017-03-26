@@ -252,7 +252,7 @@ return [
          */
         'FormAdmin' => App\Facades\FormAdminFacade::class,
         'Menu' => App\Facades\MenuFacade::class,
-        'Pagination' => App\Facades\Pagination::class,
+        'Pagination' => App\Facades\PaginationFacade::class,
         'Validation' => App\Facades\Validation::class,
         'Flash' => App\Facades\FlashFacade::class,
         'Button' => App\Facades\ButtonFacade::class,
