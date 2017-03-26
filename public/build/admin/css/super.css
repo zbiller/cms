@@ -4934,10 +4934,10 @@ nav:hover > .nano-pane, .nano-pane.active, .nano-pane.flashed {
   width: 100%;
   float: left;}
 .dropzone {
-  border: 2px dashed #55D98D;
+  border: 2px dashed #B0BEC5;
   border-radius: 5px;
   margin-top: 10px;
-  background: #F7FDF9;
+  background: #FCFCFC;
   text-align: center; }
 .dropzone > img {
   width: 160px; }
@@ -6616,19 +6616,24 @@ section.list table tr > td:last-of-type {
   width: 158px;
   padding: 10px;
 }
-section.list table tr > td:last-of-type.actions-big {
-  width: 200px;
-}
-@media only screen and (max-width: 767px) {
-  section.list table tr > td:last-of-type.actions-big {
-    display: table-cell;
-    width: 78px;
-  }
-}
 @media only screen and (max-width: 767px) {
   section.list table tr > td:last-of-type {
     display: table-cell;
     width: 78px;
+  }
+}
+section.list table tr > td:last-of-type.actions-library {
+  width: 277px;
+}
+@media only screen and (max-width: 767px) {
+  section.list table tr > td:last-of-type.actions-library {
+    display: table-cell;
+    width: 116px;
+  }
+}
+@media only screen and (max-width: 767px) {
+  section.list table tr > td.device-visible {
+    display: table-cell;
   }
 }
 
