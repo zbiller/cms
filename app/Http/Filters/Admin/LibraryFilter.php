@@ -7,6 +7,16 @@ use App\Http\Filters\Filter;
 class LibraryFilter extends Filter
 {
     /**
+     * Get the main where condition between entire request fields.
+     *
+     * @return string
+     */
+    public function morph()
+    {
+        return 'and';
+    }
+
+    /**
      * Get the filters that apply to the request.
      *
      * @return array
@@ -23,12 +33,20 @@ class LibraryFilter extends Filter
     }
 
     /**
-     * Get the main where condition between entire request fields.
+     * Get the modified value of a request filter field.
      *
-     * @return string
+     * @return array
      */
-    public function morph()
+    public function modifiers()
     {
-        return 'and';
+        return [
+            'size' => function ($modified) {
+                foreach (request('size') as $size) {
+                    $modified[] = $size * pow(1024, 2);
+                }
+
+                return $modified;
+            },
+        ];
     }
 }
