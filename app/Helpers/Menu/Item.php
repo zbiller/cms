@@ -37,7 +37,7 @@ class Item
      *
      * @var
      */
-    public $active;
+    public $active = [];
 
     /**
      * The permissions that a menu item requires met for it to dislpay.
@@ -98,6 +98,33 @@ class Item
     }
 
     /**
+     * Set|Get the active property for the current menu item.
+     *
+     * @param string|null $active
+     * @return $this|bool
+     */
+    public function active(...$active)
+    {
+        if (!$active) {
+            foreach ($this->active as $active) {
+                if (
+                    (str_contains($active, '*') && starts_with(request()->path(), trim($active, '*/'))) ||
+                    request()->path() == $active
+                ) {
+                    return true;
+                    break;
+                }
+            }
+
+            return false;
+        }
+
+        $this->active = $active;
+
+        return $this;
+    }
+
+    /**
      * Set|Get the permissions property for the current menu item.
      *
      * @param array|null $permissions
@@ -128,25 +155,6 @@ class Item
         }
 
         $this->data[$key] = $value;
-
-        return $this;
-    }
-
-    /**
-     * Set|Get the active property for the current menu item.
-     *
-     * @param string|null $active
-     * @return $this|bool
-     */
-    public function active($active = null)
-    {
-        if (!$active) {
-            return str_contains($this->active, '*') ?
-                starts_with(request()->path(), trim($this->active, '*/')) :
-                request()->path() == $this->active;
-        }
-
-        $this->active = $active;
 
         return $this;
     }

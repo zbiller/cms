@@ -33,7 +33,15 @@ class MenuComposer
             });
 
             $menu->add(function ($item) use ($menu) {
-                $access = $item->name('Access Control')->data('icon', 'fa-sign-in')->active('admin/admin*');
+                $content = $item->name('Manage Content')->data('icon', 'fa-pencil-square-o')->active('admin/library/*');
+
+                $menu->child($content, function (Item $item) {
+                    $item->name('Library')->url(route('admin.library.index'))->permissions('library-list')->active('admin/library/*');
+                });
+            });
+
+            $menu->add(function ($item) use ($menu) {
+                $access = $item->name('Access Control')->data('icon', 'fa-sign-in')->active('admin/admin-roles/*', 'admin/admin-users/*');
 
                 $menu->child($access, function (Item $item) {
                     $item->name('Admin Roles')->url(route('admin.admin_roles.index'))->permissions('admin-roles-list')->active('admin/admin-roles/*');
@@ -43,6 +51,7 @@ class MenuComposer
                     $item->name('Admin Users')->url(route('admin.admin_users.index'))->permissions('admin-users-list')->active('admin/admin-users/*');
                 });
             });
+
 
             $menu->add(function (Item $item) use ($menu) {
                 $test = $item->name('Test')->data('icon', 'fa-text-width')->active('admin/test/*');
