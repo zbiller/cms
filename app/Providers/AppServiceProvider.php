@@ -2,9 +2,9 @@
 
 namespace App\Providers;
 
+use App\Helpers\MenuHelper;
 use Schema;
 use App\Helpers\FormAdminHelper;
-use App\Helpers\Menu\Menu;
 use App\Helpers\View\Pagination;
 use App\Helpers\View\Validation;
 use App\Helpers\Message\Flash;
@@ -45,7 +45,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton('Menu', function ($app) {
-            return new Menu($app);
+            return new MenuHelper($app);
         });
 
         $this->app->singleton('Pagination', function ($app) {
@@ -65,7 +65,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->alias('form_admin', FormAdminHelper::class);
-        $this->app->alias('menu', Menu::class);
+        $this->app->alias('menu', MenuHelper::class);
         $this->app->alias('pagination', Pagination::class);
         $this->app->alias('validation', Validation::class);
         $this->app->alias('flash', Flash::class);

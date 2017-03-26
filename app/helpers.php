@@ -33,7 +33,7 @@ if (!function_exists('form_admin')) {
 
 if (!function_exists('menu')) {
     /**
-     * @return \App\Helpers\Menu\Menu
+     * @return \App\Helpers\MenuHelper
      */
     function menu()
     {

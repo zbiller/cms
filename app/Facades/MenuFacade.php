@@ -4,7 +4,7 @@ namespace App\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class Menu extends Facade
+class MenuFacade extends Facade
 {
     /**
      * Get the registered name of the component.

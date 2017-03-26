@@ -13020,7 +13020,7 @@ namespace Pbmedia\LaravelFFMpeg {
     
 namespace App\Facades {
 
-    class FormAdmin {
+    class FormAdminFacade {
         
         /**
          * Wraps the input field into html to match the admin layout.
@@ -13388,7 +13388,7 @@ namespace App\Facades {
         
     }         
 
-    class Menu {
+    class MenuFacade {
         
         /**
          * Generate a new menu.
@@ -13399,7 +13399,7 @@ namespace App\Facades {
          */
         public static function make($callback)
         {
-            return \App\Helpers\Menu\Menu::make($callback);
+            return \App\Helpers\MenuHelper::make($callback);
         }
         
         /**
@@ -13411,7 +13411,7 @@ namespace App\Facades {
          */
         public static function filter($callback = null)
         {
-            return \App\Helpers\Menu\Menu::filter($callback);
+            return \App\Helpers\MenuHelper::filter($callback);
         }
         
         /**
@@ -13425,7 +13425,7 @@ namespace App\Facades {
          */
         public static function add($callback)
         {
-            return \App\Helpers\Menu\Menu::add($callback);
+            return \App\Helpers\MenuHelper::add($callback);
         }
         
         /**
@@ -13435,36 +13435,36 @@ namespace App\Facades {
          * The callback should generate individual menu items.
          * Setting the properties using methods from App\Helpers\Menu\Item
          *
-         * @param \App\Helpers\Menu\Item $parent
+         * @param \App\Helpers\MenuItem $parent
          * @param \Closure $callback
          * @static 
          */
         public static function child($parent, $callback)
         {
-            return \App\Helpers\Menu\Menu::child($parent, $callback);
+            return \App\Helpers\MenuHelper::child($parent, $callback);
         }
         
         /**
          * Get all parent menu items.
          *
-         * @return \App\Helpers\Menu\Collection 
+         * @return \App\Helpers\Collection 
          * @static 
          */
         public static function roots()
         {
-            return \App\Helpers\Menu\Menu::roots();
+            return \App\Helpers\MenuHelper::roots();
         }
         
         /**
          * Get the children menu items corresponding to a parent.
          *
-         * @param \App\Helpers\Menu\Item $parent
-         * @return \App\Helpers\Menu\Collection 
+         * @param \App\Helpers\MenuItem $parent
+         * @return \App\Helpers\Collection 
          * @static 
          */
         public static function children($parent)
         {
-            return \App\Helpers\Menu\Menu::children($parent);
+            return \App\Helpers\MenuHelper::children($parent);
         }
         
     }         
@@ -15711,9 +15711,9 @@ namespace {
     
     class FFMpeg extends \Pbmedia\LaravelFFMpeg\FFMpegFacade {}
     
-    class FormAdmin extends \App\Facades\FormAdmin {}
+    class FormAdmin extends \App\Facades\FormAdminFacade {}
     
-    class Menu extends \App\Facades\Menu {}
+    class Menu extends \App\Facades\MenuFacade {}
     
     class Pagination extends \App\Facades\Pagination {}
     

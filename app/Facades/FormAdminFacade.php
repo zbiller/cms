@@ -4,7 +4,7 @@ namespace App\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class FormAdmin extends Facade
+class FormAdminFacade extends Facade
 {
     /**
      * Get the registered name of the component.
