@@ -9,17 +9,12 @@ use App\Services\UploadService;
 use App\Http\Requests\Crud\LibraryRequest;
 use App\Http\Filters\Admin\LibraryFilter;
 use App\Http\Sorts\Admin\LibrarySort;
-use App\Traits\CanCrud;
-use App\Options\CanCrudOptions;
-use App\Exceptions\CrudException;
 use App\Exceptions\UploadException;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class LibraryController extends Controller
 {
-    use CanCrud;
-
     /**
      * @param LibraryFilter $filter
      * @param LibrarySort $sort
@@ -27,13 +22,12 @@ class LibraryController extends Controller
      */
     public function index(LibraryFilter $filter, LibrarySort $sort)
     {
-        return $this->_index(function () use ($filter, $sort) {
-            $this->items = Upload::filtered($filter)->sorted($sort)->paginate(10);
+        $items = Upload::filtered($filter)->sorted($sort)->paginate(10);
 
-            $this->vars = [
-                'types' => Upload::$types,
-            ];
-        });
+        return view('admin.cms.library.index')->with([
+            'items' => $items,
+            'types' => Upload::$types
+        ]);
     }
 
     /**
@@ -42,45 +36,26 @@ class LibraryController extends Controller
      */
     public function store(LibraryRequest $request)
     {
-        try {
-            (new UploadService($request->file('file')))->upload();
+        $status = $message = null;
 
-            return [
-                'status' => 'success',
-                'msg' => 'Success',
-                'code' => 501
-            ];
-        } catch (UploadException $e) {
-            return [
-                'status' => 'error',
-                'msg' => $e->getMessage(),
-                'code' => 403
-            ];
-        } catch (Exception $e) {
-            return [
-                'status' => 'error',
-                'msg' => 'Could not upload the file to library!',
-                'code' => 403
-            ];
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
+            try {
+                (new UploadService($request->file('file')))->upload();
+
+                $status = true;
+            } catch (UploadException $e) {
+                $status = false;
+                $message = $e->getMessage();
+            } catch (Exception $e) {
+                $status = false;
+                $message = 'Could not upload the file to library!';
+            }
         }
 
-        return [
-            'status' => 'error',
-            'msg' => $e->getMessage(),
-            'code' => 403
-        ];
-
-
-
-
-        return $this->_store(function () use ($request) {
-            if ($request->hasFile('file') && $request->file('file')->isValid()) {
-                $this->item = app(Upload::class)->withUpload('asasa');
-
-                $this->item->storeToDisk()->saveToDatabase();
-
-            }
-        }, $request);
+        return response()->json([
+            'status' => $status,
+            'message' => $message,
+        ]);
     }
 
     /**
@@ -89,18 +64,21 @@ class LibraryController extends Controller
      */
     public function destroy($id)
     {
-        return $this->_destroy(function () use ($id) {
-            try {
-                $this->item = Upload::findOrFail($id);
+        try {
+            (new UploadService(Upload::findOrFail($id)->full_path))->unload();
 
-                $this->item->withUpload($this->item->full_path);
-
-                $this->item->deleteFromDatabase();
-                $this->item->removeFromDisk();
-            } catch (QueryException $e) {
-                throw new CrudException('Cannot delete the file because it is used by other entities!');
-            }
-        });
+            session()->flash('flash_success', 'The record was successfully deleted!');
+            return redirect()->route('admin.library.index', parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
+        } catch (ModelNotFoundException $e) {
+            session()->flash('flash_error', 'You are trying to delete a record that does not exist!');
+            return redirect()->route('admin.library.index');
+        } catch (QueryException $e) {
+            session()->flash('flash_error', 'Cannot delete the file because it is used by other entities!');
+            return redirect()->route('admin.library.index');
+        } catch (Exception $e) {
+            session()->flash('flash_error', 'The record could not be deleted! Please try again.');
+            return back();
+        }
     }
 
     /**
@@ -115,20 +93,5 @@ class LibraryController extends Controller
             session()->flash('flash_error', 'You are trying to download file that does not exist!');
             return redirect()->route('admin.library.index');
         }
-    }
-
-    /**
-     * @return CanCrudOptions
-     */
-    public function getCanCrudOptions()
-    {
-        return CanCrudOptions::instance()
-            ->setModel(app(Upload::class))
-            ->setListRoute('admin.library.index')
-            ->setListView('admin.cms.library.index')
-            ->setAddRoute('admin.library.create')
-            ->setAddView('admin.cms.library.add')
-            ->setEditRoute('admin.library.edit')
-            ->setEditView('admin.cms.library.edit');
     }
 }
