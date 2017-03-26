@@ -4,7 +4,7 @@ namespace App\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class Button extends Facade
+class ButtonFacade extends Facade
 {
     /**
      * Get the registered name of the component.

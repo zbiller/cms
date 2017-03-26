@@ -13550,7 +13550,7 @@ namespace App\Facades {
         
     }         
 
-    class Button {
+    class ButtonFacade {
         
         /**
          * Render the add button view helper.
@@ -13562,7 +13562,7 @@ namespace App\Facades {
          */
         public static function add($route, $attributes = array())
         {
-            return \App\Helpers\View\Button::add($route, $attributes);
+            return \App\Helpers\ButtonHelper::add($route, $attributes);
         }
         
         /**
@@ -13576,7 +13576,7 @@ namespace App\Facades {
          */
         public static function edit($route, $parameters = array(), $attributes = array())
         {
-            return \App\Helpers\View\Button::edit($route, $parameters, $attributes);
+            return \App\Helpers\ButtonHelper::edit($route, $parameters, $attributes);
         }
         
         /**
@@ -13590,7 +13590,7 @@ namespace App\Facades {
          */
         public static function delete($route, $parameters = array(), $attributes = array())
         {
-            return \App\Helpers\View\Button::delete($route, $parameters, $attributes);
+            return \App\Helpers\ButtonHelper::delete($route, $parameters, $attributes);
         }
         
         /**
@@ -13603,7 +13603,7 @@ namespace App\Facades {
          */
         public static function cancel($route, $attributes = array())
         {
-            return \App\Helpers\View\Button::cancel($route, $attributes);
+            return \App\Helpers\ButtonHelper::cancel($route, $attributes);
         }
         
         /**
@@ -13615,7 +13615,7 @@ namespace App\Facades {
          */
         public static function update($attributes = array())
         {
-            return \App\Helpers\View\Button::update($attributes);
+            return \App\Helpers\ButtonHelper::update($attributes);
         }
         
         /**
@@ -13627,7 +13627,7 @@ namespace App\Facades {
          */
         public static function filter($attributes = array())
         {
-            return \App\Helpers\View\Button::filter($attributes);
+            return \App\Helpers\ButtonHelper::filter($attributes);
         }
         
         /**
@@ -13639,7 +13639,7 @@ namespace App\Facades {
          */
         public static function clear($attributes = array())
         {
-            return \App\Helpers\View\Button::clear($attributes);
+            return \App\Helpers\ButtonHelper::clear($attributes);
         }
         
         /**
@@ -13653,7 +13653,7 @@ namespace App\Facades {
          */
         public static function view($route, $parameters = array(), $attributes = array())
         {
-            return \App\Helpers\View\Button::view($route, $parameters, $attributes);
+            return \App\Helpers\ButtonHelper::view($route, $parameters, $attributes);
         }
         
         /**
@@ -13667,7 +13667,7 @@ namespace App\Facades {
          */
         public static function download($route, $parameters = array(), $attributes = array())
         {
-            return \App\Helpers\View\Button::download($route, $parameters, $attributes);
+            return \App\Helpers\ButtonHelper::download($route, $parameters, $attributes);
         }
         
         /**
@@ -13679,7 +13679,7 @@ namespace App\Facades {
          */
         public static function save($attributes = array())
         {
-            return \App\Helpers\View\Button::save($attributes);
+            return \App\Helpers\ButtonHelper::save($attributes);
         }
         
         /**
@@ -13691,7 +13691,7 @@ namespace App\Facades {
          */
         public static function saveStay($attributes = array())
         {
-            return \App\Helpers\View\Button::saveStay($attributes);
+            return \App\Helpers\ButtonHelper::saveStay($attributes);
         }
         
     }         
@@ -15721,7 +15721,7 @@ namespace {
     
     class Flash extends \App\Facades\FlashFacade {}
     
-    class Button extends \App\Facades\Button {}
+    class Button extends \App\Facades\ButtonFacade {}
     
 }
 

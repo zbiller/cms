@@ -2,13 +2,13 @@
 
 namespace App\Providers;
 
+use App\Helpers\ButtonHelper;
 use App\Helpers\MenuHelper;
 use App\Helpers\FlashHelper;
 use Schema;
 use App\Helpers\FormAdminHelper;
 use App\Helpers\View\Pagination;
 use App\Helpers\View\Validation;
-use App\Helpers\View\Button;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -61,7 +61,7 @@ class AppServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton('Button', function ($app) {
-            return new Button($app);
+            return new ButtonHelper($app);
         });
 
         $this->app->alias('form_admin', FormAdminHelper::class);
@@ -69,6 +69,6 @@ class AppServiceProvider extends ServiceProvider
         $this->app->alias('pagination', Pagination::class);
         $this->app->alias('validation', Validation::class);
         $this->app->alias('flash', FlashHelper::class);
-        $this->app->alias('button', Button::class);
+        $this->app->alias('button', ButtonHelper::class);
     }
 }

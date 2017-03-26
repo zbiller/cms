@@ -73,7 +73,7 @@ if (!function_exists('flash')) {
 
 if (!function_exists('button')) {
     /**
-     * @return \App\Helpers\View\Button
+     * @return \App\Helpers\ButtonHelper
      */
     function button()
     {
