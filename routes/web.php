@@ -97,7 +97,7 @@ Route::group([
                 'prefix' => 'library',
             ], function () {
                 Route::get('/', ['as' => 'admin.library.index', 'uses' => 'LibraryController@index', 'permissions' => 'library-list']);
-                Route::get('show/{id}', ['as' => 'admin.library.show', 'uses' => 'LibraryController@show', 'permissions' => 'library-edit']);
+                Route::get('show/{id}', ['as' => 'admin.library.show', 'uses' => 'LibraryController@show', 'permissions' => 'library-list']);
                 Route::get('download/{id}', ['as' => 'admin.library.download', 'uses' => 'LibraryController@download', 'permissions' => 'library-edit']);
                 Route::post('store', ['as' => 'admin.library.store', 'uses' => 'LibraryController@store', 'permissions' => 'library-add']);
                 Route::delete('destroy/{id}', ['as' => 'admin.library.destroy', 'uses' => 'LibraryController@destroy', 'permissions' => 'library-delete']);

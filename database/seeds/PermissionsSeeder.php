@@ -63,6 +63,28 @@ class PermissionsSeeder extends Seeder
                 'label' => 'Delete',
             ],
         ],
+        'Library' => [
+            'List' => [
+                'name' => 'library-list',
+                'group' => 'Library',
+                'label' => 'List',
+            ],
+            'Add' => [
+                'name' => 'library-add',
+                'group' => 'Library',
+                'label' => 'Add',
+            ],
+            'Edit' => [
+                'name' => 'library-edit',
+                'group' => 'Library',
+                'label' => 'Edit',
+            ],
+            'Delete' => [
+                'name' => 'library-delete',
+                'group' => 'Library',
+                'label' => 'Delete',
+            ],
+        ],
     ];
 
     /**
