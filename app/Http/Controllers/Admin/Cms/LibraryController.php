@@ -73,7 +73,7 @@ class LibraryController extends Controller
             session()->flash('flash_error', 'You are trying to delete a record that does not exist!');
             return redirect()->route('admin.library.index');
         } catch (QueryException $e) {
-            session()->flash('flash_error', 'Cannot delete the file because it is used by other entities!');
+            session()->flash('flash_error', 'Could not delete the file because it is used by other entities!');
             return redirect()->route('admin.library.index');
         } catch (Exception $e) {
             session()->flash('flash_error', 'The record could not be deleted! Please try again.');
@@ -88,7 +88,7 @@ class LibraryController extends Controller
     public function download($id)
     {
         try {
-            return Upload::findOrFail($id)->download();
+            return (new UploadService(Upload::findOrFail($id)->full_path))->download();
         } catch (ModelNotFoundException $e) {
             session()->flash('flash_error', 'You are trying to download file that does not exist!');
             return redirect()->route('admin.library.index');
