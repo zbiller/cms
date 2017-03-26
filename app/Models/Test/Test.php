@@ -73,15 +73,6 @@ class Test extends Model
         return $this->belongsToMany(TestHabtm::class, 'test_test_habtm_ring', 'test_id', 'test_habtm_id');
     }
 
-    /**
-     * @return mixed
-     */
-    public static function getHasUploadsOptions()
-    {
-        return HasUploadsOptions::instance()
-            ->setUploadFields('image', 'video', 'audio', 'file');
-    }
-
     public function getUploadConfig()
     {
         return [
@@ -103,21 +94,23 @@ class Test extends Model
                             'height' => '400',
                             'ratio' => true,
                         ]
-                    ],
+                    ]
+                ]
+            ],
+            'videos' => [
+                'styles' => [
                     'video' => [
                         'small' => [
                             'width' => '200',
-                            'height' => '200',
-                            'ratio' => false,
+                            'height' => '100',
                         ],
                         'big' => [
-                            'width' => '400',
-                            'height' => '300',
-                            'ratio' => false,
+                            'width' => '600',
+                            'height' => '400',
                         ],
                     ]
                 ]
-            ]
+            ],
         ];
     }
 }

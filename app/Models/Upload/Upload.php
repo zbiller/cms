@@ -2,7 +2,6 @@
 
 namespace App\Models\Upload;
 
-use Storage;
 use App\Models\Model;
 use App\Services\UploadService;
 use App\Traits\CanFilter;
@@ -37,11 +36,6 @@ class Upload extends Model
         'mime',
         'type',
     ];
-
-    /**
-     * @var UploadService
-     */
-    protected $upload;
 
     /**
      * Pretty formatted list of upload types.
@@ -84,7 +78,7 @@ class Upload extends Model
      */
     public function getTypeIconAttribute()
     {
-        return asset('/build/admin/img/' . strtolower(self::$types[$this->attributes['type']]) . '-icon.png');
+        return asset('/build/admin/img/' . strtolower(self::$types[$this->type]) . '-icon.png');
     }
 
     /**
@@ -105,6 +99,6 @@ class Upload extends Model
     public static function column($name, Blueprint $table)
     {
         $table->string($name)->nullable();
-        $table->foreign($name)->references('full_path')->on(config('upload.database.table'))->onDelete('restrict');
+        $table->foreign($name)->references('full_path')->on((new static)->getTable())->onDelete('restrict');
     }
 }
