@@ -51,7 +51,7 @@ class Admin
      */
     public function wrap($input, $label)
     {
-        return "<fieldset><label>{$label}</label>{$input}</fieldset>";
+        return $label ? "<fieldset><label>{$label}</label>{$input}</fieldset>" : $input;
     }
 
     /**
@@ -482,6 +482,7 @@ class Admin
 
     /**
      * Set the label using the name if no label was specified.
+     * Specify the label to false to render only the input, without any wrappings.
      *
      * @param string $name
      * @param null $label
@@ -489,6 +490,10 @@ class Admin
      */
     protected function label($name, $label = null)
     {
+        if ($label === false) {
+            return false;
+        }
+
         return $label ?: ucfirst(preg_replace("/[^a-zA-Z0-9\s]/", " ", $name));
     }
 }
