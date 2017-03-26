@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Upload\Upload;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -16,6 +17,12 @@ class CreateTestingTables extends Migration
         Schema::create('test', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique();
+
+            Upload::column('image', $table);
+            Upload::column('video', $table);
+            Upload::column('audio', $table);
+            Upload::column('file', $table);
+
             $table->longText('content');
             $table->tinyInteger('type');
 

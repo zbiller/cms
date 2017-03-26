@@ -29,6 +29,7 @@ class Test extends Model
         'type',
         'image',
         'video',
+        'audio',
         'file',
     ];
 
@@ -72,37 +73,17 @@ class Test extends Model
         return $this->belongsToMany(TestHabtm::class, 'test_test_habtm_ring', 'test_id', 'test_habtm_id');
     }
 
-
-
-    /*public function getHasUploadsOptions()
+    /**
+     * @return mixed
+     */
+    public static function getHasUploadsOptions()
     {
         return HasUploadsOptions::instance()
-            ->setStorageDisk('uploads');
-
-        return HasUploadsOptions::instance()
-            ->setStorageDisk()
-            ->setDatabaseSave()
-            ->setDatabaseTable()
-            ->setImageMaxSize()
-            ->setImageAllowedExtensions()
-            ->setImageStyles()
-            ->setVideosMaxSize()
-            ->setVideoAllowedExtensions()
-            ->setVideoGenerateThumbnails()
-            ->setVideoThumbnailsNumber()
-            ->setAudioMaxSize()
-            ->setAudioAllowedExtensions()
-            ->setFileMaxSize()
-            ->setFileAllowedExtensions();
-
-    }*/
-
-
+            ->setUploadFields('image', 'video', 'audio', 'file');
+    }
 
     public function getUploadConfig()
     {
-        return [];
-
         return [
             'images' => [
                 'styles' => [
@@ -122,6 +103,18 @@ class Test extends Model
                             'height' => '400',
                             'ratio' => true,
                         ]
+                    ],
+                    'video' => [
+                        'small' => [
+                            'width' => '200',
+                            'height' => '200',
+                            'ratio' => false,
+                        ],
+                        'big' => [
+                            'width' => '400',
+                            'height' => '300',
+                            'ratio' => false,
+                        ],
                     ]
                 ]
             ]

@@ -52,6 +52,10 @@ class TestController extends Controller
      */
     public function edit($id)
     {
+        /*$this->item = Test::findOrFail($id);
+
+        return $this->item->_video->download();*/
+
         return $this->_edit(function () use ($id) {
             $this->item = Test::findOrFail($id);
         });
