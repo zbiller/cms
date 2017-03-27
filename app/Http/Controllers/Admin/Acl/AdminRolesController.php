@@ -17,14 +17,15 @@ class AdminRolesController extends Controller
     use CanCrud;
 
     /**
+     * @param Request $request
      * @param AdminRoleFilter $filter
      * @param AdminRoleSort $sort
      * @return \Illuminate\View\View
      */
-    public function index(AdminRoleFilter $filter, AdminRoleSort $sort)
+    public function index(Request $request, AdminRoleFilter $filter, AdminRoleSort $sort)
     {
-        return $this->_index(function () use ($filter, $sort) {
-            $this->items = Role::only(Role::TYPE_ADMIN)->exclude('admin')->filtered($filter)->sorted($sort)->paginate(10);
+        return $this->_index(function () use ($request, $filter, $sort) {
+            $this->items = Role::only(Role::TYPE_ADMIN)->exclude('admin')->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
         });
     }
 

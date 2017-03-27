@@ -10,20 +10,21 @@ use App\Http\Requests\Crud\LibraryRequest;
 use App\Http\Filters\Admin\LibraryFilter;
 use App\Http\Sorts\Admin\LibrarySort;
 use App\Exceptions\UploadException;
+use Illuminate\Http\Request;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Storage;
 
 class LibraryController extends Controller
 {
     /**
+     * @param Request $request
      * @param LibraryFilter $filter
      * @param LibrarySort $sort
      * @return \Illuminate\View\View
      */
-    public function index(LibraryFilter $filter, LibrarySort $sort)
+    public function index(Request $request, LibraryFilter $filter, LibrarySort $sort)
     {
-        $items = Upload::filtered($filter)->sorted($sort)->paginate(10);
+        $items = Upload::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
 
         return view('admin.cms.library.index')->with([
             'items' => $items,

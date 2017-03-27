@@ -4,12 +4,20 @@ namespace App\Traits;
 
 use App\Http\Sorts\Sort;
 use App\Exceptions\SortException;
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait CanSort
 {
+    /**
+     * The query builder instance from the Sorted scope.
+     *
+     * @var Builder
+     */
+    protected $sortQuery;
+
     /**
      * The App\Http\Sorts\Sort instance.
      * This is used to get the sorting rules, just like a request.
@@ -19,11 +27,11 @@ trait CanSort
     protected $sortInstance;
 
     /**
-     * The query builder instance from the Sorted scope.
+     * The request object passed from the controller applying the "filtered" scope on a model.
      *
-     * @var Builder
+     * @var Request
      */
-    protected $sortQuery;
+    protected $sortRequest;
 
     /**
      * The field to sort by.
@@ -44,31 +52,30 @@ trait CanSort
      * Should be called on the model when building the query.
      *
      * @param Builder $query
+     * @param Request $request
      * @param Sort $sort
+     * @throws SortException
      */
-    public function scopeSorted($query, Sort $sort = null)
+    public function scopeSorted($query, Request $request, Sort $sort = null)
     {
-        $this->sortInstance = $sort;
         $this->sortQuery = $query;
+        $this->sortRequest = $request;
+        $this->sortInstance = $sort;
 
         $this->setFieldToSortBy();
         $this->setDirectionToSortIn();
 
-        if (request()->isMethod('get') && request()->has($this->sortField) && request()->has($this->sortDirection)) {
+        if ($this->isValidSort()) {
             $this->checkSortingDirection();
 
-            switch ($direction = request($this->sortDirection)) {
-                case Sort::DIRECTION_RANDOM:
-                    $this->sortQuery->inRandomOrder();
-                    break;
-                default:
-                    if ($this->shouldSortByRelation()) {
-                        $this->sortByRelation();
-                    } else {
-                        $this->sortNormally();
-                    }
-
-                    break;
+            if ($this->sortRequest->get($this->sortDirection) == Sort::DIRECTION_RANDOM) {
+                $this->sortQuery->inRandomOrder();
+            } else {
+                if ($this->shouldSortByRelation()) {
+                    $this->sortByRelation();
+                } else {
+                    $this->sortNormally();
+                }
             }
         }
     }
@@ -80,8 +87,7 @@ trait CanSort
      */
     private function sortByRelation()
     {
-        $relation = explode('.', request($this->sortField))[0];
-        $field = explode('.', request($this->sortField))[1];
+        list($relation, $field) = explode('.', $this->sortRequest->get($this->sortField));
 
         $this->checkRelationToSortBy($relation);
 
@@ -95,7 +101,7 @@ trait CanSort
             $this->sortQuery->join($relationTable, $modelTable . '.id', '=', $relationTable . '.' . $foreignKey);
         }
 
-        $this->sortQuery->orderBy($relationTable . '.' . $field, request($this->sortDirection));
+        $this->sortQuery->orderBy($relationTable . '.' . $field, $this->sortRequest->get($this->sortDirection));
     }
 
     /**
@@ -105,7 +111,17 @@ trait CanSort
      */
     private function sortNormally()
     {
-        $this->sortQuery->orderBy(request($this->sortField), request($this->sortDirection));
+        $this->sortQuery->orderBy($this->sortRequest->get($this->sortField), $this->sortRequest->get($this->sortDirection));
+    }
+
+    /**
+     * Verify if all sorting conditions are met.
+     *
+     * @return bool
+     */
+    private function isValidSort()
+    {
+        return $this->sortRequest->isMethod('get') && $this->sortRequest->has($this->sortField) && $this->sortRequest->has($this->sortDirection);
     }
 
     /**
@@ -137,10 +153,12 @@ trait CanSort
      */
     private function shouldSortByRelation()
     {
-        return str_contains(request($this->sortField), '.');
+        return str_contains($this->sortRequest->get($this->sortField), '.');
     }
 
     /**
+     * Verify if the desired join exists already, possibly included by a global scope.
+     *
      * @param string $table
      * @return bool
      */
@@ -157,16 +175,19 @@ trait CanSort
      */
     private function checkSortingDirection()
     {
-        if (!in_array(strtolower(request($this->sortDirection)), array_map('strtolower', Sort::$directions))) {
+        if (!in_array(strtolower($this->sortRequest->get($this->sortDirection)), array_map('strtolower', Sort::$directions))) {
             throw new SortException(
                 'Invalid sorting direction.' . PHP_EOL .
-                'You provided the direction: "' . request($this->sortDirection) . '".' . PHP_EOL .
+                'You provided the direction: "' . $this->sortRequest->get($this->sortDirection) . '".' . PHP_EOL .
                 'Please provide one of these directions: ' . implode('|', Sort::$directions) . '.'
             );
         }
     }
 
     /**
+     * Verify if the desired relation to sort by is one of: HasOne or BelongsTo.
+     * Sorting by "many" relations or "morph" ones is not possible.
+     *
      * @param string $relation
      * @throws SortException
      */

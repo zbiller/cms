@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin\Acl;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Crud\AdminUserWithoutPasswordRequest;
 use App\Models\Auth\User;
 use App\Models\Auth\Role;
 use App\Traits\CanCrud;
 use App\Options\CanCrudOptions;
 use App\Http\Requests\Crud\AdminUserRequest;
+use App\Http\Requests\Crud\AdminUserWithoutPasswordRequest;
 use App\Http\Filters\Admin\AdminUserFilter;
 use App\Http\Sorts\Admin\AdminUserSort;
 use Illuminate\Http\Request;
@@ -18,14 +18,15 @@ class AdminUsersController extends Controller
     use CanCrud;
 
     /**
+     * @param Request $request
      * @param AdminUserFilter $filter
      * @param AdminUserSort $sort
      * @return \Illuminate\View\View
      */
-    public function index(AdminUserFilter $filter, AdminUserSort $sort)
+    public function index(Request $request, AdminUserFilter $filter, AdminUserSort $sort)
     {
-        return $this->_index(function () use ($filter, $sort) {
-            $this->items = User::only('admin')->notDeveloper()->filtered($filter)->sorted($sort)->paginate(10);
+        return $this->_index(function () use ($request, $filter, $sort) {
+            $this->items = User::only('admin')->notDeveloper()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
         });
     }
 

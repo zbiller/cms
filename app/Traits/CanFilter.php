@@ -2,14 +2,21 @@
 
 namespace App\Traits;
 
+use Closure;
 use App\Http\Filters\Filter;
 use App\Exceptions\FilterException;
-use Carbon\Carbon;
-use Closure;
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 
 trait CanFilter
 {
+    /**
+     * The query builder instance from the Filtered scope.
+     *
+     * @var Builder
+     */
+    protected $filterQuery;
+
     /**
      * The App\Http\Filters\Filter instance.
      * This is used to get the filtering rules, just like a request.
@@ -19,11 +26,11 @@ trait CanFilter
     protected $filterInstance;
 
     /**
-     * The query builder instance from the Filtered scope.
+     * The request object passed from the controller applying the "filtered" scope on a model.
      *
-     * @var Builder
+     * @var Request
      */
-    protected $filterQuery;
+    protected $filterRequest;
 
     /**
      * The main where condition between entire request fields.
@@ -89,17 +96,20 @@ trait CanFilter
      * Should be called on the model when building the query.
      *
      * @param Builder $query
+     * @param Request $request
      * @param Filter $filter
+     * @throws FilterException
      */
-    public function scopeFiltered($query, Filter $filter)
+    public function scopeFiltered($query, Request $request, Filter $filter)
     {
-        $this->filterInstance = $filter;
         $this->filterQuery = $query;
+        $this->filterRequest = $request;
+        $this->filterInstance = $filter;
 
         foreach ($this->filterInstance->filters() as $field => $options) {
             $this->filterField = $field;
 
-            if (request()->isMethod('get') && $this->isValidFilterField() && !$this->isNullableFilterField()) {
+            if ($this->isValidFilter()) {
                 $this->setOperatorForFiltering($options);
                 $this->setConditionToFilterBy($options);
                 $this->setColumnsToFilterIn($options);
@@ -164,20 +174,13 @@ trait CanFilter
     private function filterByRelation(Builder $query, $column)
     {
         $options = [];
-        $arguments = explode('.', $column);
-        $relation = camel_case($arguments[0]);
-        $column = $arguments[1];
-
-        $options[$relation][] = $column;
+        $relation = camel_case(explode('.', $column)[0]);
+        $options[$relation][] = explode('.', $column)[1];
 
         foreach ($options as $relation => $columns) {
             $query->{$this->filterHaving}($relation, function ($q) use ($columns) {
                 foreach ($columns as $index => $column) {
-                    if ($index == 0) {
-                        $method = lcfirst(str_replace('or', '', $this->filterMethod));
-                    } else {
-                        $method = $this->filterMethod;
-                    }
+                    $method = $index == 0 ? lcfirst(str_replace('or', '', $this->filterMethod)) : $this->filterMethod;
 
                     $this->filterIndividually($q, $method, $column);
                 }
@@ -219,7 +222,6 @@ trait CanFilter
                 break;
             case str_contains($_method, Filter::OPERATOR_DATE):
                 $operator = explode(' ', $this->filterOperator);
-
                 $query->{$method}($column, (isset($operator[1]) ? $operator[1] : '='), $this->filterValue);
                 break;
             default:
@@ -229,13 +231,23 @@ trait CanFilter
     }
 
     /**
+     * Verify if all filtering conditions are met.
+     *
+     * @return bool
+     */
+    private function isValidFilter()
+    {
+        return $this->filterRequest->isMethod('get') && $this->isValidFilterField() && !$this->isNullFilterField();
+    }
+
+    /**
      * Verify if the request field has a valid value.
      *
      * @return bool
      */
     private function isValidFilterField()
     {
-        return request()->has($this->filterField) || in_array($this->filterField, Filter::$fields);
+        return $this->filterRequest->has($this->filterField) || in_array($this->filterField, Filter::$fields);
     }
 
     /**
@@ -243,25 +255,26 @@ trait CanFilter
      *
      * @return bool
      */
-    private function isNullableFilterField()
+    private function isNullFilterField()
     {
-        if (is_array(request($this->filterField))) {
+        if (is_array($this->filterRequest->get($this->filterField))) {
             $count = 0;
 
-            foreach (request($this->filterField) as $value) {
+            foreach ($this->filterRequest->get($this->filterField) as $value) {
                 if ($value === null) {
                     $count++;
                 }
             }
 
-            return $count == count(request($this->filterField));
+            return $count == count($this->filterRequest->get($this->filterField));
         } else {
-            return is_null(request($this->filterField));
+            return is_null($this->filterRequest->get($this->filterField));
         }
     }
 
     /**
      * Determine if filtering should focus on a subsequent relationship.
+     * The convention here is to use dot ".", separating the table from column.
      *
      * @param string $column
      * @return bool
@@ -310,6 +323,7 @@ trait CanFilter
     /**
      * Set the value accordingly to the operator used.
      * Some of the operators require the value to be processed.
+     * Also, this method handles the modifiers() method if defined on the filter class.
      *
      * @return void
      */
@@ -326,7 +340,7 @@ trait CanFilter
                 }
             }
         } else {
-            $this->filterValue = request($this->filterField);
+            $this->filterValue = $this->filterRequest->get($this->filterField);
         }
 
         switch ($operator = strtolower($this->filterOperator)) {
