@@ -2,10 +2,10 @@
 
 namespace App\Sniffers;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use ReflectionMethod;
 use SplFileObject;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Relation;
 
 class ModelSniffer
 {
@@ -34,6 +34,9 @@ class ModelSniffer
     ];
 
     /**
+     * Get all the defined model class relations.
+     * Not just the eager loaded ones, present in the $relations Eloquent property.
+     *
      * @param Model $model
      * @return array
      */

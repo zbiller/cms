@@ -3,11 +3,11 @@
 namespace App\Traits;
 
 use Storage;
-use App\Models\Model;
 use App\Services\UploadService;
 use App\Helpers\UploadHelper;
 use App\Exceptions\UploadException;
 use App\Exceptions\CrudException;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 
 trait HasUploads
@@ -33,7 +33,7 @@ trait HasUploads
     {
         static::saving(function (Model $model) {
             foreach (request()->allFiles() as $name => $file) {
-                if ($model->isFillable($name) && request()->file($name)->isValid() && $file instanceof UploadedFile) {
+                if (self::isValidFile($model, $file, $name)) {
                     try {
                         $upload = (new UploadService($file, $model, $name))->upload();
 
@@ -65,5 +65,16 @@ trait HasUploads
         }
 
         return parent::getAttribute($key);
+    }
+
+    /**
+     * @param Model $model
+     * @param UploadedFile $file
+     * @param string $name
+     * @return bool
+     */
+    private static function isValidFile(Model $model, UploadedFile $file, $name)
+    {
+        return $model->isFillable($name) && request()->file($name)->isValid() && $file instanceof UploadedFile;
     }
 }
