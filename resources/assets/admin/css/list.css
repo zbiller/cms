@@ -54,19 +54,5 @@ section.list table tr > td:last-of-type {
     width: 78px;
   }
 }
-section.list table tr > td:last-of-type.actions-library {
-  width: 277px;
-}
-@media only screen and (max-width: 767px) {
-  section.list table tr > td:last-of-type.actions-library {
-    display: table-cell;
-    width: 116px;
-  }
-}
-@media only screen and (max-width: 767px) {
-  section.list table tr > td.device-visible {
-    display: table-cell;
-  }
-}
 
 /*# sourceMappingURL=list.css.map */

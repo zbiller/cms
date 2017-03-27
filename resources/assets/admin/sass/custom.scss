@@ -1,0 +1,46 @@
+@import 'init';
+
+table {
+    tr > td {
+        &:last-of-type {
+            &.actions-library {
+                width: 277px !important;
+
+                @include media-query('tablet') {
+                    width: 116px !important;
+                }
+            }
+        }
+
+        &.device-visible {
+            @include media-query('tablet') {
+                display: table-cell !important;
+            }
+        }
+
+        .library-aligned-text {
+            margin: 6px 0 0 10px;
+            display: inline-block;
+            float: left;
+
+            @include media-query('tablet') {
+                float: none;
+                margin: 0;
+            }
+        }
+
+        img.library-aligned-image {
+            float: left;
+
+            @include media-query('tablet') {
+                display: none;
+            }
+        }
+    }
+}
+
+.desktop-only {
+    @include media-query('tablet') {
+        display: none !important;
+    }
+}

@@ -1,10 +1,7 @@
 <table cellspacing="0" cellpadding="0" border="0">
     <thead>
     <tr>
-        <td class="sortable" data-sort="type" width="30">
-            <i class="fa fa-sort"></i>&nbsp; #
-        </td>
-        <td class="sortable device-visible" data-sort="original_name">
+        <td class="sortable" data-sort="original_name">
             <i class="fa fa-sort"></i>&nbsp; Name
         </td>
         <td class="sortable" data-sort="size">
@@ -18,10 +15,8 @@
         @foreach($items as $index => $item)
             <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
                 <td>
-                    <img src="{{ $item->type_icon }}" title="{{ $types[$item->type] }}" />
-                </td>
-                <td class="device-visible">
-                    {{ $item->original_name }}
+                    <img src="{{ $item->type_icon }}" title="{{ $types[$item->type] }}" class="library-aligned-image" />
+                    <span class="library-aligned-text">{{ $item->original_name }}</span>
                 </td>
                 <td>
                     {{ $item->size . ' MB' }}
