@@ -8,6 +8,7 @@ $(window).load(function(){
     sort();
     tabs();
     pagination();
+    popups();
     setups();
     helpers();
 });
@@ -231,6 +232,77 @@ function pagination() {
 /**
  * @return void
  */
+function popups()
+{
+    var openButton = $('a[data-toggle="popup"]');
+    var closeButton = $('section.popup div.modal a.close, a.modal-close');
+    var tabButtons = $('section.popup ul.modal-tabs > li');
+    var uploadFile = $('section.popup div.uploads > a');
+
+
+    //open
+    openButton.click(function (e) {
+        showSelectedPopup($(this));
+    });
+
+    //close
+    closeButton.click(function (e) {
+        resetVisiblePopup();
+        hideVisiblePopup();
+    });
+
+    $(document).keyup(function(e) {
+        if (e.keyCode == 27) {
+            resetVisiblePopup();
+            hideVisiblePopup();
+        }
+    });
+
+    //tabs
+    tabButtons.click(function (e) {
+        e.preventDefault();
+
+        hideVisiblePopupTabs();
+        showSelectedPopupTab($(this))
+    });
+
+    //upload select
+    uploadFile.click(function (e) {
+        e.preventDefault();
+
+        $('section.popup:visible div.uploads > a').removeClass('active');
+        $(this).addClass('active');
+    });
+
+    /**
+     * Helper functions.
+     */
+    var showSelectedPopup = function (_this) {
+            $(_this.data('popup-id')).show();
+        },
+        hideVisiblePopup = function () {
+            $('.popup:visible').hide();
+        },
+        showSelectedPopupTab = function (_this) {
+            _this.addClass('active');
+            $('section.popup:visible ' + _this.find('a').attr('href')).addClass('active');
+        },
+        hideVisiblePopupTabs = function () {
+            $('section.popup:visible ul.modal-tabs > li').removeClass('active');
+            $('section.popup:visible div.modal-tab').removeClass('active');
+        },
+        resetVisiblePopup = function () {
+            $('.popup:visible ul.modal-tabs > li').removeClass('active');
+            $('.popup:visible ul.modal-tabs > li:first-of-type').addClass('active');
+
+            $('.popup:visible div.modal-tab').removeClass('active');
+            $('.popup:visible div.modal-tab:first-of-type').addClass('active');
+        };
+}
+
+/**
+ * @return void
+ */
 function setups() {
     //TinyMCE setup
     tinymce.init({
@@ -293,6 +365,9 @@ function setups() {
     }).bind('keyup', function(){
         $(this).ColorPickerSetColor(this.value);
     });
+
+    //Tooltipster setup
+    $('.tooltip').tooltipster();
 }
 
 /**

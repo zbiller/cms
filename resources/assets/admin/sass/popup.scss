@@ -1,0 +1,183 @@
+@import 'init';
+
+@-webkit-keyframes animatetop {
+    from {
+        top: -200px;
+        opacity: 0;
+    }
+
+    to {
+        top: 0;
+        opacity: 1;
+    }
+}
+
+@keyframes animatetop {
+    from {
+        top: -200px;
+        opacity: 0;
+    }
+
+    to {
+        top: 0;
+        opacity: 1;
+    }
+}
+
+section.popup {
+    z-index: z-index('popup');
+    display: none;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: auto;
+    background: rgba(0,0,0,0.4);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s;
+
+    div.modal {
+        @include transform('translate(-50%,30px)');
+        @include shadow('0px 0px 8px 2px rgba(0,0,0,0.3)');
+
+        position: fixed;
+        left: 50%;
+        width: 90%;
+        max-width: 900px;
+
+        @include media-query('tablet-wide') {
+            @include transform('translate(-50%,30px)');
+        }
+
+        a.close {
+            position: absolute;
+            top: 17px;
+            right: 15px;
+            color: $colorTowerGray;
+        }
+
+        > div {
+            @include clear-padding();
+
+            position: relative;
+            display: block;
+            float: left;
+            width: 100%;
+            padding: 15px;
+            background: $colorWhite;
+
+            &.header {
+                padding-bottom: 0;
+                border-bottom: 1px solid $colorGallery;
+            }
+
+            &.footer {
+                border-top: 1px solid $colorGallery;
+            }
+        }
+
+        ul.modal-tabs {
+            display: block;
+            float: left;
+            max-width: 80%;
+            list-style: none;
+            margin-top: 10px;
+
+            li {
+                @include transition(all 0.2s ease);
+                @include font-size(13px);
+
+                display: inline-block;
+                margin: 0;
+                padding: 0 10px 5px 10px;
+                cursor: pointer;
+                border-bottom: 2px solid $colorWhite;
+
+                &:hover {
+                    border-bottom: 2px solid $colorPictonBlue;
+                }
+
+                &.active {
+                    border-bottom: 2px solid $colorPictonBlue;
+                }
+            }
+
+            a {
+                font-family: 'Open Sans Bold', sans-serif;
+                color: $colorTowerGray;
+                text-transform: uppercase;
+            }
+        }
+
+        div.modal-tab {
+            display: none;
+
+            &.active {
+                display: block;
+            }
+
+            img {
+                display: block;
+                max-width: 100%;
+                margin: 0 auto;
+            }
+        }
+
+        form.library-form {
+            input {
+                @include font-size(13px);
+                @include transition(all 0.3s ease);
+                @include clear-padding();
+
+                display: block;
+                width: 100%;
+                margin: 0;
+                padding: 5px;
+                border: none;
+                border-bottom: 1px solid darken($colorGallery, 3%);
+                background: $colorWhite;
+                color: $colorOsloGray;
+                font-family: 'Open Sans', sans-serif;
+
+                &:focus {
+                    border-bottom: 1px solid $colorPictonBlue;
+                }
+            }
+        }
+
+        div.uploads {
+            display: block;
+            float: left;
+            width: 100%;
+            margin-top: 10px;
+            height: 270px;
+            overflow-y: scroll;
+
+            a {
+                @include transition(all 0.3s ease);
+
+                display: block;
+                float: left;
+                margin: 10px;
+                width: 100px;
+                height: 100px;
+
+                &:hover{
+                    opacity: 0.4;
+                }
+
+                &.active{
+                    opacity: 0.4;
+                }
+
+                img {
+                    width: 100px;
+                    height: 100px;
+                }
+            }
+        }
+    }
+}

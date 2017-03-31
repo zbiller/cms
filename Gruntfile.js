@@ -20,6 +20,7 @@ module.exports = function(grunt) {
                     'resources/assets/admin/css/tabs.css': 'resources/assets/admin/sass/tabs.scss',
                     'resources/assets/admin/css/list.css': 'resources/assets/admin/sass/list.scss',
                     'resources/assets/admin/css/view.css': 'resources/assets/admin/sass/view.scss',
+                    'resources/assets/admin/css/popup.css': 'resources/assets/admin/sass/popup.scss',
                     'resources/assets/admin/css/custom.css': 'resources/assets/admin/sass/custom.scss'
                 }
             }
@@ -29,6 +30,7 @@ module.exports = function(grunt) {
                 src: [
                     'resources/assets/admin/js/libs/jquery.js',
                     'resources/assets/admin/js/libs/jquery-ui.js',
+                    'resources/assets/admin/js/libs/jquery-transport.js',
                     'resources/assets/admin/js/libs/bootstrap.js',
                     'resources/assets/admin/js/libs/scroll.js',
                     'resources/assets/admin/js/libs/chosen.js',
@@ -36,6 +38,8 @@ module.exports = function(grunt) {
                     'resources/assets/admin/js/libs/colorpicker.js',
                     'resources/assets/admin/js/libs/generator.js',
                     'resources/assets/admin/js/libs/dropzone.js',
+                    'resources/assets/admin/js/libs/tooltip.js',
+                    'resources/assets/admin/js/libs/upload.js',
                     'resources/assets/admin/js/main.js',
                     'public/vendor/jsvalidation/js/jsvalidation.js'
                 ],
@@ -50,6 +54,8 @@ module.exports = function(grunt) {
                     'resources/assets/admin/css/libs/timepicker.css',
                     'resources/assets/admin/css/libs/colorpicker.css',
                     'resources/assets/admin/css/libs/dropzone.css',
+                    'resources/assets/admin/css/libs/tooltip.css',
+                    'resources/assets/admin/css/libs/tooltip-theme.css',
                     'resources/assets/admin/css/fonts.css',
                     'resources/assets/admin/css/helpers.css',
                     'resources/assets/admin/css/general.css',
@@ -63,6 +69,7 @@ module.exports = function(grunt) {
                     'resources/assets/admin/css/tabs.css',
                     'resources/assets/admin/css/list.css',
                     'resources/assets/admin/css/view.css',
+                    'resources/assets/admin/css/popup.css',
                     'resources/assets/admin/css/custom.css'
                 ],
                 dest: 'public/build/admin/css/super.css'

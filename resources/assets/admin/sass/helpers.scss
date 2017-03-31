@@ -1,13 +1,5 @@
 @import 'init';
 
-input:-webkit-autofill, textarea:-webkit-autofill {
-    -webkit-text-fill-color: $colorWhite;
-}
-
-::-webkit-input-placeholder, :-moz-placeholder, ::-moz-placeholder, :-ms-input-placeholder {
-    color: $colorWhite;
-}
-
 input[type=number] {
     -moz-appearance: textfield;
 }

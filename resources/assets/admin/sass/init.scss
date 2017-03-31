@@ -26,6 +26,7 @@ $resolutions: (
 );
 
 $z-indexes: (
+    'popup',
     'flash',
     'menu',
     'header',
@@ -118,6 +119,18 @@ $z-indexes: (
     -ms-transform: #{$expression};
     -o-transform: #{$expression};
     transform: #{$expression};
+}
+
+@mixin shadow($expression) {
+    -webkit-box-shadow: #{$expression};
+    -moz-box-shadow: #{$expression};
+    box-shadow: #{$expression};
+}
+
+@mixin border-radius($expression) {
+    -webkit-border-radius: #{$expression};
+    -moz-border-radius: #{$expression};
+    border-radius: #{$expression};
 }
 
 %clearfix {

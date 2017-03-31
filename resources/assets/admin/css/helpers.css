@@ -1,11 +1,3 @@
-input:-webkit-autofill, textarea:-webkit-autofill {
-  -webkit-text-fill-color: #FFFFFF;
-}
-
-::-webkit-input-placeholder, :-moz-placeholder, ::-moz-placeholder, :-ms-input-placeholder {
-  color: #FFFFFF;
-}
-
 input[type=number] {
   -moz-appearance: textfield;
 }
