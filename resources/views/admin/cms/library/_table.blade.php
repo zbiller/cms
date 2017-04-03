@@ -15,11 +15,11 @@
         @foreach($items as $index => $item)
             <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
                 <td>
-                    <img src="{{ $item->type_icon }}" title="{{ $types[$item->type] }}" class="library-aligned-image" />
+                    <img src="{{ $item->type_icon }}" title="{{ $types[$item->type] }}" class="library-aligned-image" width="30" height="30" />
                     <span class="library-aligned-text">{{ $item->original_name }}</span>
                 </td>
                 <td>
-                    {{ $item->size . ' MB' }}
+                    {{ $item->size_mb . ' MB' }}
                 </td>
                 <td>
                     {!! button()->download('admin.library.download', ['id' => $item->id]) !!}
