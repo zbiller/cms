@@ -2,7 +2,7 @@
     <div class="modal">
         <div class="header">
             <h1>Crop Image</h1>
-            <a href="#" class="close">
+            <a data-popup="close" class="close">
                 <i class="fa fa-close"></i>
             </a>
         </div>

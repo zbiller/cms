@@ -9,6 +9,7 @@
   (Add a class to the holder and style elements for that extended class)
 */
 .jcrop-holder {
+  margin: 0 auto;
   direction: ltr;
   text-align: left;
   /* IE10 touch compatibility */

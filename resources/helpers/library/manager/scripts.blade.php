@@ -93,11 +93,11 @@
                         }
                     });
                 }, 300);
-            }, libraryUpload = function () {
+            }, libraryUpload = function (_this) {
                 popup = $('#library-new-' + index);
                 accept = popup.find('ul.modal-tabs li.active').data('accept');
 
-                $('#library-new-' + index + ' label.upload-btn > input[type="file"]').fileupload({
+                _this.fileupload({
                     url: '{{ route('admin.library.upload') }}',
                     dataType: 'json',
                     formData: {
@@ -184,14 +184,13 @@
                         }
                     }
                 });
-            }, libraryCrop = function () {
+            }, libraryCrop = function (_this) {
                 popup = $('#library-current-' + index);
-                cropper = $('.open-library-cropper-' + index);
                 model = popup.data('model');
                 field = popup.data('field');
-                url = cropper.data('url');
-                path = cropper.data('path');
-                style = cropper.data('style');
+                url = _this.data('url');
+                path = _this.data('path');
+                style = _this.data('style');
 
                 $.ajax({
                     type: 'GET',
@@ -245,7 +244,7 @@
 
             //upload new
             $(document).on('click', '#library-new-' + index + ' label.upload-btn > input[type="file"]', function (e) {
-                libraryUpload();
+                libraryUpload($(this));
             });
 
             //save new
@@ -259,7 +258,7 @@
             $(document).on('click', '.open-library-cropper-' + index, function (e) {
                 e.preventDefault();
 
-                libraryCrop();
+                libraryCrop($(this));
             });
 
             //delete current
