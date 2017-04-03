@@ -7,7 +7,7 @@
         }
 
         $(function () {
-            var popup, container, url, model, field, path, type, keyword, timer;
+            var popup, container, url, model, field, path, type, keyword, timer, cropper, style;
 
             var page = 2,
                 index = '{{ $index }}',
@@ -88,7 +88,7 @@
                     });
                 }, 300);
             }, libraryUpload = function () {
-                var popup = $('#library-new-' + index);
+                popup = $('#library-new-' + index);
 
                 $('#library-new-' + index + ' label.upload-btn > input[type="file"]').fileupload({
                     url: '{{ route('admin.library.upload') }}',
@@ -177,12 +177,13 @@
                     }
                 });
             }, libraryCrop = function () {
-                var cropper = $('.open-library-cropper-' + index);
-                var model = cropper.data('model');
-                var field = cropper.data('field');
-                var thumb = cropper.data('thumb');
-                var path = cropper.data('path');
-                var url = cropper.data('url');
+                popup = $('#library-current-' + index);
+                cropper = $('.open-library-cropper-' + index);
+                model = popup.data('model');
+                field = popup.data('field');
+                url = cropper.data('url');
+                path = cropper.data('path');
+                style = cropper.data('style');
 
                 $.ajax({
                     type: 'GET',
@@ -193,9 +194,9 @@
                         index: index,
                         model: model,
                         field: field,
-                        path: path,
                         url: url,
-                        thumb: thumb
+                        path: path,
+                        style: style
                     },
                     success: function(data) {
                         if (data.status === true) {

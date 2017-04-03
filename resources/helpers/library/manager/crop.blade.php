@@ -14,16 +14,16 @@
                 {{ Form::hidden('y', 0, ['id' => 'crop-y-' . $index]) }}
                 {{ Form::hidden('w', $cropSize[0], ['id' => 'crop-w-' . $index]) }}
                 {{ Form::hidden('h', $cropSize[1], ['id' => 'crop-h-' . $index]) }}
-                {{ Form::hidden('source', $source, ['id' => 'crop-source-' . $index]) }}
-                {{ Form::hidden('thumb', $thumb, ['id' => 'crop-thumb-' . $index]) }}
+                {{ Form::hidden('path', $path, ['id' => 'crop-path-' . $index]) }}
+                {{ Form::hidden('style', $style, ['id' => 'crop-style-' . $index]) }}
                 {{ Form::hidden('size', $dCropSize[0], ['id' => 'crop-size-' . $index]) }}
             </div>
         </div>
         <div class="footer">
-            <a href="#" id="library-crop-save-{{ $index }}" class="btn blue right no-margin-top no-margin-bottom no-margin-right">
+            <a id="library-crop-save-{{ $index }}" class="btn blue right no-margin-top no-margin-bottom no-margin-right">
                 <i class="fa fa-check"></i>&nbsp; Save
             </a>
-            <a href="#" class="btn cancel modal-close right no-margin-top no-margin-bottom no-margin-left">
+            <a data-popup="close" class="btn cancel right no-margin-top no-margin-bottom no-margin-left">
                 <i class="fa fa-ban"></i>&nbsp; Cancel
             </a>
         </div>
@@ -71,8 +71,8 @@
 
         $('#library-crop-save-' + index).click(function(){
             var url = '{{ route('admin.library.cut') }}';
-            var source = $('#crop-source-' + index).val();
-            var thumb = $('#crop-thumb-' + index).val();
+            var path = $('#crop-path-' + index).val();
+            var style = $('#crop-style-' + index).val();
             var size = $('#crop-size-' + index).val();
             var x = $('#crop-x-' + index).val();
             var y = $('#crop-y-' + index).val();
@@ -85,13 +85,13 @@
                 dataType: 'json',
                 data: {
                     _token : token,
-                    source : source,
-                    thumb : thumb,
-                    size : size,
-                    x : x,
-                    y : y,
-                    w : w,
-                    h : h
+                    path: path,
+                    style: style,
+                    size: size,
+                    x: x,
+                    y: y,
+                    w: w,
+                    h: h
                 },
                 success: function(data) {
                     if (data.status === true) {

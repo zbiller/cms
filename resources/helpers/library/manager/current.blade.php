@@ -23,9 +23,7 @@
                             <a class="open-library-cropper-{{ $index }}"
                                data-url="{{ $current->url('original') }}"
                                data-path="{{ $current->path('original', true) }}"
-                               data-model="{{ get_class($model) }}"
-                               data-field="{{ $field }}"
-                               data-thumb="{{ $style }}"
+                               data-style="{{ $style }}"
                             >
                                 <img src="{!! $current->url($style) !!}" />
                             </a>
