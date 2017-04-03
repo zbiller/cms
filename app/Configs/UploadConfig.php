@@ -87,6 +87,12 @@ class UploadConfig
             );
         }
 
+        if (!isset(self::$config['storage']['override_dependencies'])) {
+            throw new ConfigException(
+                "The key 'storage.override_dependencies' does not exist in " . self::$path. "."
+            );
+        }
+
         return true;
     }
 

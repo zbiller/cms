@@ -807,7 +807,7 @@ class UploadService
             set_time_limit(3600);
             ini_set('max_execution_time', 3600);
 
-            $video = $this->hasOriginal() ? $this->getOriginal()->full_path : $this->storeToDisk();
+            $video = $this->storeToDisk();
 
             if (!$this->hasOriginal()) {
                 $this->generateThumbnailsForVideo($video);
@@ -834,7 +834,7 @@ class UploadService
         $this->guardAgainstAllowedExtensions('audios');
 
         return $this->attemptStoringToDisk(function () {
-            return $this->hasOriginal() ? $this->getOriginal()->full_path : $this->storeToDisk();
+            return $this->storeToDisk();
         });
 
     }
@@ -851,7 +851,7 @@ class UploadService
         $this->guardAgainstAllowedExtensions('files');
 
         return $this->attemptStoringToDisk(function () {
-            return $this->hasOriginal() ? $this->getOriginal()->full_path : $this->storeToDisk();
+            return $this->storeToDisk();
         });
     }
 
@@ -1008,6 +1008,17 @@ class UploadService
     }
 
     /**
+     * Check if the given file path exists on the storage disk.
+     *
+     * @param string $path
+     * @return bool
+     */
+    protected function uploadAlreadyExistsInStorage($path)
+    {
+        return $this->getConfig('storage.override_dependencies') === false && Storage::disk($this->getDisk())->exists($path);
+    }
+
+    /**
      * Try generating thumbnail for the original uploaded image.
      * The thumbnail generation flag and size are defined in the config/upload.php (images -> generate_thumbnail | thumbnail_style).
      * Also, when creating the image thumbnail, the "quality" configuration option is taken into consideration.
@@ -1072,11 +1083,14 @@ class UploadService
                 }
 
                 foreach ($styles as $name => $style) {
-                    Storage::disk($this->getDisk())->put(
-                        $this->getPath() . '/' . substr_replace($this->getName(), '_' . $name, strpos($this->getName(), '.' . $this->getExtension()), 0),
-                        Image::make($original)->{!isset($style['ratio']) || $style['ratio'] === true ? 'fit' : 'resize'}($style['width'], $style['height'])
-                            ->stream(null, (int)$this->getConfig('images.quality') ?: 90)->__toString()
-                    );
+                    $path = $this->getPath() . '/' . substr_replace($this->getName(), '_' . $name, strpos($this->getName(), '.' . $this->getExtension()), 0);
+
+                    if (!$this->uploadAlreadyExistsInStorage($path)) {
+                        Storage::disk($this->getDisk())->put(
+                            $path, Image::make($original)->{!isset($style['ratio']) || $style['ratio'] === true ? 'fit' : 'resize'}($style['width'], $style['height'])
+                                ->stream(null, (int)$this->getConfig('images.quality') ?: 90)->__toString()
+                        );
+                    }
                 }
             }
         } catch (Exception $e) {
@@ -1150,11 +1164,13 @@ class UploadService
                 }
 
                 foreach ($styles as $name => $style) {
-                    $original->addFilter(function ($filters) use ($style) {
-                        $filters->resize(new FFMpeg\Coordinate\Dimension($style['width'], $style['height']));
-                    })->export()->toDisk($this->getDisk())->inFormat(new FFMpeg\Format\Video\WebM)->save(
-                        $this->getPath() . '/' . substr_replace($this->getName(), '_' . $name, strpos($this->getName(), '.' . $this->getExtension()), 0)
-                    );
+                    $path = $this->getPath() . '/' . substr_replace($this->getName(), '_' . $name, strpos($this->getName(), '.' . $this->getExtension()), 0);
+
+                    if (!$this->uploadAlreadyExistsInStorage($path)) {
+                        $original->addFilter(function ($filters) use ($style) {
+                            $filters->resize(new FFMpeg\Coordinate\Dimension($style['width'], $style['height']));
+                        })->export()->toDisk($this->getDisk())->inFormat(new FFMpeg\Format\Video\WebM)->save($path);
+                    }
                 }
             }
         } catch (Exception $e) {

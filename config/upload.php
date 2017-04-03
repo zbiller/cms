@@ -32,6 +32,23 @@ return [
          */
         'keep_old' => true,
 
+        /**
+         * Flag indicating that on file upload, to take into consideration if the existing file in the same full path.
+         *
+         * Given you attempt to store a file on disk with the full path of "x/y/z.ext".
+         *
+         * Having this option set to false, will check if the actual full path file exists.
+         * If it does exist, it simply skips the custom image and video styles generation.
+         * Because it will be safe to assume they are the same, given that the original file already exists.
+         *
+         * 2. Having this option set to true, will force the script to upload the newly generated image and video styles.
+         * The force style generation will happen regardless the fact that there was already an existing original file with that full path.
+         *
+         * Note that this option only applies image and video styles.
+         * The original and thumbnails will be uploaded no matter what.
+         */
+        'override_dependencies' => false,
+
     ],
 
     /**
