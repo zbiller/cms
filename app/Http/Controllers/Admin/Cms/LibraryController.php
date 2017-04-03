@@ -124,7 +124,7 @@ class LibraryController extends Controller
      */
     public function get(Request $request, $type = null)
     {
-        $uploads = Upload::newest()->onlyTypes($type)->like([
+        $uploads = Upload::newest()->onlyTypes($type)->onlyExtensions($request->get('accept'))->like([
             'original_name' => $request->get('keyword'),
         ])->paginate(28);
 
@@ -178,6 +178,13 @@ class LibraryController extends Controller
             return response()->json([
                 'status' => false,
                 'message' => 'Invalid file!'
+            ]);
+        }
+
+        if ($request->get('accept') && !in_array($request->file('file')->getClientOriginalExtension(), explode(',', $request->get('accept')))) {
+            return response()->json([
+                'status' => false,
+                'message' => 'File type is not allowed! Allowed extensions: ' . $request->get('accept')
             ]);
         }
 

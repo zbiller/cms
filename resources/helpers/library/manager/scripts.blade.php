@@ -7,7 +7,7 @@
         }
 
         $(function () {
-            var popup, container, url, model, field, path, type, keyword, timer, cropper, style;
+            var popup, container, url, model, field, path, type, accept, keyword, timer, cropper, style;
 
             var page = 2,
                 index = '{{ $index }}',
@@ -18,6 +18,7 @@
                 container = popup.find('.modal-tab.active div.uploads');
                 url = '{{ route('admin.library.get') }}';
                 type = popup.find('ul.modal-tabs li.active').data('type');
+                accept = popup.find('ul.modal-tabs li.active').data('accept');
                 keyword = popup.find('.modal-tab.active input.search').val();
 
                 $.ajax({
@@ -26,6 +27,7 @@
                     dataType: 'json',
                     data: {
                         _token : token,
+                        accept: accept,
                         keyword: keyword
                     },
                     beforeSend:function(){
@@ -45,6 +47,7 @@
                 container = popup.find('.modal-tab.active div.uploads');
                 url = '{{ route('admin.library.get') }}';
                 type = popup.find('ul.modal-tabs li.active').data('type');
+                accept = popup.find('ul.modal-tabs li.active').data('accept');
                 keyword = popup.find('.modal-tab.active input.search').val();
 
                 if(container.scrollTop() + container.innerHeight() >= container[0].scrollHeight) {
@@ -53,6 +56,7 @@
                         url: url + '/' + type + '?page=' + page,
                         data: {
                             _token: token,
+                            accept: accept,
                             keyword: keyword
                         },
                         success : function(data) {
@@ -67,6 +71,7 @@
                 container = popup.find('.modal-tab.active div.uploads');
                 url = '{{ route('admin.library.get') }}';
                 type = popup.find('ul.modal-tabs li.active').data('type');
+                accept = popup.find('ul.modal-tabs li.active').data('accept');
                 keyword = popup.find('.modal-tab.active input.search').val();
 
                 clearInterval(timer);
@@ -78,6 +83,7 @@
                         dataType: 'json',
                         data: {
                             _token : token,
+                            accept: accept,
                             keyword : keyword
                         },
                         success: function(data) {
@@ -89,6 +95,7 @@
                 }, 300);
             }, libraryUpload = function () {
                 popup = $('#library-new-' + index);
+                accept = popup.find('ul.modal-tabs li.active').data('accept');
 
                 $('#library-new-' + index + ' label.upload-btn > input[type="file"]').fileupload({
                     url: '{{ route('admin.library.upload') }}',
@@ -96,7 +103,8 @@
                     formData: {
                         _token : token,
                         model: popup.data('model'),
-                        field: popup.data('field')
+                        field: popup.data('field'),
+                        accept: accept
                     },
                     done: function (e, data) {
                         var message = popup.find('span.upload-message'),
@@ -111,13 +119,13 @@
                             popup.find('.modal-tab div.uploads > a').removeClass('active');
                             popup.find('#' + data.result.type + ' .uploads > a:first-of-type').addClass('active');
 
-                            message.text(data.result.message).addClass('success');
-                            progress.find('.bar').addClass('success');
+                            message.text(data.result.message).removeClass('error').addClass('success');
+                            progress.find('.bar').removeClass('error').addClass('success');
 
                             initTooltip();
                         } else {
-                            message.text(data.result.message).addClass('error');
-                            progress.find('.bar').addClass('error');
+                            message.text(data.result.message).removeClass('success').addClass('error');
+                            progress.find('.bar').removeClass('success').addClass('error');
                         }
 
                         setTimeout(function(){
@@ -168,7 +176,7 @@
                             button.html(data.name);
                             $('.popup:visible').hide();
                         } else {
-                            message.text(data.message).css('display', 'block').addClass('error');
+                            message.text(data.message).css('display', 'block').removeClass('success').addClass('error');
 
                             setTimeout(function(){
                                 message.text('');

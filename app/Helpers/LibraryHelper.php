@@ -45,6 +45,13 @@ class LibraryHelper
     protected $current;
 
     /**
+     * The extensions accepted for a library upload as array.
+     *
+     * @var array
+     */
+    protected $accept;
+
+    /**
      * The styles a file can have.
      * Mainly, this applies to images and videos only.
      * For any other file type, the original should suffice.
@@ -70,16 +77,7 @@ class LibraryHelper
     ];
 
     /**
-     * The extensions accepted for a library upload.
-     *
-     * @var array
-     */
-    protected $accepts = [
-        '*'
-    ];
-
-    /**
-     * The default values for styles, types and accepts.
+     * The default values for styles, types and accept.
      * This is used to re-initialize these properties after the library finished rendering.
      * This way, the next library instance on page, won't inherit values from the previous one.
      *
@@ -90,6 +88,7 @@ class LibraryHelper
         'label' => null,
         'model' => null,
         'current' => null,
+        'accept' => null,
         'styles' => [
             'original'
         ],
@@ -99,9 +98,6 @@ class LibraryHelper
             'audio',
             'file'
         ],
-        'accepts' => [
-            '*'
-        ]
     ];
 
     /**
@@ -120,7 +116,7 @@ class LibraryHelper
         $this->index++;
 
         $this->checkModel()->checkField();
-        $this->parseLabel()->parseTypes()->parseAccepts();
+        $this->parseLabel()->parseTypes()->parseAccept();
         $this->generateCurrent()->generateStyles();
         $this->buildManagerView()->resetToDefaults();
 
@@ -198,16 +194,16 @@ class LibraryHelper
     /**
      * Set or get the accepted extensions for a library instance.
      *
-     * @param array|string $accepts
+     * @param array|string $accept
      * @return $this|string
      */
-    public function accepts(...$accepts)
+    public function accept(...$accept)
     {
-        if (!$accepts) {
-            return $this->accepts;
+        if (!$accept) {
+            return $this->accept;
         }
 
-        $this->accepts = $accepts;
+        $this->accept = $accept;
 
         return $this;
     }
@@ -228,7 +224,7 @@ class LibraryHelper
             'upload' => $this->current ? $this->current->load() : null,
             'styles' => $this->styles,
             'types' => $this->types,
-            'accepts' => $this->accepts,
+            'accept' => $this->accept,
         ]);
 
         return $this;
@@ -248,7 +244,7 @@ class LibraryHelper
         $this->current = $this->defaults['current'];
         $this->styles = $this->defaults['styles'];
         $this->types = $this->defaults['types'];
-        $this->accepts = $this->defaults['accepts'];
+        $this->accept = $this->defaults['accept'];
 
         return $this;
     }
@@ -319,15 +315,15 @@ class LibraryHelper
     }
 
     /**
-     * Clean the given accepts parameter if the developer passed wrong data.
-     * Refactor the accepts parameter if it contains an "all" (*) attribute.
+     * Clean the given accept parameter if the developer passed wrong data.
+     * Refactor the accept parameter if it contains an "all" (*) attribute.
      *
      * @return $this
      */
-    private function parseAccepts()
+    private function parseAccept()
     {
-        if (count($this->accepts) > 0 && in_array('*', $this->accepts)) {
-            $this->accepts = '*';
+        if (count($this->accept) > 0 && in_array('*', $this->accept)) {
+            $this->accept = null;
         }
 
         return $this;

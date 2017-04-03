@@ -9,7 +9,7 @@
         <div class="header">
             <ul class="modal-tabs">
                 @foreach($types as $type)
-                    <li class="{!! $loop->first ? 'active' : '' !!}" data-type="{{ $type }}">
+                    <li class="{!! $loop->first ? 'active' : '' !!}" data-type="{{ $type }}" data-accept="{{ $accept && is_array($accept) && !empty($accept) ? json_encode($accept) : null }}">
                         <a href="#{!! $type !!}">{{ title_case(str_replace('_', ' ', $type)) }}</a>
                     </li>
                 @endforeach
@@ -31,7 +31,7 @@
         <div class="footer">
             <label class="upload-btn green left">
                 <i class="fa fa-upload"></i>&nbsp; Upload file
-                <input type="file" name="file">
+                <input type="file" name="file" accept="{!! $accept && is_array($accept) && !empty($accept) ? '.' . implode(',.', $accept) : '*' !!}">
             </label>
             <span class="upload-message"></span>
             <a id="library-save-{!! $index !!}" class="btn blue right no-margin">

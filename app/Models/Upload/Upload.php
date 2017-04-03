@@ -153,10 +153,14 @@ class Upload extends Model
      */
     public function scopeOnlyTypes($query, ...$types)
     {
+        $types = array_flatten($types);
+
         if (!empty($types)) {
             $query->where(function ($q) use ($types) {
                 foreach ($types as $type) {
-                    $q->orWhere('type', is_numeric($type) ? $type : array_search(title_case($type), self::$types));
+                    if ($type) {
+                        $q->orWhere('type', is_numeric($type) ? $type : array_search(title_case($type), self::$types));
+                    }
                 }
             });
         }
@@ -171,10 +175,14 @@ class Upload extends Model
      */
     public function scopeExcludingTypes($query, ...$types)
     {
+        $types = array_flatten($types);
+
         if (!empty($types)) {
             $query->where(function ($q) use ($types) {
                 foreach ($types as $type) {
-                    $q->where('type', '!=', is_numeric($type) ? $type : array_search(title_case($type), self::$types));
+                    if ($type) {
+                        $q->where('type', '!=', is_numeric($type) ? $type : array_search(title_case($type), self::$types));
+                    }
                 }
             });
         }
@@ -189,10 +197,14 @@ class Upload extends Model
      */
     public function scopeOnlyExtensions($query, ...$extensions)
     {
+        $extensions = array_flatten($extensions);
+
         if (!empty($extensions)) {
             $query->where(function ($q) use ($extensions) {
                 foreach ($extensions as $extension) {
-                    $q->orWhere('extension', strtolower($extension));
+                    if ($extension) {
+                        $q->orWhere('extension', strtolower($extension));
+                    }
                 }
             });
         }
@@ -207,10 +219,14 @@ class Upload extends Model
      */
     public function scopeExcludingExtensions($query, ...$extensions)
     {
+        $extensions = array_flatten($extensions);
+
         if (!empty($extensions)) {
             $query->where(function ($q) use ($extensions) {
                 foreach ($extensions as $extension) {
-                    $q->orWhere('extension', '!=', strtolower($extension));
+                    if ($extension) {
+                        $q->orWhere('extension', '!=', strtolower($extension));
+                    }
                 }
             });
         }
