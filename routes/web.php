@@ -99,23 +99,15 @@ Route::group([
                 Route::get('/', ['as' => 'admin.library.index', 'uses' => 'LibraryController@index', 'permissions' => 'library-list']);
                 Route::get('show/{id}', ['as' => 'admin.library.show', 'uses' => 'LibraryController@show', 'permissions' => 'library-list']);
                 Route::get('download/{id}', ['as' => 'admin.library.download', 'uses' => 'LibraryController@download', 'permissions' => 'library-edit']);
+                Route::get('get/{type?}', ['as' => 'admin.library.get', 'uses' => 'LibraryController@get', 'permissions' => 'library-list']);
+                Route::get('crop', ['as' => 'admin.library.crop', 'uses' => 'LibraryController@crop', 'permissions' => 'library-edit']);
                 Route::post('store', ['as' => 'admin.library.store', 'uses' => 'LibraryController@store', 'permissions' => 'library-add']);
+                Route::post('upload', ['as' => 'admin.library.upload', 'uses' => 'LibraryController@upload', 'permissions' => 'library-add']);
+                Route::post('set', ['as' => 'admin.library.set', 'uses' => 'LibraryController@set', 'permissions' => 'library-edit']);
+                Route::post('cut', ['as' => 'admin.library.cut', 'uses' => 'LibraryController@cut', 'permissions' => 'library-edit']);
                 Route::delete('destroy/{id}', ['as' => 'admin.library.destroy', 'uses' => 'LibraryController@destroy', 'permissions' => 'library-delete']);
-
-                /*Route::get('edit/{id}', ['as' => 'admin.admin_users.edit', 'uses' => 'AdminUsersController@edit', 'permissions' => 'admin-users-edit']);
-                Route::post('store', ['as' => 'admin.admin_users.store', 'uses' => 'AdminUsersController@store', 'permissions' => 'admin-users-add']);
-                Route::put('update/{id}', ['as' => 'admin.admin_users.update', 'uses' => 'AdminUsersController@update', 'permissions' => 'admin-users-edit']);
-                Route::delete('destroy/{id}', ['as' => 'admin.admin_users.destroy', 'uses' => 'AdminUsersController@destroy', 'permissions' => 'admin-users-delete']);*/
             });
         });
-
-
-
-
-
-
-
-
 
         Route::group([
             'namespace' => 'Test',
