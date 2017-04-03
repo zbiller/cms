@@ -9,12 +9,18 @@ use App\Services\UploadService;
 class UploadHelper
 {
     /**
+     * The full path to the original file, without any style appended to it.
+     *
+     * @var string
+     */
+    protected $original;
+
+    /**
      * The full path to the file.
      *
      * @var string
      */
     protected $file;
-
     /**
      * The filesystem disk used to search the files in.
      *
@@ -54,7 +60,30 @@ class UploadHelper
      */
     public function __construct($file)
     {
-        $this->setFile($file)->setDisk()->setExtension()->setType();
+        $this->setOriginal($file)->setFile($file)->setDisk()->setExtension()->setType();
+    }
+
+    /**
+     * Set the original property to know the original path along the way.
+     *
+     * @param string $file
+     * @return $this
+     */
+    public function setOriginal($file)
+    {
+        $this->original = $file;
+
+        return $this;
+    }
+
+    /**
+     * Get the original file.
+     *
+     * @return string
+     */
+    public function getOriginal()
+    {
+        return $this->original;
     }
 
     /**
@@ -71,6 +100,16 @@ class UploadHelper
     }
 
     /**
+     * Get the file path.
+     *
+     * @return string
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
      * Set the storage disk to work with.
      *
      * @return $this
@@ -83,7 +122,17 @@ class UploadHelper
     }
 
     /**
-     * Set the storage disk to work with.
+     * Get the storage disk.
+     *
+     * @return string
+     */
+    public function getDisk()
+    {
+        return $this->disk;
+    }
+
+    /**
+     * Set the file extension.
      *
      * @return $this
      */
@@ -92,6 +141,16 @@ class UploadHelper
         $this->extension = strtolower(last(explode('.', $this->file)));
 
         return $this;
+    }
+
+    /**
+     * Get the file extension.
+     *
+     * @return string
+     */
+    public function getExtension()
+    {
+        return $this->extension;
     }
 
     /**
@@ -117,6 +176,16 @@ class UploadHelper
     }
 
     /**
+     * Get the file type.
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    /**
      * Set the $file to the exact path of the provided video's thumbnail.
      * The $number parameter is used to specify which video thumbnail to identify: 1st, 2nd, 3rd, etc.
      * Keep in mind that this method will only have an effect on video type files.
@@ -126,6 +195,8 @@ class UploadHelper
      */
     public function thumbnail($number = null)
     {
+        $this->file = $this->original;
+
         if ($this->type == self::TYPE_IMAGE) {
             $this->file = substr_replace(
                 preg_replace('/\..+$/', '.' . $this->extension, $this->file), '_thumbnail', strpos($this->file, '.'), 0
@@ -138,26 +209,52 @@ class UploadHelper
             );
         }
 
-        return $this->url();
+        return Storage::disk($this->disk)->url($this->file);
     }
 
     /**
      * Get the parsed file's full url.
      * You can specify which style instance of the file you want to get.
-     * However, specifying the style is taking into consideration only if the file is an actual image.
+     * However, specifying the style is taking into consideration only if the file is an actual image or video.
+     * If "original" is specified as the style, it will just return the original file.
      *
      * @param string|null $style
      * @return string
      */
     public function url($style = null)
     {
-        if ($style && ($this->type == self::TYPE_IMAGE || $this->type == self::TYPE_VIDEO)) {
+        $this->file = $this->original;
+
+        if ($style && $style != 'original' && ($this->type == self::TYPE_IMAGE || $this->type == self::TYPE_VIDEO)) {
             $this->file = substr_replace(
                 $this->file, '_' . $style, strpos($this->file, '.'), 0
             );
         }
 
         return Storage::disk($this->disk)->url($this->file);
+    }
+
+    /**
+     * Get the partial or full path of the file.
+     * You can specify which style instance of the file you want to get.
+     * However, specifying the style is taking into consideration only if the file is an actual image or video.
+     * If "original" is specified as the style, it will just return the original file.
+     *
+     * @param string|null $style
+     * @param bool $full
+     * @return string
+     */
+    public function path($style = null, $full = false)
+    {
+        $this->file = $this->original;
+
+        if ($style && $style != 'original' && ($this->type == self::TYPE_IMAGE || $this->type == self::TYPE_VIDEO)) {
+            $this->file = substr_replace(
+                $this->file, '_' . $style, strpos($this->file, '.'), 0
+            );
+        }
+
+        return $full === true ? Storage::disk($this->disk)->getDriver()->getAdapter()->applyPathPrefix($this->file) : $this->file;
     }
 
     /**
