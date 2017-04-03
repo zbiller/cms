@@ -40,37 +40,54 @@ main section {
   -ms-transition: background 0.3s ease;
   -o-transition: background 0.3s ease;
   transition: background 0.3s ease;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   display: block;
   float: left;
   margin: 15px 5px;
   padding: 7px 10px;
-  border: 0;
+  border: none;
+  cursor: pointer;
   background: #B0BEC5;
   color: #FFFFFF;
   font-family: 'Open Sans Bold', sans-serif;
   text-transform: uppercase;
-  cursor: pointer;
 }
 @media only screen and (max-width: 767px) {
-  .btn {
+  .btn:not(.no-responsiveness) {
     font-size: 14px;
     font-size: 0.875rem;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
-    text-indent: -9999px !important;
-    width: 32px !important;
-    height: 30px !important;
+    text-indent: -9999px;
+    width: 32px;
+    height: 30px;
   }
 }
 @media only screen and (max-width: 767px) {
-  .btn > i {
-    text-indent: 0 !important;
-    float: left !important;
+  .btn:not(.no-responsiveness) > i {
+    text-indent: 0;
+    float: left;
   }
 }
 .btn:hover {
   background: #93a6af;
+}
+.btn.centered {
+  text-align: center;
+}
+.btn.bordered {
+  padding: 6px 10px;
+  border: 1px solid #cdd6db;
+  background: none !important;
+  color: #7E8890;
+  font-family: 'Open Sans', sans-serif;
+  text-transform: none;
+}
+.btn.bordered:hover {
+  background-color: #f1f3f5 !important;
 }
 .btn.no-margin {
   margin: 0;
@@ -93,11 +110,23 @@ main section {
 .btn.gray:hover {
   background: #B0BEC5;
 }
+.btn.gray.bordered {
+  border: 1px solid #cdd6db;
+}
+.btn.gray.bordered:hover {
+  background-color: #f1f3f5 !important;
+}
 .btn.blue {
   background: #4AAEE3;
 }
 .btn.blue:hover {
   background: #2199d9;
+}
+.btn.blue.bordered {
+  border: 1px solid #76c2ea;
+}
+.btn.blue.bordered:hover {
+  background-color: #abd9f2 !important;
 }
 .btn.green {
   background: #55D98D;
@@ -105,11 +134,23 @@ main section {
 .btn.green:hover {
   background: #2ecd71;
 }
+.btn.green.bordered {
+  border: 1px solid #7fe2a9;
+}
+.btn.green.bordered:hover {
+  background-color: #b1edca !important;
+}
 .btn.red {
   background: #DD7467;
 }
 .btn.red:hover {
   background: #d44e3d;
+}
+.btn.red.bordered {
+  border: 1px solid #e69a91;
+}
+.btn.red.bordered:hover {
+  background-color: #f2c8c3 !important;
 }
 .btn.yellow {
   background: #FFC65D;
@@ -117,90 +158,23 @@ main section {
 .btn.yellow:hover {
   background: #ffb42a;
 }
+.btn.yellow.bordered {
+  border: 1px solid #ffd890;
+}
+.btn.yellow.bordered:hover {
+  background-color: #ffedcd !important;
+}
 .btn.dark-blue {
   background: #45576D;
 }
 .btn.dark-blue:hover {
   background: #313e4e;
 }
-
-label.upload-btn {
-  box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  -webkit-transition: all 0.3s ease;
-  -moz-transition: all 0.3s ease;
-  -ms-transition: all 0.3s ease;
-  -o-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-  font-size: 12px;
-  font-size: 0.75rem;
-  cursor: pointer;
-  height: 31px;
-  margin: 0;
-  padding: 7px 10px;
-  font-family: 'Open Sans Bold', sans-serif;
-  color: #FFFFFF;
-  background: #B0BEC5;
-  text-transform: uppercase;
+.btn.dark-blue.bordered {
+  border: 1px solid #59708c;
 }
-label.upload-btn:hover {
-  background: #93a6af;
-}
-label.upload-btn.no-margin {
-  margin: 0;
-}
-label.upload-btn.no-margin-top {
-  margin-top: 0;
-}
-label.upload-btn.no-margin-bottom {
-  margin-bottom: 0;
-}
-label.upload-btn.no-margin-right {
-  margin-right: 0;
-}
-label.upload-btn.no-margin-left {
-  margin-left: 0;
-}
-label.upload-btn.gray {
-  background: #cdd6db;
-}
-label.upload-btn.gray:hover {
-  background: #B0BEC5;
-}
-label.upload-btn.blue {
-  background: #4AAEE3;
-}
-label.upload-btn.blue:hover {
-  background: #2199d9;
-}
-label.upload-btn.green {
-  background: #55D98D;
-}
-label.upload-btn.green:hover {
-  background: #2ecd71;
-}
-label.upload-btn.red {
-  background: #DD7467;
-}
-label.upload-btn.red:hover {
-  background: #d44e3d;
-}
-label.upload-btn.yellow {
-  background: #FFC65D;
-}
-label.upload-btn.yellow:hover {
-  background: #ffb42a;
-}
-label.upload-btn.dark-blue {
-  background: #45576D;
-}
-label.upload-btn.dark-blue:hover {
-  background: #313e4e;
-}
-label.upload-btn input[type="file"] {
-  position: fixed;
-  top: -10000px;
+.btn.dark-blue.bordered:hover {
+  background-color: #788faa !important;
 }
 
 .validation p {
@@ -266,31 +240,28 @@ label.upload-btn input[type="file"] {
   font-family: 'Open Sans Semibold', sans-serif;
 }
 
-div.progress {
-  display: block;
-  float: left;
-  width: 100%;
-  margin: 10px 0 0 0;
-}
-div.progress .bar {
-  -webkit-border-radius: 100px;
-  -moz-border-radius: 100px;
-  border-radius: 100px;
-  height: 5px;
-}
-div.progress .bar.success {
-  background: #55D98D;
-}
-div.progress .bar.error {
-  background: #DD7467;
-}
-
 .left {
   float: left !important;
 }
 
 .right {
   float: right !important;
+}
+
+.full {
+  width: 100% !important;
+}
+
+.half {
+  width: 50% !important;
+}
+
+.third {
+  width: 33.3% !important;
+}
+
+.quarter {
+  width: 25% !important;
 }
 
 #password-generate {

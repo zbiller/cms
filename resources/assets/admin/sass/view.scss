@@ -39,6 +39,19 @@ div.tab {
         }
     }
 
+    .field-wrapper {
+        float: right;
+        width: 80%;
+
+        @include media-query('desktop') {
+            width: 73%;
+        }
+
+        @include media-query('tablet-small') {
+            width: 100%;
+        }
+    }
+
     label {
         @include font-size(12px);
 

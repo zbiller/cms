@@ -33347,28 +33347,21 @@ function pagination() {
  */
 function popups()
 {
-    var openButton = $('a[data-toggle="popup"]');
-    var closeButton = $('section.popup div.modal a.close, a.modal-close');
     var tabButtons = $('section.popup ul.modal-tabs > li');
-    var uploadFile = $('section.popup div.uploads > a');
-
 
     //open
-    openButton.click(function (e) {
+    $(document).on('click', 'a[data-popup="open"]', function (e) {
+        e.preventDefault();
+
         showSelectedPopup($(this));
     });
 
     //close
-    closeButton.click(function (e) {
-        resetVisiblePopup();
-        hideVisiblePopup();
-    });
+    $(document).on('click', 'section.popup:visible a[data-popup="close"]', function (e) {
+        e.preventDefault();
 
-    $(document).keyup(function(e) {
-        if (e.keyCode == 27) {
-            resetVisiblePopup();
-            hideVisiblePopup();
-        }
+        resetVisiblePopup($(this));
+        hideVisiblePopup($(this));
     });
 
     //tabs
@@ -33380,7 +33373,7 @@ function popups()
     });
 
     //upload select
-    uploadFile.click(function (e) {
+    $('body').on('click', 'section.popup:visible div.uploads > a', function (e) {
         e.preventDefault();
 
         $('section.popup:visible div.uploads > a').removeClass('active');
@@ -33391,10 +33384,17 @@ function popups()
      * Helper functions.
      */
     var showSelectedPopup = function (_this) {
-            $(_this.data('popup-id')).show();
+            $('#' + _this.data('popup-id')).show();
         },
-        hideVisiblePopup = function () {
-            $('.popup:visible').hide();
+        hideVisiblePopup = function (_this) {
+            _this.closest('section.popup:visible').hide();
+        },
+        resetVisiblePopup = function (_this) {
+            _this.closest('section.popup:visible').find('ul.modal-tabs > li').removeClass('active');
+            _this.closest('section.popup:visible').find('ul.modal-tabs > li:first-of-type').addClass('active');
+
+            _this.closest('section.popup:visible').find('div.modal-tab').removeClass('active');
+            _this.closest('section.popup:visible').find('div.modal-tab:first-of-type').addClass('active');
         },
         showSelectedPopupTab = function (_this) {
             _this.addClass('active');
@@ -33403,13 +33403,6 @@ function popups()
         hideVisiblePopupTabs = function () {
             $('section.popup:visible ul.modal-tabs > li').removeClass('active');
             $('section.popup:visible div.modal-tab').removeClass('active');
-        },
-        resetVisiblePopup = function () {
-            $('.popup:visible ul.modal-tabs > li').removeClass('active');
-            $('.popup:visible ul.modal-tabs > li:first-of-type').addClass('active');
-
-            $('.popup:visible div.modal-tab').removeClass('active');
-            $('.popup:visible div.modal-tab:first-of-type').addClass('active');
         };
 }
 
@@ -33480,7 +33473,9 @@ function setups() {
     });
 
     //Tooltipster setup
-    $('.tooltip').tooltipster();
+    $('.tooltip').tooltipster({
+        theme: 'tooltipster-punk'
+    });
 }
 
 /**

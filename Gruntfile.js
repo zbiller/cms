@@ -21,6 +21,7 @@ module.exports = function(grunt) {
                     'resources/assets/admin/css/list.css': 'resources/assets/admin/sass/list.scss',
                     'resources/assets/admin/css/view.css': 'resources/assets/admin/sass/view.scss',
                     'resources/assets/admin/css/popup.css': 'resources/assets/admin/sass/popup.scss',
+                    'resources/assets/admin/css/library.css': 'resources/assets/admin/sass/library.scss',
                     'resources/assets/admin/css/custom.css': 'resources/assets/admin/sass/custom.scss'
                 }
             }
@@ -70,6 +71,7 @@ module.exports = function(grunt) {
                     'resources/assets/admin/css/list.css',
                     'resources/assets/admin/css/view.css',
                     'resources/assets/admin/css/popup.css',
+                    'resources/assets/admin/css/library.css',
                     'resources/assets/admin/css/custom.css'
                 ],
                 dest: 'public/build/admin/css/super.css'

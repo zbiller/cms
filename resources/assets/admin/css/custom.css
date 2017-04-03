@@ -1,5 +1,5 @@
 table tr > td:last-of-type.actions-library {
-  width: 277px !important;
+  width: 283px !important;
 }
 @media only screen and (max-width: 767px) {
   table tr > td:last-of-type.actions-library {

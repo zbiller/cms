@@ -40,6 +40,20 @@ div.tab.active {
 .form fieldset span.error {
   color: #DD7467;
 }
+.form .field-wrapper {
+  float: right;
+  width: 80%;
+}
+@media only screen and (max-width: 1247px) {
+  .form .field-wrapper {
+    width: 73%;
+  }
+}
+@media only screen and (max-width: 639px) {
+  .form .field-wrapper {
+    width: 100%;
+  }
+}
 .form label {
   font-size: 12px;
   font-size: 0.75rem;

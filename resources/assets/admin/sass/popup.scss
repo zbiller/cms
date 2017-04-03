@@ -39,17 +39,62 @@ section.popup {
     animation-name: animatetop;
     animation-duration: 0.4s;
 
+    &.popup-full {
+        overflow-x: hidden;
+        overflow-y: scroll;
+
+        div.modal {
+            @include transform('translate(-50%,0)');
+
+            width: 100%;
+            height: 100%;
+            max-width: none !important;
+            margin-bottom: 0 !important;
+        }
+    }
+
+    h1 {
+        @include font-size(14px);
+
+        display: block;
+        float: left;
+        margin: 0 0 10px 0;
+        font-family: 'Open Sans Bold', sans-serif;
+        color: $colorPictonBlue;
+        text-transform: uppercase;
+    }
+
     div.modal {
         @include transform('translate(-50%,30px)');
         @include shadow('0px 0px 8px 2px rgba(0,0,0,0.3)');
 
-        position: fixed;
+        position: absolute;
         left: 50%;
         width: 90%;
         max-width: 900px;
+        margin-bottom: 30px;
 
         @include media-query('tablet-wide') {
             @include transform('translate(-50%,30px)');
+        }
+
+        div.loading {
+            z-index: z-index('overlay');
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.6);
+
+            img {
+                @include transform('translate(-50%,-50%)');
+
+                position: absolute;
+                top: 50%;
+                left: 50%;
+            }
         }
 
         a.close {
@@ -57,6 +102,13 @@ section.popup {
             top: 17px;
             right: 15px;
             color: $colorTowerGray;
+        }
+
+        p {
+            @include font-size(13px);
+
+            font-family: 'Open Sans', sans-serif;
+            color: $colorOsloGray;
         }
 
         > div {
@@ -119,10 +171,36 @@ section.popup {
                 display: block;
             }
 
-            img {
+            img:not(.full-element), video {
                 display: block;
                 max-width: 100%;
+                max-height: 600px;
                 margin: 0 auto;
+
+                @include media-query('desktop') {
+                    max-height: 500px;
+                }
+
+                @include media-query('tablet') {
+                    max-height: 400px;
+                }
+
+                @include media-query('phablet') {
+                    max-height: 300px;
+                }
+
+                @include media-query('phone') {
+                    max-height: 220px;
+                }
+            }
+
+            img.full-element {
+                margin: 0 auto !important;
+                max-width: 100% !important;
+            }
+
+            audio {
+                width: 100% !important;
             }
         }
 
@@ -154,6 +232,7 @@ section.popup {
             width: 100%;
             margin-top: 10px;
             height: 270px;
+            overflow-x: hidden;
             overflow-y: scroll;
 
             a {

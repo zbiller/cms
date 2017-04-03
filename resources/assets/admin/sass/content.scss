@@ -35,36 +35,56 @@ main {
 .btn {
     @include font-size(12px);
     @include transition(background 0.3s ease);
+    @include clear-padding();
 
     display: block;
     float: left;
     margin: 15px 5px;
     padding: 7px 10px;
-    border: 0;
+    border: none;
+    cursor: pointer;
     background: $colorTowerGray;
     color: $colorWhite;
     font-family: 'Open Sans Bold', sans-serif;
     text-transform: uppercase;
-    cursor: pointer;
 
-    @include media-query('tablet') {
-        @include font-size(14px);
-        @include clear-padding();
-
-        text-indent: -9999px !important;
-        width: 32px !important;
-        height: 30px !important;
-    }
-
-    > i {
+    &:not(.no-responsiveness) {
         @include media-query('tablet') {
-            text-indent: 0 !important;
-            float: left !important;
+            @include font-size(14px);
+            @include clear-padding();
+
+            text-indent: -9999px;
+            width: 32px;
+            height: 30px;
+        }
+
+        > i {
+            @include media-query('tablet') {
+                text-indent: 0;
+                float: left;
+            }
         }
     }
 
     &:hover {
         background: darken($colorTowerGray, 10%);
+    }
+
+    &.centered {
+        text-align: center;
+    }
+
+    &.bordered {
+        padding: 6px 10px;
+        border: 1px solid lighten($colorTowerGray, 10%);
+        background: none !important;
+        color: $colorOsloGray;
+        font-family: 'Open Sans', sans-serif;
+        text-transform: none;
+
+        &:hover {
+            background-color: lighten($colorTowerGray, 22%) !important;
+        }
     }
 
     &.no-margin {
@@ -93,92 +113,13 @@ main {
         &:hover {
             background: $colorTowerGray;
         }
-    }
 
-    &.blue {
-        background: $colorPictonBlue;
+        &.bordered {
+            border: 1px solid lighten($colorTowerGray, 10%);
 
-        &:hover {
-            background: darken($colorPictonBlue, 10%);
-        }
-    }
-
-    &.green {
-        background: $colorEmerald;
-
-        &:hover {
-            background: darken($colorEmerald, 10%);
-        }
-    }
-
-    &.red {
-        background: $colorJaponica;
-
-        &:hover {
-            background: darken($colorJaponica, 10%);
-        }
-    }
-
-    &.yellow {
-        background: $colorGoldenTainoi;
-
-        &:hover {
-            background: darken($colorGoldenTainoi, 10%);
-        }
-    }
-
-    &.dark-blue {
-        background: $colorFiord;
-
-        &:hover {
-            background: darken($colorFiord, 10%);
-        }
-    }
-}
-
-label.upload-btn {
-    @include clear-padding();
-    @include transition(all 0.3s ease);
-    @include font-size(12px);
-
-    cursor: pointer;
-    height: 31px;
-    margin: 0;
-    padding: 7px 10px;
-    font-family: 'Open Sans Bold', sans-serif;
-    color: $colorWhite;
-    background: $colorTowerGray;
-    text-transform: uppercase;
-
-    &:hover {
-        background: darken($colorTowerGray, 10%);
-    }
-
-    &.no-margin {
-        margin: 0;
-    }
-
-    &.no-margin-top {
-        margin-top: 0;
-    }
-
-    &.no-margin-bottom {
-        margin-bottom: 0;
-    }
-
-    &.no-margin-right {
-        margin-right: 0;
-    }
-
-    &.no-margin-left {
-        margin-left: 0;
-    }
-
-    &.gray {
-        background: lighten($colorTowerGray, 10%);
-
-        &:hover {
-            background: $colorTowerGray;
+            &:hover {
+                background-color: lighten($colorTowerGray, 22%) !important;
+            }
         }
     }
 
@@ -188,6 +129,14 @@ label.upload-btn {
         &:hover {
             background: darken($colorPictonBlue, 10%);
         }
+
+        &.bordered {
+            border: 1px solid lighten($colorPictonBlue, 10%);
+
+            &:hover {
+                background-color: lighten($colorPictonBlue, 22%) !important;
+            }
+        }
     }
 
     &.green {
@@ -195,6 +144,14 @@ label.upload-btn {
 
         &:hover {
             background: darken($colorEmerald, 10%);
+        }
+
+        &.bordered {
+            border: 1px solid lighten($colorEmerald, 10%);
+
+            &:hover {
+                background-color: lighten($colorEmerald, 22%) !important;
+            }
         }
     }
 
@@ -204,6 +161,14 @@ label.upload-btn {
         &:hover {
             background: darken($colorJaponica, 10%);
         }
+
+        &.bordered {
+            border: 1px solid lighten($colorJaponica, 10%);
+
+            &:hover {
+                background-color: lighten($colorJaponica, 22%) !important;
+            }
+        }
     }
 
     &.yellow {
@@ -211,6 +176,14 @@ label.upload-btn {
 
         &:hover {
             background: darken($colorGoldenTainoi, 10%);
+        }
+
+        &.bordered {
+            border: 1px solid lighten($colorGoldenTainoi, 10%);
+
+            &:hover {
+                background-color: lighten($colorGoldenTainoi, 22%) !important;
+            }
         }
     }
 
@@ -220,11 +193,14 @@ label.upload-btn {
         &:hover {
             background: darken($colorFiord, 10%);
         }
-    }
 
-    input[type="file"] {
-        position: fixed;
-        top: -10000px;
+        &.bordered {
+            border: 1px solid lighten($colorFiord, 10%);
+
+            &:hover {
+                background-color: lighten($colorFiord, 22%) !important;
+            }
+        }
     }
 }
 
@@ -299,33 +275,28 @@ label.upload-btn {
     }
 }
 
-div.progress {
-    display: block;
-    float: left;
-    width: 100%;
-    margin: 10px 0 0 0;
-
-    .bar {
-        @include border-radius('100px');
-
-        height: 5px;
-
-        &.success {
-            background: $colorEmerald;
-        }
-
-        &.error {
-            background: $colorJaponica;
-        }
-    }
-}
-
 .left{
     float: left !important;
 }
 
 .right{
     float: right !important;
+}
+
+.full {
+    width: 100% !important;
+}
+
+.half {
+    width: 50% !important;
+}
+
+.third {
+    width: 33.3% !important;
+}
+
+.quarter {
+    width: 25% !important;
 }
 
 #password-generate {

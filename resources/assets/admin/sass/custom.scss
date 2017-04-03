@@ -4,7 +4,7 @@ table {
     tr > td {
         &:last-of-type {
             &.actions-library {
-                width: 277px !important;
+                width: 283px !important;
 
                 @include media-query('tablet') {
                     width: 116px !important;
