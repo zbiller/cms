@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Schema;
+use App\Helpers\LibraryHelper;
 use App\Helpers\MenuHelper;
 use App\Helpers\PaginationHelper;
 use App\Helpers\ValidationHelper;
@@ -40,6 +41,10 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function registerFacades()
     {
+        $this->app->singleton('Library', function ($app) {
+            return new LibraryHelper($app);
+        });
+
         $this->app->singleton('Menu', function ($app) {
             return new MenuHelper($app);
         });
@@ -64,6 +69,7 @@ class AppServiceProvider extends ServiceProvider
             return new FormAdminHelper($app);
         });
 
+        $this->app->alias('library', LibraryHelper::class);
         $this->app->alias('menu', MenuHelper::class);
         $this->app->alias('pagination', PaginationHelper::class);
         $this->app->alias('validation', ValidationHelper::class);

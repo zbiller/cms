@@ -11,6 +11,16 @@ if (!function_exists('upload')) {
     }
 }
 
+if (!function_exists('library')) {
+    /**
+     * @return \App\Helpers\LibraryHelper
+     */
+    function library()
+    {
+        return app(Library::class);
+    }
+}
+
 if (!function_exists('form')) {
     /**
      * @return \Collective\Html\FormBuilder
@@ -99,5 +109,28 @@ if (!function_exists('force_redirect')) {
             call_user_func($handler, $e);
             die;
         }
+    }
+}
+
+if (!function_exists('array_search_key_recursive')) {
+    /**
+     * @param string|int $needle
+     * @param array $haystack
+     * @return mixed|null
+     */
+    function array_search_key_recursive($needle, array $haystack = [])
+    {
+        $array = new \RecursiveIteratorIterator(
+            new \RecursiveArrayIterator($haystack),
+            \RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($array as $key => $value) {
+            if ($key === $needle) {
+                return $value;
+            }
+        }
+
+        return null;
     }
 }

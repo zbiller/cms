@@ -107,8 +107,8 @@ return [
          * Not specifying this option's width and height will force the generated thumbnail to resize itself to 100x100px.
          */
         'thumbnail_style' => [
-            'width' => 80,
-            'height' => 80
+            'width' => 100,
+            'height' => 100
         ],
 
         /**

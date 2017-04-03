@@ -250,12 +250,13 @@ return [
         /**
          * Application Facades
          */
-        'FormAdmin' => App\Facades\FormAdminFacade::class,
+        'Library' => App\Facades\LibraryFacade::class,
         'Menu' => App\Facades\MenuFacade::class,
         'Pagination' => App\Facades\PaginationFacade::class,
         'Validation' => App\Facades\ValidationFacade::class,
         'Flash' => App\Facades\FlashFacade::class,
         'Button' => App\Facades\ButtonFacade::class,
+        'FormAdmin' => App\Facades\FormAdminFacade::class,
     ],
 
 ];
