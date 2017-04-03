@@ -2,6 +2,7 @@
 
 namespace App\Models\Upload;
 
+use App\Helpers\UploadHelper;
 use App\Models\Model;
 use App\Services\UploadService;
 use App\Traits\CanFilter;
@@ -62,11 +63,53 @@ class Upload extends Model
     }
 
     /**
+     * @return bool
+     */
+    public function isImage()
+    {
+        return $this->type == UploadService::TYPE_IMAGE;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isVideo()
+    {
+        return $this->type == UploadService::TYPE_VIDEO;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAudio()
+    {
+        return $this->type == UploadService::TYPE_AUDIO;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFile()
+    {
+        return !$this->isImage() && !$this->isVideo() && !$this->isAudio();
+    }
+
+    /**
      * Get the size in megabytes.
      *
      * @return string
      */
-    public function getSizeAttribute()
+    public function getHelperAttribute()
+    {
+        return new UploadHelper($this->attributes['full_path']);
+    }
+
+    /**
+     * Get the size in megabytes.
+     *
+     * @return string
+     */
+    public function getSizeMbAttribute()
     {
         return number_format($this->attributes['size'] / pow(1024, 2), 2);
     }
@@ -82,12 +125,145 @@ class Upload extends Model
     }
 
     /**
-     * @param Builder $query
-     * @param $fullPath
+     * Sort the query with newest records first.
+     *
+     * @param $query
      */
-    public function scopeWhereFullPath($query, $fullPath)
+    public function scopeNewest($query)
     {
-        $query->where('full_path', '=', $fullPath);
+        $query->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Sort the query alphabetically by original_name.
+     *
+     * @param $query
+     */
+    public function scopeAlphabetically($query)
+    {
+        $query->orderBy('original_name', 'asc');
+    }
+
+    /**
+     * Filter query results to show uploads only of type.
+     * Param $types: single upload type as string or multiple upload types as an array.
+     *
+     * @param Builder $query
+     * @param array|int|string $types
+     */
+    public function scopeOnlyTypes($query, ...$types)
+    {
+        if (!empty($types)) {
+            $query->where(function ($q) use ($types) {
+                foreach ($types as $type) {
+                    $q->orWhere('type', is_numeric($type) ? $type : array_search(title_case($type), self::$types));
+                }
+            });
+        }
+    }
+
+    /**
+     * Filter query results to show uploads excluding the given types.
+     * Param $types: single upload type as string or multiple upload types as an array.
+     *
+     * @param Builder $query
+     * @param array|int|string $types
+     */
+    public function scopeExcludingTypes($query, ...$types)
+    {
+        if (!empty($types)) {
+            $query->where(function ($q) use ($types) {
+                foreach ($types as $type) {
+                    $q->where('type', '!=', is_numeric($type) ? $type : array_search(title_case($type), self::$types));
+                }
+            });
+        }
+    }
+
+    /**
+     * Filter query results to show uploads only of the given extensions.
+     * Param $extensions: single upload extension as string or multiple upload extensions as an array.
+     *
+     * @param Builder $query
+     * @param array|int|string $extensions
+     */
+    public function scopeOnlyExtensions($query, ...$extensions)
+    {
+        if (!empty($extensions)) {
+            $query->where(function ($q) use ($extensions) {
+                foreach ($extensions as $extension) {
+                    $q->orWhere('extension', strtolower($extension));
+                }
+            });
+        }
+    }
+
+    /**
+     * Filter query results to show uploads excluding the given extensions.
+     * Param $extensions: single upload extension as string or multiple upload extensions as an array.
+     *
+     * @param Builder $query
+     * @param array|int|string $extensions
+     */
+    public function scopeExcludingExtensions($query, ...$extensions)
+    {
+        if (!empty($extensions)) {
+            $query->where(function ($q) use ($extensions) {
+                foreach ($extensions as $extension) {
+                    $q->orWhere('extension', '!=', strtolower($extension));
+                }
+            });
+        }
+    }
+
+    /**
+     * Filter query results to show uploads only between the given sizes.
+     * Param $minSize: the minimum size in MB.
+     * Param $maxSize: the maximum size in MB.
+     *
+     * @param Builder $query
+     * @param int $minSize
+     * @param int $maxSize
+     */
+    public function scopeSizeBetween($query, $minSize, $maxSize)
+    {
+        $query->whereBetween('size', [
+            $minSize * pow(1024, 2),
+            $maxSize * pow(1024, 2)
+        ]);
+    }
+
+    /**
+     * Filter query results to show uploads that match the search criteria.
+     * Param $attributes: an array containing field => value.
+     *
+     * @param Builder $query
+     * @param array $attributes
+     */
+    public function scopeLike($query, array $attributes = [])
+    {
+        if (!empty($attributes)) {
+            $query->where(function ($q) use ($attributes) {
+                foreach ($attributes as $field => $value) {
+                    if ($value) {
+                        $q->orWhere($field, 'like', '%' . $value . '%');
+                    }
+                }
+            });
+        }
+
+    }
+
+    /**
+     * Filter query results to show only one upload by it's full path.
+     * Param $path: the full path of an upload.
+     *
+     * @param Builder $query
+     * @param string $path
+     */
+    public function scopeWhereFullPath($query, $path)
+    {
+        $query->where('full_path', '=', $path);
     }
 
     /**
@@ -99,6 +275,9 @@ class Upload extends Model
     public static function column($name, Blueprint $table)
     {
         $table->string($name)->nullable();
-        $table->foreign($name)->references('full_path')->on((new static)->getTable())->onDelete('restrict');
+        $table->foreign($name)
+            ->references('full_path')
+            ->on((new static)->getTable())
+            ->onDelete('restrict');
     }
 }
