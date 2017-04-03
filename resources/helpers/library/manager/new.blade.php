@@ -1,0 +1,45 @@
+<a id="open-library-new-{!! $index !!}" data-popup="open" data-popup-id="library-new-{!! $index !!}" class="btn gray centered bordered left no-margin no-responsiveness {!! $current ? 'half' : 'full' !!}">
+    Choose From Library
+</a>
+<section id="library-new-{!! $index !!}" class="popup" data-model="{{ get_class($model) }}" data-field="{{ $field }}">
+    <div class="modal">
+        <div class="loading">
+            <img src="{{ asset('/build/admin/img/loading.gif') }}" />
+        </div>
+        <div class="header">
+            <ul class="modal-tabs">
+                @foreach($types as $type)
+                    <li class="{!! $loop->first ? 'active' : '' !!}" data-type="{{ $type }}">
+                        <a href="#{!! $type !!}">{{ title_case(str_replace('_', ' ', $type)) }}</a>
+                    </li>
+                @endforeach
+            </ul>
+            <a class="close" data-popup="close">
+                <i class="fa fa-close"></i>
+            </a>
+        </div>
+        <div class="content">
+            @foreach($types as $type)
+                <div id="{!! $type !!}" class="modal-tab {!! $loop->first ? 'active' : '' !!}">
+                    <input type="text" placeholder="Search for {!! str_plural($type) !!}" class="search full" />
+                    <div class="uploads">
+                        @include('helpers::library.manager.uploads')
+                    </div>
+                </div>
+            @endforeach
+        </div>
+        <div class="footer">
+            <label class="upload-btn green left">
+                <i class="fa fa-upload"></i>&nbsp; Upload file
+                <input type="file" name="file">
+            </label>
+            <span class="upload-message"></span>
+            <a id="library-save-{!! $index !!}" class="btn blue right no-margin">
+                <i class="fa fa-check"></i>&nbsp; Save
+            </a>
+            <div class="progress" style="display: none;">
+                <div class="bar" style="width: 0%;"></div>
+            </div>
+        </div>
+    </div>
+</section>
