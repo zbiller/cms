@@ -2,26 +2,33 @@
 
 namespace App\Services;
 
-use App\Http\Requests\UploadRequest;
 use DB;
-use Illuminate\Support\Arr;
-use Illuminate\Validation\ValidationException;
 use Storage;
+use Validator;
 use Image;
 use Closure;
 use Exception;
 use FFMpeg;
 use App\Models\Model;
 use App\Models\Upload\Upload;
+use App\Http\Requests\UploadRequest;
 use App\Exceptions\UploadException;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Arr;
+use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeExtensionGuesser;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
-use Validator;
 
 class UploadService
 {
+    /**
+     * The original record from the database.
+     *
+     * @var Upload
+     */
+    protected $original;
+
     /**
      * The file instance coming from request()->file().
      *
@@ -110,13 +117,6 @@ class UploadService
      * @var bool
      */
     protected $simple = false;
-
-    /**
-     * The original record from the database.
-     *
-     * @var Upload
-     */
-    protected static $original;
 
     /**
      * The types a file can have.
@@ -253,7 +253,6 @@ class UploadService
 
         $this->setFile($file)->setField($field)->setModel($model)->setConfig($model);
         $this->setDisk()->setPath()->setName()->setExtension()->setSize()->setType();
-
     }
 
     /**
@@ -266,13 +265,13 @@ class UploadService
     {
         switch ($file) {
             case is_string($file):
-                $this->file = self::createFromString($file);
+                $this->file = $this->createFromString($file);
                 break;
             case is_array($file):
-                $this->file = self::createFromArray($file);
+                $this->file = $this->createFromArray($file);
                 break;
             default:
-                $this->file = self::createFromObject($file);
+                $this->file = $this->createFromObject($file);
         }
 
         return $this;
@@ -396,10 +395,14 @@ class UploadService
      */
     public function setName()
     {
-        $this->name = str_random(40) . '.' . $this->file->getClientOriginalExtension();
+        if ($this->hasOriginal()) {
+            $this->name = $this->original->name;
+        } else {
+            $this->name = str_random(40) . '.' . $this->file->getClientOriginalExtension();
 
-        if (Storage::disk($this->disk)->exists($this->path . '/' . $this->name)) {
-            $this->setName();
+            if (Storage::disk($this->disk)->exists($this->path . '/' . $this->name)) {
+                $this->setName();
+            }
         }
 
         return $this;
@@ -423,7 +426,11 @@ class UploadService
      */
     public function setPath()
     {
-        $this->path = date('Y') . '/' . date('m') . '/' . date('j');
+        if ($this->hasOriginal()) {
+            $this->path = $this->original->path;
+        } else {
+            $this->path = date('Y') . '/' . date('m') . '/' . date('j');
+        }
 
         return $this;
     }
@@ -446,7 +453,11 @@ class UploadService
      */
     public function setExtension()
     {
-        $this->extension = strtolower($this->file->getClientOriginalExtension());
+        if ($this->hasOriginal()) {
+            $this->extension = $this->original->extension;
+        } else {
+            $this->extension = strtolower($this->file->getClientOriginalExtension());
+        }
 
         return $this;
     }
@@ -469,7 +480,11 @@ class UploadService
      */
     public function setSize()
     {
-        $this->size = $this->file->getClientSize();
+        if ($this->hasOriginal()) {
+            $this->size = $this->original->size;
+        } else {
+            $this->size = $this->file->getClientSize();
+        }
 
         return $this;
     }
@@ -493,19 +508,23 @@ class UploadService
      */
     public function setType()
     {
-        switch ($this) {
-            case $this->isImage():
-                $this->type = self::TYPE_IMAGE;
-                break;
-            case $this->isVideo():
-                $this->type = self::TYPE_VIDEO;
-                break;
-            case $this->isAudio():
-                $this->type = self::TYPE_AUDIO;
-                break;
-            case $this->isFile():
-                $this->type = self::TYPE_FILE;
-                break;
+        if ($this->hasOriginal()) {
+            $this->type = $this->original->type;
+        } else {
+            switch ($this) {
+                case $this->isImage():
+                    $this->type = self::TYPE_IMAGE;
+                    break;
+                case $this->isVideo():
+                    $this->type = self::TYPE_VIDEO;
+                    break;
+                case $this->isAudio():
+                    $this->type = self::TYPE_AUDIO;
+                    break;
+                case $this->isFile():
+                    $this->type = self::TYPE_FILE;
+                    break;
+            }
         }
 
         return $this;
@@ -525,10 +544,17 @@ class UploadService
      * Set the original loaded model for the file.
      *
      * @param Upload|string|null $file
+     * @throws UploadException
      */
-    public static function setOriginal($file = null)
+    public function setOriginal($file = null)
     {
-        self::$original = $file instanceof Upload ? $file : Upload::whereFullPath($file)->first();
+        try {
+            $this->original = $file instanceof Upload ? $file : Upload::whereFullPath($file)->firstOrFail();
+        } catch (Exception $e) {
+            throw new UploadException(
+                'Original upload could not be found!'
+            );
+        }
     }
 
     /**
@@ -536,9 +562,22 @@ class UploadService
      *
      * @return Upload
      */
-    public static function getOriginal()
+    public function getOriginal()
     {
-        return self::$original;
+        return $this->original;
+    }
+
+    /**
+     * Check if upload/unload is attempted on an already existing file.
+     * File should exist both in storage and in database.
+     *
+     * @return bool
+     */
+    public function hasOriginal()
+    {
+        return
+            ($this->getOriginal() instanceof Upload && $this->getOriginal()->exists) &&
+            Storage::disk($this->getDisk())->exists($this->getOriginal()->full_path);
     }
 
     /**
@@ -632,7 +671,9 @@ class UploadService
                     break;
             }
 
-            $this->saveUploadToDatabase();
+            if (!$this->hasOriginal()) {
+                $this->saveUploadToDatabase();
+            }
 
             if (!$this->isSimpleUpload()) {
                 $this->forgetOldUpload();
@@ -640,7 +681,9 @@ class UploadService
 
             return $this;
         } catch (UploadException $e) {
-            $this->removeUploadFromDisk();
+            if (!$this->hasOriginal()) {
+                $this->removeUploadFromDisk();
+            }
 
             throw new UploadException($e->getMessage());
         }
@@ -655,18 +698,24 @@ class UploadService
      * To apply this method properly, pass in this class' constructor, just the first parameter.
      * The parameter's value should be the full path of an existing file in the database's table set in config/upload.php
      *
+     * You also have the possibility to overlook deleting the following:
+     * - the database record
+     * - the original file from disk
+     * - the generated file's thumbnails from disk
+     *
+     * @throws Exception
      * @throws UploadException
      */
     public function unload()
     {
         try {
             if (config('upload.database.save') === true) {
-                self::getOriginal()->delete();
+                $this->getOriginal()->delete();
             }
 
             $matchingFiles = preg_grep(
-                '~^' . self::getOriginal()->path . '/' . substr(self::getOriginal()->name, 0, strpos(self::getOriginal()->name, '.')) . '.*~',
-                Storage::disk(config('upload.storage.disk'))->files(self::getOriginal()->path)
+                '~^' . $this->getOriginal()->path . '/' . substr($this->getOriginal()->name, 0, strpos($this->getOriginal()->name, '.')) . '.*~',
+                Storage::disk(config('upload.storage.disk'))->files($this->getOriginal()->path)
             );
 
             foreach ($matchingFiles as $file) {
@@ -690,7 +739,7 @@ class UploadService
     {
         try {
             return response()->download(
-                Storage::disk($this->getDisk())->getDriver()->getAdapter()->applyPathPrefix(self::getOriginal()->full_path)
+                Storage::disk($this->getDisk())->getDriver()->getAdapter()->applyPathPrefix($this->getOriginal()->full_path)
             );
         } catch (UploadException $e) {
             throw new UploadException($e->getMessage());
@@ -710,7 +759,7 @@ class UploadService
     {
         try {
             return response()->file(
-                Storage::disk($this->getDisk())->getDriver()->getAdapter()->applyPathPrefix(self::getOriginal()->full_path)
+                Storage::disk($this->getDisk())->getDriver()->getAdapter()->applyPathPrefix($this->getOriginal()->full_path)
             );
         } catch (UploadException $e) {
             throw new UploadException($e->getMessage());
@@ -731,7 +780,9 @@ class UploadService
         return $this->attemptStoringToDisk(function () {
             $image = $this->storeToDisk();
 
-            $this->generateThumbnailForImage($image);
+            if (!$this->hasOriginal()) {
+                $this->generateThumbnailForImage($image);
+            }
 
             if (!$this->isSimpleUpload()) {
                 $this->generateStylesForImage($image);
@@ -756,9 +807,11 @@ class UploadService
             set_time_limit(3600);
             ini_set('max_execution_time', 3600);
 
-            $video = $this->storeToDisk();
+            $video = $this->hasOriginal() ? $this->getOriginal()->full_path : $this->storeToDisk();
 
-            $this->generateThumbnailsForVideo($video);
+            if (!$this->hasOriginal()) {
+                $this->generateThumbnailsForVideo($video);
+            }
 
             if (!$this->isSimpleUpload()) {
                 $this->generateStylesForVideo($video);
@@ -781,7 +834,7 @@ class UploadService
         $this->guardAgainstAllowedExtensions('audios');
 
         return $this->attemptStoringToDisk(function () {
-            return $this->storeToDisk();
+            return $this->hasOriginal() ? $this->getOriginal()->full_path : $this->storeToDisk();
         });
 
     }
@@ -798,7 +851,7 @@ class UploadService
         $this->guardAgainstAllowedExtensions('files');
 
         return $this->attemptStoringToDisk(function () {
-            return $this->storeToDisk();
+            return $this->hasOriginal() ? $this->getOriginal()->full_path : $this->storeToDisk();
         });
     }
 
@@ -807,10 +860,18 @@ class UploadService
      * When uploading, use the generated file name and file path.
      * The file will be stored on the disk provided in the config/upload.php file.
      *
+     * IMPORTANT:
+     * If an upload from an existing file is amended, the uploader will just return the original file instance.
+     * This way, duplicating files on disk is avoided.
+     *
      * @return false|string
      */
     protected function storeToDisk()
     {
+        if ($this->hasOriginal()) {
+            return $this->getOriginal()->full_path;
+        }
+
         return $this->getFile()->storePubliclyAs(
             $this->getPath(), $this->getName(), $this->getDisk()
         );
@@ -940,8 +1001,6 @@ class UploadService
                 Storage::disk($this->getDisk())->delete($file);
             }
         } catch (Exception $e) {
-            dd($e);
-
             throw new UploadException(
                 'Failed removing old uploads from disk and/or database! Please try again.'
             );
@@ -1099,8 +1158,6 @@ class UploadService
                 }
             }
         } catch (Exception $e) {
-            dd($e);
-
             throw new UploadException(
                 'Styles generation for the uploaded image failed! Please try again.'
             );
@@ -1154,11 +1211,13 @@ class UploadService
     }
 
     /**
+     * Get the UploadedFile instance.
+     *
      * @param object $file
      * @return UploadedFile
      * @throws UploadException
      */
-    private static function createFromObject($file)
+    private function createFromObject($file)
     {
         if (!($file instanceof UploadedFile)) {
             throw new UploadException('Invalid file!');
@@ -1168,11 +1227,13 @@ class UploadService
     }
 
     /**
+     * Create an UploadedFile instance from an array. ($_FILES)
+     *
      * @param array $file
      * @return UploadedFile
      * @throws UploadException
      */
-    private static function createFromArray(array $file = [])
+    private function createFromArray(array $file = [])
     {
         if (!isset($file['name']) || !isset($file['tmp_name']) || !isset($file['type']) || !isset($file['size']) || !isset($file['error'])) {
             throw new UploadException('Invalid file!');
@@ -1184,25 +1245,19 @@ class UploadService
     }
 
     /**
+     * Create an UploadedFile instance from a string.
+     *
      * @param string $file
      * @return UploadedFile
      * @throws UploadException
      */
-    private static function createFromString($file = '')
+    private function createFromString($file = '')
     {
         try {
-            self::setOriginal($file);
-
-            $file = Upload::whereFullPath($file)->firstOrFail();
-            $disk = config('upload.storage.disk');
-            $path = config('filesystems.disks.' . $disk . '.root') . DIRECTORY_SEPARATOR;
-
-            return new UploadedFile(
-                $path . $file->full_path, $file->original_name, $file->mime, $file->size
-            );
+            return $this->createFromExisting($file);
         } catch (Exception $e) {
             if (filter_var($file, FILTER_VALIDATE_URL)) {
-                return self::createFromUrl($file);
+                return $this->createFromUrl($file);
             }
 
             throw new UploadException('Invalid file!');
@@ -1210,11 +1265,39 @@ class UploadService
     }
 
     /**
+     * Create an UploadedFile instance from an already existing upload's full path.
+     *
      * @param string $file
      * @return UploadedFile
      * @throws UploadException
      */
-    private static function createFromUrl($file = '')
+    private function createFromExisting($file = '')
+    {
+        try {
+            $this->setOriginal($file);
+
+            $disk = config('upload.storage.disk');
+            $path = config('filesystems.disks.' . $disk . '.root') . DIRECTORY_SEPARATOR;
+
+            return new UploadedFile(
+                $path . $this->getOriginal()->full_path,
+                $this->getOriginal()->original_name,
+                $this->getOriginal()->mime,
+                $this->getOriginal()->size
+            );
+        } catch (Exception $e) {
+            throw new UploadException('Invalid file!');
+        }
+    }
+
+    /**
+     * Create an UploadedFile instance from a URL.
+     *
+     * @param string $file
+     * @return UploadedFile
+     * @throws UploadException
+     */
+    private function createFromUrl($file = '')
     {
         try {
             $ch = curl_init($file);
