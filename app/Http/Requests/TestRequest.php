@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Crud;
-
-use App\Http\Requests\Request;
+namespace App\Http\Requests;
 
 class TestRequest extends Request
 {

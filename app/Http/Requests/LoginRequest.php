@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Http\Requests\Auth;
+namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-
-class ForgotPasswordRequest extends Request
+class LoginRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +22,11 @@ class ForgotPasswordRequest extends Request
     public function rules()
     {
         return [
-            'email' => [
-                'required',
-                'email'
+            'username' => [
+                'required'
+            ],
+            'password' => [
+                'required'
             ],
         ];
     }

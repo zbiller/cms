@@ -8,7 +8,7 @@
 
 namespace App\Traits;
 
-use App\Http\Requests\Auth\ResetPasswordRequest;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Options\CanResetPasswordOptions;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Foundation\Auth\ResetsPasswords;

@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Http\Requests\Crud;
+namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
 use Illuminate\Validation\Rule;
 
 class AdminUserRequest extends Request

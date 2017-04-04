@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin\Test;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Crud\TestRequest;
+use App\Http\Requests\TestRequest;
 use App\Http\Filters\Admin\TestFilter;
 use App\Http\Sorts\Admin\TestSort;
 use App\Models\Test\Test;

@@ -7,7 +7,7 @@ use App\Models\Auth\User;
 use App\Models\Auth\Role;
 use App\Traits\CanCrud;
 use App\Options\CanCrudOptions;
-use App\Http\Requests\Crud\AdminUserRequest;
+use App\Http\Requests\AdminUserRequest;
 use App\Http\Filters\Admin\AdminUserFilter;
 use App\Http\Sorts\Admin\AdminUserSort;
 use Illuminate\Http\Request;

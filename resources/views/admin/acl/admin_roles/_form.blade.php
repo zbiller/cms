@@ -31,5 +31,5 @@
 </div>
 
 @section('bottom_scripts')
-    {!! JsValidator::formRequest(App\Http\Requests\Crud\AdminRoleRequest::class, '.form') !!}
+    {!! JsValidator::formRequest(App\Http\Requests\AdminRoleRequest::class, '.form') !!}
 @append

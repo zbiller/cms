@@ -16,5 +16,5 @@
 @endsection
 
 @section('bottom_scripts')
-    {!! JsValidator::formRequest(App\Http\Requests\Auth\ForgotPasswordRequest::class) !!}
+    {!! JsValidator::formRequest(App\Http\Requests\ForgotPasswordRequest::class) !!}
 @append

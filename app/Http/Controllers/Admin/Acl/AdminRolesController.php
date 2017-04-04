@@ -7,7 +7,7 @@ use App\Models\Auth\Role;
 use App\Models\Auth\Permission;
 use App\Traits\CanCrud;
 use App\Options\CanCrudOptions;
-use App\Http\Requests\Crud\AdminRoleRequest;
+use App\Http\Requests\AdminRoleRequest;
 use App\Http\Filters\Admin\AdminRoleFilter;
 use App\Http\Sorts\Admin\AdminRoleSort;
 use Illuminate\Http\Request;

@@ -1,11 +1,8 @@
 <?php
 
-namespace App\Http\Requests\Crud;
+namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
-use Illuminate\Validation\Rule;
-
-class AdminRoleRequest extends Request
+class ResetPasswordRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,10 +22,15 @@ class AdminRoleRequest extends Request
     public function rules()
     {
         return [
-            'name' => [
+            'token' => [
+                'required'
+            ],
+            'username' => [
+                'required'
+            ],
+            'password' => [
                 'required',
-                Rule::unique('roles', 'name')
-                    ->ignore($this->route('role') ? $this->route('role')->id : null)
+                'confirmed'
             ]
         ];
     }
