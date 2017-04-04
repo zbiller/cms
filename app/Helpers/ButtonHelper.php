@@ -5,6 +5,25 @@ namespace App\Helpers;
 class ButtonHelper
 {
     /**
+     * @param string $text
+     * @param string $url
+     * @param string|null $icon
+     * @param string|null $class
+     * @param array $attributes
+     * @return $this
+     */
+    public function action($text, $url, $icon = null, $class = null, $attributes = [])
+    {
+        return view('helpers::button.action')->with([
+            'text' => $text,
+            'url' => $url,
+            'icon' => $icon,
+            'class' => $class,
+            'attributes' => self::buildAttributes($attributes)
+        ]);
+    }
+
+    /**
      * Render the add button view helper.
      *
      * @param string $route
