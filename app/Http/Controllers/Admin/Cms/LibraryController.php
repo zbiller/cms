@@ -37,71 +37,6 @@ class LibraryController extends Controller
     }
 
     /**
-     * @param LibraryRequest $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function store(LibraryRequest $request)
-    {
-        $status = $message = null;
-
-        if ($request->hasFile('file') && $request->file('file')->isValid()) {
-            try {
-                (new UploadService($request->file('file')))->upload();
-
-                $status = true;
-            } catch (UploadException $e) {
-                $status = false;
-                $message = $e->getMessage();
-            } catch (Exception $e) {
-                $status = false;
-                $message = 'Could not upload the file to library!';
-            }
-        }
-
-        return response()->json([
-            'status' => $status,
-            'message' => $message,
-        ]);
-    }
-
-    /**
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function destroy($id)
-    {
-        try {
-            (new UploadService(Upload::findOrFail($id)->full_path))->unload();
-
-            session()->flash('flash_success', 'The record was successfully deleted!');
-            return redirect()->route('admin.library.index', parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
-        } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', 'You are trying to delete a record that does not exist!');
-            return redirect()->route('admin.library.index');
-        } catch (QueryException $e) {
-            session()->flash('flash_error', 'Could not delete the file because it is used by other entities!');
-            return redirect()->route('admin.library.index');
-        } catch (Exception $e) {
-            session()->flash('flash_error', 'The record could not be deleted! Please try again.');
-            return back();
-        }
-    }
-
-    /**
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function download($id)
-    {
-        try {
-            return (new UploadService(Upload::findOrFail($id)->full_path))->download();
-        } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', 'You are trying to download a file that does not exist!');
-            return redirect()->route('admin.library.index');
-        }
-    }
-
-    /**
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
@@ -165,6 +100,96 @@ class LibraryController extends Controller
                 'status' => false,
                 'message' => 'Could not set the file!',
             ]);
+        }
+    }
+
+    /**
+     * @param LibraryRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(LibraryRequest $request)
+    {
+        $status = $message = null;
+
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
+            try {
+                (new UploadService($request->file('file')))->upload();
+
+                $status = true;
+            } catch (UploadException $e) {
+                $status = false;
+                $message = $e->getMessage();
+            } catch (Exception $e) {
+                $status = false;
+                $message = 'Could not upload the file to library!';
+            }
+        }
+
+        return response()->json([
+            'status' => $status,
+            'message' => $message,
+        ]);
+    }
+
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy($id)
+    {
+        try {
+            (new UploadService(Upload::findOrFail($id)->full_path))->unload();
+
+            session()->flash('flash_success', 'The record was successfully deleted!');
+            return redirect()->route('admin.library.index', parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
+        } catch (ModelNotFoundException $e) {
+            session()->flash('flash_error', 'You are trying to delete a record that does not exist!');
+            return redirect()->route('admin.library.index');
+        } catch (QueryException $e) {
+            session()->flash('flash_error', 'Could not delete the file because it is used by other entities!');
+            return redirect()->route('admin.library.index');
+        } catch (UploadException $e) {
+            session()->flash('flash_error', $e->getMessage());
+            return back();
+        } catch (Exception $e) {
+            session()->flash('flash_error', 'The record could not be deleted! Please try again.');
+            return back();
+        }
+    }
+
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function delete()
+    {
+        foreach (Upload::all() as $item) {
+            try {
+                (new UploadService($item->full_path))->unload();
+
+                session()->flash('flash_success', 'All unused records have been successfully removed.');
+            } catch (QueryException $e) {
+                continue;
+            } catch (UploadException $e) {
+                session()->flash('flash_error', $e->getMessage());
+            } catch (Exception $e) {
+                session()->flash('flash_error', 'Something went wrong! Please try again.');
+            }
+        }
+
+        return back();
+    }
+
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function download($id)
+    {
+        try {
+            return (new UploadService(Upload::findOrFail($id)->full_path))->download();
+        } catch (ModelNotFoundException $e) {
+            session()->flash('flash_error', 'You are trying to download a file that does not exist!');
+            return redirect()->route('admin.library.index');
         }
     }
 

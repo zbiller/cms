@@ -25,5 +25,8 @@
 
     <section class="actions">
         {!! button()->update() !!}
+        {!! form()->open(['url' => route('admin.library.delete'), 'method' => 'DELETE', 'class' => 'right']) !!}
+        {!! form()->button('<i class="fa fa-trash"></i>&nbsp; Remove unused uploads', ['type' => 'submit', 'class' => 'btn blue no-margin-right', 'onclick' => 'return confirm("Are you sure? All unused uploads will be permanently deleted.")']) !!}
+        {!! form()->close() !!}
     </section>
 @endsection

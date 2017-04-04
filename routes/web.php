@@ -106,6 +106,7 @@ Route::group([
                 Route::post('set', ['as' => 'admin.library.set', 'uses' => 'LibraryController@set', 'permissions' => 'library-edit']);
                 Route::post('cut', ['as' => 'admin.library.cut', 'uses' => 'LibraryController@cut', 'permissions' => 'library-edit']);
                 Route::delete('destroy/{id}', ['as' => 'admin.library.destroy', 'uses' => 'LibraryController@destroy', 'permissions' => 'library-delete']);
+                Route::delete('delete', ['as' => 'admin.library.delete', 'uses' => 'LibraryController@delete', 'permissions' => 'library-delete']);
             });
         });
 
