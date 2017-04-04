@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Crud;
 
 use App\Http\Requests\Request;
+use Illuminate\Validation\Rule;
 
 class AdminRoleRequest extends Request
 {
@@ -24,7 +25,11 @@ class AdminRoleRequest extends Request
     public function rules()
     {
         return [
-            'name' => 'required|unique:roles,name,' . $this->route('id'),
+            'name' => [
+                'required',
+                Rule::unique('roles', 'name')
+                    ->ignore($this->route('role') ? $this->route('role')->id : null)
+            ]
         ];
     }
 }

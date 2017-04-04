@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Crud;
 
 use App\Http\Requests\Request;
+use Illuminate\Validation\Rule;
 
 class AdminUserRequest extends Request
 {
@@ -23,24 +24,36 @@ class AdminUserRequest extends Request
      */
     public function rules()
     {
-        $rules = [
-            'username' => 'required|unique:users,username,' . $this->route('id'),
-            'roles' => 'required|array|exists:roles,id',
-            'person.first_name' => 'required|min:3',
-            'person.last_name' => 'required|min:3',
-            'person.email' => 'required|email|unique:persons,email,' . $this->route('id') . ',user_id',
+        return [
+            'username' => [
+                'required',
+                Rule::unique('users', 'username')
+                    ->ignore($this->route('user') ? $this->route('user')->id : null)
+            ],
+            'password' => [
+                'confirmed',
+                $this->isMethod('post') ? 'required' : null
+            ],
+            'roles' => [
+                'required',
+                'array',
+                Rule::exists('roles', 'id')
+            ],
+            'person.first_name' => [
+                'required',
+                'min:3'
+            ],
+            'person.last_name' => [
+                'required',
+                'min:3'
+            ],
+            'person.email' => [
+                'required',
+                'email',
+                Rule::unique('persons', 'email')
+                    ->ignore($this->route('user') ? $this->route('user')->id : null, 'user_id')
+            ],
         ];
-
-        switch ($this->method()) {
-            case 'POST':
-                $rules['password'] = 'required|confirmed';
-                break;
-            case 'PUT':
-                $rules['password'] = 'confirmed';
-                break;
-        }
-
-        return $rules;
     }
 
     /**

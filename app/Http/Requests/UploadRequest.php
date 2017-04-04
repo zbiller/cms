@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Validation\Rule;
+
 class UploadRequest extends Request
 {
     /**
@@ -23,14 +25,34 @@ class UploadRequest extends Request
     {
         if (config('upload.database.save') === true) {
             return [
-                'name' => 'required',
-                'original_name' => 'required',
-                'path' => 'required',
-                'full_path' => 'required|unique:' . config('upload.database.table') . ',name,' . $this->route('id'),
-                'extension' => 'required',
-                'size' => 'required|numeric',
-                'mime' => 'required',
-                'type' => 'required|numeric',
+                'name' => [
+                    'required'
+                ],
+                'original_name' => [
+                    'required'
+                ],
+                'path' => [
+                    'required'
+                ],
+                'full_path' => [
+                    'required',
+                    Rule::unique(config('upload.database.table'), 'name')
+                        ->ignore($this->route('upload') ? $this->route('upload')->id : null)
+                ],
+                'extension' => [
+                    'required'
+                ],
+                'size' => [
+                    'required',
+                    'numeric'
+                ],
+                'mime' => [
+                    'required'
+                ],
+                'type' => [
+                    'required',
+                    'numeric'
+                ],
             ];
         }
 

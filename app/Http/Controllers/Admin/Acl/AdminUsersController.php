@@ -55,28 +55,29 @@ class AdminUsersController extends Controller
     }
 
     /**
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     * @param User $user
+     * @return \Illuminate\View\View
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        return $this->_edit(function () use ($id) {
-            $this->item = User::findOrFail($id);
+        return $this->_edit(function () use ($user) {
+            $this->item = $user;
             $this->vars['roles'] = Role::only(Role::TYPE_ADMIN)->exclude('admin')->get();
         });
     }
 
     /**
      * @param AdminUserRequest $request
-     * @param int $id
+     * @param User $user
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
      */
-    public function update(AdminUserRequest $request, $id)
+    public function update(AdminUserRequest $request, User $user)
     {
-        return $this->_update(function () use ($request, $id) {
+        return $this->_update(function () use ($request, $user) {
             $request = self::mergeRequest($request);
 
-            $this->item = User::findOrFail($id);
+            $this->item = $user;
             $this->item->update($request->all());
             $this->item->person()->update($request->get('person'));
             $this->item->roles()->sync($request->get('roles'));
@@ -84,13 +85,15 @@ class AdminUsersController extends Controller
     }
 
     /**
-     * @param int $id
+     * @param User $user
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        return $this->_destroy(function () use ($id) {
-            $this->item = User::findOrFail($id)->delete();
+        return $this->_destroy(function () use ($user) {
+            $this->item = $user;
+            $this->item->delete();
         });
     }
 

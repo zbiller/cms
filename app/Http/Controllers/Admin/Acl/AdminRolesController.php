@@ -42,6 +42,7 @@ class AdminRolesController extends Controller
     /**
      * @param AdminRoleRequest $request
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
      */
     public function store(AdminRoleRequest $request)
     {
@@ -54,41 +55,44 @@ class AdminRolesController extends Controller
     }
 
     /**
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     * @param Role $role
+     * @return \Illuminate\View\View
      */
-    public function edit($id)
+    public function edit(Role $role)
     {
-        return $this->_edit(function () use ($id) {
-            $this->item = Role::findOrFail($id);
+        return $this->_edit(function () use ($role) {
+            $this->item = $role;
             $this->vars['permissions'] = Permission::getGrouped();
         });
     }
 
     /**
      * @param AdminRoleRequest $request
-     * @param int $id
+     * @param Role $role
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
      */
-    public function update(AdminRoleRequest $request, $id)
+    public function update(AdminRoleRequest $request, Role $role)
     {
-        return $this->_update(function () use ($request, $id) {
+        return $this->_update(function () use ($request, $role) {
             $request = self::mergeRequest($request);
 
-            $this->item = Role::findOrFail($id);
+            $this->item = $role;
             $this->item->update($request->all());
             $this->item->permissions()->sync((array)$request->get('permissions'));
         }, $request);
     }
 
     /**
-     * @param int $id
+     * @param Role $role
      * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
      */
-    public function destroy($id)
+    public function destroy(Role $role)
     {
-        return $this->_destroy(function () use ($id) {
-            $this->item = Role::findOrFail($id)->delete();
+        return $this->_destroy(function () use ($role) {
+            $this->item = $role;
+            $this->item->delete();
         });
     }
 

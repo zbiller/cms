@@ -37,13 +37,14 @@ class LibraryController extends Controller
     }
 
     /**
-     * @param int $id
+     * @param Upload $upload
      * @return \Illuminate\Http\RedirectResponse
+     * @throws UploadException
      */
-    public function show($id)
+    public function show(Upload $upload)
     {
         try {
-            return (new UploadService(Upload::findOrFail($id)->full_path))->show();
+            return (new UploadService($upload->full_path))->show();
         } catch (ModelNotFoundException $e) {
             session()->flash('flash_error', 'You are trying to view a record that does not exist!');
             return redirect()->route('admin.library.index');
@@ -132,13 +133,13 @@ class LibraryController extends Controller
     }
 
     /**
-     * @param int $id
+     * @param Upload $upload
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function destroy($id)
+    public function destroy(Upload $upload)
     {
         try {
-            (new UploadService(Upload::findOrFail($id)->full_path))->unload();
+            (new UploadService($upload->full_path))->unload();
 
             session()->flash('flash_success', 'The record was successfully deleted!');
             return redirect()->route('admin.library.index', parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
@@ -180,13 +181,14 @@ class LibraryController extends Controller
     }
 
     /**
-     * @param int $id
+     * @param Upload $upload
      * @return \Illuminate\Http\RedirectResponse
+     * @throws UploadException
      */
-    public function download($id)
+    public function download(Upload $upload)
     {
         try {
-            return (new UploadService(Upload::findOrFail($id)->full_path))->download();
+            return (new UploadService($upload->full_path))->download();
         } catch (ModelNotFoundException $e) {
             session()->flash('flash_error', 'You are trying to download a file that does not exist!');
             return redirect()->route('admin.library.index');

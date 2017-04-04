@@ -195,6 +195,18 @@ class User extends Authenticatable
     }
 
     /**
+     * Override route model binding default column value.
+     * This is done because the user is joined with person by the global scope.
+     * Otherwise, the model binding will throw an "ambiguous column" error.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'users.id';
+    }
+
+    /**
      * Send the password reset email.
      * Determine if user requesting the password is an admin or not.
      *

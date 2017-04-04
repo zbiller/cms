@@ -24,9 +24,16 @@ class ResetPasswordRequest extends Request
     public function rules()
     {
         return [
-            'token' => 'required',
-            'username' => 'required',
-            'password' => 'required|confirmed',
+            'token' => [
+                'required'
+            ],
+            'username' => [
+                'required'
+            ],
+            'password' => [
+                'required',
+                'confirmed'
+            ]
         ];
     }
 }

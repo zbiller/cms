@@ -63,10 +63,10 @@ Route::group([
             ], function () {
                 Route::get('/', ['as' => 'admin.admin_roles.index', 'uses' => 'AdminRolesController@index', 'permissions' => 'admin-roles-list']);
                 Route::get('create', ['as' => 'admin.admin_roles.create', 'uses' => 'AdminRolesController@create', 'permissions' => 'admin-roles-add']);
-                Route::get('edit/{id}', ['as' => 'admin.admin_roles.edit', 'uses' => 'AdminRolesController@edit', 'permissions' => 'admin-roles-edit']);
+                Route::get('edit/{role}', ['as' => 'admin.admin_roles.edit', 'uses' => 'AdminRolesController@edit', 'permissions' => 'admin-roles-edit']);
                 Route::post('store', ['as' => 'admin.admin_roles.store', 'uses' => 'AdminRolesController@store', 'permissions' => 'admin-roles-add']);
-                Route::put('update/{id}', ['as' => 'admin.admin_roles.update', 'uses' => 'AdminRolesController@update', 'permissions' => 'admin-roles-edit']);
-                Route::delete('destroy/{id}', ['as' => 'admin.admin_roles.destroy', 'uses' => 'AdminRolesController@destroy', 'permissions' => 'admin-roles-delete']);
+                Route::put('update/{role}', ['as' => 'admin.admin_roles.update', 'uses' => 'AdminRolesController@update', 'permissions' => 'admin-roles-edit']);
+                Route::delete('destroy/{role}', ['as' => 'admin.admin_roles.destroy', 'uses' => 'AdminRolesController@destroy', 'permissions' => 'admin-roles-delete']);
             });
 
             /**
@@ -77,10 +77,10 @@ Route::group([
             ], function () {
                 Route::get('/', ['as' => 'admin.admin_users.index', 'uses' => 'AdminUsersController@index', 'permissions' => 'admin-users-list']);
                 Route::get('create', ['as' => 'admin.admin_users.create', 'uses' => 'AdminUsersController@create', 'permissions' => 'admin-users-add']);
-                Route::get('edit/{id}', ['as' => 'admin.admin_users.edit', 'uses' => 'AdminUsersController@edit', 'permissions' => 'admin-users-edit']);
+                Route::get('edit/{user}', ['as' => 'admin.admin_users.edit', 'uses' => 'AdminUsersController@edit', 'permissions' => 'admin-users-edit']);
                 Route::post('store', ['as' => 'admin.admin_users.store', 'uses' => 'AdminUsersController@store', 'permissions' => 'admin-users-add']);
-                Route::put('update/{id}', ['as' => 'admin.admin_users.update', 'uses' => 'AdminUsersController@update', 'permissions' => 'admin-users-edit']);
-                Route::delete('destroy/{id}', ['as' => 'admin.admin_users.destroy', 'uses' => 'AdminUsersController@destroy', 'permissions' => 'admin-users-delete']);
+                Route::put('update/{user}', ['as' => 'admin.admin_users.update', 'uses' => 'AdminUsersController@update', 'permissions' => 'admin-users-edit']);
+                Route::delete('destroy/{user}', ['as' => 'admin.admin_users.destroy', 'uses' => 'AdminUsersController@destroy', 'permissions' => 'admin-users-delete']);
             });
         });
 
@@ -97,15 +97,15 @@ Route::group([
                 'prefix' => 'library',
             ], function () {
                 Route::get('/', ['as' => 'admin.library.index', 'uses' => 'LibraryController@index', 'permissions' => 'library-list']);
-                Route::get('show/{id}', ['as' => 'admin.library.show', 'uses' => 'LibraryController@show', 'permissions' => 'library-list']);
-                Route::get('download/{id}', ['as' => 'admin.library.download', 'uses' => 'LibraryController@download', 'permissions' => 'library-edit']);
+                Route::get('show/{upload}', ['as' => 'admin.library.show', 'uses' => 'LibraryController@show', 'permissions' => 'library-list']);
+                Route::get('download/{upload}', ['as' => 'admin.library.download', 'uses' => 'LibraryController@download', 'permissions' => 'library-edit']);
                 Route::get('get/{type?}', ['as' => 'admin.library.get', 'uses' => 'LibraryController@get', 'permissions' => 'library-list']);
                 Route::get('crop', ['as' => 'admin.library.crop', 'uses' => 'LibraryController@crop', 'permissions' => 'library-edit']);
                 Route::post('store', ['as' => 'admin.library.store', 'uses' => 'LibraryController@store', 'permissions' => 'library-add']);
                 Route::post('upload', ['as' => 'admin.library.upload', 'uses' => 'LibraryController@upload', 'permissions' => 'library-add']);
                 Route::post('set', ['as' => 'admin.library.set', 'uses' => 'LibraryController@set', 'permissions' => 'library-edit']);
                 Route::post('cut', ['as' => 'admin.library.cut', 'uses' => 'LibraryController@cut', 'permissions' => 'library-edit']);
-                Route::delete('destroy/{id}', ['as' => 'admin.library.destroy', 'uses' => 'LibraryController@destroy', 'permissions' => 'library-delete']);
+                Route::delete('destroy/{upload}', ['as' => 'admin.library.destroy', 'uses' => 'LibraryController@destroy', 'permissions' => 'library-delete']);
                 Route::delete('delete', ['as' => 'admin.library.delete', 'uses' => 'LibraryController@delete', 'permissions' => 'library-delete']);
             });
         });
