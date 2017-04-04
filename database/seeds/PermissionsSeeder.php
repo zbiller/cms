@@ -94,7 +94,7 @@ class PermissionsSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('permissions')->delete();
+        DB::table('permissions')->truncate();
 
         $this->adminPermissions = new Collection();
 

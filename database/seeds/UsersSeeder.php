@@ -13,7 +13,7 @@ class UsersSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->delete();
+        DB::table('users')->truncate();
 
         /**
          * Create the developer user.
