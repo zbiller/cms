@@ -4,7 +4,7 @@
 <section id="library-new-{!! $index !!}" class="popup" data-model="{{ get_class($model) }}" data-field="{{ $field }}">
     <div class="modal">
         <div class="loading">
-            <img src="{{ asset('/build/admin/img/loading.gif') }}" />
+            <img src="{{ asset('/build/assets/img/admin/loading.gif') }}" />
         </div>
         <div class="header">
             <ul class="modal-tabs">

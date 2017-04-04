@@ -31,8 +31,8 @@
 </section>
 
 
-{{ Html::style('/build/plugins/jcrop/css/jquery.Jcrop.min.css') }}
-{{ Html::script('/build/plugins/jcrop/js/jquery.Jcrop.min.js') }}
+{{ Html::style('/build/assets/plugins/jcrop/css/jquery.Jcrop.min.css') }}
+{{ Html::script('/build/assets/plugins/jcrop/js/jquery.Jcrop.min.js') }}
 
 <script type="text/javascript">
     var token = "{{ csrf_token() }}";

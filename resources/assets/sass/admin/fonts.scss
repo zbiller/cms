@@ -1,0 +1,97 @@
+@font-face{
+    font-family: 'Chalet';
+    font-weight: normal;
+    font-style: normal;
+    src: url('/build/assets/fonts/chalet.eot');
+    src:
+    url('/build/assets/fonts/chalet.woff') format('woff'),
+    url('/build/assets/fonts/chalet.ttf') format('truetype'),
+    url('/build/assets/fonts/chalet.svg#svgFontName') format('svg');
+}
+
+@font-face{
+    font-family: 'Open Sans';
+    font-weight: normal;
+    font-style: normal;
+    src: url('/build/assets/fonts/OpenSans-Regular.eot');
+    src:
+    url('/build/assets/fonts/OpenSans-Regular.woff') format('woff'),
+    url('/build/assets/fonts/OpenSans-Regular.ttf') format('truetype'),
+    url('/build/assets/fonts/OpenSans-Regular.svg#svgFontName') format('svg');
+}
+
+@font-face{
+    font-family: 'Open Sans Light';
+    font-weight: normal;
+    font-style: normal;
+    src: url('/build/assets/fonts/OpenSans-Light.eot');
+    src:
+    url('/build/assets/fonts/OpenSans-Light.woff') format('woff'),
+    url('/build/assets/fonts/OpenSans-Light.ttf') format('truetype'),
+    url('/build/assets/fonts/OpenSans-Light.svg#svgFontName') format('svg');
+}
+
+@font-face{
+    font-family: 'Open Sans Semibold';
+    font-weight: normal;
+    font-style: normal;
+    src: url('/build/assets/fonts/OpenSans-Semibold.eot');
+    src:
+    url('/build/assets/fonts/OpenSans-Semibold.woff') format('woff'),
+    url('/build/assets/fonts/OpenSans-Semibold.ttf') format('truetype'),
+    url('/build/assets/fonts/OpenSans-Semibold.svg#svgFontName') format('svg');
+}
+
+@font-face{
+    font-family: 'Open Sans Bold';
+    font-weight: normal;
+    font-style: normal;
+    src: url('/build/assets/fonts/OpenSans-Bold.eot');
+    src:
+    url('/build/assets/fonts/OpenSans-Bold.woff') format('woff'),
+    url('/build/assets/fonts/OpenSans-Bold.ttf') format('truetype'),
+    url('/build/assets/fonts/OpenSans-Bold.svg#svgFontName') format('svg');
+}
+
+@font-face{
+    font-family: 'Open Sans Extrabold';
+    font-weight: normal;
+    font-style: normal;
+    src: url('/build/assets/fonts/OpenSans-ExtraBold.eot');
+    src:
+    url('/build/assets/fonts/OpenSans-ExtraBold.woff') format('woff'),
+    url('/build/assets/fonts/OpenSans-ExtraBold.ttf') format('truetype'),
+    url('/build/assets/fonts/OpenSans-ExtraBold.svg#svgFontName') format('svg');
+}
+
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+    @font-face {
+        font-family: 'Chalet';
+        src: url('/build/assets/fonts/chalet.svg#svgFontName') format('svg');
+    }
+
+    @font-face {
+        font-family: 'Open Sans';
+        src: url('/build/assets/fonts/OpenSans-Regular.svg#svgFontName') format('svg');
+    }
+
+    @font-face {
+        font-family: 'Open Sans Light';
+        src: url('/build/assets/fonts/OpenSans-Light.svg#svgFontName') format('svg');
+    }
+
+    @font-face {
+        font-family: 'Open Sans Semibold';
+        src: url('/build/assets/fonts/OpenSans-Semibold.svg#svgFontName') format('svg');
+    }
+
+    @font-face {
+        font-family: 'Open Sans Bold';
+        src: url('/build/assets/fonts/OpenSans-Bold.svg#svgFontName') format('svg');
+    }
+
+    @font-face {
+        font-family: 'Open Sans Extrabold';
+        src: url('/build/assets/fonts/OpenSans-ExtraBold.svg#svgFontName') format('svg');
+    }
+}

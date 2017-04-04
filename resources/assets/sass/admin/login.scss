@@ -1,0 +1,105 @@
+@import 'init';
+
+.login {
+    @include transform('translate(-50%, -50%)');
+
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    max-width: 400px;
+    margin: 0;
+
+    > div {
+        display: block;
+        float: left;
+        width: 100%;
+        margin: 0;
+        padding: 15px;
+        border: none;
+
+        &.header {
+            @include font-size(18px);
+
+            background: $colorFiord;
+            color: $colorWhite;
+            font-family: 'Open Sans Bold', sans-serif;
+            text-transform: uppercase;
+        }
+
+        &.content {
+            background: $colorWhite;
+        }
+
+        input[type="text"], input[type="password"], input[type="submit"] {
+            @include font-size(13px);
+            @include transition(all 0.3s ease);
+            @include clear-padding();
+
+            display: block;
+            float: left;
+            width: 100%;
+            margin: 5px 0 20px 0;
+            padding: 5px 2px;
+            border: none;
+            border-bottom: 1px solid darken($colorGallery, 3%);
+            font-family: 'Open Sans', sans-serif;
+            color: $colorTowerGray;
+
+            &:focus {
+                border-bottom: 1px solid $colorPictonBlue;
+            }
+
+            &.error {
+                border-bottom: 1px solid $colorJaponica;
+            }
+        }
+
+        input[type="submit"] {
+            width: auto;
+            margin: 5px 0 0 0;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            background: $colorPictonBlue;
+            color: $colorWhite;
+            font-family: 'Open Sans Bold', sans-serif;
+            text-transform: uppercase;
+
+            &:hover {
+                background: darken($colorPictonBlue, 10%);
+            }
+        }
+
+        span {
+            @include font-size(13px);
+            @include transition(all 0.3s ease);
+
+            float: left;
+            clear: both;
+            width: 100%;
+            margin: -15px 0 10px 0;
+            font-family: 'Open Sans', sans-serif;
+            color: $colorOsloGray;
+
+            &.error {
+                color: $colorJaponica;
+            }
+        }
+
+        a {
+            @include font-size(13px);
+            @include transition(all 0.2s ease);
+
+            display: block;
+            float: right;
+            margin: 13px 0 0 0;
+            font-family: 'Open Sans', sans-serif;
+            color: $colorFiord;
+
+            &:hover {
+                color: $colorPictonBlue;
+            }
+        }
+    }
+}

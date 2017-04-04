@@ -121,7 +121,7 @@ class Upload extends Model
      */
     public function getTypeIconAttribute()
     {
-        return asset('/build/admin/img/' . strtolower(self::$types[$this->type]) . '-icon.png');
+        return asset('/build/assets/img/admin/' . strtolower(self::$types[$this->type]) . '-icon.png');
     }
 
     /**

@@ -1,0 +1,50 @@
+@import 'init';
+
+section.filters {
+    margin: 0 0 20px 0;
+    padding: 0 5px;
+
+    form {
+        fieldset {
+            width: 200px;
+            float: left;
+            margin: 15px 10px;
+
+            @include media-query('phablet') {
+                @include calc(width, '100% - 20px');
+            }
+        }
+
+        div {
+            float: right;
+            margin: 15px 10px;
+
+            @include media-query('tablet-wide') {
+                float: left;
+            }
+        }
+
+        input, select {
+            @include font-size(13px);
+            @include transition(all 0.3s ease);
+
+            display: block;
+            float: left;
+            width: 100%;
+            padding: 5px 2px;
+            border: none;
+            border-bottom: 1px solid darken($colorGallery, 3%);
+            color: $colorGullGray;
+            font-family: 'Open Sans', sans-serif;
+
+            &:focus {
+                border-bottom: 1px solid $colorPictonBlue;
+            }
+        }
+
+        select {
+            padding: 5px 32px 5px 2px;
+            background: url('/build/assets/img/admin/select-dropdown-bg.png') no-repeat right 2px center;
+        }
+    }
+}
