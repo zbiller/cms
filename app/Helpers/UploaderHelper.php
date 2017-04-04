@@ -40,7 +40,7 @@ class UploaderHelper
     /**
      * The current uploaded file.
      *
-     * @var UploadHelper|null
+     * @var UploadedHelper|null
      */
     protected $current;
 

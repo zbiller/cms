@@ -1,13 +1,13 @@
 <?php
 
-if (!function_exists('upload')) {
+if (!function_exists('uploaded')) {
     /**
      * @param string $file
-     * @return \App\Helpers\UploadHelper
+     * @return \App\Helpers\UploadedHelper
      */
-    function upload($file)
+    function uploaded($file)
     {
-        return new \App\Helpers\UploadHelper($file);
+        return new \App\Helpers\UploadedHelper($file);
     }
 }
 

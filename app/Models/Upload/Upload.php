@@ -2,7 +2,7 @@
 
 namespace App\Models\Upload;
 
-use App\Helpers\UploadHelper;
+use App\Helpers\UploadedHelper;
 use App\Models\Model;
 use App\Services\UploadService;
 use App\Traits\CanFilter;
@@ -101,7 +101,7 @@ class Upload extends Model
      */
     public function getHelperAttribute()
     {
-        return new UploadHelper($this->attributes['full_path']);
+        return new UploadedHelper($this->attributes['full_path']);
     }
 
     /**

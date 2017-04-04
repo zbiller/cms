@@ -4,7 +4,7 @@ namespace App\Traits;
 
 use Storage;
 use App\Services\UploadService;
-use App\Helpers\UploadHelper;
+use App\Helpers\UploadedHelper;
 use App\Exceptions\UploadException;
 use App\Exceptions\CrudException;
 use Illuminate\Database\Eloquent\Model;
@@ -51,16 +51,16 @@ trait HasUploads
      * To achieve this, call the respective upload field property prefixed with an underscore "_".
      * The script will look to see if it's meant for an upload and it will return the helper.
      * The returned helper instance will contain the upload file coming from database field, without the underscore "_".
-     * Afterwards, you can call App\Helpers\UploadHelper methods directly on the attribute.
+     * Afterwards, you can call App\Helpers\UploadedHelper methods directly on the attribute.
      *
      * @param string $key
-     * @return UploadHelper|mixed
+     * @return UploadedHelper|mixed
      */
     public function getAttribute($key)
     {
         if (starts_with($key, '_')) {
             if (Storage::disk(config('upload.storage.disk'))->exists($this->{ltrim($key, '_')})) {
-                return new UploadHelper($this->{ltrim($key, '_')});
+                return new UploadedHelper($this->{ltrim($key, '_')});
             }
         }
 

@@ -6,7 +6,7 @@ use Storage;
 use App\Models\Upload\Upload;
 use App\Services\UploadService;
 
-class UploadHelper
+class UploadedHelper
 {
     /**
      * The full path to the original file, without any style appended to it.
@@ -54,7 +54,7 @@ class UploadHelper
     const TYPE_VIDEO = 3;
 
     /**
-     * Build a fully configured UploadHelper instance.
+     * Build a fully configured UploadedHelper instance.
      *
      * @param string $file
      */
