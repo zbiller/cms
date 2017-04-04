@@ -8,8 +8,8 @@ use App\Models\Auth\Role;
 use App\Traits\CanCrud;
 use App\Options\CanCrudOptions;
 use App\Http\Requests\AdminUserRequest;
-use App\Http\Filters\Admin\AdminUserFilter;
-use App\Http\Sorts\Admin\AdminUserSort;
+use App\Http\Filters\AdminUserFilter;
+use App\Http\Sorts\AdminUserSort;
 use Illuminate\Http\Request;
 
 class AdminUsersController extends Controller

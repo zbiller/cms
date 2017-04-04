@@ -8,8 +8,8 @@ use App\Models\Auth\Permission;
 use App\Traits\CanCrud;
 use App\Options\CanCrudOptions;
 use App\Http\Requests\AdminRoleRequest;
-use App\Http\Filters\Admin\AdminRoleFilter;
-use App\Http\Sorts\Admin\AdminRoleSort;
+use App\Http\Filters\AdminRoleFilter;
+use App\Http\Sorts\AdminRoleSort;
 use Illuminate\Http\Request;
 
 class AdminRolesController extends Controller

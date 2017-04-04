@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Http\Sorts\Admin;
-
-use App\Http\Sorts\Sort;
+namespace App\Http\Sorts;
 
 class TestSort extends Sort
 {

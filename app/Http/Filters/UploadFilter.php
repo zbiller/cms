@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Http\Filters\Admin;
-
-use App\Http\Filters\Filter;
+namespace App\Http\Filters;
 
 class UploadFilter extends Filter
 {
