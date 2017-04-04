@@ -14,5 +14,5 @@
 </div>
 
 @section('bottom_scripts')
-    {!! JsValidator::formRequest($item->id ? App\Http\Requests\Crud\AdminUserWithoutPasswordRequest::class : App\Http\Requests\Crud\AdminUserRequest::class, '.form') !!}
+    {!! JsValidator::formRequest(App\Http\Requests\Crud\AdminUserRequest::class, '.form') !!}
 @append

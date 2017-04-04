@@ -8,7 +8,6 @@ use App\Models\Auth\Role;
 use App\Traits\CanCrud;
 use App\Options\CanCrudOptions;
 use App\Http\Requests\Crud\AdminUserRequest;
-use App\Http\Requests\Crud\AdminUserWithoutPasswordRequest;
 use App\Http\Filters\Admin\AdminUserFilter;
 use App\Http\Sorts\Admin\AdminUserSort;
 use Illuminate\Http\Request;
@@ -68,11 +67,11 @@ class AdminUsersController extends Controller
     }
 
     /**
-     * @param AdminUserWithoutPasswordRequest $request
+     * @param AdminUserRequest $request
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(AdminUserWithoutPasswordRequest $request, $id)
+    public function update(AdminUserRequest $request, $id)
     {
         return $this->_update(function () use ($request, $id) {
             $request = self::mergeRequest($request);

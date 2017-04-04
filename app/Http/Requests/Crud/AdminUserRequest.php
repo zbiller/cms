@@ -23,14 +23,24 @@ class AdminUserRequest extends Request
      */
     public function rules()
     {
-        return [
+        $rules = [
             'username' => 'required|unique:users,username,' . $this->route('id'),
-            'password' => 'required|confirmed',
             'roles' => 'required|array|exists:roles,id',
             'person.first_name' => 'required|min:3',
             'person.last_name' => 'required|min:3',
             'person.email' => 'required|email|unique:persons,email,' . $this->route('id') . ',user_id',
         ];
+
+        switch ($this->method()) {
+            case 'POST':
+                $rules['password'] = 'required|confirmed';
+                break;
+            case 'PUT':
+                $rules['password'] = 'confirmed';
+                break;
+        }
+
+        return $rules;
     }
 
     /**
