@@ -13,9 +13,7 @@
     "grunt-contrib-uglify": "^0.8.0",
     "grunt-contrib-watch": "^0.6.1",
     "gulp": "^3.9.1",
-    "jquery": "^3.1.0",
     "laravel-elixir": "^6.0.0-14",
-    "laravel-elixir-css-url-adjuster": "^3.0.0",
     "laravel-elixir-webpack-official": "^1.0.2"
   }
 }
