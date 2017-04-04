@@ -1,7 +1,7 @@
-<a id="open-library-new-{!! $index !!}" data-popup="open" data-popup-id="library-new-{!! $index !!}" class="btn gray centered bordered left no-margin no-responsiveness {!! $current ? 'half' : 'full' !!}">
-    Choose From Library
+<a id="open-upload-new-{!! $index !!}" data-popup="open" data-popup-id="upload-new-{!! $index !!}" class="btn gray centered bordered left no-margin no-responsiveness {!! $current ? 'half' : 'full' !!}">
+    Choose From upload
 </a>
-<section id="library-new-{!! $index !!}" class="popup" data-model="{{ get_class($model) }}" data-field="{{ $field }}">
+<section id="upload-new-{!! $index !!}" class="popup" data-model="{{ get_class($model) }}" data-field="{{ $field }}">
     <div class="modal">
         <div class="loading">
             <img src="{{ asset('/build/assets/img/admin/loading.gif') }}" />
@@ -23,7 +23,7 @@
                 <div id="{!! $type !!}" class="modal-tab {!! $loop->first ? 'active' : '' !!}">
                     <input type="text" placeholder="Search for {!! str_plural($type) !!}" class="search full" />
                     <div class="uploads">
-                        @include('helpers::library.manager.uploads')
+                        @include('helpers::uploader.manager.items')
                     </div>
                 </div>
             @endforeach
@@ -34,7 +34,7 @@
                 <input type="file" name="file" accept="{!! $accept && is_array($accept) && !empty($accept) ? '.' . implode(',.', $accept) : '*' !!}">
             </label>
             <span class="upload-message"></span>
-            <a id="library-save-{!! $index !!}" class="btn blue right no-margin">
+            <a id="upload-save-{!! $index !!}" class="btn blue right no-margin">
                 <i class="fa fa-check"></i>&nbsp; Save
             </a>
             <div class="progress" style="display: none;">

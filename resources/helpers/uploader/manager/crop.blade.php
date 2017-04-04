@@ -1,4 +1,4 @@
-<section id="library-crop-{!! $index !!}" class="popup popup-full">
+<section id="upload-crop-{!! $index !!}" class="popup popup-full">
     <div class="modal">
         <div class="header">
             <h1>Crop Image</h1>
@@ -7,9 +7,9 @@
             </a>
         </div>
         <div class="content">
-            <img src="{{ $url }}" id="library-crop-image-{{ $index }}" class="full-element" />
+            <img src="{{ $url }}" id="upload-crop-image-{{ $index }}" class="full-element" />
 
-            <div class="library-crop-inputs-{{ $index }}">
+            <div class="upload-crop-inputs-{{ $index }}">
                 {{ Form::hidden('x', 0, ['id' => 'crop-x-' . $index]) }}
                 {{ Form::hidden('y', 0, ['id' => 'crop-y-' . $index]) }}
                 {{ Form::hidden('w', $cropSize[0], ['id' => 'crop-w-' . $index]) }}
@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="footer">
-            <a id="library-crop-save-{{ $index }}" class="btn blue right no-margin-top no-margin-bottom no-margin-right">
+            <a id="upload-crop-save-{{ $index }}" class="btn blue right no-margin-top no-margin-bottom no-margin-right">
                 <i class="fa fa-check"></i>&nbsp; Save
             </a>
             <a data-popup="close" class="btn cancel right no-margin-top no-margin-bottom no-margin-left">
@@ -67,10 +67,10 @@
             options.aspectRatio = '{{ (int)$cropSize[0] / (int)$cropSize[1] }}';
         @endif
 
-        $('#library-crop-image-' + index).Jcrop(options);
+        $('#upload-crop-image-' + index).Jcrop(options);
 
-        $('#library-crop-save-' + index).click(function(){
-            var url = '{{ route('admin.library.cut') }}';
+        $('#upload-crop-save-' + index).click(function(){
+            var url = '{{ route('admin.uploads.cut') }}';
             var path = $('#crop-path-' + index).val();
             var style = $('#crop-style-' + index).val();
             var size = $('#crop-size-' + index).val();
@@ -97,7 +97,7 @@
                     if (data.status === true) {
                         date = new Date();
 
-                        $('#library-crop-' + index).hide();
+                        $('#upload-crop-' + index).hide();
                         $('.modal-tab.active > a > img').attr('src', $('.modal-tab.active > a > img').attr('src') + '?' + date.getTime());
                     }
                 }

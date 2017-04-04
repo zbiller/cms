@@ -4,7 +4,7 @@ namespace App\Http\Sorts\Admin;
 
 use App\Http\Sorts\Sort;
 
-class LibrarySort extends Sort
+class UploadSort extends Sort
 {
     /**
      * Get the request field name to sort by.

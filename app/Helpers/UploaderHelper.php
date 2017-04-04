@@ -3,10 +3,10 @@
 namespace App\Helpers;
 
 use App\Models\Model;
-use App\Exceptions\LibraryException;
+use App\Exceptions\UploadException;
 use Illuminate\View\View;
 
-class LibraryHelper
+class UploaderHelper
 {
     /**
      * The view container instance.
@@ -16,7 +16,7 @@ class LibraryHelper
     protected $view;
 
     /**
-     * The field of the library input.
+     * The field of the uploader input.
      * Generally this represents a field in the database that holds or can hold a path for an uploaded file.
      *
      * @var string
@@ -31,7 +31,7 @@ class LibraryHelper
     protected $label;
 
     /**
-     * The loaded or unloaded model class on which the library manager will function.
+     * The loaded or unloaded model class on which the uploader manager will function.
      *
      * @var Model
      */
@@ -45,7 +45,7 @@ class LibraryHelper
     protected $current;
 
     /**
-     * The extensions accepted for a library upload as array.
+     * The extensions accepted for an upload as array.
      *
      * @var array
      */
@@ -64,7 +64,7 @@ class LibraryHelper
 
     /**
      * The type of files that can be uploaded.
-     * These types will be separated in tabs on library popup.
+     * These types will be separated in tabs on the uploader popup.
      * Accepted values: image | video | audio | file
      *
      * @var array
@@ -78,8 +78,8 @@ class LibraryHelper
 
     /**
      * The default values for styles, types and accept.
-     * This is used to re-initialize these properties after the library finished rendering.
-     * This way, the next library instance on page, won't inherit values from the previous one.
+     * This is used to re-initialize these properties after the uploader finished rendering.
+     * This way, the next uploader instance on page, won't inherit values from the previous one.
      *
      * @var array
      */
@@ -101,7 +101,7 @@ class LibraryHelper
     ];
 
     /**
-     * The index used to identify a library helper instance in a page with multiple uploads.
+     * The index used to identify an uploader helper instance in a page with multiple uploads.
      *
      * @var int
      */
@@ -109,7 +109,7 @@ class LibraryHelper
 
     /**
      * @return View
-     * @throws LibraryException
+     * @throws UploadException
      */
     public function manager()
     {
@@ -124,7 +124,7 @@ class LibraryHelper
     }
 
     /**
-     * Set or get the name of a library instance.
+     * Set or get the name of an uploader instance.
      *
      * @param string|null $field
      * @return $this|string
@@ -141,7 +141,7 @@ class LibraryHelper
     }
 
     /**
-     * Set or get the label for a library instance.
+     * Set or get the label for an uploader instance.
      *
      * @param string|null $label
      * @return $this|string
@@ -158,7 +158,7 @@ class LibraryHelper
     }
 
     /**
-     * Set or get the model for a library instance.
+     * Set or get the model for an uploader instance.
      *
      * @param Model|null $model
      * @return $this|string
@@ -175,7 +175,7 @@ class LibraryHelper
     }
 
     /**
-     * Set or get the types for a library instance.
+     * Set or get the types for an uploader instance.
      *
      * @param array|string $types
      * @return $this|string
@@ -192,7 +192,7 @@ class LibraryHelper
     }
 
     /**
-     * Set or get the accepted extensions for a library instance.
+     * Set or get the accepted extensions for an uploader instance.
      *
      * @param array|string $accept
      * @return $this|string
@@ -209,13 +209,13 @@ class LibraryHelper
     }
 
     /**
-     * Build the helpers::library.manager view with the generated properties.
+     * Build the helpers::uploader.manager view with the generated properties.
      *
      * @return $this
      */
     private function buildManagerView()
     {
-        $this->view = view('helpers::library.manager')->with([
+        $this->view = view('helpers::uploader.manager')->with([
             'index' => $this->index,
             'field' => $this->field,
             'label' => $this->label,
@@ -232,7 +232,7 @@ class LibraryHelper
 
     /**
      * Reset the properties to their default value.
-     * This way, the next library helper instance in the page won't inherit values from the previous one.
+     * This way, the next uploader helper instance in the page won't inherit values from the previous one.
      *
      * @return $this
      */
@@ -250,7 +250,7 @@ class LibraryHelper
     }
 
     /**
-     * Check if the library instance already has a current upload and set it.
+     * Check if the uploader instance already has a current upload and set it.
      *
      * @return $this
      */
@@ -330,18 +330,18 @@ class LibraryHelper
     }
 
     /**
-     * Check if a model instance was passed to the library helper.
+     * Check if a model instance was passed to the uploader helper.
      * The model must be of type App\Models\Model.
      *
      * @return $this
-     * @throws LibraryException
+     * @throws UploadException
      */
     private function checkModel()
     {
         if (!$this->model) {
-            throw new LibraryException(
-                'You must specify a loaded or unloaded instance of App\Models\Model for the library.' . PHP_EOL .
-                'To do this, chain the model() method to the library() helper.'
+            throw new UploadException(
+                'You must specify a loaded or unloaded instance of App\Models\Model for the uploader.' . PHP_EOL .
+                'To do this, chain the model() method to the uploader() helper.'
             );
         }
 
@@ -349,18 +349,18 @@ class LibraryHelper
     }
 
     /**
-     * Check if field name was passed to the library helper.
+     * Check if field name was passed to the uploader helper.
      * The field must be a string representing an existing column on the model's database table.
      *
      * @return $this
-     * @throws LibraryException
+     * @throws UploadException
      */
     private function checkField()
     {
         if (!$this->field) {
-            throw new LibraryException(
-                'You must specify a field for the library.' . PHP_EOL .
-                'To do this, chain the field() method to the library() helper.'
+            throw new UploadException(
+                'You must specify a field for the uploader.' . PHP_EOL .
+                'To do this, chain the field() method to the uploader() helper.'
             );
         }
 

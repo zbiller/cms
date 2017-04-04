@@ -33,10 +33,10 @@ class MenuComposer
             });
 
             $menu->add(function ($item) use ($menu) {
-                $content = $item->name('Manage Content')->data('icon', 'fa-pencil-square-o')->active('admin/library/*');
+                $content = $item->name('Manage Content')->data('icon', 'fa-pencil-square-o')->active('admin/uploads/*');
 
                 $menu->child($content, function (MenuItem $item) {
-                    $item->name('Library')->url(route('admin.library.index'))->permissions('library-list')->active('admin/library/*');
+                    $item->name('Uploads')->url(route('admin.uploads.index'))->permissions('uploads-list')->active('admin/uploads/*');
                 });
             });
 

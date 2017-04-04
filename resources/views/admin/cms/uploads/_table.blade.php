@@ -7,7 +7,7 @@
         <td class="sortable" data-sort="size">
             <i class="fa fa-sort"></i>&nbsp; Size
         </td>
-        <td class="actions-library">Actions</td>
+        <td class="actions-upload">Actions</td>
     </tr>
     </thead>
     <tbody>
@@ -15,16 +15,16 @@
         @foreach($items as $index => $item)
             <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
                 <td>
-                    <img src="{{ $item->type_icon }}" title="{{ $types[$item->type] }}" class="library-aligned-image" width="30" height="30" />
-                    <span class="library-aligned-text">{{ $item->original_name }}</span>
+                    <img src="{{ $item->type_icon }}" title="{{ $types[$item->type] }}" class="upload-aligned-image" width="30" height="30" />
+                    <span class="upload-aligned-text">{{ $item->original_name }}</span>
                 </td>
                 <td>
                     {{ $item->size_mb . ' MB' }}
                 </td>
                 <td>
-                    {!! button()->download('admin.library.download', ['id' => $item->id]) !!}
-                    {!! button()->view('admin.library.show', ['id' => $item->id], ['target' => '_blank', 'title' => 'view cacat']) !!}
-                    {!! button()->delete('admin.library.destroy', ['id' => $item->id]) !!}
+                    {!! button()->download('admin.uploads.download', ['id' => $item->id]) !!}
+                    {!! button()->view('admin.uploads.show', ['id' => $item->id], ['target' => '_blank', 'title' => 'view cacat']) !!}
+                    {!! button()->delete('admin.uploads.destroy', ['id' => $item->id]) !!}
                 </td>
             </tr>
         @endforeach

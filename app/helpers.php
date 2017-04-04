@@ -11,13 +11,13 @@ if (!function_exists('upload')) {
     }
 }
 
-if (!function_exists('library')) {
+if (!function_exists('uploader')) {
     /**
-     * @return \App\Helpers\LibraryHelper
+     * @return \App\Helpers\UploaderHelper
      */
-    function library()
+    function uploader()
     {
-        return app(Library::class);
+        return app(Uploader::class);
     }
 }
 

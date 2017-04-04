@@ -1,4 +1,4 @@
-{!! form()->open(['url' => route('admin.library.store'), 'method' => 'POST', 'id' => 'library', 'class' => 'dropzone', 'files' => true]) !!}
+{!! form()->open(['url' => route('admin.uploads.store'), 'method' => 'POST', 'id' => 'uploads', 'class' => 'dropzone', 'files' => true]) !!}
     <div class="ddTitle" style="width: 358px;">
         Drag & drop files or click the area to upload
     </div>
@@ -6,7 +6,7 @@
 
 @section('bottom_scripts')
     <script type="text/javascript">
-        Dropzone.options.library = {
+        Dropzone.options.uploads = {
             success: function(file, response){
                 if (response.status == true) {
                     return file.previewElement.classList.add("dz-success");

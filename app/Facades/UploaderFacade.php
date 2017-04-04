@@ -4,7 +4,7 @@ namespace App\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
-class LibraryFacade extends Facade
+class UploaderFacade extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -13,6 +13,6 @@ class LibraryFacade extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'Library';
+        return 'Uploader';
     }
 }

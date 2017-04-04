@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.4.15 on 2017-04-01.
+ * Generated for Laravel 5.4.15 on 2017-04-04.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -13020,7 +13020,19 @@ namespace Pbmedia\LaravelFFMpeg {
     
 namespace App\Facades {
 
-    class LibraryFacade {
+    class UploaderFacade {
+        
+        /**
+         * 
+         *
+         * @return \View 
+         * @throws LibraryException
+         * @static 
+         */
+        public static function manager()
+        {
+            return \App\Helpers\UploaderHelper::manager();
+        }
         
         /**
          * Set or get the name of a library instance.
@@ -13031,7 +13043,7 @@ namespace App\Facades {
          */
         public static function field($field = null)
         {
-            return \App\Helpers\LibraryHelper::field($field);
+            return \App\Helpers\UploaderHelper::field($field);
         }
         
         /**
@@ -13043,7 +13055,7 @@ namespace App\Facades {
          */
         public static function label($label = null)
         {
-            return \App\Helpers\LibraryHelper::label($label);
+            return \App\Helpers\UploaderHelper::label($label);
         }
         
         /**
@@ -13055,7 +13067,7 @@ namespace App\Facades {
          */
         public static function model($model = null)
         {
-            return \App\Helpers\LibraryHelper::model($model);
+            return \App\Helpers\UploaderHelper::model($model);
         }
         
         /**
@@ -13067,31 +13079,19 @@ namespace App\Facades {
          */
         public static function types($types = null)
         {
-            return \App\Helpers\LibraryHelper::types($types);
+            return \App\Helpers\UploaderHelper::types($types);
         }
         
         /**
          * Set or get the accepted extensions for a library instance.
          *
-         * @param array|string $accepts
+         * @param array|string $accept
          * @return $this|string 
          * @static 
          */
-        public static function accepts($accepts = null)
+        public static function accept($accept = null)
         {
-            return \App\Helpers\LibraryHelper::accepts($accepts);
-        }
-        
-        /**
-         * 
-         *
-         * @return \Illuminate\View\View 
-         * @throws LibraryException
-         * @static 
-         */
-        public static function manager()
-        {
-            return \App\Helpers\LibraryHelper::manager();
+            return \App\Helpers\UploaderHelper::accept($accept);
         }
         
     }         
@@ -13259,6 +13259,22 @@ namespace App\Facades {
     }         
 
     class ButtonFacade {
+        
+        /**
+         * 
+         *
+         * @param string $text
+         * @param string $url
+         * @param string|null $icon
+         * @param string|null $class
+         * @param array $attributes
+         * @return $this 
+         * @static 
+         */
+        public static function action($text, $url, $icon = null, $class = null, $attributes = array())
+        {
+            return \App\Helpers\ButtonHelper::action($text, $url, $icon, $class, $attributes);
+        }
         
         /**
          * Render the add button view helper.
@@ -15787,7 +15803,7 @@ namespace {
     
     class FFMpeg extends \Pbmedia\LaravelFFMpeg\FFMpegFacade {}
     
-    class Library extends \App\Facades\LibraryFacade {}
+    class Uploader extends \App\Facades\UploaderFacade {}
     
     class Menu extends \App\Facades\MenuFacade {}
     

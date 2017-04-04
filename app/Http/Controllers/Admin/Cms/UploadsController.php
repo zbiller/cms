@@ -8,9 +8,8 @@ use Throwable;
 use App\Http\Controllers\Controller;
 use App\Models\Upload\Upload;
 use App\Services\UploadService;
-use App\Http\Requests\Crud\LibraryRequest;
-use App\Http\Filters\Admin\LibraryFilter;
-use App\Http\Sorts\Admin\LibrarySort;
+use App\Http\Filters\Admin\UploadFilter;
+use App\Http\Sorts\Admin\UploadSort;
 use App\Exceptions\UploadException;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Collection;
@@ -18,19 +17,19 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
-class LibraryController extends Controller
+class UploadsController extends Controller
 {
     /**
      * @param Request $request
-     * @param LibraryFilter $filter
-     * @param LibrarySort $sort
+     * @param UploadFilter $filter
+     * @param UploadSort $sort
      * @return \Illuminate\View\View
      */
-    public function index(Request $request, LibraryFilter $filter, LibrarySort $sort)
+    public function index(Request $request, UploadFilter $filter, UploadSort $sort)
     {
         $items = Upload::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
 
-        return view('admin.cms.library.index')->with([
+        return view('admin.cms.uploads.index')->with([
             'items' => $items,
             'types' => Upload::$types
         ]);
@@ -47,7 +46,7 @@ class LibraryController extends Controller
             return (new UploadService($upload->full_path))->show();
         } catch (ModelNotFoundException $e) {
             session()->flash('flash_error', 'You are trying to view a record that does not exist!');
-            return redirect()->route('admin.library.index');
+            return redirect()->route('admin.uploads.index');
         }
     }
 
@@ -66,7 +65,7 @@ class LibraryController extends Controller
 
         return response()->json([
             'status' => $request->get('page') > 1 && !$uploads->count() ? false : true,
-            'html' => $request->get('page') > 1 && !$uploads->count() ? '' : view('helpers::library.manager.uploads')->with([
+            'html' => $request->get('page') > 1 && !$uploads->count() ? '' : view('helpers::uploader.manager.items')->with([
                 'type' => $type,
                 'uploads' => $uploads,
             ])->render()
@@ -105,10 +104,10 @@ class LibraryController extends Controller
     }
 
     /**
-     * @param LibraryRequest $request
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(LibraryRequest $request)
+    public function store(Request $request)
     {
         $status = $message = null;
 
@@ -122,7 +121,7 @@ class LibraryController extends Controller
                 $message = $e->getMessage();
             } catch (Exception $e) {
                 $status = false;
-                $message = 'Could not upload the file to library!';
+                $message = 'Could not upload the file!';
             }
         }
 
@@ -142,13 +141,13 @@ class LibraryController extends Controller
             (new UploadService($upload->full_path))->unload();
 
             session()->flash('flash_success', 'The record was successfully deleted!');
-            return redirect()->route('admin.library.index', parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
+            return redirect()->route('admin.uploads.index', parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
         } catch (ModelNotFoundException $e) {
             session()->flash('flash_error', 'You are trying to delete a record that does not exist!');
-            return redirect()->route('admin.library.index');
+            return redirect()->route('admin.uploads.index');
         } catch (QueryException $e) {
             session()->flash('flash_error', 'Could not delete the file because it is used by other entities!');
-            return redirect()->route('admin.library.index');
+            return redirect()->route('admin.uploads.index');
         } catch (UploadException $e) {
             session()->flash('flash_error', $e->getMessage());
             return back();
@@ -191,7 +190,7 @@ class LibraryController extends Controller
             return (new UploadService($upload->full_path))->download();
         } catch (ModelNotFoundException $e) {
             session()->flash('flash_error', 'You are trying to download a file that does not exist!');
-            return redirect()->route('admin.library.index');
+            return redirect()->route('admin.uploads.index');
         }
     }
 
@@ -230,7 +229,7 @@ class LibraryController extends Controller
                 'status' => true,
                 'message' => 'Upload successful!',
                 'type' => snake_case(Upload::$types[$file->getType()]),
-                'html' => view('helpers::library.manager.uploads')->with([
+                'html' => view('helpers::uploader.manager.items')->with([
                     'type' => snake_case(Upload::$types[$file->getType()]),
                     'uploads' => $collection,
                 ])->render()
@@ -280,7 +279,7 @@ class LibraryController extends Controller
 
         return response()->json([
             'status' => true,
-            'html' => view('helpers::library.manager.crop')->with([
+            'html' => view('helpers::uploader.manager.crop')->with([
                 'index' => $index,
                 'url' => $url,
                 'path' => $path,

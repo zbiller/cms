@@ -4,7 +4,7 @@ namespace App\Http\Filters\Admin;
 
 use App\Http\Filters\Filter;
 
-class LibraryFilter extends Filter
+class UploadFilter extends Filter
 {
     /**
      * Get the main where condition between entire request fields.

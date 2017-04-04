@@ -80,8 +80,8 @@ class Test extends Model
                 'styles' => [
                     'image' => [
                         'portrait' => [
-                            'width' => '600',
-                            'height' => '1080',
+                            'width' => '300',
+                            'height' => '600',
                             'ratio' => true,
                         ],
                         'landscape' => [

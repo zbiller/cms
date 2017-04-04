@@ -3,7 +3,7 @@
 table {
     tr > td {
         &:last-of-type {
-            &.actions-library {
+            &.actions-upload {
                 width: 283px !important;
 
                 @include media-query('tablet') {
@@ -18,7 +18,7 @@ table {
             }
         }
 
-        .library-aligned-text {
+        .upload-aligned-text {
             margin: 6px 0 0 10px;
             display: inline-block;
             float: left;
@@ -29,7 +29,7 @@ table {
             }
         }
 
-        img.library-aligned-image {
+        img.upload-aligned-image {
             float: left;
 
             @include media-query('tablet') {

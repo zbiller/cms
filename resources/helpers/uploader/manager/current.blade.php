@@ -1,8 +1,8 @@
 @if($current)
-    <a id="open-library-current-{!! $index !!}" data-popup="open" data-popup-id="library-current-{!! $index !!}" class="btn blue centered left half no-margin no-responsiveness">
+    <a id="open-upload-current-{!! $index !!}" data-popup="open" data-popup-id="upload-current-{!! $index !!}" class="btn blue centered left half no-margin no-responsiveness">
         View Current File
     </a>
-    <section id="library-current-{!! $index !!}" class="popup" data-model="{{ get_class($model) }}" data-field="{{ $field }}">
+    <section id="upload-current-{!! $index !!}" class="popup" data-model="{{ get_class($model) }}" data-field="{{ $field }}">
         <div class="modal">
             <div class="header">
                 <ul class="modal-tabs">
@@ -20,7 +20,7 @@
                 @foreach($styles as $style)
                     <div id="{!! $style !!}" class="modal-tab {!! $loop->first ? 'active' : '' !!}">
                         @if($upload->isImage())
-                            <a class="open-library-cropper-{{ $index }}"
+                            <a class="open-upload-cropper-{{ $index }}"
                                data-url="{{ $current->url('original') }}"
                                data-path="{{ $current->path('original', true) }}"
                                data-style="{{ $style }}"
@@ -46,7 +46,7 @@
                 @endforeach
             </div>
             <div class="footer">
-                <a class="library-delete btn delete red right no-margin-top no-margin-bottom no-margin-right">
+                <a class="upload-delete btn delete red right no-margin-top no-margin-bottom no-margin-right">
                     <i class="fa fa-times"></i>&nbsp; Delete
                 </a>
                 <a data-popup="close" class="btn cancel modal-close right no-margin-top no-margin-bottom no-margin-left">
@@ -55,5 +55,5 @@
             </div>
         </div>
     </section>
-    <div id="library-crop-container-{{ $index }}"></div>
+    <div id="upload-crop-container-{{ $index }}"></div>
 @endif

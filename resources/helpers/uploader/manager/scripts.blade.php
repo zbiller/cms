@@ -13,10 +13,10 @@
                 index = '{{ $index }}',
                 token = '{{ csrf_token() }}';
 
-            var libraryLoad = function () {
-                popup = $('#library-new-' + index);
+            var uploadLoad = function () {
+                popup = $('#upload-new-' + index);
                 container = popup.find('.modal-tab.active div.uploads');
-                url = '{{ route('admin.library.get') }}';
+                url = '{{ route('admin.uploads.get') }}';
                 type = popup.find('ul.modal-tabs li.active').data('type');
                 accept = popup.find('ul.modal-tabs li.active').data('accept');
                 keyword = popup.find('.modal-tab.active input.search').val();
@@ -42,10 +42,10 @@
                         initTooltip();
                     }
                 });
-            }, libraryScroll = function () {
-                popup = $('#library-new-' + index);
+            }, uploadScroll = function () {
+                popup = $('#upload-new-' + index);
                 container = popup.find('.modal-tab.active div.uploads');
-                url = '{{ route('admin.library.get') }}';
+                url = '{{ route('admin.uploads.get') }}';
                 type = popup.find('ul.modal-tabs li.active').data('type');
                 accept = popup.find('ul.modal-tabs li.active').data('accept');
                 keyword = popup.find('.modal-tab.active input.search').val();
@@ -66,10 +66,10 @@
                         }
                     });
                 }
-            }, librarySearch = function () {
-                popup = $('#library-new-' + index);
+            }, uploadSearch = function () {
+                popup = $('#upload-new-' + index);
                 container = popup.find('.modal-tab.active div.uploads');
-                url = '{{ route('admin.library.get') }}';
+                url = '{{ route('admin.uploads.get') }}';
                 type = popup.find('ul.modal-tabs li.active').data('type');
                 accept = popup.find('ul.modal-tabs li.active').data('accept');
                 keyword = popup.find('.modal-tab.active input.search').val();
@@ -93,12 +93,12 @@
                         }
                     });
                 }, 300);
-            }, libraryUpload = function (_this) {
-                popup = $('#library-new-' + index);
+            }, uploadUpload = function (_this) {
+                popup = $('#upload-new-' + index);
                 accept = popup.find('ul.modal-tabs li.active').data('accept');
 
                 _this.fileupload({
-                    url: '{{ route('admin.library.upload') }}',
+                    url: '{{ route('admin.uploads.upload') }}',
                     dataType: 'json',
                     formData: {
                         _token : token,
@@ -142,10 +142,10 @@
                         popup.find('.progress .bar').css('width', progress + '%');
                     }
                 });
-            }, librarySave = function () {
-                popup = $('#library-new-' + index);
+            }, uploadSave = function () {
+                popup = $('#upload-new-' + index);
                 container = popup.find('.modal-tab.active div.uploads');
-                url = "{{ URL::route('admin.library.set') }}";
+                url = "{{ URL::route('admin.uploads.set') }}";
                 model = popup.data('model');
                 field = popup.data('field');
                 path = container.find('a.active').data('path');
@@ -167,8 +167,8 @@
                         popup.find('.loading').fadeOut(300);
                     },
                     success: function(data) {
-                        var input = $('#library-input-' + index),
-                            button = $('a[data-popup-id="library-new-' + index + '"]'),
+                        var input = $('#upload-input-' + index),
+                            button = $('a[data-popup-id="upload-new-' + index + '"]'),
                             message = popup.find('span.upload-message');
 
                         if (data.status === true) {
@@ -184,8 +184,8 @@
                         }
                     }
                 });
-            }, libraryCrop = function (_this) {
-                popup = $('#library-current-' + index);
+            }, uploadCrop = function (_this) {
+                popup = $('#upload-current-' + index);
                 model = popup.data('model');
                 field = popup.data('field');
                 url = _this.data('url');
@@ -194,7 +194,7 @@
 
                 $.ajax({
                     type: 'GET',
-                    url: '{{ route('admin.library.crop') }}',
+                    url: '{{ route('admin.uploads.crop') }}',
                     dataType: 'json',
                     data: {
                         _token : token,
@@ -207,65 +207,65 @@
                     },
                     success: function(data) {
                         if (data.status === true) {
-                            $('#library-crop-container-' + index).html(data.html);
-                            $('#library-crop-' + index).show();
+                            $('#upload-crop-container-' + index).html(data.html);
+                            $('#upload-crop-' + index).show();
                         }
                     }
                 });
             };
 
             //initial load
-            $(document).on('click', '#open-library-new-' + index, function (e) {
+            $(document).on('click', '#open-upload-new-' + index, function (e) {
                 e.preventDefault();
 
-                libraryLoad();
+                uploadLoad();
             });
 
             //click load
-            $(document).on('click', '#library-new-' + index + ' ul.modal-tabs > li', function(e) {
+            $(document).on('click', '#upload-new-' + index + ' ul.modal-tabs > li', function(e) {
                 e.preventDefault();
 
-                libraryLoad();
+                uploadLoad();
             });
 
             //scroll load
-            $('#library-new-' + index + ' .modal-tab .uploads').on('scroll', function(e) {
+            $('#upload-new-' + index + ' .modal-tab .uploads').on('scroll', function(e) {
                 e.preventDefault();
 
-                libraryScroll();
+                uploadScroll();
             });
 
             //search load
-            $(document).on('keyup', '#library-new-' + index + ' .modal-tab.active input.search', function(e) {
+            $(document).on('keyup', '#upload-new-' + index + ' .modal-tab.active input.search', function(e) {
                 e.preventDefault();
 
-                librarySearch();
+                uploadSearch();
             });
 
             //upload new
-            $(document).on('click', '#library-new-' + index + ' label.upload-btn > input[type="file"]', function (e) {
-                libraryUpload($(this));
+            $(document).on('click', '#upload-new-' + index + ' label.upload-btn > input[type="file"]', function (e) {
+                uploadUpload($(this));
             });
 
             //save new
-            $(document).on('click', '#library-save-' + index, function(e) {
+            $(document).on('click', '#upload-save-' + index, function(e) {
                 e.preventDefault();
 
-                librarySave();
+                uploadSave();
             });
 
             //cropper load
-            $(document).on('click', '.open-library-cropper-' + index, function (e) {
+            $(document).on('click', '.open-upload-cropper-' + index, function (e) {
                 e.preventDefault();
 
-                libraryCrop($(this));
+                uploadCrop($(this));
             });
 
             //delete current
-            $(document).on('click', '#library-current-' + index + ' .library-delete', function(){
-                $('#library-input-' + index).val('');
-                $('#open-library-current-' + index).remove();
-                $('#open-library-new-' + index).removeClass('half').addClass('full');
+            $(document).on('click', '#upload-current-' + index + ' .upload-delete', function(){
+                $('#upload-input-' + index).val('');
+                $('#open-upload-current-' + index).remove();
+                $('#open-upload-new-' + index).removeClass('half').addClass('full');
                 $('.popup:visible').hide();
             });
         });

@@ -91,24 +91,28 @@ Route::group([
             'namespace' => 'Cms',
         ], function () {
             /**
-             * CRUD Library
+             * CRUD Uploads
              */
             Route::group([
-                'prefix' => 'library',
+                'prefix' => 'uploads',
             ], function () {
-                Route::get('/', ['as' => 'admin.library.index', 'uses' => 'LibraryController@index', 'permissions' => 'library-list']);
-                Route::get('show/{upload}', ['as' => 'admin.library.show', 'uses' => 'LibraryController@show', 'permissions' => 'library-list']);
-                Route::get('download/{upload}', ['as' => 'admin.library.download', 'uses' => 'LibraryController@download', 'permissions' => 'library-edit']);
-                Route::get('get/{type?}', ['as' => 'admin.library.get', 'uses' => 'LibraryController@get', 'permissions' => 'library-list']);
-                Route::get('crop', ['as' => 'admin.library.crop', 'uses' => 'LibraryController@crop', 'permissions' => 'library-edit']);
-                Route::post('store', ['as' => 'admin.library.store', 'uses' => 'LibraryController@store', 'permissions' => 'library-add']);
-                Route::post('upload', ['as' => 'admin.library.upload', 'uses' => 'LibraryController@upload', 'permissions' => 'library-add']);
-                Route::post('set', ['as' => 'admin.library.set', 'uses' => 'LibraryController@set', 'permissions' => 'library-edit']);
-                Route::post('cut', ['as' => 'admin.library.cut', 'uses' => 'LibraryController@cut', 'permissions' => 'library-edit']);
-                Route::delete('destroy/{upload}', ['as' => 'admin.library.destroy', 'uses' => 'LibraryController@destroy', 'permissions' => 'library-delete']);
-                Route::delete('delete', ['as' => 'admin.library.delete', 'uses' => 'LibraryController@delete', 'permissions' => 'library-delete']);
+                Route::get('/', ['as' => 'admin.uploads.index', 'uses' => 'UploadsController@index', 'permissions' => 'library-list']);
+                Route::get('show/{upload}', ['as' => 'admin.uploads.show', 'uses' => 'UploadsController@show', 'permissions' => 'library-list']);
+                Route::get('download/{upload}', ['as' => 'admin.uploads.download', 'uses' => 'UploadsController@download', 'permissions' => 'library-edit']);
+                Route::get('get/{type?}', ['as' => 'admin.uploads.get', 'uses' => 'UploadsController@get', 'permissions' => 'library-list']);
+                Route::get('crop', ['as' => 'admin.uploads.crop', 'uses' => 'UploadsController@crop', 'permissions' => 'library-edit']);
+                Route::post('store', ['as' => 'admin.uploads.store', 'uses' => 'UploadsController@store', 'permissions' => 'library-add']);
+                Route::post('upload', ['as' => 'admin.uploads.upload', 'uses' => 'UploadsController@upload', 'permissions' => 'library-add']);
+                Route::post('set', ['as' => 'admin.uploads.set', 'uses' => 'UploadsController@set', 'permissions' => 'library-edit']);
+                Route::post('cut', ['as' => 'admin.uploads.cut', 'uses' => 'UploadsController@cut', 'permissions' => 'library-edit']);
+                Route::delete('destroy/{upload}', ['as' => 'admin.uploads.destroy', 'uses' => 'UploadsController@destroy', 'permissions' => 'library-delete']);
+                Route::delete('delete', ['as' => 'admin.uploads.delete', 'uses' => 'UploadsController@delete', 'permissions' => 'library-delete']);
             });
         });
+
+
+
+
 
         Route::group([
             'namespace' => 'Test',
