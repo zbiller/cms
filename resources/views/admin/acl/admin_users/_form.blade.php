@@ -1,4 +1,4 @@
-{!! validation()->errors() !!}
+{!! validation('admin')->errors() !!}
 
 <div id="tab-1" class="tab">
     {!! form_admin()->select('roles[]', 'Roles', $roles->pluck('name', 'id'), $item->id ? $item->roles->pluck('id') : null, ['multiple']) !!}

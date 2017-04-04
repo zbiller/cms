@@ -31,33 +31,56 @@ if (!function_exists('form')) {
     }
 }
 
+if (!function_exists('form_admin')) {
+    /**
+     * @return \App\Helpers\FormAdminHelper
+     */
+    function form_admin()
+    {
+        return app(FormAdmin::class);
+    }
+}
+
+if (!function_exists('flash')) {
+    /**
+     * @param string|null $type
+     * @return \App\Helpers\FlashHelper
+     */
+    function flash($type = null)
+    {
+        return new App\Helpers\FlashHelper($type);
+    }
+}
+
 if (!function_exists('menu')) {
     /**
      * @return \App\Helpers\MenuHelper
      */
     function menu()
     {
-        return app(Menu::class);
+        return new \App\Helpers\MenuHelper();
     }
 }
 
 if (!function_exists('pagination')) {
     /**
+     * @param string|null $type
      * @return \App\Helpers\PaginationHelper
      */
-    function pagination()
+    function pagination($type = null)
     {
-        return app(Pagination::class);
+        return new App\Helpers\PaginationHelper($type);
     }
 }
 
 if (!function_exists('validation')) {
     /**
+     * @param string|null $type
      * @return \App\Helpers\ValidationHelper
      */
-    function validation()
+    function validation($type = null)
     {
-        return app(Validation::class);
+        return new App\Helpers\ValidationHelper($type);
     }
 }
 
@@ -67,27 +90,7 @@ if (!function_exists('button')) {
      */
     function button()
     {
-        return app(Button::class);
-    }
-}
-
-if (!function_exists('flash')) {
-    /**
-     * @return \App\Helpers\FlashHelper
-     */
-    function flash()
-    {
-        return app(Flash::class);
-    }
-}
-
-if (!function_exists('form_admin')) {
-    /**
-     * @return \App\Helpers\FormAdminHelper
-     */
-    function form_admin()
-    {
-        return app(FormAdmin::class);
+        return new App\Helpers\ButtonHelper();
     }
 }
 

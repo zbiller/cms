@@ -5,6 +5,27 @@ namespace App\Helpers;
 class FlashHelper
 {
     /**
+     * The flash type to be rendered.
+     * For now, only "default" and "admin" are available.
+     * The message() method on this helper will try to display the view with the name of this property.
+     *
+     * @var string
+     */
+    protected $type = 'default';
+
+    /**
+     * Set the pagination type (view) to render.
+     *
+     * @param string|null $type
+     */
+    public function __construct($type = null)
+    {
+        if ($type) {
+            $this->type = $type;
+        }
+    }
+
+    /**
      * Render any flash message if it's set.
      *
      * @return string|null
@@ -65,7 +86,7 @@ class FlashHelper
      */
     protected function show($type, $message)
     {
-        return view('helpers::flash.message')->with([
+        return view("helpers::flash.message.{$this->type}")->with([
             'type' => $type,
             'message' => $message
         ]);

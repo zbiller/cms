@@ -5,7 +5,7 @@
         Zbiller
     </div>
     <div class="content">
-        {!! validation()->errors() !!}
+        {!! validation('admin')->errors() !!}
         {!! form()->open(['url' => request()->url()]) !!}
         {!! form()->text('username', null, ['placeholder' => 'Username']) !!}
         {!! form()->password('password', ['placeholder' => 'Password']) !!}

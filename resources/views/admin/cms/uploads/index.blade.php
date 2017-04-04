@@ -21,7 +21,7 @@
 @endsection
 
 @section('footer')
-    {!! pagination()->render($items, 'admin') !!}
+    {!! pagination('admin')->render($items) !!}
 
     <section class="actions">
         {!! button()->update() !!}

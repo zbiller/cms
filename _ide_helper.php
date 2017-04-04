@@ -13026,7 +13026,7 @@ namespace App\Facades {
          * 
          *
          * @return \View 
-         * @throws LibraryException
+         * @throws UploadException
          * @static 
          */
         public static function manager()
@@ -13035,7 +13035,7 @@ namespace App\Facades {
         }
         
         /**
-         * Set or get the name of a library instance.
+         * Set or get the name of an uploader instance.
          *
          * @param string|null $field
          * @return $this|string 
@@ -13047,7 +13047,7 @@ namespace App\Facades {
         }
         
         /**
-         * Set or get the label for a library instance.
+         * Set or get the label for an uploader instance.
          *
          * @param string|null $label
          * @return $this|string 
@@ -13059,7 +13059,7 @@ namespace App\Facades {
         }
         
         /**
-         * Set or get the model for a library instance.
+         * Set or get the model for an uploader instance.
          *
          * @param \App\Helpers\Model|null $model
          * @return $this|string 
@@ -13071,7 +13071,7 @@ namespace App\Facades {
         }
         
         /**
-         * Set or get the types for a library instance.
+         * Set or get the types for an uploader instance.
          *
          * @param array|string $types
          * @return $this|string 
@@ -13083,7 +13083,7 @@ namespace App\Facades {
         }
         
         /**
-         * Set or get the accepted extensions for a library instance.
+         * Set or get the accepted extensions for an uploader instance.
          *
          * @param array|string $accept
          * @return $this|string 
@@ -13092,330 +13092,6 @@ namespace App\Facades {
         public static function accept($accept = null)
         {
             return \App\Helpers\UploaderHelper::accept($accept);
-        }
-        
-    }         
-
-    class MenuFacade {
-        
-        /**
-         * Generate a new menu.
-         *
-         * @param \Closure $callback
-         * @return $this 
-         * @static 
-         */
-        public static function make($callback)
-        {
-            return \App\Helpers\MenuHelper::make($callback);
-        }
-        
-        /**
-         * Filter the menu items based on a callback.
-         *
-         * @param \Closure|null $callback
-         * @return $this 
-         * @static 
-         */
-        public static function filter($callback = null)
-        {
-            return \App\Helpers\MenuHelper::filter($callback);
-        }
-        
-        /**
-         * Add a new menu item via a callback.
-         * 
-         * The callback should generate individual menu items.
-         * Setting the properties using methods from App\Helpers\Menu\Item
-         *
-         * @param \Closure $callback
-         * @static 
-         */
-        public static function add($callback)
-        {
-            return \App\Helpers\MenuHelper::add($callback);
-        }
-        
-        /**
-         * Container for generating children menu items inside a parent node.
-         * 
-         * Add a new child menu item via a callback for a parent node.
-         * The callback should generate individual menu items.
-         * Setting the properties using methods from App\Helpers\Menu\Item
-         *
-         * @param \App\Helpers\MenuItem $parent
-         * @param \Closure $callback
-         * @static 
-         */
-        public static function child($parent, $callback)
-        {
-            return \App\Helpers\MenuHelper::child($parent, $callback);
-        }
-        
-        /**
-         * Get all parent menu items.
-         *
-         * @return \App\Helpers\Collection 
-         * @static 
-         */
-        public static function roots()
-        {
-            return \App\Helpers\MenuHelper::roots();
-        }
-        
-        /**
-         * Get the children menu items corresponding to a parent.
-         *
-         * @param \App\Helpers\MenuItem $parent
-         * @return \App\Helpers\Collection 
-         * @static 
-         */
-        public static function children($parent)
-        {
-            return \App\Helpers\MenuHelper::children($parent);
-        }
-        
-    }         
-
-    class PaginationFacade {
-        
-        /**
-         * Display the pagination view helper.
-         *
-         * @param \App\Helpers\LengthAwarePaginator $items
-         * @param string $view
-         * @param array $data
-         * @return string 
-         * @static 
-         */
-        public static function render($items, $view, $data = array())
-        {
-            return \App\Helpers\PaginationHelper::render($items, $view, $data);
-        }
-        
-    }         
-
-    class ValidationFacade {
-        
-        /**
-         * Display the validation errors for a request.
-         *
-         * @return \Illuminate\View\View 
-         * @static 
-         */
-        public static function errors()
-        {
-            return \App\Helpers\ValidationHelper::errors();
-        }
-        
-    }         
-
-    class FlashFacade {
-        
-        /**
-         * Render any flash message if it's set.
-         *
-         * @return string|null 
-         * @static 
-         */
-        public static function message()
-        {
-            return \App\Helpers\FlashHelper::message();
-        }
-        
-        /**
-         * Render the success flash message.
-         *
-         * @return \Illuminate\View\View 
-         * @static 
-         */
-        public static function success()
-        {
-            return \App\Helpers\FlashHelper::success();
-        }
-        
-        /**
-         * Render the error flash message.
-         *
-         * @return \Illuminate\View\View 
-         * @static 
-         */
-        public static function error()
-        {
-            return \App\Helpers\FlashHelper::error();
-        }
-        
-        /**
-         * Render the warning flash message.
-         *
-         * @return \Illuminate\View\View 
-         * @static 
-         */
-        public static function warning()
-        {
-            return \App\Helpers\FlashHelper::warning();
-        }
-        
-    }         
-
-    class ButtonFacade {
-        
-        /**
-         * 
-         *
-         * @param string $text
-         * @param string $url
-         * @param string|null $icon
-         * @param string|null $class
-         * @param array $attributes
-         * @return $this 
-         * @static 
-         */
-        public static function action($text, $url, $icon = null, $class = null, $attributes = array())
-        {
-            return \App\Helpers\ButtonHelper::action($text, $url, $icon, $class, $attributes);
-        }
-        
-        /**
-         * Render the add button view helper.
-         *
-         * @param string $route
-         * @param array $attributes
-         * @return \Illuminate\View\View 
-         * @static 
-         */
-        public static function add($route, $attributes = array())
-        {
-            return \App\Helpers\ButtonHelper::add($route, $attributes);
-        }
-        
-        /**
-         * Render the edit button view helper.
-         *
-         * @param string $route
-         * @param array $parameters
-         * @param array $attributes
-         * @return \Illuminate\View\View 
-         * @static 
-         */
-        public static function edit($route, $parameters = array(), $attributes = array())
-        {
-            return \App\Helpers\ButtonHelper::edit($route, $parameters, $attributes);
-        }
-        
-        /**
-         * Render the delete button view helper.
-         *
-         * @param string $route
-         * @param array $parameters
-         * @param array $attributes
-         * @return \Illuminate\View\View 
-         * @static 
-         */
-        public static function delete($route, $parameters = array(), $attributes = array())
-        {
-            return \App\Helpers\ButtonHelper::delete($route, $parameters, $attributes);
-        }
-        
-        /**
-         * Render the cancel button view helper.
-         *
-         * @param string $route
-         * @param array $attributes
-         * @return \Illuminate\View\View 
-         * @static 
-         */
-        public static function cancel($route, $attributes = array())
-        {
-            return \App\Helpers\ButtonHelper::cancel($route, $attributes);
-        }
-        
-        /**
-         * Render the update button view helper.
-         *
-         * @param array $attributes
-         * @return \Illuminate\View\View 
-         * @static 
-         */
-        public static function update($attributes = array())
-        {
-            return \App\Helpers\ButtonHelper::update($attributes);
-        }
-        
-        /**
-         * Render the filter button view helper.
-         *
-         * @param array $attributes
-         * @return \Illuminate\View\View 
-         * @static 
-         */
-        public static function filter($attributes = array())
-        {
-            return \App\Helpers\ButtonHelper::filter($attributes);
-        }
-        
-        /**
-         * Render the clear button view helper.
-         *
-         * @param array $attributes
-         * @return \Illuminate\View\View 
-         * @static 
-         */
-        public static function clear($attributes = array())
-        {
-            return \App\Helpers\ButtonHelper::clear($attributes);
-        }
-        
-        /**
-         * Render the clear button view helper.
-         *
-         * @param string $route
-         * @param array $parameters
-         * @param array $attributes
-         * @return \Illuminate\View\View 
-         * @static 
-         */
-        public static function view($route, $parameters = array(), $attributes = array())
-        {
-            return \App\Helpers\ButtonHelper::view($route, $parameters, $attributes);
-        }
-        
-        /**
-         * Render the clear button view helper.
-         *
-         * @param string $route
-         * @param array $parameters
-         * @param array $attributes
-         * @return \Illuminate\View\View 
-         * @static 
-         */
-        public static function download($route, $parameters = array(), $attributes = array())
-        {
-            return \App\Helpers\ButtonHelper::download($route, $parameters, $attributes);
-        }
-        
-        /**
-         * Render the save button view helper.
-         *
-         * @param array $attributes
-         * @return \Illuminate\View\View 
-         * @static 
-         */
-        public static function save($attributes = array())
-        {
-            return \App\Helpers\ButtonHelper::save($attributes);
-        }
-        
-        /**
-         * Render the save and stay button view helper.
-         *
-         * @param array $attributes
-         * @return \Illuminate\View\View 
-         * @static 
-         */
-        public static function saveStay($attributes = array())
-        {
-            return \App\Helpers\ButtonHelper::saveStay($attributes);
         }
         
     }         
@@ -15804,16 +15480,6 @@ namespace {
     class FFMpeg extends \Pbmedia\LaravelFFMpeg\FFMpegFacade {}
     
     class Uploader extends \App\Facades\UploaderFacade {}
-    
-    class Menu extends \App\Facades\MenuFacade {}
-    
-    class Pagination extends \App\Facades\PaginationFacade {}
-    
-    class Validation extends \App\Facades\ValidationFacade {}
-    
-    class Flash extends \App\Facades\FlashFacade {}
-    
-    class Button extends \App\Facades\ButtonFacade {}
     
     class FormAdmin extends \App\Facades\FormAdminFacade {}
     

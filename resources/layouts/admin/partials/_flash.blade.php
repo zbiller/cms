@@ -1,1 +1,1 @@
-{!! flash()->message() !!}
+{!! flash('admin')->message() !!}

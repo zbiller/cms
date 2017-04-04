@@ -5,7 +5,7 @@
         Zbiller
     </div>
     <div class="content">
-        {!! validation()->errors() !!}
+        {!! validation('admin')->errors() !!}
 
         {!! form()->open(['url' => route('admin.password.reset')]) !!}
         {!! form()->hidden('token', $token) !!}
