@@ -16,7 +16,7 @@
             <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
                 <td>
                     <img src="{{ $item->type_icon }}" title="{{ $types[$item->type] }}" class="upload-aligned-image" width="30" height="30" />
-                    <span class="upload-aligned-text">{{ $item->original_name }}</span>
+                    <span class="upload-aligned-text">{{ $item->original_name ?: 'N/A' }}</span>
                 </td>
                 <td>
                     {{ $item->size_mb . ' MB' }}

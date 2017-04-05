@@ -33,7 +33,11 @@ class MenuComposer
             });
 
             $menu->add(function ($item) use ($menu) {
-                $content = $item->name('Manage Content')->data('icon', 'fa-pencil-square-o')->active('admin/uploads/*');
+                $content = $item->name('Manage Content')->data('icon', 'fa-pencil-square-o')->active('admin/uploads/*')->active('admin/pages/*');
+
+                $menu->child($content, function (MenuItem $item) {
+                    $item->name('Layouts')->url(route('admin.layouts.index'))->permissions('layouts-list')->active('admin/layouts/*');
+                });
 
                 $menu->child($content, function (MenuItem $item) {
                     $item->name('Uploads')->url(route('admin.uploads.index'))->permissions('uploads-list')->active('admin/uploads/*');

@@ -1,0 +1,81 @@
+<?php
+
+namespace App\Models\Cms;
+
+use App\Models\Model;
+use App\Traits\CanFilter;
+use App\Traits\CanSort;
+
+class Layout extends Model
+{
+    use CanFilter;
+    use CanSort;
+
+    /**
+     * The database table.
+     *
+     * @var string
+     */
+    protected $table = 'layouts';
+
+    /**
+     * The attributes that mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'identifier',
+        'file',
+    ];
+
+    /**
+     * The layout files located in /resources/layouts/default.
+     *
+     * @var array
+     */
+    public static $files = [];
+
+    /**
+     * Sort the query with newest records first.
+     *
+     * @param $query
+     */
+    public function scopeNewest($query)
+    {
+        $query->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Sort the query alphabetically by original_name.
+     *
+     * @param $query
+     */
+    public function scopeAlphabetically($query)
+    {
+        $query->orderBy('name', 'asc');
+    }
+
+    /**
+     * Search for all layout files located in /resources/layouts/default.
+     * Get them pretty formatted as an array.
+     *
+     * @return array
+     */
+    public static function getFiles()
+    {
+        foreach (glob(resource_path('layouts/default/*.blade.php')) as $layout) {
+            $file = last(explode('/', $layout));
+
+            if (!starts_with($file, '_')) {
+                self::$files[$file] = $file;
+            }
+        }
+
+        if (empty(self::$files)) {
+            self::$files[null] = 'You have no layout files';
+        }
+
+        return self::$files;
+    }
+}

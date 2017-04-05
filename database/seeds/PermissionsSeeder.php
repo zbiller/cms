@@ -63,6 +63,28 @@ class PermissionsSeeder extends Seeder
                 'label' => 'Delete',
             ],
         ],
+        'Layouts' => [
+            'List' => [
+                'name' => 'layouts-list',
+                'group' => 'Layouts',
+                'label' => 'List',
+            ],
+            'Add' => [
+                'name' => 'layouts-add',
+                'group' => 'Layouts',
+                'label' => 'Add',
+            ],
+            'Edit' => [
+                'name' => 'layouts-edit',
+                'group' => 'Layouts',
+                'label' => 'Edit',
+            ],
+            'Delete' => [
+                'name' => 'layouts-delete',
+                'group' => 'Layouts',
+                'label' => 'Delete',
+            ],
+        ],
         'Uploads' => [
             'List' => [
                 'name' => 'uploads-list',

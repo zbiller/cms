@@ -20,10 +20,10 @@
     @if($items->count() > 0)
         @foreach($items as $index => $item)
             <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
-                <td>{{ $item->username }}</td>
-                <td>{{ $item->first_name }}</td>
-                <td>{{ $item->last_name }}</td>
-                <td>{{ $item->email }}</td>
+                <td>{{ $item->username ?: 'N/A' }}</td>
+                <td>{{ $item->first_name ?: 'N/A' }}</td>
+                <td>{{ $item->last_name ?: 'N/A' }}</td>
+                <td>{{ $item->email ?: 'N/A' }}</td>
                 <td>
                     {!! button()->edit('admin.admin_users.edit', ['id' => $item->id]) !!}
                     {!! button()->delete('admin.admin_users.destroy', ['id' => $item->id]) !!}
