@@ -44,6 +44,7 @@ elixir(function (mix) {
             'libs/scroll.css',
             'libs/timepicker.css',
             'libs/tooltip.css',
+            'libs/jstree.css',
             'admin/main.css'
         ], 'public/assets/css/admin/app.css')
 
@@ -60,6 +61,7 @@ elixir(function (mix) {
             'libs/dropzone.js',
             'libs/tooltip.js',
             'libs/upload.js',
+            'libs/jstree.js',
             'admin/main.js',
             './public/vendor/jsvalidation/js/jsvalidation.js'
         ], 'public/assets/js/admin/app.js')

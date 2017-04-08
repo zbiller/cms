@@ -4,6 +4,60 @@ section.list {
     padding: 10px 0 0 0;
     border-bottom: none;
 
+    &.list-small {
+        width: 300px;
+        margin: 0 0 20px;
+        border-right: 1px solid $colorGallery;
+        border-bottom: 1px solid $colorGallery;
+
+        @include media-query('desktop') {
+            width: 100%;
+            border-right: none;
+        }
+
+        @include media-query('tablet-wide') {
+            width: 300px;
+            border-right: 1px solid $colorGallery;
+        }
+
+        @include media-query('tablet-small') {
+            width: 100%;
+            border-right: none;
+        }
+    }
+
+    &.list-big {
+        @include calc(width, '100% - 322px');
+
+        border-left: 1px solid $colorGallery;
+
+        @include media-query('desktop') {
+            width: 100%;
+            border-left: none;
+        }
+
+        @include media-query('tablet-wide') {
+            @include calc(width, '100% - 322px');
+
+            border-left: 1px solid $colorGallery;
+        }
+
+        @include media-query('tablet-small') {
+            width: 100%;
+            border-left: none;
+        }
+    }
+
+    .list-container {
+        @include clear-padding();
+        @include font-size(13px);
+
+        padding: 15px;
+        font-family: "Open Sans", sans-serif;
+        color: $colorOsloGray;
+
+    }
+
     table {
         width: 100%;
         color: $colorOsloGray;
