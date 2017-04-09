@@ -32,6 +32,24 @@ main {
     }
 }
 
+.box {
+    @include clear-padding();
+
+    display: block;
+    float: left;
+    max-width: 100% !important;
+    margin: 15px 0;
+    padding: 10px;
+    background: $colorAlabaster;
+    border: 1px solid $colorGallery;
+    
+    a {
+        font-family: 'Open Sans Semibold', sans-serif;
+        color: $colorPictonBlue;
+        text-decoration: none;
+    }
+}
+
 .btn {
     @include font-size(12px);
     @include transition(background 0.3s ease);
