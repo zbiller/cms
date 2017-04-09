@@ -57,6 +57,16 @@ class Layout extends Model
     }
 
     /**
+     * Layout has many pages.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function pages()
+    {
+        return $this->hasMany(Page::class, 'layout_id');
+    }
+
+    /**
      * Search for all layout files located in /resources/layouts/default.
      * Get them pretty formatted as an array.
      *

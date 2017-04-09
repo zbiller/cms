@@ -37,7 +37,7 @@ class RolesSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('roles')->truncate();
+        DB::table('roles')->delete();
 
         $this->adminRoles = new Collection();
 

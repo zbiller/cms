@@ -25,7 +25,7 @@ class AdminUsersController extends Controller
     public function index(Request $request, AdminUserFilter $filter, AdminUserSort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
-            $this->items = User::only('admin')->notDeveloper()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = User::notDeveloper()->only('admin')->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
         });
     }
 

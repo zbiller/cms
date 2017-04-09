@@ -185,6 +185,18 @@ class User extends Authenticatable
     }
 
     /**
+     * Override route model binding default column value.
+     * This is done because the user is joined with person by the global scope.
+     * Otherwise, the model binding will throw an "ambiguous column" error.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return 'users.id';
+    }
+
+    /**
      * Determine if the current user is a super user.
      *
      * @return bool
@@ -195,15 +207,13 @@ class User extends Authenticatable
     }
 
     /**
-     * Override route model binding default column value.
-     * This is done because the user is joined with person by the global scope.
-     * Otherwise, the model binding will throw an "ambiguous column" error.
+     * Determine if the current user is the developer one.
      *
-     * @return string
+     * @return bool
      */
-    public function getRouteKeyName()
+    public function isDeveloper()
     {
-        return 'users.id';
+        return $this->username === 'developer';
     }
 
     /**

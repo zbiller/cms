@@ -19,47 +19,25 @@ class PermissionsSeeder extends Seeder
      * @var array
      */
     private $adminMap = [
-        'Admin Roles' => [
+        'Pages' => [
             'List' => [
-                'name' => 'admin-roles-list',
-                'group' => 'Admin Roles',
+                'name' => 'pages-list',
+                'group' => 'Pages',
                 'label' => 'List',
             ],
             'Add' => [
-                'name' => 'admin-roles-add',
-                'group' => 'Admin Roles',
+                'name' => 'pages-add',
+                'group' => 'Pages',
                 'label' => 'Add',
             ],
             'Edit' => [
-                'name' => 'admin-roles-edit',
-                'group' => 'Admin Roles',
+                'name' => 'pages-edit',
+                'group' => 'Pages',
                 'label' => 'Edit',
             ],
             'Delete' => [
-                'name' => 'admin-roles-delete',
-                'group' => 'Admin Roles',
-                'label' => 'Delete',
-            ],
-        ],
-        'Admin Users' => [
-            'List' => [
-                'name' => 'admin-users-list',
-                'group' => 'Admin Users',
-                'label' => 'List',
-            ],
-            'Add' => [
-                'name' => 'admin-users-add',
-                'group' => 'Admin Users',
-                'label' => 'Add',
-            ],
-            'Edit' => [
-                'name' => 'admin-users-edit',
-                'group' => 'Admin Users',
-                'label' => 'Edit',
-            ],
-            'Delete' => [
-                'name' => 'admin-users-delete',
-                'group' => 'Admin Users',
+                'name' => 'pages-delete',
+                'group' => 'Pages',
                 'label' => 'Delete',
             ],
         ],
@@ -107,6 +85,50 @@ class PermissionsSeeder extends Seeder
                 'label' => 'Delete',
             ],
         ],
+        'Admin Roles' => [
+            'List' => [
+                'name' => 'admin-roles-list',
+                'group' => 'Admin Roles',
+                'label' => 'List',
+            ],
+            'Add' => [
+                'name' => 'admin-roles-add',
+                'group' => 'Admin Roles',
+                'label' => 'Add',
+            ],
+            'Edit' => [
+                'name' => 'admin-roles-edit',
+                'group' => 'Admin Roles',
+                'label' => 'Edit',
+            ],
+            'Delete' => [
+                'name' => 'admin-roles-delete',
+                'group' => 'Admin Roles',
+                'label' => 'Delete',
+            ],
+        ],
+        'Admin Users' => [
+            'List' => [
+                'name' => 'admin-users-list',
+                'group' => 'Admin Users',
+                'label' => 'List',
+            ],
+            'Add' => [
+                'name' => 'admin-users-add',
+                'group' => 'Admin Users',
+                'label' => 'Add',
+            ],
+            'Edit' => [
+                'name' => 'admin-users-edit',
+                'group' => 'Admin Users',
+                'label' => 'Edit',
+            ],
+            'Delete' => [
+                'name' => 'admin-users-delete',
+                'group' => 'Admin Users',
+                'label' => 'Delete',
+            ],
+        ],
     ];
 
     /**
@@ -116,7 +138,7 @@ class PermissionsSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('permissions')->truncate();
+        DB::table('permissions')->delete();
 
         $this->adminPermissions = new Collection();
 
