@@ -102,10 +102,14 @@ trait HasSlug
     protected function generateNonUniqueSlug()
     {
         if ($this->slugHasChanged()) {
-            return str_slug($this->getAttribute($this->hasSlugOptions->toField));
+            $source = $this->getAttribute($this->hasSlugOptions->toField);
+
+            return str_is('/', $source) ? $source : str_slug($source);
         }
 
-        return str_slug($this->getSlugSource());
+        $source = $this->getSlugSource();
+
+        return str_is('/', $source) ? $source : str_slug($source);
     }
 
     /**

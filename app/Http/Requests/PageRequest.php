@@ -38,7 +38,6 @@ class PageRequest extends Request
             ],
             'slug' => [
                 'required',
-                'min:3',
                 Rule::unique('pages', 'slug')
                     ->ignore($this->route('page') ? $this->route('page')->id : null)
             ],

@@ -5,6 +5,7 @@ namespace App\Models\Cms;
 use App\Models\Model;
 use App\Traits\CanFilter;
 use App\Traits\CanSort;
+use Illuminate\Database\Eloquent\Builder;
 
 class Layout extends Model
 {
@@ -39,7 +40,7 @@ class Layout extends Model
     /**
      * Sort the query with newest records first.
      *
-     * @param $query
+     * @param Builder $query
      */
     public function scopeNewest($query)
     {
@@ -47,13 +48,24 @@ class Layout extends Model
     }
 
     /**
-     * Sort the query alphabetically by original_name.
+     * Sort the query alphabetically by name.
      *
-     * @param $query
+     * @param Builder $query
      */
     public function scopeAlphabetically($query)
     {
         $query->orderBy('name', 'asc');
+    }
+
+    /**
+     * Filter the query by identifier.
+     *
+     * @param Builder $query
+     * @param string $identifier
+     */
+    public function scopeIdentify($query, $identifier)
+    {
+        $query->where('identifier', $identifier);
     }
 
     /**
