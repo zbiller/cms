@@ -49,15 +49,17 @@ trait HasSlug
      */
     public function generateSlug()
     {
-        $this->initSlugOptions()->checkSlugOptions();
+        $this->checkSlugOptions();
 
-        $slug = $this->generateNonUniqueSlug();
+        if ($this->slugHasBeenSupplied()) {
+            $slug = $this->generateNonUniqueSlug();
 
-        if ($this->hasSlugOptions->uniqueSlugs) {
-            $slug = $this->makeSlugUnique($slug);
+            if ($this->hasSlugOptions->uniqueSlugs) {
+                $slug = $this->makeSlugUnique($slug);
+            }
+
+            $this->setAttribute($this->hasSlugOptions->toField, $slug);
         }
-
-        $this->{$this->hasSlugOptions->toField} = $slug;
     }
 
     /**
@@ -100,7 +102,7 @@ trait HasSlug
     protected function generateNonUniqueSlug()
     {
         if ($this->slugHasChanged()) {
-            return str_slug($this->{$this->hasSlugOptions->toField});
+            return str_slug($this->getAttribute($this->hasSlugOptions->toField));
         }
 
         return str_slug($this->getSlugSource());
@@ -125,6 +127,17 @@ trait HasSlug
     }
 
     /**
+     * Check if the $fromField slug has been supplied.
+     * If not, then skip the entire slug generation.
+     *
+     * @return bool
+     */
+    protected function slugHasBeenSupplied()
+    {
+        return $this->getAttribute($this->hasSlugOptions->fromField) !== null;
+    }
+
+    /**
      * Determine if a custom slug has been saved.
      *
      * @return bool
@@ -133,7 +146,7 @@ trait HasSlug
     {
         return
             $this->getOriginal($this->hasSlugOptions->toField) &&
-            $this->getOriginal($this->hasSlugOptions->toField) != $this->{$this->hasSlugOptions->toField};
+            $this->getOriginal($this->hasSlugOptions->toField) != $this->getAttribute($this->hasSlugOptions->toField);
     }
 
     /**
@@ -150,7 +163,7 @@ trait HasSlug
         }
 
         return collect($this->hasSlugOptions->fromField)->map(function ($field) {
-            return $this->{$field} ?: '';
+            return $this->getAttribute($field) ?: '';
         })->implode('-');
     }
 
