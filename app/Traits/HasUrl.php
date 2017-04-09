@@ -23,6 +23,13 @@ trait HasUrl
     protected $hasUrlOptions;
 
     /**
+     * Flag to manually disable the url generation only for the current request.
+     *
+     * @var bool
+     */
+    protected static $shouldGenerateUrl = true;
+
+    /**
      * The method used for setting the slug options.
      * This method should be called inside the model using this trait.
      * Inside the method, you should set all the slug options.
@@ -54,11 +61,15 @@ trait HasUrl
         });
 
         static::updated(function (Model $model) {
-            $model->updateUrl();
+            if (self::$shouldGenerateUrl === true) {
+                $model->updateUrl();
+            }
         });
 
         static::deleted(function (Model $model) {
-            $model->deleteUrl();
+            if ($model->forceDeleting !== false) {
+                $model->deleteUrl();
+            }
         });
     }
 
@@ -70,6 +81,18 @@ trait HasUrl
     public function url()
     {
         return $this->morphOne(Url::class, 'urlable');
+    }
+
+    /**
+     * Disable the url generation manually only for the current request.
+     *
+     * @return static
+     */
+    public static function doNotGenerateUrl()
+    {
+        self::$shouldGenerateUrl = false;
+
+        return new static();
     }
 
     /**
@@ -92,6 +115,10 @@ trait HasUrl
      */
     protected function createUrl()
     {
+        if (!$this->getAttribute($this->hasUrlOptions->toField)) {
+            return;
+        }
+
         try {
             $this->url()->create([
                 'url' => $this->buildFullUrl()
@@ -111,6 +138,10 @@ trait HasUrl
      */
     protected function updateUrl()
     {
+        if (!$this->getAttribute($this->hasUrlOptions->toField)) {
+            return;
+        }
+
         try {
             DB::transaction(function () {
                 $this->url()->update([
@@ -152,7 +183,7 @@ trait HasUrl
     protected function updateUrlsInCascade()
     {
         $old = trim($this->getOriginal($this->hasUrlOptions->toField), '/');
-        $new = trim($this->{$this->hasUrlOptions->toField}, '/');
+        $new = trim($this->getAttribute($this->hasUrlOptions->toField), '/');
 
         $children = URL::where('urlable_type', static::class)->where(function ($query) use ($old) {
             $query->where('url', 'like', "{$old}/%")->orWhere('url', 'like', "%/{$old}/%");
@@ -178,7 +209,7 @@ trait HasUrl
 
         return
             ($prefix ? $prefix . '/' : '') .
-            $this->{$this->hasUrlOptions->toField} .
+            $this->getAttribute($this->hasUrlOptions->toField) .
             ($suffix ? '/' . $suffix : '');
     }
 
