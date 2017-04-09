@@ -40,6 +40,24 @@ section.filters {
             &:focus {
                 border-bottom: 1px solid $colorPictonBlue;
             }
+
+            &::-webkit-input-placeholder {
+                color: $colorGullGray !important;
+            }
+
+            &:-moz-placeholder {
+                color: $colorGullGray !important;
+                opacity: 1 !important;
+            }
+
+            &::-moz-placeholder {
+                color: $colorGullGray !important;
+                opacity: 1;
+            }
+
+            &:-ms-input-placeholder {
+                color: $colorGullGray !important;
+            }
         }
 
         select {
