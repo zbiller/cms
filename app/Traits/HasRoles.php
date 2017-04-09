@@ -132,6 +132,10 @@ trait HasRoles
      */
     public function hasAnyRole($roles)
     {
+        if (!$roles || empty($roles)) {
+            return true;
+        }
+
         return (bool)(new Collection($roles))->map(function ($role) {
             return $this->getRole($role);
         })->intersect($this->roles)->count();
@@ -175,13 +179,17 @@ trait HasRoles
      */
     public function hasAnyPermission($permissions)
     {
+        if (!$permissions || empty($permissions)) {
+            return true;
+        }
+
         foreach ($permissions as $permission) {
-            if (!$this->hasPermission($permission)) {
-                return false;
+            if ($this->hasPermission($permission)) {
+                return true;
             }
         }
 
-        return true;
+        return false;
     }
 
     /**
