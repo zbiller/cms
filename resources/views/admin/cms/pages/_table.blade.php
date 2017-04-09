@@ -7,7 +7,7 @@
         <td class="sortable" data-sort="slug">
             <i class="fa fa-sort"></i>&nbsp; URL
         </td>
-        <td class="sortable" data-sort="slug">
+        <td class="sortable" data-sort="active">
             <i class="fa fa-sort"></i>&nbsp; Active
         </td>
         <td>Actions</td>

@@ -9,8 +9,7 @@
 @section('bottom_scripts')
     <script type="text/javascript">
         $(function(){
-            var input = $('input[name="refresh_tree"]');
-            input.val() == 'yes' ? location.reload(true) : input.val('yes');
+
 
             //init tree
             setTimeout(function () {
@@ -46,6 +45,8 @@
                 var active = $('section.filters select[name="active"]').val();
                 var start_date = $('section.filters input[name="start_date"]').val();
                 var end_date = $('section.filters input[name="end_date"]').val();
+                var sort = _getParam('sort');
+                var dir = _getParam('dir');
 
                 $('table.pages-table').css({
                     opacity: 0.5
@@ -62,7 +63,9 @@
                         type: type,
                         active: active,
                         start_date: start_date,
-                        end_date: end_date
+                        end_date: end_date,
+                        sort: sort,
+                        dir: dir
                     },
                     success: function(data){
                         $('a.btn.add').attr('href', $('a.btn.add').attr('href') + '/' + (parseInt(node.id) ? node.id : ''));
@@ -70,6 +73,56 @@
                         $('section#pages-container').html(data);
                         $('table.pages-table').css({
                             opacity: 1
+                        });
+
+
+
+
+
+                        var sortField = $('section.list > table > thead > tr > td.sortable');
+
+                        //initialize sort headings display
+                        sortField.each(function () {
+                            if (_getParam('sort') == $(this).data('sort')) {
+                                if (_getParam('dir') == 'asc') {
+                                    $(this).attr('data-dir', 'desc');
+                                    $(this).find('i').addClass('fa-sort-asc');
+                                } else {
+                                    $(this).attr('data-dir', 'asc');
+                                    $(this).find('i').addClass('fa-sort-desc');
+                                }
+                            }
+
+                            if (!$(this).attr('data-dir')) {
+                                $(this).attr('data-dir', 'asc');
+                            }
+                        });
+
+
+                        //create sort full url & redirect
+                        sortField.click(function () {
+                            var url = window.location.href.replace('#', '').split('?')[0],
+                                    params = [];
+
+                            $.each(_getParams(), function (index, obj) {
+                                if (obj.name == 'sort' || obj.name == 'dir') {
+                                    return true;
+                                }
+
+                                params.push(obj);
+                            });
+
+                            params.push({
+                                name: 'sort',
+                                value: $(this).data('sort')
+                            });
+
+                            params.push({
+                                name: 'dir',
+                                value: $(this).data('dir') ? $(this).data('dir') : 'asc'
+                            });
+
+                            window.location.href = url + '?' + decodeURIComponent($.param(params));
                         });
                     }
                 });
