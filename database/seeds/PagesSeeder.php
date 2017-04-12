@@ -27,18 +27,6 @@ class PagesSeeder extends Seeder
         }
 
         /**
-         * Create the trash page.
-         */
-        Page::doNotGenerateUrl()->create([
-            'layout_id' => $layout->id,
-            'name' => 'Trash',
-            'identifier' => 'trash',
-            'active' => Page::ACTIVE_NO,
-            'type' => Page::TYPE_DEFAULT,
-            'deleted_at' => Carbon::now()
-        ]);
-
-        /**
          * Create the home page.
          */
         Page::create([

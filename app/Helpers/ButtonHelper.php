@@ -157,6 +157,22 @@ class ButtonHelper
     }
 
     /**
+     * Render the restore button view helper.
+     *
+     * @param string $route
+     * @param array $parameters
+     * @param array $attributes
+     * @return \Illuminate\View\View
+     */
+    public function restore($route, array $parameters = [], array $attributes = [])
+    {
+        return view('helpers::button.restore')->with([
+            'url' => route($route, $parameters),
+            'attributes' => self::buildAttributes($attributes)
+        ]);
+    }
+
+    /**
      * Render the save button view helper.
      *
      * @param array $attributes

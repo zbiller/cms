@@ -75,10 +75,6 @@
                             opacity: 1
                         });
 
-
-
-
-
                         var sortField = $('section.list > table > thead > tr > td.sortable');
 
                         //initialize sort headings display
@@ -138,6 +134,8 @@
                     parent: parseInt(data.parent) ? data.parent : '',
                     old_parent: parseInt(data.old_parent) ? data.old_parent : ''
                 };
+
+                console.log(_node, _data);
 
                 $.ajax({
                     url: "{{ URL::route('admin.pages.tree.sort') }}",

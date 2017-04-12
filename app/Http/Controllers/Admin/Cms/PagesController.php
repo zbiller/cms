@@ -3,20 +3,65 @@
 namespace App\Http\Controllers\Admin\Cms;
 
 use App\Http\Controllers\Controller;
-use App\Http\Filters\PageFilter;
-use App\Http\Requests\PageRequest;
-use App\Http\Sorts\PageSort;
-use App\Models\Cms\Layout;
 use App\Models\Cms\Page;
-use App\Options\CanCrudOptions;
+use App\Models\Cms\Layout;
 use App\Traits\CanCrud;
-use App\Traits\CanHandleTree;
+use App\Http\Requests\PageRequest;
+use App\Http\Filters\PageFilter;
+use App\Http\Sorts\PageSort;
+use App\Options\CanCrudOptions;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class PagesController extends Controller
 {
     use CanCrud;
     //use CanHandleTree;
+
+
+
+    public function deleted(Request $request, PageFilter $filter, PageSort $sort)
+    {
+        $items = Page::with('url')->onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+
+        return view('admin.cms.pages.deleted')->with([
+            'items' => $items,
+            'layouts' => Layout::all(),
+            'types' => Page::$types,
+            'actives' => Page::$actives,
+        ]);
+    }
+
+    public function restore($id)
+    {
+        try {
+            $page = Page::onlyTrashed()->findOrFail($id);
+            $page->doNotGenerateUrl()->restore();
+
+            session()->flash('flash_success', 'The record was successfully restored!');
+        } catch (ModelNotFoundException $e) {
+            session()->flash('flash_error', 'You are trying to restore a record that does not exist!');
+        }
+
+        return redirect()->route('admin.pages.deleted');
+    }
+
+    public function delete($id)
+    {
+        try {
+            $page = Page::onlyTrashed()->findOrFail($id);
+            $page->forceDelete();
+
+            session()->flash('flash_success', 'The record was successfully deleted!');
+        } catch (ModelNotFoundException $e) {
+            session()->flash('flash_error', 'You are trying to delete a record that does not exist!');
+        }
+
+        return redirect()->route('admin.pages.deleted');
+    }
+
+
+
 
     /**
      * @param Request $request
@@ -30,7 +75,10 @@ class PagesController extends Controller
         cache()->forget('first_tree_load');
 
         return $this->_index(function () use ($request, $filter, $sort) {
-            $this->items = Page::with('url')->filtered($request, $filter)->sorted($request, $sort)->whereIsRoot()->defaultOrder();
+            $query = Page::with('url')->whereIsRoot()->filtered($request, $filter);
+            $request->has('sort') ? $query->sorted($request, $sort) : $query->defaultOrder();
+
+            $this->items = $query->get();
 
             $this->vars = [
                 'layouts' => Layout::all(),
@@ -132,7 +180,7 @@ class PagesController extends Controller
      */
     public function fixTree()
     {
-        Page::doNotGenerateUrl()->fixTree();
+        app(Page::class)->doNotGenerateUrl()->fixTree();
 
         return back();
     }
@@ -152,11 +200,13 @@ class PagesController extends Controller
             cache()->forget('first_tree_load');
         } else {
             cache()->forever('first_tree_load', true);
+
             $data[] = [
                 'id' => 'root_id',
                 'text' => 'Pages',
                 'children' => true,
                 'type' => 'root',
+                'icon' => 'jstree-folder'
             ];
         }
 
@@ -167,6 +217,7 @@ class PagesController extends Controller
                     'text' => $item->name,
                     'children' => $item->children->count() > 0 ? true : false,
                     'type' => 'child',
+                    'icon' => 'jstree-folder'
                 ];
             }
         }
@@ -183,8 +234,9 @@ class PagesController extends Controller
      */
     public function listTreeItems(Request $request, PageFilter $filter, PageSort $sort, Page $parent = null)
     {
-        $query = Page::with('url')->filtered($request, $filter)->sorted($request, $sort)->defaultOrder();
+        $query = Page::with('url')->filtered($request, $filter);
 
+        $request->has('sort') ? $query->sorted($request, $sort) : $query->defaultOrder();
         $parent->exists ? $query->whereParent($parent->id) : $query->whereIsRoot();
 
         $items = $query->get();
@@ -206,7 +258,7 @@ class PagesController extends Controller
 
         $this->rebuildTreeBranch($branch, $tree);
 
-        return Page::doNotGenerateUrl()->rebuildTree($tree);
+        return app(Page::class)->doNotGenerateUrl()->rebuildTree($tree);
     }
 
     /**
@@ -295,7 +347,7 @@ class PagesController extends Controller
     public function getCanCrudOptions()
     {
         return CanCrudOptions::instance()
-            ->setModel(app(Layout::class))
+            ->setModel(app(Page::class))
             ->setListRoute('admin.pages.index')
             ->setListView('admin.cms.pages.index')
             ->setAddRoute('admin.pages.create')

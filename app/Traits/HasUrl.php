@@ -57,7 +57,9 @@ trait HasUrl
         });
 
         static::created(function (Model $model) {
-            $model->createUrl();
+            if (self::$shouldGenerateUrl === true) {
+                $model->createUrl();
+            }
         });
 
         static::updated(function (Model $model) {
@@ -88,11 +90,11 @@ trait HasUrl
      *
      * @return static
      */
-    public static function doNotGenerateUrl()
+    public function doNotGenerateUrl()
     {
         self::$shouldGenerateUrl = false;
 
-        return new static();
+        return $this;
     }
 
     /**
@@ -208,9 +210,9 @@ trait HasUrl
         $suffix = $this->buildUrlSegment('suffix');
 
         return
-            ($prefix ? $prefix . '/' : '') .
+            (str_is('/', $prefix) ? '' : ($prefix ? $prefix . '/' : '')) .
             $this->getAttribute($this->hasUrlOptions->toField) .
-            ($suffix ? '/' . $suffix : '');
+            (str_is('/', $suffix) ? '' : ($suffix ? '/' . $suffix : ''));
     }
 
     /**

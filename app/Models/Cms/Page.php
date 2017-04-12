@@ -121,7 +121,7 @@ class Page extends Model
     }
 
     /**
-     * Sort the query alphabetically by original_name.
+     * Sort the query alphabetically by name.
      *
      * @param Builder $query
      */
@@ -139,6 +139,17 @@ class Page extends Model
     public function scopeWhereParent($query, $id)
     {
         $query->where('parent_id', $id);
+    }
+
+    /**
+     * Filter the query by the given identifier.
+     *
+     * @param Builder $query
+     * @param string $identifier
+     */
+    public function scopeIdentify($query, $identifier)
+    {
+        $query->where('identifier', $identifier);
     }
 
     /**

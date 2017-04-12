@@ -58,7 +58,7 @@ class Layout extends Model
     }
 
     /**
-     * Filter the query by identifier.
+     * Filter the query by the given identifier.
      *
      * @param Builder $query
      * @param string $identifier

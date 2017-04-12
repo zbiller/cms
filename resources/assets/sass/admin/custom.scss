@@ -10,6 +10,14 @@ table {
                     width: 116px !important;
                 }
             }
+
+            &.actions-deleted {
+                width: 181px !important;
+
+                @include media-query('tablet') {
+                    width: 78px !important;
+                }
+            }
         }
 
         &.device-visible {

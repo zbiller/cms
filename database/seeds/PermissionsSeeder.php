@@ -41,6 +41,28 @@ class PermissionsSeeder extends Seeder
                 'label' => 'Delete',
             ],
         ],
+        'Pages Deleted' => [
+            'List' => [
+                'name' => 'pages-deleted-list',
+                'group' => 'Pages Deleted',
+                'label' => 'List',
+            ],
+            'Add' => [
+                'name' => 'pages-deleted-add',
+                'group' => 'Pages Deleted',
+                'label' => 'Add',
+            ],
+            'Edit' => [
+                'name' => 'pages-deleted-edit',
+                'group' => 'Pages Deleted',
+                'label' => 'Edit',
+            ],
+            'Delete' => [
+                'name' => 'pages-deleted-delete',
+                'group' => 'Pages Deleted',
+                'label' => 'Delete',
+            ],
+        ],
         'Layouts' => [
             'List' => [
                 'name' => 'layouts-list',
