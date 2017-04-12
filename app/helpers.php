@@ -94,6 +94,17 @@ if (!function_exists('button')) {
     }
 }
 
+if (!function_exists('page')) {
+    /**
+     * @param string $identifier
+     * @return \App\Helpers\PageHelper
+     */
+    function page($identifier)
+    {
+        return new App\Helpers\PageHelper($identifier);
+    }
+}
+
 if (!function_exists('force_redirect')) {
     /**
      * @param string $url
