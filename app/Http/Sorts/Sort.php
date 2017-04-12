@@ -7,7 +7,7 @@ abstract class Sort
     /**
      * In case you apply the sorted scope on a model without an App\Http\Sorts\Sort instance as it's parameter.
      * This constant will act as the default sort field.
-     * Meaning that the CanSort trait will look for this request name when deciding what to sort by.
+     * Meaning that the IsSortable trait will look for this request name when deciding what to sort by.
      *
      * @const
      */
@@ -16,7 +16,7 @@ abstract class Sort
     /**
      * In case you apply the sorted scope on a model without an App\Http\Sorts\Sort instance as it's parameter.
      * This constant will act as the default sorting direction field.
-     * Meaning that the CanSort trait will look for this request name when deciding the sorting direction.
+     * Meaning that the IsSortable trait will look for this request name when deciding the sorting direction.
      *
      * @const
      */

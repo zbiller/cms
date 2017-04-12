@@ -3,8 +3,8 @@
 namespace App\Models\Auth;
 
 use App\Traits\HasRoles;
-use App\Traits\CanFilter;
-use App\Traits\CanSort;
+use App\Traits\IsFilterable;
+use App\Traits\IsSortable;
 use App\Scopes\SelectUserScope;
 use App\Scopes\JoinPersonScope;
 use App\Options\CacheOptions;
@@ -17,8 +17,8 @@ class User extends Authenticatable
 {
     use Notifiable;
     use HasRoles;
-    use CanFilter;
-    use CanSort;
+    use IsFilterable;
+    use IsSortable;
 
     /**
      * The database table.
@@ -230,7 +230,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Set the options necessary for the CanCache trait.
+     * Set the options necessary for the IsCacheable trait.
      *
      * @return CacheOptions
      */

@@ -4,9 +4,9 @@ namespace App\Models\Auth;
 
 use App\Models\Model;
 use App\Traits\HasPermissions;
-use App\Traits\CanCache;
-use App\Traits\CanFilter;
-use App\Traits\CanSort;
+use App\Traits\IsCacheable;
+use App\Traits\IsFilterable;
+use App\Traits\IsSortable;
 use App\Options\CacheOptions;
 use App\Contracts\RoleContract;
 use Illuminate\Database\Query\Builder;
@@ -15,9 +15,9 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class Role extends Model implements RoleContract
 {
     use HasPermissions;
-    use CanCache;
-    use CanFilter;
-    use CanSort;
+    use IsCacheable;
+    use IsFilterable;
+    use IsSortable;
 
     /**
      * The database table
@@ -117,7 +117,7 @@ class Role extends Model implements RoleContract
     }
 
     /**
-     * Set the options necessary for the CanCache trait.
+     * Set the options necessary for the IsCacheable trait.
      *
      * @return CacheOptions
      */

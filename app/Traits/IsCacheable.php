@@ -5,7 +5,7 @@ namespace App\Traits;
 use App\Options\CacheOptions;
 use App\Exceptions\CacheException;
 
-trait CanCache
+trait IsCacheable
 {
     use ChecksTrait;
 
@@ -23,7 +23,7 @@ trait CanCache
      *
      * @return void
      */
-    public static function bootCanCache()
+    public static function bootIsCacheable()
     {
         self::checkOptionsMethodDeclaration('getCacheOptions');
 
@@ -64,7 +64,7 @@ trait CanCache
     {
         if (!self::$cacheOptions->key) {
             throw new CacheException(
-                'Model ' . get_class($this) . ' uses the CanCache trait. ' . PHP_EOL .
+                'Model ' . get_class($this) . ' uses the IsCacheable trait. ' . PHP_EOL .
                 'You must set the key via the getCacheOptions() method from model.' . PHP_EOL .
                 'Use the setKey() method from the App\Options\CacheOptions class.'
             );

@@ -2,7 +2,7 @@
 
 namespace App\Models\Auth;
 
-use App\Traits\CanCache;
+use App\Traits\IsCacheable;
 use App\Options\CacheOptions;
 use App\Contracts\PermissionContract;
 use Illuminate\Database\Eloquent\Model;
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Permission extends Model implements PermissionContract
 {
-    use CanCache;
+    use IsCacheable;
 
     /**
      * The database table.
@@ -75,7 +75,7 @@ class Permission extends Model implements PermissionContract
     }
 
     /**
-     * Set the options necessary for the CanCache trait.
+     * Set the options necessary for the IsCacheable trait.
      *
      * @return CacheOptions
      */

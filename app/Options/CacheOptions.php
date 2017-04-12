@@ -22,7 +22,7 @@ class CacheOptions
     }
 
     /**
-     * Set the key to work with in the App\Traits\CanCache trait.
+     * Set the key to work with in the App\Traits\IsCacheable trait.
      *
      * @param string $key
      * @return CacheOptions

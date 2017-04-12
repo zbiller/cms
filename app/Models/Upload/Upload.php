@@ -5,15 +5,15 @@ namespace App\Models\Upload;
 use App\Helpers\UploadedHelper;
 use App\Models\Model;
 use App\Services\UploadService;
-use App\Traits\CanFilter;
-use App\Traits\CanSort;
+use App\Traits\IsFilterable;
+use App\Traits\IsSortable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Schema\Blueprint;
 
 class Upload extends Model
 {
-    use CanFilter;
-    use CanSort;
+    use IsFilterable;
+    use IsSortable;
 
     /**
      * The database table.

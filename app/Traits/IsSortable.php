@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-trait CanSort
+trait IsSortable
 {
     /**
      * The query builder instance from the Sorted scope.

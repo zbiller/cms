@@ -3,8 +3,8 @@
 namespace App\Models\Cms;
 
 use App\Models\Model;
-use App\Traits\CanFilter;
-use App\Traits\CanSort;
+use App\Traits\IsFilterable;
+use App\Traits\IsSortable;
 use App\Traits\HasUrl;
 use App\Traits\HasMetadata;
 use App\Options\UrlOptions;
@@ -15,8 +15,8 @@ use Kalnoy\Nestedset\NodeTrait;
 
 class Page extends Model
 {
-    use CanFilter;
-    use CanSort;
+    use IsFilterable;
+    use IsSortable;
     use HasUrl;
     use HasMetadata;
     use SoftDeletes;

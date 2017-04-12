@@ -8,7 +8,7 @@ use App\Exceptions\FilterException;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
 
-trait CanFilter
+trait IsFilterable
 {
     /**
      * The query builder instance from the Filtered scope.

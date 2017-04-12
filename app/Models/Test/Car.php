@@ -7,8 +7,8 @@ use App\Options\UrlOptions;
 use App\Traits\CanSave;
 use App\Traits\HasMetadata;
 use App\Traits\HasUploads;
-use App\Traits\CanFilter;
-use App\Traits\CanSort;
+use App\Traits\IsFilterable;
+use App\Traits\IsSortable;
 use App\Traits\HasUrl;
 
 class Car extends Model
@@ -16,8 +16,8 @@ class Car extends Model
     use HasUploads;
     use HasUrl;
     use HasMetadata;
-    use CanFilter;
-    use CanSort;
+    use IsFilterable;
+    use IsSortable;
 
     /**
      * The database table.
