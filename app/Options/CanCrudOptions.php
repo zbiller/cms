@@ -38,6 +38,14 @@ class CanCrudOptions
     public $editView;
 
     /**
+     * The deleted route and view as strings
+     *
+     * @var
+     */
+    public $deletedRoute;
+    public $deletedView;
+
+    /**
      * Get a fresh instance of this class.
      *
      * @return CanCrudOptions
@@ -134,6 +142,32 @@ class CanCrudOptions
     public function setEditView($view): CanCrudOptions
     {
         $this->editView = $view;
+
+        return $this;
+    }
+
+    /**
+     * Set the edit route to work with in the App\Traits\CanCrud trait.
+     *
+     * @param string $route
+     * @return CanCrudOptions
+     */
+    public function setDeletedRoute($route): CanCrudOptions
+    {
+        $this->deletedRoute = $route;
+
+        return $this;
+    }
+
+    /**
+     * Set the edit view to work with in the App\Traits\CanCrud trait.
+     *
+     * @param string $view
+     * @return CanCrudOptions
+     */
+    public function setDeletedView($view): CanCrudOptions
+    {
+        $this->deletedView = $view;
 
         return $this;
     }

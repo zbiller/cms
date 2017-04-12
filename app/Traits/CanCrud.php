@@ -254,6 +254,92 @@ trait CanCrud
     }
 
     /**
+     * This method should be called inside the controller's deleted() method.
+     * The closure should at least set the $items collection.
+     *
+     * @param Closure|null $function
+     * @return $this
+     */
+    public function _deleted(Closure $function = null)
+    {
+        if ($function) {
+            call_user_func($function);
+        }
+
+        $this->vars['items'] = $this->items;
+
+        return view($this->canCrudOptions->deletedView)->with($this->vars);
+    }
+
+    /**
+     * This method should be called inside the controller's restore() method.
+     * The closure should at least attempt to restore the record in the database.
+     * $this->item = Model::findOrFail($id)->restore($request->all());
+     *
+     * @param Closure|null $function
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws Exception
+     */
+    public function _restore(Closure $function = null)
+    {
+        try {
+            if ($function) {
+                DB::transaction($function);
+            }
+
+            session()->flash('flash_success', 'The record was successfully restored!');
+            return redirect()->route($this->canCrudOptions->deletedRoute);
+        } catch (ModelNotFoundException $e) {
+            session()->flash('flash_error', 'You are trying to restore a record that does not exist!');
+            return redirect()->route($this->canCrudOptions->deletedRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
+        } catch (CrudException $e) {
+            session()->flash('flash_error', $e->getMessage());
+            return redirect()->route($this->canCrudOptions->deletedRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
+        } catch (Exception $e) {
+            if (app()->environment() == 'development') {
+                throw new Exception($e->getMessage());
+            } else {
+                session()->flash('flash_error', 'The record could not be restored! Please try again.');
+                return redirect()->route($this->canCrudOptions->deletedRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
+            }
+        }
+    }
+
+    /**
+     * This method should be called inside the controller's delete() method.
+     * The closure should at least attempt to find and delete the record from the database.
+     * $this->item = Model::findOrFail($id)->forceDelete();
+     *
+     * @param Closure|null $function
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws Exception
+     */
+    public function _delete(Closure $function = null)
+    {
+        try {
+            if ($function) {
+                DB::transaction($function);
+            }
+
+            session()->flash('flash_success', 'The record was successfully deleted!');
+            return redirect()->route($this->canCrudOptions->deletedRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
+        } catch (ModelNotFoundException $e) {
+            session()->flash('flash_error', 'You are trying to delete a record that does not exist!');
+            return redirect()->route($this->canCrudOptions->deletedRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
+        } catch (CrudException $e) {
+            session()->flash('flash_error', $e->getMessage());
+            return redirect()->route($this->canCrudOptions->deletedRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
+        } catch (Exception $e) {
+            if (app()->environment() == 'development') {
+                throw new Exception($e->getMessage());
+            } else {
+                session()->flash('flash_error', 'The record could not be deleted! Please try again.');
+                return redirect()->route($this->canCrudOptions->deletedRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
+            }
+        }
+    }
+
+    /**
      * Verify if the current action runs under the appropriate CRUD method.
      *
      * @throws CrudException

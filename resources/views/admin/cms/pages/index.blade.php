@@ -21,9 +21,7 @@
 @endsection
 
 @section('footer')
-    <section class="left">
-        {!! button()->action('Deleted Pages', route('admin.pages.deleted'), 'fa-trash', 'red') !!}
-    </section>
+    {{--{!! pagination('admin')->render($items) !!}--}}
 
     <section class="actions">
         {!! button()->update() !!}

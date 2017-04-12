@@ -18,51 +18,6 @@ class PagesController extends Controller
     use CanCrud;
     //use CanHandleTree;
 
-
-
-    public function deleted(Request $request, PageFilter $filter, PageSort $sort)
-    {
-        $items = Page::with('url')->onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
-
-        return view('admin.cms.pages.deleted')->with([
-            'items' => $items,
-            'layouts' => Layout::all(),
-            'types' => Page::$types,
-            'actives' => Page::$actives,
-        ]);
-    }
-
-    public function restore($id)
-    {
-        try {
-            $page = Page::onlyTrashed()->findOrFail($id);
-            $page->doNotGenerateUrl()->restore();
-
-            session()->flash('flash_success', 'The record was successfully restored!');
-        } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', 'You are trying to restore a record that does not exist!');
-        }
-
-        return redirect()->route('admin.pages.deleted');
-    }
-
-    public function delete($id)
-    {
-        try {
-            $page = Page::onlyTrashed()->findOrFail($id);
-            $page->forceDelete();
-
-            session()->flash('flash_success', 'The record was successfully deleted!');
-        } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', 'You are trying to delete a record that does not exist!');
-        }
-
-        return redirect()->route('admin.pages.deleted');
-    }
-
-
-
-
     /**
      * @param Request $request
      * @param PageFilter $filter
@@ -161,6 +116,51 @@ class PagesController extends Controller
         return $this->_destroy(function () use ($page) {
             $this->item = $page;
             $this->item->delete();
+        });
+    }
+
+    /**
+     * @param Request $request
+     * @param PageFilter $filter
+     * @param PageSort $sort
+     * @return \Illuminate\View\View
+     */
+    public function deleted(Request $request, PageFilter $filter, PageSort $sort)
+    {
+        return $this->_deleted(function () use ($request, $filter, $sort) {
+            $this->items = Page::with('url')->onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+
+            $this->vars = [
+                'layouts' => Layout::all(),
+                'types' => Page::$types,
+                'actives' => Page::$actives,
+            ];
+        });
+    }
+
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function restore($id)
+    {
+        return $this->_restore(function () use ($id) {
+            $this->item = Page::onlyTrashed()->findOrFail($id);
+            $this->item->doNotGenerateUrl()->restore();
+        });
+    }
+
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function delete($id)
+    {
+        return $this->_delete(function () use ($id) {
+            $this->item = Page::onlyTrashed()->findOrFail($id);
+            $this->forceDelete();
         });
     }
 
@@ -353,6 +353,8 @@ class PagesController extends Controller
             ->setAddRoute('admin.pages.create')
             ->setAddView('admin.cms.pages.add')
             ->setEditRoute('admin.pages.edit')
-            ->setEditView('admin.cms.pages.edit');
+            ->setEditView('admin.cms.pages.edit')
+            ->setDeletedRoute('admin.pages.deleted')
+            ->setDeletedView('admin.cms.pages.deleted');
     }
 }
