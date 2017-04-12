@@ -3,7 +3,7 @@
 namespace App\Models\Auth;
 
 use App\Traits\CanCache;
-use App\Options\CanCacheOptions;
+use App\Options\CacheOptions;
 use App\Contracts\PermissionContract;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -77,11 +77,11 @@ class Permission extends Model implements PermissionContract
     /**
      * Set the options necessary for the CanCache trait.
      *
-     * @return CanCacheOptions
+     * @return CacheOptions
      */
-    public function getCanCacheOptions(): CanCacheOptions
+    public static function getCacheOptions(): CacheOptions
     {
-        return CanCacheOptions::instance()
+        return CacheOptions::instance()
             ->setKey('acl');
     }
 }

@@ -9,13 +9,15 @@
 namespace App\Traits;
 
 use App\Http\Requests\ResetPasswordRequest;
-use App\Options\CanResetPasswordOptions;
+use App\Options\ResetPasswordOptions;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
 
 trait CanResetPassword
 {
+    use ChecksTrait;
+
     use ResetsPasswords {
         sendResetResponse as baseSendResetResponse;
     }
@@ -27,30 +29,22 @@ trait CanResetPassword
 
     /**
      * The container for all the options necessary for this trait.
-     * Options can be viewed in the App\Options\CanResetPasswordOptions file.
+     * Options can be viewed in the App\Options\ResetPasswordOptions file.
      *
-     * @var CanResetPasswordOptions
+     * @var ResetPasswordOptions
      */
-    protected $canResetPasswordOptions;
-
-    /**
-     * The method used for setting the authentication options.
-     * This method should be called inside the controller using this trait.
-     * Inside the method, you should set all the authentication options.
-     * This can be achieved using the methods from App\Options\CanAuthenticateOptions.
-     *
-     * @return CanResetPasswordOptions
-     */
-    abstract public function getCanResetPasswordOptions(): CanResetPasswordOptions;
+    protected static $resetPasswordOptions;
 
     /**
      * Instantiate the $CanAuthenticateOptions property with the necessary authentication properties.
      *
      * @set $CanAuthenticateOptions
      */
-    public function bootCanResetPassword()
+    public static function bootCanResetPassword()
     {
-        $this->canResetPasswordOptions = $this->getCanResetPasswordOptions();
+        self::checkOptionsMethodDeclaration('getResetPasswordOptions');
+
+        self::$resetPasswordOptions = self::getResetPasswordOptions();
     }
 
     /**
@@ -60,7 +54,7 @@ trait CanResetPassword
      */
     public function redirectTo()
     {
-        return $this->canResetPasswordOptions->redirectPath;
+        return self::$resetPasswordOptions->redirectPath;
     }
 
     /**
@@ -82,7 +76,7 @@ trait CanResetPassword
     protected function credentials(Request $request)
     {
         return $request->only(
-            $this->canResetPasswordOptions->identifierField,
+            self::$resetPasswordOptions->identifierField,
             'password', 'password_confirmation', 'token'
         );
     }
@@ -120,9 +114,9 @@ trait CanResetPassword
      */
     protected function sendResetLinkResponse($response)
     {
-        if ($this->canResetPasswordOptions->redirectPath) {
+        if (self::$resetPasswordOptions->redirectPath) {
             session()->flash('flash_success', trans($response));
-            return redirect($this->canResetPasswordOptions->redirectPath);
+            return redirect(self::$resetPasswordOptions->redirectPath);
         } else {
             session()->flash('flash_error', trans($response));
             return $this->baseSendResetLinkResponse($response);

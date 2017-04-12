@@ -4,27 +4,19 @@ namespace App\Traits;
 
 use App\Exceptions\SlugException;
 use App\Models\Model;
-use App\Options\HasSlugOptions;
+use App\Options\SlugOptions;
 
 trait HasSlug
 {
-    /**
-     * The container for all the options necessary for this trait.
-     * Options can be viewed in the App\Options\HasSlugOptions file.
-     *
-     * @var HasSlugOptions
-     */
-    protected $hasSlugOptions;
+    use ChecksTrait;
 
     /**
-     * The method used for setting the slug options.
-     * This method should be called inside the model using this trait.
-     * Inside the method, you should set all the slug options.
-     * This can be achieved using the methods from App\Options\HasSlugOptions.
+     * The container for all the options necessary for this trait.
+     * Options can be viewed in the App\Options\SlugOptions file.
      *
-     * @return HasSlugOptions
+     * @var SlugOptions
      */
-    abstract function getHasSlugOptions(): HasSlugOptions;
+    protected static $slugOptions;
 
     /**
      * Boot the trait.
@@ -33,6 +25,10 @@ trait HasSlug
      */
     public static function bootHasSlug()
     {
+        self::checkOptionsMethodDeclaration('getSlugOptions');
+
+        self::$slugOptions = self::getSlugOptions();
+
         static::creating(function (Model $model) {
             $model->generateSlugOnCreate();
         });
@@ -49,16 +45,16 @@ trait HasSlug
      */
     public function generateSlug()
     {
-        $this->checkSlugOptions();
+        self::checkSlugOptions();
 
         if ($this->slugHasBeenSupplied()) {
             $slug = $this->generateNonUniqueSlug();
 
-            if ($this->hasSlugOptions->uniqueSlugs) {
+            if (self::$slugOptions->uniqueSlugs) {
                 $slug = $this->makeSlugUnique($slug);
             }
 
-            $this->setAttribute($this->hasSlugOptions->toField, $slug);
+            $this->setAttribute(self::$slugOptions->toField, $slug);
         }
     }
 
@@ -69,9 +65,7 @@ trait HasSlug
      */
     protected function generateSlugOnCreate()
     {
-        $this->initSlugOptions();
-
-        if ($this->hasSlugOptions->generateSlugOnCreate === false) {
+        if (self::$slugOptions->generateSlugOnCreate === false) {
             return;
         }
 
@@ -85,9 +79,7 @@ trait HasSlug
      */
     protected function generateSlugOnUpdate()
     {
-        $this->initSlugOptions();
-
-        if ($this->hasSlugOptions->generateSlugOnUpdate === false) {
+        if (self::$slugOptions->generateSlugOnUpdate === false) {
             return;
         }
 
@@ -102,7 +94,7 @@ trait HasSlug
     protected function generateNonUniqueSlug()
     {
         if ($this->slugHasChanged()) {
-            $source = $this->getAttribute($this->hasSlugOptions->toField);
+            $source = $this->getAttribute(self::$slugOptions->toField);
 
             return str_is('/', $source) ? $source : str_slug($source);
         }
@@ -138,7 +130,7 @@ trait HasSlug
      */
     protected function slugHasBeenSupplied()
     {
-        return $this->getAttribute($this->hasSlugOptions->fromField) !== null;
+        return $this->getAttribute(self::$slugOptions->fromField) !== null;
     }
 
     /**
@@ -149,8 +141,8 @@ trait HasSlug
     protected function slugHasChanged()
     {
         return
-            $this->getOriginal($this->hasSlugOptions->toField) &&
-            $this->getOriginal($this->hasSlugOptions->toField) != $this->getAttribute($this->hasSlugOptions->toField);
+            $this->getOriginal(self::$slugOptions->toField) &&
+            $this->getOriginal(self::$slugOptions->toField) != $this->getAttribute(self::$slugOptions->toField);
     }
 
     /**
@@ -160,13 +152,13 @@ trait HasSlug
      */
     protected function getSlugSource()
     {
-        if (is_callable($this->hasSlugOptions->fromField)) {
-            $source = call_user_func($this->hasSlugOptions->fromField, $this);
+        if (is_callable(self::$slugOptions->fromField)) {
+            $source = call_user_func(self::$slugOptions->fromField, $this);
 
-            return substr($source, 0, $this->hasSlugOptions->fromField);
+            return substr($source, 0, self::$slugOptions->fromField);
         }
 
-        return collect($this->hasSlugOptions->fromField)->map(function ($field) {
+        return collect(self::$slugOptions->fromField)->map(function ($field) {
             return $this->getAttribute($field) ?: '';
         })->implode('-');
     }
@@ -179,21 +171,9 @@ trait HasSlug
      */
     protected function slugAlreadyExists($slug)
     {
-        return (bool)static::where($this->hasSlugOptions->toField, $slug)
+        return (bool)static::where(self::$slugOptions->toField, $slug)
             ->where($this->getKeyName(), '!=', $this->getKey() ?: '0')
             ->first();
-    }
-
-    /**
-     * Set the slug options.
-     *
-     * @return $this
-     */
-    protected function initSlugOptions()
-    {
-        $this->hasSlugOptions = $this->getHasSlugOptions();
-
-        return $this;
     }
 
     /**
@@ -203,21 +183,21 @@ trait HasSlug
      * @return void
      * @throws SlugException
      */
-    protected function checkSlugOptions()
+    protected static function checkSlugOptions()
     {
-        if (!count($this->hasSlugOptions->fromField)) {
+        if (!count(self::$slugOptions->fromField)) {
             throw new SlugException(
-                'The model ' . get_class($this) . ' uses the HasSlug trait' . PHP_EOL .
+                'The model ' . self::class . ' uses the HasSlug trait' . PHP_EOL .
                 'You are required to set the field from where to generate the slug ($fromField)' . PHP_EOL .
-                'You can do this from inside the getHasSlugOptions() method defined on the model.'
+                'You can do this from inside the getSlugOptions() method defined on the model.'
             );
         }
 
-        if (!strlen($this->hasSlugOptions->toField)) {
+        if (!strlen(self::$slugOptions->toField)) {
             throw new SlugException(
-                'The model ' . get_class($this) . ' uses the HasSlug trait' . PHP_EOL .
+                'The model ' . self::class . ' uses the HasSlug trait' . PHP_EOL .
                 'You are required to set the field where to store the generated slug ($toField)' . PHP_EOL .
-                'You can do this from inside the getHasSlugOptions() method defined on the model.'
+                'You can do this from inside the getSlugOptions() method defined on the model.'
             );
         }
     }

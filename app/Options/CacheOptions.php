@@ -2,7 +2,7 @@
 
 namespace App\Options;
 
-class CanCacheOptions
+class CacheOptions
 {
     /**
      * The cache key in use.
@@ -14,9 +14,9 @@ class CanCacheOptions
     /**
      * Get a fresh instance of this class.
      *
-     * @return CanCacheOptions
+     * @return CacheOptions
      */
-    public static function instance(): CanCacheOptions
+    public static function instance(): CacheOptions
     {
         return new static();
     }
@@ -25,9 +25,9 @@ class CanCacheOptions
      * Set the key to work with in the App\Traits\CanCache trait.
      *
      * @param string $key
-     * @return CanCacheOptions
+     * @return CacheOptions
      */
-    public function setKey($key): CanCacheOptions
+    public function setKey($key): CacheOptions
     {
         $this->key = $key;
 

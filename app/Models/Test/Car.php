@@ -3,21 +3,28 @@
 namespace App\Models\Test;
 
 use App\Models\Model;
-use App\Options\HasUploadsOptions;
-use App\Traits\CanFilter;
+use App\Options\UrlOptions;
+use App\Traits\CanSave;
+use App\Traits\HasMetadata;
 use App\Traits\HasUploads;
+use App\Traits\CanFilter;
 use App\Traits\CanSort;
+use App\Traits\HasUrl;
 
-class Test extends Model
+class Car extends Model
 {
-    use CanFilter, CanSort, HasUploads;
+    use HasUploads;
+    use HasUrl;
+    use HasMetadata;
+    use CanFilter;
+    use CanSort;
 
     /**
      * The database table.
      *
      * @var string
      */
-    protected $table = 'test';
+    protected $table = 'cars';
 
     /**
      * The attributes that are mass assignable.
@@ -25,54 +32,81 @@ class Test extends Model
      * @var array
      */
     protected $fillable = [
+        'owner_id',
+        'brand_id',
         'name',
-        'type',
+        'slug',
         'image',
         'video',
         'audio',
         'file',
+        'metadata',
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function testHasOne1()
-    {
-        return $this->hasOne(TestHasOne1::class, 'test_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-     */
-    public function testHasOne2()
-    {
-        return $this->hasOne(TestHasOne2::class, 'test_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function testHasMany1()
-    {
-        return $this->hasMany(TestHasMany1::class, 'test_id');
-    }
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function testHasMany2()
-    {
-        return $this->hasMany(TestHasMany2::class, 'test_id');
-    }
-
-    /**
+     * Car belongs to Owner.
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function testHabtm()
+    public function owner()
     {
-        return $this->belongsToMany(TestHabtm::class, 'test_test_habtm_ring', 'test_id', 'test_habtm_id');
+        return $this->belongsTo(Owner::class, 'owner_id');
     }
 
+    /**
+     * Car belongs to Brand.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class, 'brand_id');
+    }
+
+    /**
+     * Car has one Book.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function book()
+    {
+        return $this->hasOne(Book::class, 'car_id');
+    }
+
+    /**
+     * Car has many Pieces.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function pieces()
+    {
+        return $this->hasMany(Piece::class, 'car_id');
+    }
+
+    /**
+     * Car has and belongs to many Mechanics.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function mechanics()
+    {
+        return $this->belongsToMany(Mechanic::class, 'cars_mechanics_ring', 'car_id', 'mechanic_id');
+    }
+
+    /**
+     * @return UrlOptions
+     */
+    public static function getUrlOptions()
+    {
+        return UrlOptions::instance()
+            ->generateUrlSlugFrom('slug')
+            ->saveUrlSlugTo('slug')
+            ->prefixUrlWith('cars');
+    }
+
+    /**
+     * @return array
+     */
     public function getUploadConfig()
     {
         return [
@@ -86,7 +120,7 @@ class Test extends Model
                         ],
                         'landscape' => [
                             'width' => '600',
-                            'height' => '200',
+                            'height' => '300',
                             'ratio' => true,
                         ],
                         'square' => [

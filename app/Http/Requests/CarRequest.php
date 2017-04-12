@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-class TestRequest extends Request
+class CarRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,7 +22,7 @@ class TestRequest extends Request
     public function rules()
     {
         return [
-            'name' => 'required|unique:test,name,' . $this->route('id'),
+            'name' => 'required'
         ];
     }
 }

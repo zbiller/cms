@@ -6,8 +6,8 @@ use DB;
 use Exception;
 use App\Models\Model;
 use App\Models\Cms\Url;
-use App\Options\HasUrlOptions;
-use App\Options\HasSlugOptions;
+use App\Options\UrlOptions;
+use App\Options\SlugOptions;
 use App\Exceptions\UrlException;
 
 trait HasUrl
@@ -16,11 +16,11 @@ trait HasUrl
 
     /**
      * The container for all the options necessary for this trait.
-     * Options can be viewed in the App\Options\HasSlugOptions file.
+     * Options can be viewed in the App\Options\UrlOptions file.
      *
-     * @var HasSlugOptions
+     * @var UrlOptions
      */
-    protected $hasUrlOptions;
+    protected static $urlOptions;
 
     /**
      * Flag to manually disable the url generation only for the current request.
@@ -28,16 +28,6 @@ trait HasUrl
      * @var bool
      */
     protected static $shouldGenerateUrl = true;
-
-    /**
-     * The method used for setting the slug options.
-     * This method should be called inside the model using this trait.
-     * Inside the method, you should set all the slug options.
-     * This can be achieved using the methods from App\Options\HasUrlOptions.
-     *
-     * @return HasUrlOptions
-     */
-    abstract function getHasUrlOptions(): HasUrlOptions;
 
     /**
      * Boot the trait.
@@ -48,13 +38,19 @@ trait HasUrl
      */
     public static function bootHasUrl()
     {
-        static::creating(function (Model $model) {
+        self::checkOptionsMethodDeclaration('getUrlOptions');
+
+        self::$urlOptions = self::getUrlOptions();
+
+        self::checkUrlOptions();
+
+        /*static::creating(function (Model $model) {
             $model->initUrlOptions();
         });
 
         static::updating(function (Model $model) {
             $model->initUrlOptions();
-        });
+        });*/
 
         static::created(function (Model $model) {
             if (self::$shouldGenerateUrl === true) {
@@ -100,13 +96,13 @@ trait HasUrl
     /**
      * Get the options for the HasSlug trait.
      *
-     * @return HasSlugOptions
+     * @return SlugOptions
      */
-    public function getHasSlugOptions()
+    public static function getSlugOptions()
     {
-        return HasSlugOptions::instance()
-            ->generateSlugFrom($this->hasUrlOptions->fromField)
-            ->saveSlugTo($this->hasUrlOptions->toField);
+        return SlugOptions::instance()
+            ->generateSlugFrom(self::$urlOptions->fromField)
+            ->saveSlugTo(self::$urlOptions->toField);
     }
 
     /**
@@ -117,7 +113,7 @@ trait HasUrl
      */
     protected function createUrl()
     {
-        if (!$this->getAttribute($this->hasUrlOptions->toField)) {
+        if (!$this->getAttribute(self::$urlOptions->toField)) {
             return;
         }
 
@@ -140,7 +136,7 @@ trait HasUrl
      */
     protected function updateUrl()
     {
-        if (!$this->getAttribute($this->hasUrlOptions->toField)) {
+        if (!$this->getAttribute(self::$urlOptions->toField)) {
             return;
         }
 
@@ -150,7 +146,7 @@ trait HasUrl
                     'url' => $this->buildFullUrl()
                 ]);
 
-                if ($this->hasUrlOptions->cascadeUpdate === true) {
+                if (self::$urlOptions->cascadeUpdate === true) {
                     $this->updateUrlsInCascade();
                 }
             });
@@ -184,8 +180,8 @@ trait HasUrl
      */
     protected function updateUrlsInCascade()
     {
-        $old = trim($this->getOriginal($this->hasUrlOptions->toField), '/');
-        $new = trim($this->getAttribute($this->hasUrlOptions->toField), '/');
+        $old = trim($this->getOriginal(self::$urlOptions->toField), '/');
+        $new = trim($this->getAttribute(self::$urlOptions->toField), '/');
 
         $children = URL::where('urlable_type', static::class)->where(function ($query) use ($old) {
             $query->where('url', 'like', "{$old}/%")->orWhere('url', 'like', "%/{$old}/%");
@@ -211,7 +207,7 @@ trait HasUrl
 
         return
             (str_is('/', $prefix) ? '' : ($prefix ? $prefix . '/' : '')) .
-            $this->getAttribute($this->hasUrlOptions->toField) .
+            $this->getAttribute(self::$urlOptions->toField) .
             (str_is('/', $suffix) ? '' : ($suffix ? '/' . $suffix : ''));
     }
 
@@ -230,7 +226,7 @@ trait HasUrl
             return '';
         }
 
-        $segment = $this->hasUrlOptions->{'url' . ucwords($type)};
+        $segment = self::$urlOptions->{'url' . ucwords($type)};
 
         if (is_callable($segment)) {
             return call_user_func_array($segment, ['', $this]);
@@ -244,39 +240,27 @@ trait HasUrl
     }
 
     /**
-     * Set the url options.
-     *
-     * @return $this
-     */
-    protected function initUrlOptions()
-    {
-        $this->hasUrlOptions = $this->getHasUrlOptions();
-
-        return $this;
-    }
-
-    /**
      * Check if mandatory slug options have been properly set from the model.
      * Check if $fromField and $toField have been set.
      *
      * @return void
      * @throws UrlException
      */
-    protected function checkUrlOptions()
+    protected static function checkUrlOptions()
     {
-        if (!count($this->hasUrlOptions->fromField)) {
+        if (!count(self::$urlOptions->fromField)) {
             throw new UrlException(
-                'The model ' . get_class($this) . ' uses the HasUrl trait' . PHP_EOL .
+                'The model ' . self::class . ' uses the HasUrl trait' . PHP_EOL .
                 'You are required to set the field from where to generate the url slug ($fromField)' . PHP_EOL .
-                'You can do this from inside the getHasUrlOptions() method defined on the model.'
+                'You can do this from inside the getUrlOptions() method defined on the model.'
             );
         }
 
-        if (!strlen($this->hasUrlOptions->toField)) {
+        if (!strlen(self::$urlOptions->toField)) {
             throw new UrlException(
-                'The model ' . get_class($this) . ' uses the HasUrl trait' . PHP_EOL .
+                'The model ' . self::class . ' uses the HasUrl trait' . PHP_EOL .
                 'You are required to set the field where to store the generated url slug ($toField)' . PHP_EOL .
-                'You can do this from inside the getHasUrlOptions() method defined on the model.'
+                'You can do this from inside the getUrlOptions() method defined on the model.'
             );
         }
     }

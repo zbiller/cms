@@ -8,11 +8,11 @@
 
 @section('content')
     <section class="filters">
-        @include('admin.test._filter')
+        @include('admin.test.cars._filter')
     </section>
 
     <section class="list">
-        @include('admin.test._table', ['items' => $items])
+        @include('admin.test.cars._table', ['items' => $items])
     </section>
 @endsection
 
@@ -21,6 +21,6 @@
 
     <section class="actions">
         {!! button()->update() !!}
-        {!! button()->add('admin.test.create') !!}
+        {!! button()->add('admin.cars.create') !!}
     </section>
 @endsection

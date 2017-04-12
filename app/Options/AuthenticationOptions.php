@@ -2,21 +2,21 @@
 
 namespace App\Options;
 
-class CanAuthenticateOptions
+class AuthenticationOptions
 {
     /**
      * The field name to be used in combination with the password to sign in the user.
      *
      * @var string
      */
-    public $usernameField = 'email';
+    public $usernameField = 'username';
 
     /**
      * The path to redirect the user after login.
      *
      * @var string
      */
-    public $loginRedirectPath = '/admin';
+    public $loginRedirectPath = '/';
 
     /**
      * The path to redirect the user after logout.
@@ -30,21 +30,21 @@ class CanAuthenticateOptions
      *
      * @var int
      */
-    public $throttleMaxLoginAttempts = 3;
+    public $maxLoginAttempts = 3;
 
     /**
      * The number of minutes to delay further login attempts.
      *
      * @var int
      */
-    public $throttleLockoutTime = 1;
+    public $lockoutTime = 1;
 
     /**
      * Get a fresh instance of this class.
      *
-     * @return CanAuthenticateOptions
+     * @return AuthenticationOptions
      */
-    public static function instance(): CanAuthenticateOptions
+    public static function instance(): AuthenticationOptions
     {
         return new static();
     }
@@ -53,9 +53,9 @@ class CanAuthenticateOptions
      * Set the $usernameField to work with in the App\Traits\AuthenticatesUsers trait.
      *
      * @param string $name
-     * @return CanAuthenticateOptions
+     * @return AuthenticationOptions
      */
-    public function setUsernameField($name): CanAuthenticateOptions
+    public function setUsernameField($name): AuthenticationOptions
     {
         $this->usernameField = $name;
 
@@ -66,9 +66,9 @@ class CanAuthenticateOptions
      * Set the $logoutRedirectPath to work with in the App\Traits\AuthenticatesUsers trait.
      *
      * @param string $path
-     * @return CanAuthenticateOptions
+     * @return AuthenticationOptions
      */
-    public function setLogoutRedirectPath($path): CanAuthenticateOptions
+    public function setLogoutRedirectPath($path): AuthenticationOptions
     {
         $this->logoutRedirectPath = $path;
 
@@ -79,9 +79,9 @@ class CanAuthenticateOptions
      * Set the $loginRedirectPath to work with in the App\Traits\AuthenticatesUsers trait.
      *
      * @param string $path
-     * @return CanAuthenticateOptions
+     * @return AuthenticationOptions
      */
-    public function setLoginRedirectPath($path): CanAuthenticateOptions
+    public function setLoginRedirectPath($path): AuthenticationOptions
     {
         $this->loginRedirectPath = $path;
 
@@ -92,11 +92,11 @@ class CanAuthenticateOptions
      * Set the throttleMaxLoginAttempts to work with in the App\Traits\AuthenticatesUsers trait.
      *
      * @param int $tries
-     * @return CanAuthenticateOptions
+     * @return AuthenticationOptions
      */
-    public function setThrottleMaxLoginAttempts($tries): CanAuthenticateOptions
+    public function setMaxLoginAttempts($tries): AuthenticationOptions
     {
-        $this->throttleMaxLoginAttempts = $tries;
+        $this->maxLoginAttempts = $tries;
 
         return $this;
     }
@@ -105,11 +105,11 @@ class CanAuthenticateOptions
      * Set the $throttleLockoutTime to work with in the App\Traits\AuthenticatesUsers trait.
      *
      * @param int $minutes
-     * @return CanAuthenticateOptions
+     * @return AuthenticationOptions
      */
-    public function setThrottleLockoutTime($minutes): CanAuthenticateOptions
+    public function setLockoutTime($minutes): AuthenticationOptions
     {
-        $this->throttleLockoutTime = $minutes;
+        $this->lockoutTime = $minutes;
 
         return $this;
     }

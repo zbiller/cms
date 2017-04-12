@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Auth\User;
 use App\Models\Auth\Role;
 use App\Traits\CanCrud;
-use App\Options\CanCrudOptions;
+use App\Options\CrudOptions;
 use App\Http\Requests\AdminUserRequest;
 use App\Http\Filters\AdminUserFilter;
 use App\Http\Sorts\AdminUserSort;
@@ -98,11 +98,11 @@ class AdminUsersController extends Controller
     }
 
     /**
-     * @return CanCrudOptions
+     * @return CrudOptions
      */
-    public function getCanCrudOptions()
+    public static function getCrudOptions()
     {
-        return CanCrudOptions::instance()
+        return CrudOptions::instance()
             ->setModel(app(Role::class))
             ->setListRoute('admin.admin_users.index')
             ->setListView('admin.acl.admin_users.index')

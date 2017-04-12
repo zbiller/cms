@@ -2,7 +2,7 @@
 
 namespace App\Http\Sorts;
 
-class TestSort extends Sort
+class CarSort extends Sort
 {
     /**
      * Get the request field name to sort by.

@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Traits\CanResetPassword;
-use App\Options\CanResetPasswordOptions;
+use App\Options\ResetPasswordOptions;
 use Illuminate\Http\Request;
 
 class ResetPasswordController extends Controller
@@ -25,11 +25,11 @@ class ResetPasswordController extends Controller
     }
 
     /**
-     * @return CanResetPasswordOptions
+     * @return ResetPasswordOptions
      */
-    public function getCanResetPasswordOptions()
+    public static function getResetPasswordOptions()
     {
-        return CanResetPasswordOptions::instance()
+        return ResetPasswordOptions::instance()
             ->setIdentifierField('username')
             ->setRedirectPath('/admin');
     }

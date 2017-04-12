@@ -9,7 +9,8 @@ use App\Traits\CanCrud;
 use App\Http\Requests\PageRequest;
 use App\Http\Filters\PageFilter;
 use App\Http\Sorts\PageSort;
-use App\Options\CanCrudOptions;
+use App\Options\CrudOptions;
+use App\Traits\CanHandleTree;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
@@ -342,11 +343,11 @@ class PagesController extends Controller
 
 
     /**
-     * @return CanCrudOptions
+     * @return CrudOptions
      */
-    public function getCanCrudOptions()
+    public static function getCrudOptions()
     {
-        return CanCrudOptions::instance()
+        return CrudOptions::instance()
             ->setModel(app(Page::class))
             ->setListRoute('admin.pages.index')
             ->setListView('admin.cms.pages.index')

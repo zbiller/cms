@@ -48,9 +48,9 @@ class Controller extends BaseController
      */
     private function bootTraits()
     {
-        foreach (class_uses_recursive($this) as $trait) {
-            if (method_exists($this, $method = 'boot' . class_basename($trait))) {
-                call_user_func([&$this, $method]);
+        foreach (class_uses_recursive(static::class) as $trait) {
+            if (method_exists(static::class, $method = 'boot' . class_basename($trait))) {
+                forward_static_call([static::class, $method]);
             }
         }
     }

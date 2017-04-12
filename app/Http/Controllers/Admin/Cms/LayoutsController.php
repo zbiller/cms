@@ -8,7 +8,7 @@ use App\Http\Requests\LayoutRequest;
 use App\Http\Sorts\LayoutSort;
 use App\Models\Cms\Layout;
 use App\Traits\CanCrud;
-use App\Options\CanCrudOptions;
+use App\Options\CrudOptions;
 use Illuminate\Http\Request;
 
 class LayoutsController extends Controller
@@ -92,11 +92,11 @@ class LayoutsController extends Controller
     }
 
     /**
-     * @return CanCrudOptions
+     * @return CrudOptions
      */
-    public function getCanCrudOptions()
+    public static function getCrudOptions()
     {
-        return CanCrudOptions::instance()
+        return CrudOptions::instance()
             ->setModel(app(Layout::class))
             ->setListRoute('admin.layouts.index')
             ->setListView('admin.cms.layouts.index')

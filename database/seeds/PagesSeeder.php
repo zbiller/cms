@@ -21,7 +21,7 @@ class PagesSeeder extends Seeder
          * Get the default or first layout.
          */
         try {
-            $layout = Layout::identify('default')->firstOrFail();
+            $layout = Layout::whereIdentifier('default')->firstOrFail();
         } catch (ModelNotFoundException $e) {
             $layout = Layout::first();
         }

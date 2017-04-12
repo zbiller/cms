@@ -7,7 +7,7 @@ use App\Traits\HasPermissions;
 use App\Traits\CanCache;
 use App\Traits\CanFilter;
 use App\Traits\CanSort;
-use App\Options\CanCacheOptions;
+use App\Options\CacheOptions;
 use App\Contracts\RoleContract;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -119,11 +119,11 @@ class Role extends Model implements RoleContract
     /**
      * Set the options necessary for the CanCache trait.
      *
-     * @return CanCacheOptions
+     * @return CacheOptions
      */
-    public function getCanCacheOptions(): CanCacheOptions
+    public static function getCacheOptions(): CacheOptions
     {
-        return CanCacheOptions::instance()
+        return CacheOptions::instance()
             ->setKey('acl');
     }
 }

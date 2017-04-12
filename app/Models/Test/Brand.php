@@ -4,14 +4,14 @@ namespace App\Models\Test;
 
 use App\Models\Model;
 
-class TestHasOne1 extends Model
+class Brand extends Model
 {
     /**
      * The database table.
      *
      * @var string
      */
-    protected $table = 'test_hasone_1';
+    protected $table = 'cars_brands';
 
     /**
      * The attributes that are mass assignable.
@@ -19,15 +19,16 @@ class TestHasOne1 extends Model
      * @var array
      */
     protected $fillable = [
-        'test_id',
         'name',
     ];
 
     /**
+     * Brand has many Cars.
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function test()
+    public function cars()
     {
-        return $this->belongsTo(Test::class, 'test_id');
+        return $this->hasMany(Car::class, 'brand_id');
     }
 }

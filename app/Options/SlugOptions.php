@@ -2,7 +2,7 @@
 
 namespace App\Options;
 
-class HasSlugOptions
+class SlugOptions
 {
     /**
      * The field used to generate the slug from.
@@ -42,9 +42,9 @@ class HasSlugOptions
     /**
      * Get a fresh instance of this class.
      *
-     * @return HasSlugOptions
+     * @return SlugOptions
      */
-    public static function instance(): HasSlugOptions
+    public static function instance(): SlugOptions
     {
         return new static();
     }
@@ -53,9 +53,9 @@ class HasSlugOptions
      * Set the $fromField to work with in the App\Traits\HasSlug trait.
      *
      * @param string|array|callable $field
-     * @return HasSlugOptions
+     * @return SlugOptions
      */
-    public function generateSlugFrom($field): HasSlugOptions
+    public function generateSlugFrom($field): SlugOptions
     {
         $this->fromField = $field;
 
@@ -66,9 +66,9 @@ class HasSlugOptions
      * Set the $toField to work with in the App\Traits\HasSlug trait.
      *
      * @param string $field
-     * @return HasSlugOptions
+     * @return SlugOptions
      */
-    public function saveSlugTo($field): HasSlugOptions
+    public function saveSlugTo($field): SlugOptions
     {
         $this->toField = $field;
 
@@ -78,9 +78,9 @@ class HasSlugOptions
     /**
      * Set the $uniqueSlugs to work with in the App\Traits\HasSlug trait.
      *
-     * @return HasSlugOptions
+     * @return SlugOptions
      */
-    public function allowDuplicateSlugs(): HasSlugOptions
+    public function allowDuplicateSlugs(): SlugOptions
     {
         $this->uniqueSlugs = false;
 
@@ -90,9 +90,9 @@ class HasSlugOptions
     /**
      * Set the $generateSlugOnCreate to work with in the App\Traits\HasSlug trait.
      *
-     * @return HasSlugOptions
+     * @return SlugOptions
      */
-    public function doNotGenerateSlugOnCreate(): HasSlugOptions
+    public function doNotGenerateSlugOnCreate(): SlugOptions
     {
         $this->generateSlugOnCreate = false;
 
@@ -102,9 +102,9 @@ class HasSlugOptions
     /**
      * Set the $generateSlugOnUpdate to work with in the App\Traits\HasSlug trait.
      *
-     * @return HasSlugOptions
+     * @return SlugOptions
      */
-    public function doNotGenerateSlugOnUpdate(): HasSlugOptions
+    public function doNotGenerateSlugOnUpdate(): SlugOptions
     {
         $this->generateSlugOnUpdate = false;
 

@@ -107,20 +107,6 @@ Route::group([
                 Route::delete('delete/{id}', ['as' => 'admin.pages.delete', 'uses' => 'PagesController@delete', 'permissions' => 'pages-deleted-delete']);
 
                 /**
-                 * Crud Deleted Pages
-                 */
-                /*Route::group([
-                    'namespace' => 'Pages',
-                    'prefix' => 'deleted'
-                ], function () {
-                    Route::get('', ['as' => 'admin.pages.deleted', 'uses' => 'PagesController@deleted', 'permissions' => 'pages-deleted-list']);
-                    Route::get('restore/{deleted}', ['as' => 'admin.pages.restore', 'uses' => 'DeletedController@restore', 'permissions' => 'pages-deleted-edit']);
-                    Route::bind('deleted', function ($id) {
-                        return \App\Models\Cms\Page::onlyTrashed()->where('id', $id)->first();
-                    });
-                });*/
-
-                /**
                  * Tree Actions
                  */
                 Route::group([
@@ -174,14 +160,14 @@ Route::group([
 
         Route::group([
             'namespace' => 'Test',
-            'prefix' => 'test',
+            'prefix' => 'cars',
         ], function () {
-            Route::get('/', ['as' => 'admin.test.index', 'uses' => 'TestController@index']);
-            Route::get('create', ['as' => 'admin.test.create', 'uses' => 'TestController@create']);
-            Route::get('edit/{id}', ['as' => 'admin.test.edit', 'uses' => 'TestController@edit']);
-            Route::post('store', ['as' => 'admin.test.store', 'uses' => 'TestController@store']);
-            Route::put('update/{id}', ['as' => 'admin.test.update', 'uses' => 'TestController@update']);
-            Route::delete('destroy/{id}', ['as' => 'admin.test.destroy', 'uses' => 'TestController@destroy']);
+            Route::get('/', ['as' => 'admin.cars.index', 'uses' => 'CarsController@index']);
+            Route::get('create', ['as' => 'admin.cars.create', 'uses' => 'CarsController@create']);
+            Route::get('edit/{id}', ['as' => 'admin.cars.edit', 'uses' => 'CarsController@edit']);
+            Route::post('store', ['as' => 'admin.cars.store', 'uses' => 'CarsController@store']);
+            Route::put('update/{id}', ['as' => 'admin.cars.update', 'uses' => 'CarsController@update']);
+            Route::delete('destroy/{id}', ['as' => 'admin.cars.destroy', 'uses' => 'CarsController@destroy']);
         });
     });
 });

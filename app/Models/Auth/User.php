@@ -7,7 +7,7 @@ use App\Traits\CanFilter;
 use App\Traits\CanSort;
 use App\Scopes\SelectUserScope;
 use App\Scopes\JoinPersonScope;
-use App\Options\CanCacheOptions;
+use App\Options\CacheOptions;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Notifications\Notifiable;
@@ -232,11 +232,11 @@ class User extends Authenticatable
     /**
      * Set the options necessary for the CanCache trait.
      *
-     * @return CanCacheOptions
+     * @return CacheOptions
      */
-    public function getCanCacheOptions(): CanCacheOptions
+    public static function getCacheOptions(): CacheOptions
     {
-        return CanCacheOptions::instance()
+        return CacheOptions::instance()
             ->setKey('acl');
     }
 }

@@ -42,8 +42,10 @@ class PageRequest extends Request
                     ->ignore($this->route('page') ? $this->route('page')->id : null)
             ],
             'identifier' => [
-                Rule::unique('pages', 'identifier')
-                    ->ignore($this->route('page') ? $this->route('page')->id : null)
+                $this->get('identifier') !== null ?
+                    Rule::unique('pages', 'identifier')
+                        ->ignore($this->route('page') ? $this->route('page')->id : null) :
+                    null
             ],
         ];
     }

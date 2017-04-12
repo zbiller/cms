@@ -7,7 +7,7 @@ use App\Traits\CanFilter;
 use App\Traits\CanSort;
 use App\Traits\HasUrl;
 use App\Traits\HasMetadata;
-use App\Options\HasUrlOptions;
+use App\Options\UrlOptions;
 use App\Exceptions\CrudException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -90,6 +90,12 @@ class Page extends Model
         self::TYPE_SPECIAL => 'Special',
     ];
 
+    public static $map = [
+        self::TYPE_DEFAULT => [
+
+        ]
+    ];
+
     /**
      * Boot the model.
      * On delete verify if page has children.
@@ -147,7 +153,7 @@ class Page extends Model
      * @param Builder $query
      * @param string $identifier
      */
-    public function scopeIdentify($query, $identifier)
+    public function scopeWhereIdentifier($query, $identifier)
     {
         $query->where('identifier', $identifier);
     }
@@ -163,11 +169,11 @@ class Page extends Model
     }
 
     /**
-     * @return HasUrlOptions
+     * @return UrlOptions
      */
-    public function getHasUrlOptions()
+    public static function getUrlOptions()
     {
-        return HasUrlOptions::instance()
+        return UrlOptions::instance()
             ->generateUrlSlugFrom('slug')
             ->saveUrlSlugTo('slug')
             ->prefixUrlWith(function ($prefix, $model) {

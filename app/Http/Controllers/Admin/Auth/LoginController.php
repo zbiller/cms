@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Traits\CanAuthenticate;
-use App\Options\CanAuthenticateOptions;
+use App\Options\AuthenticationOptions;
 
 class LoginController extends Controller
 {
@@ -21,15 +21,12 @@ class LoginController extends Controller
     }
 
     /**
-     * @return CanAuthenticateOptions
+     * @return AuthenticationOptions
      */
-    public function getCanAuthenticateOptions()
+    public static function getAuthenticationOptions()
     {
-        return CanAuthenticateOptions::instance()
-            ->setUsernameField('username')
+        return AuthenticationOptions::instance()
             ->setLoginRedirectPath('/admin')
-            ->setLogoutRedirectPath('/admin/login')
-            ->setThrottleMaxLoginAttempts(3)
-            ->setThrottleLockoutTime(1);
+            ->setLogoutRedirectPath('/admin/login');
     }
 }

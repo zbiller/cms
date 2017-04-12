@@ -1,12 +1,12 @@
 <?php
 
+use App\Models\Test\Brand;
+use App\Models\Test\Car;
+use App\Models\Test\Mechanic;
+use App\Models\Test\Owner;
+use App\Models\Test\Book;
+use App\Models\Test\Piece;
 use Carbon\Carbon;
-use App\Models\Test\Test;
-use App\Models\Test\TestHasOne1;
-use App\Models\Test\TestHasOne2;
-use App\Models\Test\TestHasMany1;
-use App\Models\Test\TestHasMany2;
-use App\Models\Test\TestHabtm;
 use Illuminate\Database\Seeder;
 
 class TestSeeder extends Seeder
@@ -18,34 +18,103 @@ class TestSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('test_test_habtm_ring')->delete();
-        DB::table('test_habtm')->delete();
-        DB::table('test_hasmany_2')->delete();
-        DB::table('test_hasmany_1')->delete();
-        DB::table('test_hasone_2')->delete();
-        DB::table('test_hasone_1')->delete();
-        DB::table('test')->delete();
+        DB::table('cars_mechanics_ring')->delete();
+        DB::table('cars_mechanics')->delete();
+        DB::table('cars_pieces')->delete();
+        DB::table('cars_books')->delete();
+        DB::table('cars')->delete();
+        DB::table('cars_brands')->delete();
+        DB::table('cars_owners')->delete();
 
-        Test::create(['name' => 'Sample name', 'content' => 'content', 'type' => '2']);
-        Test::create(['name' => 'Type 3', 'content' => 'sample content', 'type' => '3']);
+        $owner1 = Owner::create([
+            'first_name' => 'Andrei',
+            'last_name' => 'Badea',
+        ]);
 
-        $test = Test::create(['name' => 'Test Name', 'content' => 'content', 'type' => '1']);
+        $owner2 = Owner::create([
+            'first_name' => 'Ion',
+            'last_name' => 'Gheorghe',
+        ]);
 
-        TestHasOne1::create(['test_id' => $test->id, 'name' => 'Test Has One 1 Name 1']);
-        TestHasOne1::create(['test_id' => $test->id, 'name' => 'Test Has One 1 Name 2']);
+        $brand1 = Brand::create([
+            'name' => 'BMW',
+        ]);
 
-        TestHasOne2::create(['test_id' => $test->id, 'name' => 'Test Has One 2 Name 1']);
-        TestHasOne2::create(['test_id' => $test->id, 'name' => 'Test Has One 2 Name 2']);
+        $brand2 = Brand::create([
+            'name' => 'Audi',
+        ]);
 
-        TestHasMany1::create(['test_id' => $test->id, 'name' => 'Test Has Many 1 Name 1']);
-        TestHasMany1::create(['test_id' => $test->id, 'name' => 'Test Has Many 1 Name 2']);
+        $brand3 = Brand::create([
+            'name' => 'Mercedes',
+        ]);
 
-        TestHasMany2::create(['test_id' => $test->id, 'name' => 'Test Has Many 2 Name 1']);
-        TestHasMany2::create(['test_id' => $test->id, 'name' => 'Test Has Many 2 Name 2']);
+        $car1 = Car::create([
+            'owner_id' => $owner1->id,
+            'brand_id' => $brand1->id,
+            'name' => 'BMW Seria 7',
+            'slug' => 'bmw-seria-7',
+        ]);
 
-        $testHabtm1 = TestHabtm::create(['name' => 'Test Habtm Name 1', 'email' => 'mail_1@mail.com', 'date' => Carbon::now()]);
-        $testHabtm2 = TestHabtm::create(['name' => 'Test Habtm Name 2', 'email' => 'mail_2@mail.com', 'date' => Carbon::now()]);
+        $car2 = Car::create([
+            'owner_id' => $owner2->id,
+            'brand_id' => $brand2->id,
+            'name' => 'Audi A5',
+            'slug' => 'audi-a5',
+        ]);
 
-        $test->testHabtm()->attach([$testHabtm1->id, $testHabtm2->id]);
+        $car3 = Car::create([
+            'owner_id' => $owner1->id,
+            'brand_id' => $brand3->id,
+            'name' => 'Mercedes C Class',
+            'slug' => 'mercedes-c-class',
+        ]);
+
+        $book1 = Book::create([
+            'car_id' => $car1->id,
+            'name' => 'BMW Identity Book',
+        ]);
+
+        $book2 = Book::create([
+            'car_id' => $car2->id,
+            'name' => 'Audi Identity Book',
+        ]);
+
+        $book3 = Book::create([
+            'car_id' => $car3->id,
+            'name' => 'Mercedes Identity Book',
+        ]);
+
+        $piece1 = Piece::create([
+            'car_id' => $car1->id,
+            'name' => 'Wheel',
+        ]);
+
+        $piece2 = Piece::create([
+            'car_id' => $car1->id,
+            'name' => 'Clutch',
+        ]);
+
+        $piece3 = Piece::create([
+            'car_id' => $car1->id,
+            'name' => 'Chair',
+        ]);
+
+        $mechanic1 = Mechanic::create([
+            'name' => 'Mechanic 1',
+        ]);
+
+        $mechanic2 = Mechanic::create([
+            'name' => 'Mechanic 2',
+        ]);
+
+        $mechanic3 = Mechanic::create([
+            'name' => 'Mechanic 3',
+        ]);
+
+        $car1->mechanics()->attach([
+            $mechanic1->id,
+            $mechanic2->id,
+            $mechanic3->id,
+        ]);
     }
 }

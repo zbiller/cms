@@ -62,10 +62,10 @@ class MenuComposer
 
 
             $menu->add(function (MenuItem $item) use ($menu) {
-                $test = $item->name('Test')->data('icon', 'fa-text-width')->active('admin/test/*');
+                $test = $item->name('Test')->data('icon', 'fa-text-width')->active('admin/cars/*');
 
                 $menu->child($test, function (MenuItem $item) {
-                    $item->name('Test')->url(route('admin.test.index'))->active('admin/test/*');
+                    $item->name('Cars')->url(route('admin.cars.index'))->active('admin/cars/*');
                 });
             });
         })->filter(function (MenuItem $item) use ($user) {

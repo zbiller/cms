@@ -13,8 +13,8 @@
             <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
                 <td>{{ $item->name }}</td>
                 <td>
-                    {!! button()->edit('admin.test.edit', ['id' => $item->id]) !!}
-                    {!! button()->delete('admin.test.destroy', ['id' => $item->id]) !!}
+                    {!! button()->edit('admin.cars.edit', ['id' => $item->id]) !!}
+                    {!! button()->delete('admin.cars.destroy', ['id' => $item->id]) !!}
                 </td>
             </tr>
         @endforeach

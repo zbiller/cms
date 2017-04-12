@@ -4,7 +4,7 @@ namespace App\Options;
 
 use App\Models\Model;
 
-class CanCrudOptions
+class CrudOptions
 {
     /**
      * The instantiated model to work with.
@@ -48,9 +48,9 @@ class CanCrudOptions
     /**
      * Get a fresh instance of this class.
      *
-     * @return CanCrudOptions
+     * @return CrudOptions
      */
-    public static function instance(): CanCrudOptions
+    public static function instance(): CrudOptions
     {
         return new static();
     }
@@ -59,9 +59,9 @@ class CanCrudOptions
      * Set the model to work with in the App\Traits\CanCrud trait.
      *
      * @param Model $model
-     * @return CanCrudOptions
+     * @return CrudOptions
      */
-    public function setModel(Model $model): CanCrudOptions
+    public function setModel(Model $model): CrudOptions
     {
         $this->model = $model;
 
@@ -72,9 +72,9 @@ class CanCrudOptions
      * Set the list route to work with in the App\Traits\CanCrud trait.
      *
      * @param string $route
-     * @return CanCrudOptions
+     * @return CrudOptions
      */
-    public function setListRoute($route): CanCrudOptions
+    public function setListRoute($route): CrudOptions
     {
         $this->listRoute = $route;
 
@@ -85,9 +85,9 @@ class CanCrudOptions
      * Set the list view to work with in the App\Traits\CanCrud trait.
      *
      * @param string $view
-     * @return CanCrudOptions
+     * @return CrudOptions
      */
-    public function setListView($view): CanCrudOptions
+    public function setListView($view): CrudOptions
     {
         $this->listView = $view;
 
@@ -98,9 +98,9 @@ class CanCrudOptions
      * Set the add route to work with in the App\Traits\CanCrud trait.
      *
      * @param string $route
-     * @return CanCrudOptions
+     * @return CrudOptions
      */
-    public function setAddRoute($route): CanCrudOptions
+    public function setAddRoute($route): CrudOptions
     {
         $this->addRoute = $route;
 
@@ -111,9 +111,9 @@ class CanCrudOptions
      * Set the add view to work with in the App\Traits\CanCrud trait.
      *
      * @param string $view
-     * @return CanCrudOptions
+     * @return CrudOptions
      */
-    public function setAddView($view): CanCrudOptions
+    public function setAddView($view): CrudOptions
     {
         $this->addView = $view;
 
@@ -124,9 +124,9 @@ class CanCrudOptions
      * Set the edit route to work with in the App\Traits\CanCrud trait.
      *
      * @param string $route
-     * @return CanCrudOptions
+     * @return CrudOptions
      */
-    public function setEditRoute($route): CanCrudOptions
+    public function setEditRoute($route): CrudOptions
     {
         $this->editRoute = $route;
 
@@ -137,9 +137,9 @@ class CanCrudOptions
      * Set the edit view to work with in the App\Traits\CanCrud trait.
      *
      * @param string $view
-     * @return CanCrudOptions
+     * @return CrudOptions
      */
-    public function setEditView($view): CanCrudOptions
+    public function setEditView($view): CrudOptions
     {
         $this->editView = $view;
 
@@ -150,9 +150,9 @@ class CanCrudOptions
      * Set the edit route to work with in the App\Traits\CanCrud trait.
      *
      * @param string $route
-     * @return CanCrudOptions
+     * @return CrudOptions
      */
-    public function setDeletedRoute($route): CanCrudOptions
+    public function setDeletedRoute($route): CrudOptions
     {
         $this->deletedRoute = $route;
 
@@ -163,9 +163,9 @@ class CanCrudOptions
      * Set the edit view to work with in the App\Traits\CanCrud trait.
      *
      * @param string $view
-     * @return CanCrudOptions
+     * @return CrudOptions
      */
-    public function setDeletedView($view): CanCrudOptions
+    public function setDeletedView($view): CrudOptions
     {
         $this->deletedView = $view;
 

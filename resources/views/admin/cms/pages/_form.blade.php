@@ -20,5 +20,5 @@
 </div>
 
 @section('bottom_scripts')
-    {!! JsValidator::formRequest(App\Http\Requests\PageRequest::class, '.form') !!}
+    {{--{!! JsValidator::formRequest(App\Http\Requests\PageRequest::class, '.form') !!}--}}
 @append

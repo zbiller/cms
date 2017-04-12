@@ -5,45 +5,37 @@
  * Using this trait is like using the Laravel's one, but with more power of configuring options.
  * It's role is to give more flexibility in setting additional properties that are hard-coded in the framework.
  */
-
 namespace App\Traits;
 
-use App\Options\CanAuthenticateOptions;
+use App\Options\AuthenticationOptions;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 trait CanAuthenticate
 {
+    use ChecksTrait;
     use AuthenticatesUsers {
         logout as baseLogout;
     }
 
     /**
      * The container for all the options necessary for this trait.
-     * Options can be viewed in the App\Options\CanAuthenticateOptions file.
+     * Options can be viewed in the App\Options\AuthenticationOptions file.
      *
-     * @var CanAuthenticateOptions
+     * @var AuthenticationOptions
      */
-    protected $canAuthenticateOptions;
+    protected static $authenticationOptions;
 
     /**
-     * The method used for setting the authentication options.
-     * This method should be called inside the controller using this trait.
-     * Inside the method, you should set all the authentication options.
-     * This can be achieved using the methods from App\Options\CanAuthenticateOptions.
+     * Instantiate the $AuthenticationOptions property with the necessary authentication properties.
      *
-     * @return CanAuthenticateOptions
+     * @set $AuthenticationOptions
      */
-    abstract public function getCanAuthenticateOptions(): CanAuthenticateOptions;
-
-    /**
-     * Instantiate the $CanAuthenticateOptions property with the necessary authentication properties.
-     *
-     * @set $CanAuthenticateOptions
-     */
-    public function bootCanAuthenticate()
+    public static function bootCanAuthenticate()
     {
-        $this->canAuthenticateOptions = $this->getCanAuthenticateOptions();
+        self::checkOptionsMethodDeclaration('getAuthenticationOptions');
+
+        self::$authenticationOptions = self::getAuthenticationOptions();
     }
 
     /**
@@ -53,7 +45,7 @@ trait CanAuthenticate
      */
     public function username()
     {
-        return $this->canAuthenticateOptions->usernameField;
+        return self::$authenticationOptions->usernameField;
     }
 
     /**
@@ -67,7 +59,7 @@ trait CanAuthenticate
             return $this->getIntendedRedirectUrl();
         }
 
-        return $this->canAuthenticateOptions->loginRedirectPath;
+        return self::$authenticationOptions->loginRedirectPath;
     }
 
     /**
@@ -80,7 +72,7 @@ trait CanAuthenticate
     {
         $this->baseLogout($request);
 
-        return redirect($this->canAuthenticateOptions->logoutRedirectPath);
+        return redirect(self::$authenticationOptions->logoutRedirectPath);
     }
 
     /**
@@ -93,8 +85,8 @@ trait CanAuthenticate
     {
         return $this->limiter()->tooManyAttempts(
             $this->throttleKey($request),
-            $this->canAuthenticateOptions->throttleMaxLoginAttempts,
-            $this->canAuthenticateOptions->throttleLockoutTime
+            self::$authenticationOptions->maxLoginAttempts,
+            self::$authenticationOptions->lockoutTime
         );
     }
 
@@ -105,7 +97,7 @@ trait CanAuthenticate
      */
     protected function setIntendedRedirectUrl()
     {
-        if (str_contains(url()->previous(), $this->canAuthenticateOptions->loginRedirectPath)) {
+        if (str_contains(url()->previous(), self::$authenticationOptions->loginRedirectPath)) {
             session()->flash('intended_redirect', url()->previous());
         }
     }

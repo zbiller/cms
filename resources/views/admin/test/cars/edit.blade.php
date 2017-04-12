@@ -8,19 +8,19 @@
 
 @section('content')
     <section class="tabs">
-        @include('admin.test._tabs')
+        @include('admin.test.cars._tabs')
     </section>
 
     <section class="view">
-        {!! form_admin()->model($item, ['url' => route('admin.test.update', ['id' => $item->id]), 'method' => 'PUT', 'class' => 'form', 'files' => true]) !!}
-        @include('admin.test._form')
+        {!! form_admin()->model($item, ['url' => route('admin.cars.update', ['id' => $item->id]), 'method' => 'PUT', 'class' => 'form', 'files' => true]) !!}
+            @include('admin.test.cars._form')
         {!! form()->close() !!}
     </section>
 @endsection
 
 @section('footer')
     <section class="actions left">
-        {!! button()->cancel('admin.test.index') !!}
+        {!! button()->cancel('admin.cars.index') !!}
     </section>
     <section class="actions">
         {!! button()->saveStay() !!}

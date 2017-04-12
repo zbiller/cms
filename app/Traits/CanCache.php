@@ -2,28 +2,20 @@
 
 namespace App\Traits;
 
-use App\Options\CanCacheOptions;
+use App\Options\CacheOptions;
 use App\Exceptions\CacheException;
 
 trait CanCache
 {
-    /**
-     * The container for all the options necessary for this trait.
-     * Options can be viewed in the App\Options\CanCacheOptions file.
-     *
-     * @var CanCacheOptions
-     */
-    protected $canCacheOptions;
+    use ChecksTrait;
 
     /**
-     * The method used for setting the refresh cache options.
-     * This method should be called inside the model using this trait.
-     * Inside the method, you should set all the refresh cache options.
-     * This can be achieved using the methods from App\Options\CanCacheOptions.
+     * The container for all the options necessary for this trait.
+     * Options can be viewed in the App\Options\CacheOptions file.
      *
-     * @return CanCacheOptions
+     * @var CacheOptions
      */
-    abstract public function getCanCacheOptions(): CanCacheOptions;
+    protected static $cacheOptions;
 
     /**
      * On every database change, attempt to clear the cache.
@@ -33,6 +25,10 @@ trait CanCache
      */
     public static function bootCanCache()
     {
+        self::checkOptionsMethodDeclaration('getCacheOptions');
+
+        self::$cacheOptions = self::getCacheOptions();
+
         static::created(function ($model) {
             $model->forgetCache();
         });
@@ -53,11 +49,9 @@ trait CanCache
      */
     public function forgetCache()
     {
-        $this->canCacheOptions = $this->getCanCacheOptions();
-
         $this->checkKey();
 
-        cache()->forget($this->canCacheOptions->key);
+        cache()->forget(self::$cacheOptions->key);
     }
 
     /**
@@ -68,11 +62,11 @@ trait CanCache
      */
     private function checkKey()
     {
-        if (!$this->canCacheOptions->key) {
+        if (!self::$cacheOptions->key) {
             throw new CacheException(
                 'Model ' . get_class($this) . ' uses the CanCache trait. ' . PHP_EOL .
-                'You must set the key via the getCanCacheOptions() method from model.' . PHP_EOL .
-                'Use the setKey() method from the App\Options\CanCacheOptions class.'
+                'You must set the key via the getCacheOptions() method from model.' . PHP_EOL .
+                'Use the setKey() method from the App\Options\CacheOptions class.'
             );
         }
     }

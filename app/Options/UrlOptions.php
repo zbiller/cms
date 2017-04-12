@@ -2,7 +2,7 @@
 
 namespace App\Options;
 
-class HasUrlOptions
+class UrlOptions
 {
     /**
      * The field used to generate the url slug from.
@@ -42,9 +42,9 @@ class HasUrlOptions
     /**
      * Get a fresh instance of this class.
      *
-     * @return HasUrlOptions
+     * @return UrlOptions
      */
-    public static function instance(): HasUrlOptions
+    public static function instance(): UrlOptions
     {
         return new static();
     }
@@ -53,9 +53,9 @@ class HasUrlOptions
      * Set the $fromField to work with in the App\Traits\HasUrl trait.
      *
      * @param string|array|callable $field
-     * @return HasUrlOptions
+     * @return UrlOptions
      */
-    public function generateUrlSlugFrom($field): HasUrlOptions
+    public function generateUrlSlugFrom($field): UrlOptions
     {
         $this->fromField = $field;
 
@@ -66,9 +66,9 @@ class HasUrlOptions
      * Set the $toField to work with in the App\Traits\HasUrl trait.
      *
      * @param string $field
-     * @return HasUrlOptions
+     * @return UrlOptions
      */
-    public function saveUrlSlugTo($field): HasUrlOptions
+    public function saveUrlSlugTo($field): UrlOptions
     {
         $this->toField = $field;
 
@@ -79,9 +79,9 @@ class HasUrlOptions
      * Set the $urlPrefix to work with in the App\Traits\HasUrl trait.
      *
      * @param string|array|callable $prefix
-     * @return HasUrlOptions
+     * @return UrlOptions
      */
-    public function prefixUrlWith($prefix): HasUrlOptions
+    public function prefixUrlWith($prefix): UrlOptions
     {
         $this->urlPrefix = $prefix;
 
@@ -92,9 +92,9 @@ class HasUrlOptions
      * Set the $urlSuffix to work with in the App\Traits\HasUrl trait.
      *
      * @param string|array|callable $suffix
-     * @return HasUrlOptions
+     * @return UrlOptions
      */
-    public function suffixUrlWith($suffix): HasUrlOptions
+    public function suffixUrlWith($suffix): UrlOptions
     {
         $this->urlSuffix = $suffix;
 
@@ -104,9 +104,9 @@ class HasUrlOptions
     /**
      * Set the $cascadeUpdate to work with in the App\Traits\HasUrl trait.
      *
-     * @return HasUrlOptions
+     * @return UrlOptions
      */
-    public function doNotUpdateCascading(): HasUrlOptions
+    public function doNotUpdateCascading(): UrlOptions
     {
         $this->cascadeUpdate = false;
 

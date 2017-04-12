@@ -297,7 +297,6 @@ class UploadsController extends Controller
      */
     public function cut(Request $request)
     {
-
         $path = $request->get('path');
         $style = $request->get('style');
         $size = $request->get('size');
