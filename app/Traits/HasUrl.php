@@ -9,6 +9,7 @@ use App\Models\Cms\Url;
 use App\Options\UrlOptions;
 use App\Options\SlugOptions;
 use App\Exceptions\UrlException;
+use Illuminate\Database\Eloquent\Builder;
 
 trait HasUrl
 {
@@ -32,7 +33,9 @@ trait HasUrl
     /**
      * Boot the trait.
      *
-     * Init UrlOptions on "creating" and "updating" so the HasSlug trait will know with what data to work.
+     * Check if the "getUrlOptions" method has been implemented on the underlying model class.
+     * Eager load urls through anonymous global scope.
+     * Trigger eloquent events to create, update, delete url.
      *
      * @return void
      */
@@ -44,13 +47,9 @@ trait HasUrl
 
         self::checkUrlOptions();
 
-        /*static::creating(function (Model $model) {
-            $model->initUrlOptions();
+        static::addGlobalScope('url', function (Builder $builder) {
+            $builder->with('url');
         });
-
-        static::updating(function (Model $model) {
-            $model->initUrlOptions();
-        });*/
 
         static::created(function (Model $model) {
             if (self::$shouldGenerateUrl === true) {
