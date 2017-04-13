@@ -90,10 +90,18 @@ class Page extends Model
         self::TYPE_SPECIAL => 'Special',
     ];
 
+    /**
+     * The options available for each page type.
+     *
+     * @var array
+     */
     public static $map = [
         self::TYPE_DEFAULT => [
-
-        ]
+            'forwarding' => 'Front\Cms\PagesController@index',
+        ],
+        self::TYPE_SPECIAL => [
+            'forwarding' => 'Front\Cms\PagesController@index',
+        ],
     ];
 
     /**
@@ -114,6 +122,27 @@ class Page extends Model
                 );
             }
         });
+    }
+
+    /**
+     * Get the page's forwarding for route definition.
+     *
+     * @return mixed
+     */
+    public function getRouteNameAttribute()
+    {
+        return isset($this->attributes['identifier']) && !empty($this->attributes['identifier']) ?
+            'page-' . $this->attributes['identifier'] : null;
+    }
+
+    /**
+     * Get the page's forwarding for route definition.
+     *
+     * @return mixed
+     */
+    public function getRouteForwardingAttribute()
+    {
+        return self::$map[$this->attributes['type']]['forwarding'];
     }
 
     /**
