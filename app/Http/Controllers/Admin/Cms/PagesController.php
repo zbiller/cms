@@ -10,8 +10,6 @@ use App\Http\Requests\PageRequest;
 use App\Http\Filters\PageFilter;
 use App\Http\Sorts\PageSort;
 use App\Options\CrudOptions;
-use App\Traits\CanHandleTree;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class PagesController extends Controller
@@ -35,6 +33,25 @@ class PagesController extends Controller
             $request->has('sort') ? $query->sorted($request, $sort) : $query->defaultOrder();
 
             $this->items = $query->get();
+
+            $this->vars = [
+                'layouts' => Layout::all(),
+                'types' => Page::$types,
+                'actives' => Page::$actives,
+            ];
+        });
+    }
+
+    /**
+     * @param Request $request
+     * @param PageFilter $filter
+     * @param PageSort $sort
+     * @return \Illuminate\View\View
+     */
+    public function deleted(Request $request, PageFilter $filter, PageSort $sort)
+    {
+        return $this->_deleted(function () use ($request, $filter, $sort) {
+            $this->items = Page::with('url')->onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
 
             $this->vars = [
                 'layouts' => Layout::all(),
@@ -70,8 +87,7 @@ class PagesController extends Controller
     {
         return $this->_store(function () use ($request, $parent) {
             $this->item = Page::create(
-                $request->all(),
-                $parent->exists ? $parent : null
+                $request->all(), $parent->exists ? $parent : null
             );
         }, $request);
     }
@@ -108,38 +124,6 @@ class PagesController extends Controller
     }
 
     /**
-     * @param Page $page
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
-     */
-    public function destroy(Page $page)
-    {
-        return $this->_destroy(function () use ($page) {
-            $this->item = $page;
-            $this->item->delete();
-        });
-    }
-
-    /**
-     * @param Request $request
-     * @param PageFilter $filter
-     * @param PageSort $sort
-     * @return \Illuminate\View\View
-     */
-    public function deleted(Request $request, PageFilter $filter, PageSort $sort)
-    {
-        return $this->_deleted(function () use ($request, $filter, $sort) {
-            $this->items = Page::with('url')->onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
-
-            $this->vars = [
-                'layouts' => Layout::all(),
-                'types' => Page::$types,
-                'actives' => Page::$actives,
-            ];
-        });
-    }
-
-    /**
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
@@ -153,6 +137,19 @@ class PagesController extends Controller
     }
 
     /**
+     * @param Page $page
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function destroy(Page $page)
+    {
+        return $this->_destroy(function () use ($page) {
+            $this->item = $page;
+            $this->item->delete();
+        });
+    }
+
+    /**
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
@@ -161,7 +158,7 @@ class PagesController extends Controller
     {
         return $this->_delete(function () use ($id) {
             $this->item = Page::onlyTrashed()->findOrFail($id);
-            $this->forceDelete();
+            $this->item->forceDelete();
         });
     }
 

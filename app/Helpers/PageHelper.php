@@ -13,6 +13,6 @@ class PageHelper
      */
     public function __construct($identifier)
     {
-        return Page::whereIdentifier($identifier)->first();
+        return Page::withTrashed()->whereIdentifier($identifier)->first();
     }
 }

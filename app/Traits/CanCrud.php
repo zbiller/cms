@@ -82,8 +82,6 @@ trait CanCrud
 
         self::checkCrudMethod();
         self::checkCrudModel();
-        self::checkCrudRoutes();
-        self::checkCrudViews();
     }
 
     /**
@@ -103,6 +101,24 @@ trait CanCrud
         $this->vars['items'] = $this->items;
 
         return view(self::$crudOptions->listView)->with($this->vars);
+    }
+
+    /**
+     * This method should be called inside the controller's deleted() method.
+     * The closure should at least set the $items collection.
+     *
+     * @param Closure|null $function
+     * @return $this
+     */
+    public function _deleted(Closure $function = null)
+    {
+        if ($function) {
+            call_user_func($function);
+        }
+
+        $this->vars['items'] = $this->items;
+
+        return view(self::$crudOptions->deletedView)->with($this->vars);
     }
 
     /**
@@ -142,7 +158,7 @@ trait CanCrud
                 DB::transaction($function);
             }
 
-            session()->flash('flash_success', 'The record was successfully created!');
+            session()->flash('flash_success', __('crud.create_success'));
             return request()->has('save_stay') ? back() : redirect()->route(self::$crudOptions->listRoute);
         } catch (CrudException $e) {
             session()->flash('flash_error', $e->getMessage());
@@ -159,6 +175,7 @@ trait CanCrud
      *
      * @param Closure|null $function
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     * @throws Exception
      */
     public function _edit(Closure $function = null)
     {
@@ -171,9 +188,16 @@ trait CanCrud
 
             return view(self::$crudOptions->editView)->with($this->vars);
         } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', 'You are trying to access a record that does not exist!');
-            return redirect()->route(self::$crudOptions->listRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
+            session()->flash('flash_error', __('crud.does_not_exist'));
+        } catch (CrudException $e) {
+            session()->flash('flash_error', $e->getMessage());
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
         }
+
+        return redirect()->route(
+            self::$crudOptions->listRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []
+        );
     }
 
     /**
@@ -193,64 +217,17 @@ trait CanCrud
                 DB::transaction($function);
             }
 
-            session()->flash('flash_success', 'The record was successfully updated!');
-            return request()->has('save_stay') ? back() : redirect()->route(self::$crudOptions->listRoute);
+            session()->flash('flash_success', __('crud.update_success'));
         } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', 'You are trying to update a record that does not exist!');
-            return redirect()->route(self::$crudOptions->listRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
+            session()->flash('flash_error', __('crud.does_not_exist'));
         } catch (CrudException $e) {
             session()->flash('flash_error', $e->getMessage());
             return back()->withInput($request->all());
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
-    }
 
-    /**
-     * This method should be called inside the controller's destroy() method.
-     * The closure should at least attempt to find and delete the record from the database.
-     * $this->item = Model::findOrFail($id)->delete();
-     *
-     * @param Closure|null $function
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws Exception
-     */
-    public function _destroy(Closure $function = null)
-    {
-        try {
-            if ($function) {
-                DB::transaction($function);
-            }
-
-            session()->flash('flash_success', 'The record was successfully deleted!');
-            return redirect()->route(self::$crudOptions->listRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
-        } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', 'You are trying to delete a record that does not exist!');
-            return redirect()->route(self::$crudOptions->listRoute);
-        } catch (CrudException $e) {
-            session()->flash('flash_error', $e->getMessage());
-            return back();
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
-    }
-
-    /**
-     * This method should be called inside the controller's deleted() method.
-     * The closure should at least set the $items collection.
-     *
-     * @param Closure|null $function
-     * @return $this
-     */
-    public function _deleted(Closure $function = null)
-    {
-        if ($function) {
-            call_user_func($function);
-        }
-
-        $this->vars['items'] = $this->items;
-
-        return view(self::$crudOptions->deletedView)->with($this->vars);
+        return request()->has('save_stay') ? back() : redirect()->route(self::$crudOptions->listRoute);
     }
 
     /**
@@ -269,17 +246,48 @@ trait CanCrud
                 DB::transaction($function);
             }
 
-            session()->flash('flash_success', 'The record was successfully restored!');
-            return redirect()->route(self::$crudOptions->deletedRoute);
+            session()->flash('flash_success', __('crud.restore_success'));
         } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', 'You are trying to restore a record that does not exist!');
-            return redirect()->route(self::$crudOptions->deletedRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
+            session()->flash('flash_error', __('crud.does_not_exist'));
         } catch (CrudException $e) {
             session()->flash('flash_error', $e->getMessage());
-            return redirect()->route(self::$crudOptions->deletedRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+
+        return redirect()->route(
+            self::$crudOptions->deletedRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []
+        );
+    }
+
+    /**
+     * This method should be called inside the controller's destroy() method.
+     * The closure should at least attempt to find and delete the record from the database.
+     * $this->item = Model::findOrFail($id)->delete();
+     *
+     * @param Closure|null $function
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws Exception
+     */
+    public function _destroy(Closure $function = null)
+    {
+        try {
+            if ($function) {
+                DB::transaction($function);
+            }
+
+            session()->flash('flash_success', __('crud.delete_success'));
+        } catch (ModelNotFoundException $e) {
+            session()->flash('flash_error', __('crud.does_not_exist'));
+        } catch (CrudException $e) {
+            session()->flash('flash_error', $e->getMessage());
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+
+        return redirect()->route(
+            self::$crudOptions->listRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []
+        );
     }
 
     /**
@@ -298,17 +306,18 @@ trait CanCrud
                 DB::transaction($function);
             }
 
-            session()->flash('flash_success', 'The record was successfully deleted!');
-            return redirect()->route(self::$crudOptions->deletedRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
+            session()->flash('flash_success', __('crud.delete_success'));
         } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', 'You are trying to delete a record that does not exist!');
-            return redirect()->route(self::$crudOptions->deletedRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
+            session()->flash('flash_error', __('crud.does_not_exist'));
         } catch (CrudException $e) {
             session()->flash('flash_error', $e->getMessage());
-            return redirect()->route(self::$crudOptions->deletedRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
+
+        return redirect()->route(
+            self::$crudOptions->deletedRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []
+        );
     }
 
     /**
@@ -341,38 +350,6 @@ trait CanCrud
             throw new CrudException(
                 'You must set the model via the getCrudOptions() method from controller.' . PHP_EOL .
                 'Use the setModel() method from the App\Options\CrudOptions class.'
-            );
-        }
-    }
-
-    /**
-     * Verify if the list|add|edit routes have been properly set on the controller.
-     * These 3 properties should be set inside the getCrudOptions method.
-     *
-     * @throws CrudException
-     */
-    private static function checkCrudRoutes()
-    {
-        if (!self::$crudOptions->listRoute || !self::$crudOptions->addRoute || !self::$crudOptions->editRoute) {
-            throw new CrudException(
-                'You must set the listRoute, addRoute, editRoute via the getCrudOptions() method from controller.' . PHP_EOL .
-                'Use the setListRoute(), setAddRoute(), setEditRoute() methods from the App\Options\CrudOptions class.'
-            );
-        }
-    }
-
-    /**
-     * Verify if the list|add|edit views have been properly set on the controller.
-     * These 3 properties should be set inside the getCrudOptions method.
-     *
-     * @throws CrudException
-     */
-    private static function checkCrudViews()
-    {
-        if (!self::$crudOptions->listView || !self::$crudOptions->addView || !self::$crudOptions->editView) {
-            throw new CrudException(
-                'You must set the listView, addView, editView via the getCrudOptions() method from controller.' . PHP_EOL .
-                'Use the setListView(), setAddView(), setEditView() methods from the App\Options\CrudOptions class.'
             );
         }
     }

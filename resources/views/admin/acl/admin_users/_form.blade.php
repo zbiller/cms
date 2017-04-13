@@ -1,7 +1,7 @@
 {!! validation('admin')->errors() !!}
 
 <div id="tab-1" class="tab">
-    {!! form_admin()->select('roles[]', 'Roles', $roles->pluck('name', 'id'), $item->id ? $item->roles->pluck('id') : null, ['multiple']) !!}
+    {!! form_admin()->select('roles[]', 'Roles', $roles->pluck('name', 'id'), $item->exists ? $item->roles->pluck('id') : null, ['multiple']) !!}
     {!! form_admin()->text('username', 'Username') !!}
     {!! form_admin()->password('password', 'Password', ['placeholder' => 'Leave blank to remain the same'], true) !!}
     {!! form_admin()->password('password_confirmation', 'Confirm Password') !!}
