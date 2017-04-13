@@ -38,6 +38,17 @@ class Layout extends Model
     public static $files = [];
 
     /**
+     * Get the only layout name from the layout file.
+     * Used inside blade views when working with directives.
+     *
+     * @return mixed
+     */
+    public function getBladeAttribute()
+    {
+        return str_replace('.blade.php', '', $this->attributes['file']);
+    }
+
+    /**
      * Sort the query with newest records first.
      *
      * @param Builder $query
@@ -63,7 +74,7 @@ class Layout extends Model
      * @param Builder $query
      * @param string $identifier
      */
-    public function scopeIdentify($query, $identifier)
+    public function scopeWhereIdentifier($query, $identifier)
     {
         $query->where('identifier', $identifier);
     }

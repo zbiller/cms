@@ -29,7 +29,7 @@ class PagesController extends Controller
         cache()->forget('first_tree_load');
 
         return $this->_index(function () use ($request, $filter, $sort) {
-            $query = Page::with('url')->whereIsRoot()->filtered($request, $filter);
+            $query = Page::whereIsRoot()->filtered($request, $filter);
             $request->has('sort') ? $query->sorted($request, $sort) : $query->defaultOrder();
 
             $this->items = $query->get();
@@ -51,7 +51,7 @@ class PagesController extends Controller
     public function deleted(Request $request, PageFilter $filter, PageSort $sort)
     {
         return $this->_deleted(function () use ($request, $filter, $sort) {
-            $this->items = Page::with('url')->onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Page::onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
 
             $this->vars = [
                 'layouts' => Layout::all(),
@@ -232,7 +232,7 @@ class PagesController extends Controller
      */
     public function listTreeItems(Request $request, PageFilter $filter, PageSort $sort, Page $parent = null)
     {
-        $query = Page::with('url')->filtered($request, $filter);
+        $query = Page::filtered($request, $filter);
 
         $request->has('sort') ? $query->sorted($request, $sort) : $query->defaultOrder();
         $parent->exists ? $query->whereParent($parent->id) : $query->whereIsRoot();

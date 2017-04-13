@@ -175,5 +175,5 @@ Route::group([
  * Page Routes.
  */
 foreach (page()->all() as $page) {
-    Route::get($page->url->url, ['as' => $page->routeName, 'uses' => $page->routeForwarding, 'model' => $page]);
+    Route::get($page->url->url, ['as' => $page->routeName, 'uses' => $page->routeController . '@' . $page->routeAction, 'model' => $page]);
 }

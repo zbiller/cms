@@ -97,10 +97,14 @@ class Page extends Model
      */
     public static $map = [
         self::TYPE_DEFAULT => [
-            'forwarding' => 'Front\Cms\PagesController@index',
+            'controller' => 'Front\Cms\PagesController',
+            'action' => 'index',
+            'view' => 'front.cms.page',
         ],
         self::TYPE_SPECIAL => [
-            'forwarding' => 'Front\Cms\PagesController@index',
+            'controller' => 'Front\Cms\PagesController',
+            'action' => 'index',
+            'view' => 'front.cms.page',
         ],
     ];
 
@@ -136,13 +140,33 @@ class Page extends Model
     }
 
     /**
-     * Get the page's forwarding for route definition.
+     * Get the page's controller for route definition.
      *
      * @return mixed
      */
-    public function getRouteForwardingAttribute()
+    public function getRouteControllerAttribute()
     {
-        return self::$map[$this->attributes['type']]['forwarding'];
+        return self::$map[$this->attributes['type']]['controller'];
+    }
+
+    /**
+     * Get the page's action for route definition.
+     *
+     * @return mixed
+     */
+    public function getRouteActionAttribute()
+    {
+        return self::$map[$this->attributes['type']]['action'];
+    }
+
+    /**
+     * Get the page's view for route definition.
+     *
+     * @return mixed
+     */
+    public function getRouteViewAttribute()
+    {
+        return self::$map[$this->attributes['type']]['view'];
     }
 
     /**

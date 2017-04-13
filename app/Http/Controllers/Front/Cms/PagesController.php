@@ -27,6 +27,8 @@ class PagesController extends Controller
 
         if (isset($action['model']) && $action['model'] instanceof Page) {
             view()->share('page', $this->page = $action['model']);
+
+            $this->page->load('layout');
         }
     }
 
@@ -35,6 +37,6 @@ class PagesController extends Controller
      */
     public function index()
     {
-        return view('front.cms.page');
+        return view($this->page->routeView);
     }
 }
