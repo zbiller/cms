@@ -96,12 +96,11 @@ if (!function_exists('button')) {
 
 if (!function_exists('page')) {
     /**
-     * @param string $identifier
      * @return \App\Helpers\PageHelper
      */
-    function page($identifier)
+    function page()
     {
-        return new App\Helpers\PageHelper($identifier);
+        return new App\Helpers\PageHelper();
     }
 }
 
