@@ -12,7 +12,7 @@
 */
 
 /**
- * All of the admin routes.
+ * Admin routes.
  */
 Route::group([
     'namespace' => 'Admin',
@@ -70,7 +70,7 @@ Route::group([
             });
 
             /**
-             * CRUD Admin Users
+             * CRUD Admin Users.
              */
             Route::group([
                 'prefix' => 'admin-users',
@@ -91,7 +91,7 @@ Route::group([
             'namespace' => 'Cms',
         ], function () {
             /**
-             * CRUD Pages
+             * CRUD Pages.
              */
             Route::group([
                 'prefix' => 'pages',
@@ -107,7 +107,7 @@ Route::group([
                 Route::delete('delete/{id}', ['as' => 'admin.pages.delete', 'uses' => 'PagesController@delete', 'permissions' => 'pages-deleted-delete']);
 
                 /**
-                 * Tree Actions
+                 * Tree Actions.
                  */
                 Route::group([
                     'prefix' => 'tree'
@@ -121,7 +121,7 @@ Route::group([
             });
 
             /**
-             * CRUD Layouts
+             * CRUD Layouts.
              */
             Route::group([
                 'prefix' => 'layouts',
@@ -135,7 +135,7 @@ Route::group([
             });
 
             /**
-             * CRUD Uploads
+             * CRUD Uploads.
              */
             Route::group([
                 'prefix' => 'uploads',
@@ -154,10 +154,9 @@ Route::group([
             });
         });
 
-
-
-
-
+        /**
+         * CRUD Test (Cars)
+         */
         Route::group([
             'namespace' => 'Test',
             'prefix' => 'cars',
@@ -172,6 +171,9 @@ Route::group([
     });
 });
 
-Route::get('/', function () {
-    return '';
-})->name('home');
+/**
+ * Page Routes.
+ */
+foreach (page()->all() as $page) {
+    Route::get($page->url->url, ['as' => $page->routeName, 'uses' => $page->routeForwarding, 'model' => $page]);
+}
