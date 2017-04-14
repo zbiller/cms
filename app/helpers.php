@@ -104,6 +104,16 @@ if (!function_exists('page')) {
     }
 }
 
+if (!function_exists('js')) {
+    /**
+     * @return \App\Helpers\JavascriptHelper
+     */
+    function js()
+    {
+        return new App\Helpers\JavascriptHelper();
+    }
+}
+
 if (!function_exists('force_redirect')) {
     /**
      * @param string $url
