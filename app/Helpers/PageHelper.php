@@ -7,7 +7,7 @@ use App\Models\Cms\Page;
 class PageHelper
 {
     /**
-     * Get a page instance by it's identifier.
+     * Get a page by it's identifier.
      *
      * @param string $identifier
      * @return mixed
@@ -18,12 +18,22 @@ class PageHelper
     }
 
     /**
-     * Get all pages sorted by date descending.
+     * Get all pages.
      *
      * @return mixed
      */
     public function all()
     {
-        return Page::defaultOrder()->get();
+        return Page::withTrashed()->get();
+    }
+
+    /**
+     * Get a new builder instance with global scopes applied.
+     *
+     * @return mixed
+     */
+    public function query()
+    {
+        return app(Page::class)->newQuery();
     }
 }

@@ -174,6 +174,6 @@ Route::group([
 /**
  * Page Routes.
  */
-foreach (page()->all() as $page) {
+foreach (page()->query()->active()->defaultOrder()->get() as $page) {
     Route::get($page->url->url, ['as' => $page->routeName, 'uses' => $page->routeController . '@' . $page->routeAction, 'model' => $page]);
 }

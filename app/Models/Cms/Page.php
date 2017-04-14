@@ -190,6 +190,26 @@ class Page extends Model
     }
 
     /**
+     * Filter the query to return only active results.
+     *
+     * @param Builder $query
+     */
+    public function scopeActive($query)
+    {
+        $query->where('active', self::ACTIVE_YES);
+    }
+
+    /**
+     * Filter the query to return only inactive results.
+     *
+     * @param Builder $query
+     */
+    public function scopeInactive($query)
+    {
+        $query->where('active', self::ACTIVE_NO);
+    }
+
+    /**
      * Filter the query by the given parent id.
      *
      * @param Builder $query

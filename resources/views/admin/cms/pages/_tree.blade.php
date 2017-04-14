@@ -9,8 +9,6 @@
 @section('bottom_scripts')
     <script type="text/javascript">
         $(function(){
-
-
             //init tree
             setTimeout(function () {
                 $("#tree").jstree({
