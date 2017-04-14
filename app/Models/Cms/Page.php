@@ -3,10 +3,10 @@
 namespace App\Models\Cms;
 
 use App\Models\Model;
-use App\Traits\IsFilterable;
-use App\Traits\IsSortable;
 use App\Traits\HasUrl;
 use App\Traits\HasMetadata;
+use App\Traits\IsFilterable;
+use App\Traits\IsSortable;
 use App\Options\UrlOptions;
 use App\Exceptions\CrudException;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,10 +15,10 @@ use Kalnoy\Nestedset\NodeTrait;
 
 class Page extends Model
 {
-    use IsFilterable;
-    use IsSortable;
     use HasUrl;
     use HasMetadata;
+    use IsFilterable;
+    use IsSortable;
     use SoftDeletes;
     use NodeTrait;
 

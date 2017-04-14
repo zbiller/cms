@@ -2,20 +2,24 @@
 
 namespace App\Http\Controllers\Admin\Cms;
 
-use App\Http\Controllers\Controller;
 use App\Models\Cms\Page;
 use App\Models\Cms\Layout;
+use App\Http\Controllers\Controller;
 use App\Traits\CanCrud;
+use App\Traits\CanHandleTree;
 use App\Http\Requests\PageRequest;
 use App\Http\Filters\PageFilter;
 use App\Http\Sorts\PageSort;
 use App\Options\CrudOptions;
+use App\Options\TreeOptions;
 use Illuminate\Http\Request;
 
 class PagesController extends Controller
 {
     use CanCrud;
-    //use CanHandleTree;
+    use CanHandleTree {
+        CanCrud::checkOptionsMethodDeclaration insteadof CanHandleTree;
+    }
 
     /**
      * @param Request $request
@@ -162,183 +166,6 @@ class PagesController extends Controller
         });
     }
 
-
-
-
-
-
-
-
-
-
-
-
-    /**
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function fixTree()
-    {
-        app(Page::class)->doNotGenerateUrl()->fixTree();
-
-        return back();
-    }
-
-    /**
-     * @param null $parent
-     * @return array
-     */
-    public function loadTreeNodes($parent = null)
-    {
-        $data = [];
-
-        if ($parent) {
-            $items = Page::whereDescendantOf($parent)->defaultOrder()->get()->toTree();
-        } elseif (cache()->has('first_tree_load')) {
-            $items = Page::whereIsRoot()->defaultOrder()->get();
-            cache()->forget('first_tree_load');
-        } else {
-            cache()->forever('first_tree_load', true);
-
-            $data[] = [
-                'id' => 'root_id',
-                'text' => 'Pages',
-                'children' => true,
-                'type' => 'root',
-                'icon' => 'jstree-folder'
-            ];
-        }
-
-        if (isset($items)) {
-            foreach ($items as $item) {
-                $data[] = [
-                    'id' => $item->id,
-                    'text' => $item->name,
-                    'children' => $item->children->count() > 0 ? true : false,
-                    'type' => 'child',
-                    'icon' => 'jstree-folder'
-                ];
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * @param Request $request
-     * @param PageFilter $filter
-     * @param PageSort $sort
-     * @param Page $parent
-     * @return \Illuminate\Contracts\View\View
-     */
-    public function listTreeItems(Request $request, PageFilter $filter, PageSort $sort, Page $parent = null)
-    {
-        $query = Page::filtered($request, $filter);
-
-        $request->has('sort') ? $query->sorted($request, $sort) : $query->defaultOrder();
-        $parent->exists ? $query->whereParent($parent->id) : $query->whereIsRoot();
-
-        $items = $query->get();
-
-        return view('admin.cms.pages._table')->with([
-            'items' => $items,
-            'parent' => $parent,
-            'actives' => Page::$actives,
-        ]);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function sortTreeItems()
-    {
-        $tree = [];
-        $branch = head(request()->input('tree'))['children'];
-
-        $this->rebuildTreeBranch($branch, $tree);
-
-        return app(Page::class)->doNotGenerateUrl()->rebuildTree($tree);
-    }
-
-    /**
-     * @return void
-     */
-    public function refreshTreeItemsUrls()
-    {
-        $data = request()->input('data');
-
-        if ((int)$data['parent'] != (int)$data['old_parent']) {
-            $parent = Page::find($data['parent']);
-            $page = Page::find($data['page']);
-
-            $page->url()->update([
-                'url' => trim(($parent ? $parent->url->url . '/' : '') . $page->slug, '/')
-            ]);
-
-            $this->rebuildChildrenUrls($page);
-        }
-    }
-
-    /**
-     * @param array $items
-     * @param array $array
-     * @return void
-     */
-    private function rebuildTreeBranch(array $items, array &$array)
-    {
-        foreach ($items as $item) {
-            if (!is_numeric($item['id'])) {
-                continue;
-            }
-
-            $_item = [
-                'id' => $item['id'],
-                'name' => $item['text'],
-            ];
-
-            if (isset($item['children']) && is_array($item['children'])) {
-                $_item['children'] = [];
-
-                $this->rebuildTreeBranch($item['children'], $_item['children']);
-            }
-
-            $array[] = $_item;
-        }
-    }
-
-    /**
-     * @param Page $page
-     * @return void
-     */
-    private function rebuildChildrenUrls(Page $page)
-    {
-        foreach ($page->children as $child) {
-            $child->url()->update([
-                'url' => trim(($page ? $page->url->url . '/' : '') . $child->slug, '/')
-            ]);
-
-            $this->rebuildChildrenUrls($child);
-        }
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * @return CrudOptions
      */
@@ -354,5 +181,21 @@ class PagesController extends Controller
             ->setEditView('admin.cms.pages.edit')
             ->setDeletedRoute('admin.pages.deleted')
             ->setDeletedView('admin.cms.pages.deleted');
+    }
+
+    /**
+     * @return TreeOptions
+     */
+    public static function getTreeOptions()
+    {
+        return TreeOptions::instance()
+            ->setModel(app(Page::class))
+            ->setFilter(app(PageFilter::class))
+            ->setSort(app(PageSort::class))
+            ->setName('Pages')
+            ->setView('admin.cms.pages._table')
+            ->setVars([
+                'actives' => Page::$actives
+            ]);
     }
 }
