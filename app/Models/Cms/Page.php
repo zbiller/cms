@@ -136,7 +136,7 @@ class Page extends Model
     public function getRouteNameAttribute()
     {
         return isset($this->attributes['identifier']) && !empty($this->attributes['identifier']) ?
-            'page-' . $this->attributes['identifier'] : null;
+            'page.' . $this->attributes['identifier'] : null;
     }
 
     /**
