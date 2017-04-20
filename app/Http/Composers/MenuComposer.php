@@ -33,10 +33,14 @@ class MenuComposer
             });
 
             $menu->add(function ($item) use ($menu) {
-                $content = $item->name('Manage Content')->data('icon', 'fa-pencil-square-o')->active('admin/pages/*', 'admin/layouts/*', 'admin/uploads/*');
+                $content = $item->name('Manage Content')->data('icon', 'fa-pencil-square-o')->active('admin/pages/*', 'admin/menus/*', 'admin/layouts/*', 'admin/uploads/*');
 
                 $menu->child($content, function (MenuItem $item) {
                     $item->name('Pages')->url(route('admin.pages.index'))->permissions('pages-list')->active('admin/pages/*');
+                });
+
+                $menu->child($content, function (MenuItem $item) {
+                    $item->name('Menus')->url(route('admin.menus.locations'))->permissions('menus-list')->active('admin/menus/*');
                 });
 
                 $menu->child($content, function (MenuItem $item) {

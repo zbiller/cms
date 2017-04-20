@@ -27,13 +27,14 @@ class ButtonHelper
      * Render the add button view helper.
      *
      * @param string $route
+     * @param array $parameters
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function add($route, array $attributes = [])
+    public function add($route, array $parameters = [], array $attributes = [])
     {
         return view('helpers::button.add')->with([
-            'url' => route($route),
+            'url' => route($route, $parameters),
             'attributes' => self::buildAttributes($attributes)
         ]);
     }
@@ -74,13 +75,14 @@ class ButtonHelper
      * Render the cancel button view helper.
      *
      * @param string $route
+     * @param array $parameters
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function cancel($route, array $attributes = [])
+    public function cancel($route, array $parameters = [], array $attributes = [])
     {
         return view('helpers::button.cancel')->with([
-            'url' => route($route),
+            'url' => route($route, $parameters),
             'attributes' => self::buildAttributes($attributes)
         ]);
     }

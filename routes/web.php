@@ -121,6 +121,36 @@ Route::group([
             });
 
             /**
+             * CRUD Menus.
+             */
+            Route::group([
+                'prefix' => 'menus',
+            ], function () {
+                Route::get('locations', ['as' => 'admin.menus.locations', 'uses' => 'MenusController@locations', 'permissions' => 'menus-list']);
+                Route::get('entity/{type?}', ['as' => 'admin.menus.entity', 'uses' => 'MenusController@entity', 'permissions' => 'menus-list']);
+
+                Route::get('{location}/create/{parent?}', ['as' => 'admin.menus.create', 'uses' => 'MenusController@create', 'permissions' => 'menus-add']);
+                Route::get('{location}/edit/{menu}', ['as' => 'admin.menus.edit', 'uses' => 'MenusController@edit', 'permissions' => 'menus-edit']);
+                Route::post('{location}/store/{parent?}', ['as' => 'admin.menus.store', 'uses' => 'MenusController@store', 'permissions' => 'menus-add']);
+                Route::put('{location}/update/{menu}', ['as' => 'admin.menus.update', 'uses' => 'MenusController@update', 'permissions' => 'menus-edit']);
+                Route::delete('{location}/destroy/{menu}', ['as' => 'admin.menus.destroy', 'uses' => 'MenusController@destroy', 'permissions' => 'menus-delete']);
+                Route::get('/{location}', ['as' => 'admin.menus.index', 'uses' => 'MenusController@index', 'permissions' => 'menus-list']);
+
+                /**
+                 * Tree Actions.
+                 */
+                Route::group([
+                    'prefix' => 'tree'
+                ], function () {
+                    Route::get('fix', ['as' => 'admin.menus.tree.fix', 'uses' => 'MenusController@fixTree', 'acl' => 'menus-list']);
+                    Route::get('{location}/load/{parent?}', ['as' => 'admin.menus.tree.load', 'uses' => 'MenusController@loadTreeNodes', 'acl' => 'menus-list']);
+                    Route::get('{location}/list/{parent?}', ['as' => 'admin.menus.tree.list', 'uses' => 'MenusController@listTreeItems', 'acl' => 'menus-list']);
+                    Route::post('sort', ['as' => 'admin.menus.tree.sort', 'uses' => 'MenusController@sortTreeItems', 'acl' => 'menus-list']);
+                    Route::post('url', ['as' => 'admin.menus.tree.url', 'uses' => 'MenusController@refreshTreeItemsUrls', 'acl' => 'menus-list']);
+                });
+            });
+
+            /**
              * CRUD Layouts.
              */
             Route::group([

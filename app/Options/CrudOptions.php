@@ -19,6 +19,7 @@ class CrudOptions
      * @var
      */
     public $listRoute;
+    public $listRouteParameters;
     public $listView;
 
     /**
@@ -27,6 +28,7 @@ class CrudOptions
      * @var
      */
     public $addRoute;
+    public $addRouteParameters;
     public $addView;
 
     /**
@@ -35,6 +37,7 @@ class CrudOptions
      * @var
      */
     public $editRoute;
+    public $editRouteParameters;
     public $editView;
 
     /**
@@ -43,6 +46,7 @@ class CrudOptions
      * @var
      */
     public $deletedRoute;
+    public $deletedRouteParameters;
     public $deletedView;
 
     /**
@@ -72,11 +76,13 @@ class CrudOptions
      * Set the list route to work with in the App\Traits\CanCrud trait.
      *
      * @param string $route
+     * @param array $parameters
      * @return CrudOptions
      */
-    public function setListRoute($route): CrudOptions
+    public function setListRoute($route, array $parameters = []): CrudOptions
     {
         $this->listRoute = $route;
+        $this->listRouteParameters = $parameters;
 
         return $this;
     }
@@ -98,11 +104,13 @@ class CrudOptions
      * Set the add route to work with in the App\Traits\CanCrud trait.
      *
      * @param string $route
+     * @param array $parameters
      * @return CrudOptions
      */
-    public function setAddRoute($route): CrudOptions
+    public function setAddRoute($route, array $parameters = []): CrudOptions
     {
         $this->addRoute = $route;
+        $this->addRouteParameters = $parameters;
 
         return $this;
     }
@@ -124,11 +132,13 @@ class CrudOptions
      * Set the edit route to work with in the App\Traits\CanCrud trait.
      *
      * @param string $route
+     * @param array $parameters
      * @return CrudOptions
      */
-    public function setEditRoute($route): CrudOptions
+    public function setEditRoute($route, array $parameters = []): CrudOptions
     {
         $this->editRoute = $route;
+        $this->editRouteParameters = $parameters;
 
         return $this;
     }
@@ -150,11 +160,13 @@ class CrudOptions
      * Set the edit route to work with in the App\Traits\CanCrud trait.
      *
      * @param string $route
+     * @param array $parameters
      * @return CrudOptions
      */
-    public function setDeletedRoute($route): CrudOptions
+    public function setDeletedRoute($route, array $parameters = []): CrudOptions
     {
         $this->deletedRoute = $route;
+        $this->deletedRouteParameters = $parameters;
 
         return $this;
     }

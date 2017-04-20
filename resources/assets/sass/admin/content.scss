@@ -63,7 +63,7 @@ main {
     border: none;
     cursor: pointer;
     background: $colorTowerGray;
-    color: $colorWhite;
+    color: $colorWhite !important;
     font-family: 'Open Sans Bold', sans-serif;
     text-transform: uppercase;
 

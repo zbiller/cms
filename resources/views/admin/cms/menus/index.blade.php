@@ -1,0 +1,28 @@
+@extends('layouts::admin.default')
+
+@section('header')
+    @parent
+
+    <h1>Menus</h1>
+@endsection
+
+@section('content')
+    <section class="filters">
+        @include('admin.cms.menus._filter')
+    </section>
+
+    <section id="tree-container" class="list list-small left">
+        @include('admin.cms.menus._tree')
+    </section>
+
+    <section id="menus-container" class="list list-big right">
+        @include('admin.cms.menus._table', ['items' => $items])
+    </section>
+@endsection
+
+@section('footer')
+    <section class="actions">
+        {!! button()->update() !!}
+        {!! button()->add('admin.menus.create', ['location' => $location]) !!}
+    </section>
+@endsection

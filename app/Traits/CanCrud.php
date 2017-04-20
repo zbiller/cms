@@ -159,7 +159,7 @@ trait CanCrud
             }
 
             session()->flash('flash_success', __('crud.create_success'));
-            return request()->has('save_stay') ? back() : redirect()->route(self::$crudOptions->listRoute);
+            return request()->has('save_stay') ? back() : redirect()->route(self::$crudOptions->listRoute, self::$crudOptions->listRouteParameters);
         } catch (CrudException $e) {
             session()->flash('flash_error', $e->getMessage());
             return back()->withInput($request->all());
@@ -195,8 +195,9 @@ trait CanCrud
             throw new Exception($e->getMessage());
         }
 
-        return redirect()->route(
-            self::$crudOptions->listRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []
+        return redirect(
+            route(self::$crudOptions->listRoute, self::$crudOptions->listRouteParameters) .
+            (($query = parse_url(url()->previous(), PHP_URL_QUERY)) ? '?' . $query : '')
         );
     }
 
@@ -227,7 +228,10 @@ trait CanCrud
             throw new Exception($e->getMessage());
         }
 
-        return request()->has('save_stay') ? back() : redirect()->route(self::$crudOptions->listRoute);
+        return request()->has('save_stay') ? back() : redirect(
+            route(self::$crudOptions->listRoute, self::$crudOptions->listRouteParameters) .
+            (($query = parse_url(url()->previous(), PHP_URL_QUERY)) ? '?' . $query : '')
+        );
     }
 
     /**
@@ -255,8 +259,9 @@ trait CanCrud
             throw new Exception($e->getMessage());
         }
 
-        return redirect()->route(
-            self::$crudOptions->deletedRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []
+        return redirect(
+            route(self::$crudOptions->deletedRoute, self::$crudOptions->deletedRouteParameters) .
+            (($query = parse_url(url()->previous(), PHP_URL_QUERY)) ? '?' . $query : '')
         );
     }
 
@@ -285,8 +290,9 @@ trait CanCrud
             throw new Exception($e->getMessage());
         }
 
-        return redirect()->route(
-            self::$crudOptions->listRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []
+        return redirect(
+            route(self::$crudOptions->listRoute, self::$crudOptions->listRouteParameters) .
+            (($query = parse_url(url()->previous(), PHP_URL_QUERY)) ? '?' . $query : '')
         );
     }
 
@@ -315,8 +321,9 @@ trait CanCrud
             throw new Exception($e->getMessage());
         }
 
-        return redirect()->route(
-            self::$crudOptions->deletedRoute, parse_url(url()->previous(), PHP_URL_QUERY) ?: []
+        return redirect(
+            route(self::$crudOptions->deletedRoute, self::$crudOptions->deletedRouteParameters) .
+            (($query = parse_url(url()->previous(), PHP_URL_QUERY)) ? '?' . $query : '')
         );
     }
 

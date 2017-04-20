@@ -1,9 +1,8 @@
 <div class="list-container">
     <div id="tree"></div>
-
-    <span class="box full">Something wrong in tree? <a href="{{ route('admin.pages.tree.fix') }}">Fix it now!</a></span>
-
-    {{--{!! button()->action('Deleted Pages', route('admin.pages.deleted'), 'fa-trash', 'red centered full no-margin-top no-margin-left no-margin-right') !!}--}}
+    <span class="box full">
+        Something wrong in tree? <a href="{{ route('admin.menus.tree.fix') }}">Fix it now!</a>
+    </span>
 </div>
 
 @section('bottom_scripts')
@@ -25,7 +24,7 @@
                         },
                         'data': {
                             'url' : function(node) {
-                                return "{{ route('admin.pages.tree.load') }}" + (parseInt(node.id) ? "/" + node.id : '');
+                                return "{{ route('admin.menus.tree.load', ['location' => $location]) }}" + (parseInt(node.id) ? "/" + node.id : '');
                             }
                         }
                     },
@@ -38,38 +37,32 @@
             $("#tree").on('select_node.jstree', function (e, data) {
                 var node = data.instance.get_node(data.selected);
                 var search = $('section.filters input[name="search"]').val();
-                var layout = $('section.filters select[name="layout"]').val();
                 var type = $('section.filters select[name="type"]').val();
                 var active = $('section.filters select[name="active"]').val();
-                var start_date = $('section.filters input[name="start_date"]').val();
-                var end_date = $('section.filters input[name="end_date"]').val();
                 var sort = _getParam('sort');
                 var dir = _getParam('dir');
 
-                $('table.pages-table').css({
+                $('table.menus-table').css({
                     opacity: 0.5
                 });
 
-                $('a.btn.add').attr('href', '{{ route('admin.pages.create') }}');
+                $('a.btn.add').attr('href', '{{ route('admin.menus.create', ['location' => $location]) }}');
 
                 $.ajax({
-                    url: "{{ URL::route('admin.pages.tree.list') }}" + "/" + (parseInt(node.id) ? node.id : ''),
+                    url: "{{ URL::route('admin.menus.tree.list', ['location' => $location]) }}" + "/" + (parseInt(node.id) ? node.id : ''),
                     type: "GET",
                     data: {
                         search: search,
-                        layout: layout,
                         type: type,
                         active: active,
-                        start_date: start_date,
-                        end_date: end_date,
                         sort: sort,
                         dir: dir
                     },
                     success: function(data){
                         $('a.btn.add').attr('href', $('a.btn.add').attr('href') + '/' + (parseInt(node.id) ? node.id : ''));
 
-                        $('section#pages-container').html(data);
-                        $('table.pages-table').css({
+                        $('section#menus-container').html(data);
+                        $('table.menus-table').css({
                             opacity: 1
                         });
 
@@ -134,7 +127,7 @@
                 };
 
                 $.ajax({
-                    url: "{{ URL::route('admin.pages.tree.sort') }}",
+                    url: "{{ URL::route('admin.menus.tree.sort') }}",
                     type: "POST",
                     data: {
                         _token: '{{ csrf_token() }}',
@@ -142,18 +135,7 @@
                     },
                     dataType: 'json',
                     success: function(data){
-                        if (data > 0) {
-                            $.ajax({
-                                url: "{{ URL::route('admin.pages.tree.url') }}",
-                                type: "POST",
-                                data: {
-                                    _token: '{{ csrf_token() }}',
-                                    data: _data
-                                },
-                                dataType: 'json',
-                                success: function(data){}
-                            });
-                        }
+
                     }
                 });
             });
