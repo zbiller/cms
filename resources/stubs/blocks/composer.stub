@@ -1,0 +1,26 @@
+<?php
+
+namespace DummyNamespace;
+
+use Illuminate\Contracts\View\View;
+
+class Composer
+{
+    /**
+     * The available locations for the block to be rendered.
+     *
+	 * @param View $view
+	 */
+	public static $locations = [];
+
+    /**
+     * The block view logic.
+     *
+     * @param View $view
+     */
+    public function compose(View $view)
+    {
+        $view->with('item', $view->model);
+        $view->with('data', $view->model->metadata);
+    }
+}
