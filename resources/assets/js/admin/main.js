@@ -1,4 +1,7 @@
 $(window).load(function(){
+    /**
+     * General Scripts
+     */
     //load();
     flash();
     menu();
@@ -11,6 +14,11 @@ $(window).load(function(){
     popups();
     setups();
     helpers();
+
+    /**
+     * Custom Scripts
+     */
+    menus();
 });
 
 /**
@@ -395,6 +403,52 @@ function helpers()
             $('input[type="password"][name="password_confirmation"]').val(generatedPassword);
             alert('The generated password has been copied to your clipboard.');
         }
+    });
+}
+
+/**
+ * @return void
+ */
+function menus()
+{
+    var menuTypeSelect = '#menu-type-select';
+    var selectMenuType = function (type) {
+        $('div.menu-types').hide();
+
+        if (type.val() == type.data('default-type')) {
+            $('#menu-type-default').show();
+        } else {
+            var chosen = $('select[name="menuable_id"]');
+
+            chosen.empty();
+
+            $.ajax({
+                type: 'GET',
+                url: type.data('url') + '/' + type.val(),
+                dataType: 'json',
+                success: function(data) {
+                    if (data.status == true) {
+                        $.each(data.attributes, function (index, attribute){
+                            chosen.append(
+                                '<option value="' + attribute.value + '"' + (
+                                    attribute.value == type.data('selected') ? ' selected' : ''
+                                ) + '>' + attribute.name + '</option>'
+                            ).trigger('chosen:updated');
+                        });
+                    }
+
+                    $('#menu-type-custom').show();
+                }
+            });
+        }
+    };
+
+    if ($(menuTypeSelect).val() != '') {
+        selectMenuType($(menuTypeSelect));
+    }
+
+    $(document).on('change', menuTypeSelect, function () {
+        selectMenuType($(this));
     });
 }
 
