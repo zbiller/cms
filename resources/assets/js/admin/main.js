@@ -18,6 +18,7 @@ $(window).load(function(){
     /**
      * Custom Scripts
      */
+    tree();
     menus();
 });
 
@@ -404,6 +405,111 @@ function helpers()
             alert('The generated password has been copied to your clipboard.');
         }
     });
+}
+
+/**
+ * @return void
+ */
+function tree()
+{
+    var tree = $(".jstree");
+
+    var load = function (tree) {
+        setTimeout(function () {
+            tree.jstree({
+                "core" : {
+                    "themes" : {
+                        "responsive" : false
+                    },
+                    "check_callback" : function(operation, node, node_parent, node_position, more) {
+                        if (operation === "move_node") {
+                            return (node.id != "id" && node_parent.id != "id");
+                        }
+
+                        return true;
+                    },
+                    'data': {
+                        'url' : function(node) {
+                            return tree.data('load-url') + (parseInt(node.id) ? "/" + node.id : '');
+                        }
+                    }
+                },
+                "state" : { "key" : "state_key" },
+                "plugins" : ["dnd", "state", "types"]
+            });
+        }, 500);
+    };
+
+    var list = function (tree) {
+        tree.on('select_node.jstree', function (e, data) {
+            var node = data.instance.get_node(data.selected);
+            var request = {};
+
+            $(tree.data('table')).css({opacity: 0.5});
+            $('a.btn.add').attr('href', tree.data('add-url'));
+
+            $.each(_getParams(), function (index, obj) {
+                request[obj.name] = obj.value;
+            });
+
+            $.ajax({
+                url: tree.data('list-url') + "/" + (parseInt(node.id) ? node.id : ''),
+                type: 'GET',
+                data: request,
+                success: function(data){
+                    $('a.btn.add').attr('href', $('a.btn.add').attr('href') + '/' + (parseInt(node.id) ? node.id : ''));
+                    $(tree.data('container')).html(data);
+                    $(tree.data('table')).css({opacity: 1});
+
+                    //init sorting
+                    sort();
+                }
+            });
+        });
+    };
+
+    var move = function (tree) {
+        tree.on('move_node.jstree', function (e, data) {
+            var _tree = tree.jstree().get_json();
+            var _node = data.node;
+            var _data = {
+                page: parseInt(_node.id) ? _node.id : '',
+                children: _node.children,
+                parent: parseInt(data.parent) ? data.parent : '',
+                old_parent: parseInt(data.old_parent) ? data.old_parent : ''
+            };
+
+            $.ajax({
+                url: tree.data('move-url'),
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    _token: tree.data('token'),
+                    tree: _tree
+                },
+                success: function(data) {
+                    if (data > 0 && tree.data('has-url') === true) {
+                        $.ajax({
+                            url: tree.data('url-url'),
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                _token: tree.data('token'),
+                                data: _data
+                            },
+                            success: function(data) {
+
+                            }
+                        });
+                    }
+                }
+            });
+        });
+    };
+
+    load(tree);
+    list(tree);
+    move(tree);
 }
 
 /**

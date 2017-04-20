@@ -23,7 +23,7 @@ class MenuFilter extends Filter
     {
         return [
             'search' => 'operator:like|condition:or|columns:name,url',
-            'type' => 'operator:=|condition:or|columns:entity_type',
+            'type' => 'operator:=|condition:or|columns:type',
             'active' => 'operator:=|condition:or|columns:active',
         ];
     }
