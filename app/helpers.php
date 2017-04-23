@@ -139,9 +139,10 @@ if (!function_exists('array_search_key_recursive')) {
     /**
      * @param string|int $needle
      * @param array $haystack
+     * @param bool $match
      * @return mixed|null
      */
-    function array_search_key_recursive($needle, array $haystack = [])
+    function array_search_key_recursive($needle, array $haystack = [], $match = false)
     {
         $array = new \RecursiveIteratorIterator(
             new \RecursiveArrayIterator($haystack),
@@ -149,11 +150,27 @@ if (!function_exists('array_search_key_recursive')) {
         );
 
         foreach ($array as $key => $value) {
-            if ($key === $needle) {
+            if ($match ? str_is($key, $needle) : $key === $needle) {
                 return $value;
             }
         }
 
         return null;
+    }
+}
+
+if (!function_exists('get_object_vars_recursive')) {
+
+    function get_object_vars_recursive($object)
+    {
+        $result = [];
+        $vars = is_object($object) ? get_object_vars($object) : $object;
+
+        foreach ($vars as $key => $value) {
+            $value = (is_array($value) || is_object($value)) ? get_object_vars_recursive($value) : $value;
+            $result[$key] = $value;
+        }
+
+        return $result;
     }
 }
