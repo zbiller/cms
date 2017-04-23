@@ -85,6 +85,28 @@ class PermissionsSeeder extends Seeder
                 'label' => 'Delete',
             ],
         ],
+        'Blocks' => [
+            'List' => [
+                'name' => 'blocks-list',
+                'group' => 'Blocks',
+                'label' => 'List',
+            ],
+            'Add' => [
+                'name' => 'blocks-add',
+                'group' => 'Blocks',
+                'label' => 'Add',
+            ],
+            'Edit' => [
+                'name' => 'blocks-edit',
+                'group' => 'Blocks',
+                'label' => 'Edit',
+            ],
+            'Delete' => [
+                'name' => 'blocks-delete',
+                'group' => 'Blocks',
+                'label' => 'Delete',
+            ],
+        ],
         'Layouts' => [
             'List' => [
                 'name' => 'layouts-list',

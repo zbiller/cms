@@ -12,7 +12,7 @@
 */
 
 /**
- * Admin routes.
+ * Admin Routes.
  */
 Route::group([
     'namespace' => 'Admin',
@@ -149,15 +149,29 @@ Route::group([
             });
 
             /**
+             * CRUD Blocks.
+             */
+            Route::group([
+                'prefix' => 'blocks',
+            ], function () {
+                Route::get('/', ['as' => 'admin.blocks.index', 'uses' => 'BlocksController@index', 'permissions' => 'blocks-list']);
+                Route::get('create/{type?}', ['as' => 'admin.blocks.create', 'uses' => 'BlocksController@create', 'permissions' => 'blocks-add']);
+                Route::get('edit/{block}', ['as' => 'admin.blocks.edit', 'uses' => 'BlocksController@edit', 'permissions' => 'blocks-edit']);
+                Route::post('store', ['as' => 'admin.blocks.store', 'uses' => 'BlocksController@store', 'permissions' => 'blocks-add']);
+                Route::put('update/{block}', ['as' => 'admin.blocks.update', 'uses' => 'BlocksController@update', 'permissions' => 'blocks-edit']);
+                Route::delete('destroy/{block}', ['as' => 'admin.blocks.destroy', 'uses' => 'BlocksController@destroy', 'permissions' => 'blocks-delete']);
+            });
+
+            /**
              * CRUD Layouts.
              */
             Route::group([
                 'prefix' => 'layouts',
             ], function () {
                 Route::get('/', ['as' => 'admin.layouts.index', 'uses' => 'LayoutsController@index', 'permissions' => 'layouts-list']);
-                Route::get('create/{parent?}', ['as' => 'admin.layouts.create', 'uses' => 'LayoutsController@create', 'permissions' => 'layouts-add']);
+                Route::get('create', ['as' => 'admin.layouts.create', 'uses' => 'LayoutsController@create', 'permissions' => 'layouts-add']);
                 Route::get('edit/{layout}', ['as' => 'admin.layouts.edit', 'uses' => 'LayoutsController@edit', 'permissions' => 'layouts-edit']);
-                Route::post('store/{?parent}', ['as' => 'admin.layouts.store', 'uses' => 'LayoutsController@store', 'permissions' => 'layouts-add']);
+                Route::post('store', ['as' => 'admin.layouts.store', 'uses' => 'LayoutsController@store', 'permissions' => 'layouts-add']);
                 Route::put('update/{layout}', ['as' => 'admin.layouts.update', 'uses' => 'LayoutsController@update', 'permissions' => 'layouts-edit']);
                 Route::delete('destroy/{layout}', ['as' => 'admin.layouts.destroy', 'uses' => 'LayoutsController@destroy', 'permissions' => 'layouts-delete']);
             });
@@ -203,5 +217,9 @@ Route::group([
  * Page Routes.
  */
 foreach (page()->query()->active()->defaultOrder()->get() as $page) {
-    Route::get($page->url->url, ['as' => $page->routeName, 'uses' => $page->routeController . '@' . $page->routeAction, 'model' => $page]);
+    Route::get($page->url->url, [
+        'as' => $page->routeName,
+        'uses' => $page->routeController . '@' . $page->routeAction,
+        'model' => $page
+    ]);
 }
