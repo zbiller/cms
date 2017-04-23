@@ -137,6 +137,8 @@ class FormAdminHelper
      */
     public function hidden($name, $value = null, array $options = [])
     {
+        $options['data-value'] = $value;
+
         return $this->form->hidden($this->name($name), $this->value($name, $value), $options);
     }
 
@@ -151,6 +153,8 @@ class FormAdminHelper
      */
     public function text($name, $label = null, $value = null, array $options = [])
     {
+        $options['data-value'] = $value;
+
         return $this->wrap(
             $this->form->text($this->name($name), $this->value($name, $value), $options),
             $this->label($name, $label)
@@ -168,6 +172,8 @@ class FormAdminHelper
      */
     public function textarea($name, $label = null, $value = null, array $options = [])
     {
+        $options['data-value'] = $value;
+
         return $this->wrap(
             $this->form->textarea($this->name($name), $this->value($name, $value), $options),
             $this->label($name, $label)
@@ -189,6 +195,7 @@ class FormAdminHelper
         $list = $list instanceof Collection ? $list->toArray() : $list;
         $selected = $selected instanceof Collection ? $selected->toArray() : $selected;
         $options['class'] = 'select-input ' . (isset($options['class']) ? $options['class'] : '');
+        $options['data-selected'] = $selected;
 
         return $this->wrap(
             $this->form->select($this->name($name), $list, $this->value($name, $selected), $options),
@@ -243,6 +250,8 @@ class FormAdminHelper
      */
     public function number($name, $value = null, $label = null, array $options = [])
     {
+        $options['data-value'] = $value;
+
         return $this->wrap(
             $this->form->number($this->name($name), $this->value($name, $value), $options),
             $this->label($name, $label)
@@ -260,6 +269,8 @@ class FormAdminHelper
      */
     public function email($name, $value = null, $label = null, array $options = [])
     {
+        $options['data-value'] = $value;
+
         return $this->wrap(
             $this->form->email($this->name($name), $this->value($name, $value), $options),
             $this->label($name, $label)
@@ -277,6 +288,8 @@ class FormAdminHelper
      */
     public function phone($name, $value = null, $label = null, array $options = [])
     {
+        $options['data-value'] = $value;
+
         return $this->wrap(
             $this->form->tel($this->name($name), $this->value($name, $value), $options),
             $this->label($name, $label)
@@ -295,6 +308,8 @@ class FormAdminHelper
      */
     public function checkbox($name, $label = null, $value = 1, $checked = null, array $options = [])
     {
+        $options['data-value'] = $value;
+
         return $this->wrap(
             $this->form->checkbox($this->name($name), $this->value($name, $value), $checked, $options),
             $this->label($name, $label)
@@ -313,6 +328,8 @@ class FormAdminHelper
      */
     public function radio($name, $label = null, $value = 1, $checked = null, array $options = [])
     {
+        $options['data-value'] = $value;
+
         return $this->wrap(
             $this->form->radio($this->name($name), $this->value($name, $value), $checked, $options),
             $this->label($name, $label)
@@ -331,6 +348,7 @@ class FormAdminHelper
     public function editor($name, $label = null, $value = null, array $options = [])
     {
         $options['class'] = 'editor-input ' . (isset($options['class']) ? $options['class'] : '');
+        $options['data-value'] = $value;
 
         return $this->wrap(
             $this->form->textarea($this->name($name), $this->value($name, $value), $options),
@@ -350,6 +368,7 @@ class FormAdminHelper
     public function calendar($name, $label = null, $value = null, array $options = [])
     {
         $options['class'] = 'date-input ' . (isset($options['class']) ? $options['class'] : '');
+        $options['data-value'] = $value;
 
         return $this->wrap(
             $this->form->text($this->name($name), $this->value($name, $value), $options),
@@ -369,6 +388,7 @@ class FormAdminHelper
     public function time($name, $label = null, $value = null, array $options = [])
     {
         $options['class'] = 'time-input ' . (isset($options['class']) ? $options['class'] : '');
+        $options['data-value'] = $value;
 
         return $this->wrap(
             $this->form->text($this->name($name), $this->value($name, $value), $options),
@@ -388,6 +408,7 @@ class FormAdminHelper
     public function color($name, $label = null, $value = null, array $options = [])
     {
         $options['class'] = 'color-input ' . (isset($options['class']) ? $options['class'] : '');
+        $options['data-value'] = $value;
 
         return $this->wrap(
             $this->form->text($this->name($name), $this->value($name, $value), $options),
@@ -409,6 +430,7 @@ class FormAdminHelper
     public function selectRange($name, $label = null, $start = 0, $end = 0, $selected = null, array $options = [])
     {
         $options['class'] = 'select-input ' . (isset($options['class']) ? $options['class'] : '');
+        $options['data-selected'] = $selected;
 
         return $this->wrap(
             $this->form->selectRange($this->name($name), $start, $end, $this->value($name, $selected), $options),
@@ -430,6 +452,7 @@ class FormAdminHelper
     public function selectYear($name, $label = null, $start = null, $end = null, $selected = null, array $options = [])
     {
         $options['class'] = 'select-input ' . (isset($options['class']) ? $options['class'] : '');
+        $options['data-selected'] = $selected;
 
         return $this->wrap(
             $this->form->selectYear($this->name($name), $start ?: 1970, $end ?: date('Y'), $this->value($name, $selected), $options),
@@ -450,6 +473,7 @@ class FormAdminHelper
     public function selectMonth($name, $label = null, $selected = null, array $options = [], $format = '%B')
     {
         $options['class'] = 'select-input ' . (isset($options['class']) ? $options['class'] : '');
+        $options['data-selected'] = $selected;
 
         return $this->wrap(
             $this->form->selectMonth($this->name($name), $this->value($name, $selected), $options, $format),
