@@ -4,6 +4,7 @@ namespace App\Models\Cms;
 
 use App\Models\Model;
 use App\Traits\HasUrl;
+use App\Traits\HasBlocks;
 use App\Traits\HasMetadata;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
@@ -16,6 +17,7 @@ use Kalnoy\Nestedset\NodeTrait;
 class Page extends Model
 {
     use HasUrl;
+    use HasBlocks;
     use HasMetadata;
     use IsFilterable;
     use IsSortable;
