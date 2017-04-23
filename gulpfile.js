@@ -62,6 +62,7 @@ elixir(function (mix) {
             'libs/tooltip.js',
             'libs/upload.js',
             'libs/jstree.js',
+            'admin/helpers.js',
             'admin/main.js',
             './public/vendor/jsvalidation/js/jsvalidation.js'
         ], 'public/assets/js/admin/app.js')
