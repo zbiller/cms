@@ -19,8 +19,7 @@ class CreateMenusTable extends Migration
 
             NestedSet::columns($table);
 
-            $table->integer('menuable_id')->unsigned()->nullable();
-            $table->string('menuable_type')->nullable();
+            $table->nullableMorphs('menuable');
 
             $table->string('type');
             $table->string('location');
