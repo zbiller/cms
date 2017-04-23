@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Cms\Block;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 class ComposerServiceProvider extends ServiceProvider
@@ -13,6 +14,12 @@ class ComposerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        /* link admin menu composer */
         view()->composer('layouts::admin.partials._menu', 'App\Http\Composers\MenuComposer@admin');
+
+        /* link blocks composers */
+        foreach (Block::$map as $type => $options) {
+            view()->composer("blocks_{$type}::front", $options['composer_class']);
+        }
     }
 }
