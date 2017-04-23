@@ -2,6 +2,8 @@
 
 namespace App\Helpers;
 
+use Storage;
+use Exception;
 use App\Models\Model;
 use App\Exceptions\UploadException;
 use Illuminate\View\View;
@@ -256,7 +258,19 @@ class UploaderHelper
      */
     private function generateCurrent()
     {
-        if ($this->model->{$this->field} && $this->model->{'_' . $this->field}->exists()) {
+        if (!$this->model->exists) {
+            return $this;
+        }
+
+        if (str_contains($this->field, 'metadata')) {
+            try {
+                if (Storage::disk(config('upload.storage.disk'))->exists($this->model->metadata($this->field))) {
+                    $this->current = new UploadedHelper($this->model->metadata($this->field));
+                }
+            } catch (Exception $e) {
+                $this->current = null;
+            }
+        } elseif ($this->model->{$this->field} && $this->model->{'_' . $this->field}->exists()) {
             $this->current = $this->model->{'_' . $this->field};
         }
 
@@ -273,7 +287,7 @@ class UploaderHelper
     {
         if (
             method_exists($this->model, 'getUploadConfig') &&
-            ($styles = array_search_key_recursive($this->field, $this->model->getUploadConfig()))
+            ($styles = array_search_key_recursive($this->field, $this->model->getUploadConfig(), true))
         ) {
             $this->styles = array_keys($styles);
         } else {

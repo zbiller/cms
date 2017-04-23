@@ -1,7 +1,7 @@
-<a id="open-upload-new-{!! $index !!}" data-popup="open" data-popup-id="upload-new-{!! $index !!}" class="btn gray centered bordered left no-margin no-responsiveness {!! $current ? 'half' : 'full' !!}">
-    Choose From upload
+<a id="open-upload-new-{!! $index !!}" data-popup="open" data-popup-id="upload-new-{!! $index !!}" class="open-upload-new btn gray centered bordered left no-margin no-responsiveness {!! $current ? 'half' : 'full' !!}">
+    Choose Upload
 </a>
-<section id="upload-new-{!! $index !!}" class="popup" data-model="{{ get_class($model) }}" data-field="{{ $field }}">
+<section id="upload-new-{!! $index !!}" class="upload-new popup" data-model="{{ get_class($model) }}" data-field="{{ $field }}">
     <div class="modal">
         <div class="loading">
             <img src="{{ asset('/build/assets/img/admin/loading.gif') }}" />
@@ -30,7 +30,7 @@
         </div>
         <div class="footer">
             <label class="upload-btn green left">
-                <i class="fa fa-upload"></i>&nbsp; Upload file
+                <i class="fa fa-upload"></i>&nbsp; Upload New
                 <input type="file" name="file" accept="{!! $accept && is_array($accept) && !empty($accept) ? '.' . implode(',.', $accept) : '*' !!}">
             </label>
             <span class="upload-message"></span>

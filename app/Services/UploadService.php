@@ -14,7 +14,6 @@ use App\Models\Upload\Upload;
 use App\Http\Requests\UploadRequest;
 use App\Exceptions\UploadException;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Arr;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeExtensionGuesser;
@@ -359,7 +358,7 @@ class UploadService
      */
     public function getConfig($key = null)
     {
-        return Arr::get($this->config, $key);
+        return array_get($this->config, $key);
     }
 
     /**
@@ -1078,7 +1077,7 @@ class UploadService
             $original = Storage::disk($this->getDisk())->get($path);
 
             foreach ($this->getConfig('images.styles') as $field => $styles) {
-                if ($field != $this->getField()) {
+                if (!str_is($field, $this->getField())) {
                     continue;
                 }
 

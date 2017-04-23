@@ -262,6 +262,15 @@ class UploadsController extends Controller
         $path = $request->get('path');
         $style = $request->get('style');
 
+        if (isset($model->getUploadConfig()['images']['styles'])) {
+            foreach ($model->getUploadConfig()['images']['styles'] as $name => $styles) {
+                if (str_is($name, $field)) {
+                    $field = $name;
+                    break;
+                }
+            }
+        }
+
         $width = array_get($model->getUploadConfig(), "images.styles.{$field}.{$style}.width");
         $height = array_get($model->getUploadConfig(), "images.styles.{$field}.{$style}.height");
 

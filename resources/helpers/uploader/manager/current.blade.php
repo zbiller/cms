@@ -1,14 +1,14 @@
 @if($current)
-    <a id="open-upload-current-{!! $index !!}" data-popup="open" data-popup-id="upload-current-{!! $index !!}" class="btn blue centered left half no-margin no-responsiveness">
+    <a id="open-upload-current-{!! $index !!}" data-popup="open" data-popup-id="upload-current-{!! $index !!}" class="open-upload-current btn blue centered left half no-margin no-responsiveness">
         View Current File
     </a>
-    <section id="upload-current-{!! $index !!}" class="popup" data-model="{{ get_class($model) }}" data-field="{{ $field }}">
+    <section id="upload-current-{!! $index !!}" class="upload-current popup" data-model="{{ get_class($model) }}" data-field="{{ $field }}">
         <div class="modal">
             <div class="header">
                 <ul class="modal-tabs">
                     @foreach($styles as $style)
                         <li class="{!! $loop->first ? 'active' : '' !!}">
-                            <a href="#{!! $style !!}">{{ title_case(str_replace('_', ' ', $style)) }}</a>
+                            <a href="#{!! $style !!}-{!! $index !!}">{{ title_case(str_replace('_', ' ', $style)) }}</a>
                         </li>
                     @endforeach
                 </ul>
@@ -18,7 +18,7 @@
             </div>
             <div class="content">
                 @foreach($styles as $style)
-                    <div id="{!! $style !!}" class="modal-tab {!! $loop->first ? 'active' : '' !!}">
+                    <div id="{!! $style !!}-{!! $index !!}" class="modal-tab {!! $loop->first ? 'active' : '' !!}">
                         @if($upload->isImage())
                             <a class="open-upload-cropper-{{ $index }}"
                                data-url="{{ $current->url('original') }}"

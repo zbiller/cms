@@ -98,7 +98,9 @@
                         date = new Date();
 
                         $('#upload-crop-' + index).hide();
-                        $('.modal-tab.active > a > img').attr('src', $('.modal-tab.active > a > img').attr('src') + '?' + date.getTime());
+                        $('#upload-current-' + index +' .modal-tab.active > a > img').attr(
+                            'src', $('#upload-current-' + index +' .modal-tab.active > a > img').attr('src') + '?' + date.getTime()
+                        );
                     }
                 }
             });
