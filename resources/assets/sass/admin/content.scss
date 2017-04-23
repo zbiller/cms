@@ -96,8 +96,8 @@ main {
     &.bordered {
         padding: 6px 10px;
         border: 1px solid lighten($colorTowerGray, 10%);
-        background: none !important;
-        color: $colorOsloGray;
+        background: none;
+        color: $colorOsloGray !important;
         font-family: 'Open Sans', sans-serif;
         text-transform: none;
 

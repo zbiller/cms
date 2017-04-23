@@ -13,6 +13,10 @@
 }
 
 /* Uploads Styles */
+a.open-upload-new {
+    background: $colorWhite !important;
+}
+
 td.actions-upload {
     width: 283px !important;
 
@@ -54,4 +58,28 @@ div.menu-types {
     float: left;
     width: 100%;
     margin-top: 10px;
+}
+
+/* Block Styles */
+img#block-image {
+    display: none;
+    float: right;
+    max-width: 100%;
+}
+
+div.block-item {
+    @include clear-padding();
+
+    display: block;
+    float: left;
+    width: 100%;
+    background: $colorWhite;
+    padding: 15px;
+    margin: 60px 0 0 0;
+    border: 3px dashed $colorPictonBlue;
+}
+
+a.block-item-btn {
+    width: 33.3%;
+    background: #FFF !important;
 }
