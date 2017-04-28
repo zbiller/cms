@@ -9,6 +9,7 @@ $(window).load(function(){
     inputs();
     filter();
     sort();
+    order();
     tabs();
     pagination();
     popups();
@@ -193,6 +194,34 @@ function sort() {
         });
 
         window.location.href = url + '?' + decodeURIComponent($.param(params));
+    });
+}
+
+/**
+ * @return void
+ */
+function order()
+{
+    $('table[data-orderable="true"]').tableDnD({
+        onDrop: function(table, row){
+            var rows = table.tBodies[0].rows,
+                items = {};
+
+            for (var i = 0; i < rows.length; i++) {
+                items[i + 1] = rows[i].id;
+            }
+
+            $.ajax({
+                type: 'PATCH',
+                url: $(table).data('order-url'),
+                data: {
+                    _method: 'PATCH',
+                    _token: $(table).data('order-token'),
+                    model: $(table).data('order-model'),
+                    items: items
+                }
+            });
+        }
     });
 }
 
