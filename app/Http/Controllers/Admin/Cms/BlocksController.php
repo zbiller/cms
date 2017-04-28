@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin\Cms;
 
+use DB;
+use Exception;
 use App\Models\Cms\Block;
 use App\Http\Controllers\Controller;
 use App\Traits\CanCrud;
@@ -26,7 +28,7 @@ class BlocksController extends Controller
         return $this->_index(function () use ($request, $filter, $sort) {
             $this->items = Block::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
 
-            $this->vars['types'] = Block::types();
+            $this->vars['types'] = Block::getTypes();
         });
     }
 
@@ -36,10 +38,10 @@ class BlocksController extends Controller
      */
     public function create($type = null)
     {
-        if (!$type || !array_key_exists($type, Block::types())) {
+        if (!$type || !array_key_exists($type, Block::getTypes())) {
             return view('admin.cms.blocks.init')->with([
-                'types' => Block::types(),
-                'images' => Block::images(),
+                'types' => Block::getTypes(),
+                'images' => Block::getImages(),
             ]);
         }
 
@@ -96,6 +98,89 @@ class BlocksController extends Controller
             $this->item = $block;
             $this->item->delete();
         });
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function assign(Request $request)
+    {
+        $this->validate($request, [
+            'block_id' => 'required|numeric',
+            'blockable_id' => 'required|numeric',
+            'blockable_type' => 'required',
+            'location' => 'required',
+        ]);
+
+        try {
+            $data = $request->all();
+            $block = Block::findOrFail($data['block_id']);
+            $model = $data['blockable_type']::findOrFail($data['blockable_id']);
+
+            $model->assignBlock($block, $data['location']);
+
+            return [
+                'status' => true,
+                'html' => view('helpers::block.table')->with([
+                    'model' => $model,
+                    'location' => $data['location'],
+                ])->render(),
+            ];
+        } catch (Exception $e) {
+            dd($e);
+            return [
+                'status' => false
+            ];
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function unassign(Request $request)
+    {
+        $this->validate($request, [
+            'block_id' => 'required|numeric',
+            'pivot_id' => 'required|numeric',
+            'location' => 'required ',
+        ]);
+
+        try {
+            $data = $request->all();
+            $block = Block::findOrFail($data['block_id']);
+            $model = $data['blockable_type']::findOrFail($data['blockable_id']);
+
+            $model->unassignBlock($block, $data['pivot_id'], $data['location']);
+
+            return [
+                'status' => true,
+                'html' => view('helpers::block.table')->with([
+                    'model' => $model,
+                    'location' => $data['location'],
+                ])->render(),
+            ];
+        } catch (Exception $e) {
+            return [
+                'status' => false
+            ];
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return void
+     */
+    public function order(Request $request)
+    {
+        if ($request->has('items')) {
+            foreach ($request->get('items') as $ord => $id) {
+                DB::table('blockables')->where('id', $id)->update([
+                    'ord' => $ord
+                ]);
+            }
+        }
     }
 
     /**

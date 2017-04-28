@@ -94,6 +94,16 @@ if (!function_exists('button')) {
     }
 }
 
+if (!function_exists('block')) {
+    /**
+     * @return \App\Helpers\BlockHelper
+     */
+    function block()
+    {
+        return new App\Helpers\BlockHelper();
+    }
+}
+
 if (!function_exists('page')) {
     /**
      * @return \App\Helpers\PageHelper

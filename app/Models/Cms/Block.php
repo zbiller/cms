@@ -36,7 +36,7 @@ class Block extends Model
     ];
 
     /**
-     * List with all of the block types.
+     * List with all blocks.
      *
      * --- Label:
      * The pretty formatted block type name.
@@ -54,14 +54,33 @@ class Block extends Model
      *
      * @var array
      */
-    public static $map = [
+    public static $blocks = [
         'Example' => [
             'label' => 'Example Block',
             'composer_class' => 'App\Blocks\Example\Composer',
             'views_path' => 'app/Blocks/Example/Views',
             'preview_image' => 'example.jpg',
         ],
+        'Test' => [
+            'label' => 'Test Block',
+            'composer_class' => 'App\Blocks\Test\Composer',
+            'views_path' => 'app/Blocks/Test/Views',
+            'preview_image' => 'test.jpg',
+        ],
     ];
+
+    /**
+     * Get all of the records of a single entity type that are assigned to this block.
+     *
+     * @param string $class
+     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
+     */
+    public function blockables($class)
+    {
+        return $this->morphedByMany($class, 'blockable')->withPivot([
+            'id', 'location', 'ord'
+        ])->withTimestamps();
+    }
 
     /**
      * Sort the query with newest records first.
@@ -84,16 +103,37 @@ class Block extends Model
     }
 
     /**
+     * Get a list of all block locations.
+     * This is done by looking inside each block's composer class -> $locations property.
+     *
+     * @return array
+     */
+    public static function getLocations()
+    {
+        $locations = [];
+
+        foreach (self::$blocks as $name => $options) {
+            $class = app($options['composer_class']);
+
+            foreach ($class::$locations as $location) {
+                $locations[$location] = title_case(str_replace(['_', '-'], ' ', $location));
+            }
+        }
+
+        return $locations;
+    }
+
+    /**
      * Get the formatted block types for a select.
      * Final format will be: type => label.
      *
      * @return array
      */
-    public static function types()
+    public static function getTypes()
     {
         $types = [];
 
-        foreach (self::$map as $type => $options) {
+        foreach (self::$blocks as $type => $options) {
             $types[$type] = $options['label'];
         }
 
@@ -106,11 +146,11 @@ class Block extends Model
      *
      * @return array
      */
-    public static function classes()
+    public static function getClasses()
     {
         $types = [];
 
-        foreach (self::$map as $type => $options) {
+        foreach (self::$blocks as $type => $options) {
             $types[$options['composer_class']] = $options['label'];
         }
 
@@ -123,11 +163,11 @@ class Block extends Model
      *
      * @return array
      */
-    public static function paths()
+    public static function getPaths()
     {
         $types = [];
 
-        foreach (self::$map as $type => $options) {
+        foreach (self::$blocks as $type => $options) {
             $types[$options['views_class']] = $options['label'];
         }
 
@@ -140,26 +180,15 @@ class Block extends Model
      *
      * @return array
      */
-    public static function images()
+    public static function getImages()
     {
         $images = [];
 
-        foreach (self::$map as $type => $options) {
+        foreach (self::$blocks as $type => $options) {
             $images[$type] = $options['preview_image'];
         }
 
         return $images;
-    }
-
-    /**
-     * Get all of the records of a single entity type that are assigned to this block.
-     *
-     * @param string $class
-     * @return \Illuminate\Database\Eloquent\Relations\MorphToMany
-     */
-    public function related($class)
-    {
-        return $this->morphedByMany($class, 'blockable');
     }
 
     /**
