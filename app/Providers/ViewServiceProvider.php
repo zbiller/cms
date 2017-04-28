@@ -21,7 +21,7 @@ class ViewServiceProvider extends ServiceProvider
         view()->addNamespace('helpers', config('view.paths.helpers'));
 
         /* setup blocks view paths */
-        foreach (Block::$map as $type => $options) {
+        foreach (Block::$blocks as $type => $options) {
             view()->addNamespace("blocks_{$type}", realpath(base_path($options['views_path'])));
         }
     }

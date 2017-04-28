@@ -18,7 +18,7 @@ class ComposerServiceProvider extends ServiceProvider
         view()->composer('layouts::admin.partials._menu', 'App\Http\Composers\MenuComposer@admin');
 
         /* link blocks composers */
-        foreach (Block::$map as $type => $options) {
+        foreach (Block::$blocks as $type => $options) {
             view()->composer("blocks_{$type}::front", $options['composer_class']);
         }
     }
