@@ -7,7 +7,7 @@ use Illuminate\Contracts\View\View;
 class Composer
 {
     /**
-     * The available locations for the block to be rendered.
+     * The available locations for the block to be rendered in.
      *
 	 * @param View $view
 	 */
@@ -20,7 +20,7 @@ class Composer
      */
     public function compose(View $view)
     {
-        $view->with('item', $view->model);
+        $view->with('block', $view->model);
         $view->with('data', $view->model->metadata);
     }
 }
