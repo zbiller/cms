@@ -1,3 +1,3 @@
-@if($item->anchor)
-	<a id="{{ $item->anchor }}"></a>
+@if($block->anchor)
+	<a id="{{ $block->anchor }}"></a>
 @endif

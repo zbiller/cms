@@ -11,16 +11,7 @@
     @if($item->exists && isset($item->metadata->items))
         @foreach($item->metadata->items as $index => $_item)
             <div class="block-item" data-index="{{ $index }}">
-                <a href="#" class="block-move-item-up block-item-btn btn no-margin centered bordered">
-                    <i class="fa fa-arrow-up"></i>&nbsp; Move Up
-                </a>
-                <a href="#" class="block-move-item-down block-item-btn btn no-margin centered bordered">
-                    <i class="fa fa-arrow-down"></i>&nbsp; Move Down
-                </a>
-                <a href="#" class="block-delete-item block-item-btn btn no-margin centered bordered">
-                    <i class="fa fa-times"></i>&nbsp; Delete Item
-                </a>
-                <br /><br /><br />
+                {!! block()->buttons() !!}
 
                 {!! form_admin()->text('metadata[items][' . $index . '][title]', 'Title') !!}
                 {!! form_admin()->text('metadata[items][' . $index . '][subtitle]', 'Subtitle') !!}
@@ -36,16 +27,7 @@
 </div>
 <script type="x-template" id="block-items-template">
     <div class="block-item" data-index="#index">
-        <a href="#" class="block-move-item-up block-item-btn btn no-margin centered bordered">
-            <i class="fa fa-arrow-up"></i>&nbsp; Move Up
-        </a>
-        <a href="#" class="block-move-item-down block-item-btn btn no-margin centered bordered">
-            <i class="fa fa-arrow-down"></i>&nbsp; Move Down
-        </a>
-        <a href="#" class="block-delete-item block-item-btn btn no-margin centered bordered">
-            <i class="fa fa-times"></i>&nbsp; Delete Item
-        </a>
-        <br /><br /><br />
+        {!! block()->buttons() !!}
 
         {!! form_admin()->text('metadata[items][#index][title]', 'Title', '#title#') !!}
         {!! form_admin()->text('metadata[items][#index][subtitle]', 'Subtitle', '#subtitle#') !!}

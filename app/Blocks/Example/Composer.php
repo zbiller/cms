@@ -11,7 +11,9 @@ class Composer
      *
 	 * @param View $view
 	 */
-	public static $locations = [];
+	public static $locations = [
+        'header', 'footer', 'sidebar'
+    ];
 
     /**
      * The block view logic.
@@ -20,7 +22,7 @@ class Composer
      */
     public function compose(View $view)
     {
-        $view->with('item', $view->model);
+        $view->with('block', $view->model);
         $view->with('data', $view->model->metadata);
     }
 }
