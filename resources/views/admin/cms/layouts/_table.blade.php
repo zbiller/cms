@@ -1,14 +1,14 @@
 <table cellspacing="0" cellpadding="0" border="0">
     <thead>
-    <tr>
-        <td class="sortable" data-sort="name">
-            <i class="fa fa-sort"></i>&nbsp; Name
-        </td>
-        <td class="sortable" data-sort="file">
-            <i class="fa fa-sort"></i>&nbsp; Type
-        </td>
-        <td>Actions</td>
-    </tr>
+        <tr>
+            <td class="sortable" data-sort="name">
+                <i class="fa fa-sort"></i>&nbsp; Name
+            </td>
+            <td class="sortable" data-sort="type">
+                <i class="fa fa-sort"></i>&nbsp; Type
+            </td>
+            <td>Actions</td>
+        </tr>
     </thead>
     <tbody>
     @if($items->count() > 0)
