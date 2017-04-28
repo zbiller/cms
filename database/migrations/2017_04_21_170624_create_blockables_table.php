@@ -14,6 +14,8 @@ class CreateBlockablesTable extends Migration
     public function up()
     {
         Schema::create('blockables', function (Blueprint $table) {
+            $table->increments('id');
+
             $table->integer('block_id');
             $table->morphs('blockable');
 
