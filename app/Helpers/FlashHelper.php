@@ -44,7 +44,7 @@ class FlashHelper
                 break;
         }
 
-        return null;
+        return $this->show(null, null);
     }
 
     /**
