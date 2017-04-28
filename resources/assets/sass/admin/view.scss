@@ -225,7 +225,9 @@ div.tab {
             @include font-size(13px);
 
             font-family: 'Open Sans', sans-serif;
+        }
 
+        tr {
             &.odd {
                 background: $colorWhite;
             }

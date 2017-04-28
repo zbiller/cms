@@ -13,11 +13,11 @@
 }
 
 /* Uploads Styles */
-a.open-upload-new {
+.open-upload-new {
     background: $colorWhite !important;
 }
 
-td.actions-upload {
+.actions-upload {
     width: 283px !important;
 
     @include media-query('tablet') {
@@ -25,7 +25,7 @@ td.actions-upload {
     }
 }
 
-td.actions-deleted {
+.actions-deleted {
     width: 181px !important;
 
     @include media-query('tablet') {
@@ -33,7 +33,7 @@ td.actions-deleted {
     }
 }
 
-td span.upload-aligned-text {
+td .upload-aligned-text {
     margin: 6px 0 0 10px;
     display: inline-block;
     float: left;
@@ -44,7 +44,7 @@ td span.upload-aligned-text {
     }
 }
 
-td img.upload-aligned-image {
+td .upload-aligned-image {
     float: left;
 
     @include media-query('tablet') {
@@ -53,7 +53,7 @@ td img.upload-aligned-image {
 }
 
 /* Menu Styles */
-div.menu-types {
+.menu-types {
     display: none;
     float: left;
     width: 100%;
@@ -61,13 +61,13 @@ div.menu-types {
 }
 
 /* Block Styles */
-img#block-image {
+#block-image {
     display: none;
     float: right;
     max-width: 100%;
 }
 
-div.block-item {
+.block-item {
     @include clear-padding();
 
     display: block;
@@ -79,7 +79,87 @@ div.block-item {
     border: 3px dashed $colorPictonBlue;
 }
 
-a.block-item-btn {
+.block-item-btn {
     width: 33.3%;
     background: #FFF !important;
+}
+
+.actions-blocks {
+    width: 165px;
+    padding: 10px;
+
+    @include media-query('tablet') {
+        display: table-cell;
+        width: 78px;
+    }
+}
+
+.block-assign-container {
+    @include clear-padding();
+
+    display: block;
+    float: left;
+    width: 100%;
+    padding: 15px;
+    background: $colorAlabaster;
+    border: 1px solid $colorGallery;
+    border-top: none;
+}
+
+.block-assign-select-container {
+    @include calc(width, '100% - 95px');
+
+    float: left;
+
+    @include media-query('tablet') {
+        @include calc(width, '100% - 45px');
+    }
+}
+
+.block-assign-btn-container {
+    width: 95px;
+    float: right;
+
+    @include media-query('tablet') {
+        width: 45px;
+    }
+}
+
+.block-assign-select {
+    float: left;
+    width: 100%;
+    border: 1px solid $colorGallery;
+    padding: 4px 5px 9px;
+    max-height: none;
+    margin-top: 0;
+
+    @include media-query('tablet') {
+        padding: 4px 5px 8px;
+    }
+}
+
+.block-inheritance {
+    @include clear-padding();
+    @include calc(width, '100% - 2px');
+
+    display: block;
+    float: left;
+    margin: 5px 0;
+    padding: 15px;
+    border: 1px solid $colorGoldenTainoi;
+    background: lighten($colorGoldenTainoi, 30%);
+
+    span {
+        @include font-size(13px);
+
+        font-family: 'Open Sans', sans-serif;
+        color: $colorOsloGray;
+    }
+
+    em {
+        @include font-size(13px);
+
+        font-family: 'Open Sans Bold', sans-serif;
+        color: $colorOsloGray;
+    }
 }

@@ -680,4 +680,10 @@ function blocks()
             moveBlockItem($(this).closest('.block-item'), 'down');
         });
     }
+
+    //assign blocks
+    $('.block-assign-select').chosen({
+        width: '100%',
+        inherit_select_classes: true
+    });
 }

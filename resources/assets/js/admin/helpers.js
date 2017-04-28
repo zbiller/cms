@@ -30,6 +30,17 @@ var init = {
             });
         }
     },
+    FlashMessage: function (type, message) {
+        var flash = $('div.flash');
+
+        flash.removeClass('success error warning').addClass(type);
+        flash.find('p').text('').text(message);
+        flash.fadeIn(800);
+
+        setTimeout(function(){
+            flash.fadeOut(800);
+        }, 10000);
+    },
     Editor: function () {
         tinymce.init({
             selector: "textarea.editor-input",
