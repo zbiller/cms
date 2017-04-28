@@ -195,7 +195,7 @@ class FormAdminHelper
         $list = $list instanceof Collection ? $list->toArray() : $list;
         $selected = $selected instanceof Collection ? $selected->toArray() : $selected;
         $options['class'] = 'select-input ' . (isset($options['class']) ? $options['class'] : '');
-        $options['data-selected'] = $selected;
+        $options['data-selected'] = is_array($selected) ? json_encode($selected) : $selected;
 
         return $this->wrap(
             $this->form->select($this->name($name), $list, $this->value($name, $selected), $options),

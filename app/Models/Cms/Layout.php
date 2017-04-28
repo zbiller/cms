@@ -3,12 +3,15 @@
 namespace App\Models\Cms;
 
 use App\Models\Model;
+use App\Traits\HasBlocks;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
+use App\Options\BlockOptions;
 use Illuminate\Database\Eloquent\Builder;
 
 class Layout extends Model
 {
+    use HasBlocks;
     use IsFilterable;
     use IsSortable;
 
@@ -26,16 +29,64 @@ class Layout extends Model
      */
     protected $fillable = [
         'name',
+        'type',
         'identifier',
-        'file',
     ];
 
     /**
-     * The layout files located in /resources/layouts/default.
+     * The constants defining the layout type.
+     *
+     * @const
+     */
+    const TYPE_DEFAULT = 1;
+    const TYPE_HOME = 2;
+
+    /**
+     * The property defining the layout types.
      *
      * @var array
      */
-    public static $files = [];
+    public static $types = [
+        self::TYPE_DEFAULT => 'Default',
+        self::TYPE_HOME => 'Home',
+    ];
+
+    /**
+     * The options available for each layout type.
+     *
+     * --- label
+     * The layout name displayed throughout the application.
+     *
+     * --- block_locations
+     * The available block locations for the layout.
+     * The available block locations for pages inheriting the layout.
+     *
+     * @var array
+     */
+    public static $map = [
+        self::TYPE_DEFAULT => [
+            'file' => 'default/default.blade.php',
+            'block_locations' => [
+                'header', 'footer', 'sidebar'
+            ],
+        ],
+        self::TYPE_HOME => [
+            'file' => 'default/home.blade.php',
+            'block_locations' => [
+                'header', 'footer'
+            ],
+        ],
+    ];
+
+    /**
+     * Layout has many pages.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function pages()
+    {
+        return $this->hasMany(Page::class, 'layout_id');
+    }
 
     /**
      * Get the only layout name from the layout file.
@@ -45,7 +96,7 @@ class Layout extends Model
      */
     public function getBladeAttribute()
     {
-        return str_replace('.blade.php', '', $this->attributes['file']);
+        return str_replace('.blade.php', '', self::$map[$this->attributes['type']]['file']);
     }
 
     /**
@@ -69,6 +120,17 @@ class Layout extends Model
     }
 
     /**
+     * Filter the query by the given type.
+     *
+     * @param Builder $query
+     * @param string $type
+     */
+    public function scopeWhereType($query, $type)
+    {
+        $query->where('type', $type);
+    }
+
+    /**
      * Filter the query by the given identifier.
      *
      * @param Builder $query
@@ -80,35 +142,32 @@ class Layout extends Model
     }
 
     /**
-     * Layout has many pages.
+     * Get all block locations for the given layout (by type).
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return array|null
      */
-    public function pages()
+    public function getBlockLocations()
     {
-        return $this->hasMany(Page::class, 'layout_id');
+        if (!$this->exists || !isset(Layout::$map[$this->type]['block_locations'])) {
+            return null;
+        }
+
+        $locations = [];
+
+        foreach (Layout::$map[$this->type]['block_locations'] as $index => $location) {
+            $locations[] = $location;
+        }
+
+        return $locations;
     }
 
     /**
-     * Search for all layout files located in /resources/layouts/default.
-     * Get them pretty formatted as an array.
+     * Set the options for the HasBlocks trait.
      *
-     * @return array
+     * @return BlockOptions
      */
-    public static function getFiles()
+    public static function getBlockOptions()
     {
-        foreach (glob(resource_path('layouts/default/*.blade.php')) as $layout) {
-            $file = last(explode('/', $layout));
-
-            if (!starts_with($file, '_')) {
-                self::$files[$file] = $file;
-            }
-        }
-
-        if (empty(self::$files)) {
-            self::$files[null] = 'You have no layout files';
-        }
-
-        return self::$files;
+        return BlockOptions::instance();
     }
 }

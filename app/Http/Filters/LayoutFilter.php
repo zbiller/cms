@@ -23,7 +23,7 @@ class LayoutFilter extends Filter
     {
         return [
             'search' => 'operator:like|condition:or|columns:name,identifier',
-            'file' => 'operator:=|condition:or|columns:file',
+            'type' => 'operator:=|condition:or|columns:type',
         ];
     }
 

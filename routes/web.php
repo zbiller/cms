@@ -160,6 +160,9 @@ Route::group([
                 Route::post('store', ['as' => 'admin.blocks.store', 'uses' => 'BlocksController@store', 'permissions' => 'blocks-add']);
                 Route::put('update/{block}', ['as' => 'admin.blocks.update', 'uses' => 'BlocksController@update', 'permissions' => 'blocks-edit']);
                 Route::delete('destroy/{block}', ['as' => 'admin.blocks.destroy', 'uses' => 'BlocksController@destroy', 'permissions' => 'blocks-delete']);
+                Route::post('assign', ['as' => 'admin.blocks.assign', 'uses' => 'BlocksController@assign', 'permissions' => 'blocks-edit']);
+                Route::post('unassign', ['as' => 'admin.blocks.unassign', 'uses' => 'BlocksController@unassign', 'permissions' => 'blocks-edit']);
+                Route::post('order', ['as' => 'admin.blocks.order', 'uses' => 'BlocksController@order', 'permissions' => 'blocks-list']);
             });
 
             /**

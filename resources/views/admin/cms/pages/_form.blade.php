@@ -19,6 +19,10 @@
     {!! form_admin()->textarea('metadata[meta_keywords]', 'Meta Keywords') !!}
 </div>
 
+@if($item->exists)
+    {!! block()->containers($item) !!}
+@endif
+
 @section('bottom_scripts')
     {!! JsValidator::formRequest(App\Http\Requests\PageRequest::class, '.form') !!}
 @append

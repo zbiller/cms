@@ -30,11 +30,12 @@ class LayoutRequest extends Request
                     ->ignore($this->route('layout') ? $this->route('layout')->id : null)
             ],
             'identifier' => [
-                'required',
-                Rule::unique('layouts', 'identifier')
-                    ->ignore($this->route('layout') ? $this->route('layout')->id : null)
+                $this->get('identifier') !== null ?
+                    Rule::unique('layouts', 'identifier')
+                        ->ignore($this->route('layout') ? $this->route('layout')->id : null) :
+                    null
             ],
-            'file' => [
+            'type' => [
                 'required',
             ],
         ];

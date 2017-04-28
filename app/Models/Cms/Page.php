@@ -3,6 +3,7 @@
 namespace App\Models\Cms;
 
 use App\Models\Model;
+use App\Options\BlockOptions;
 use App\Traits\HasUrl;
 use App\Traits\HasBlocks;
 use App\Traits\HasMetadata;
@@ -17,7 +18,9 @@ use Kalnoy\Nestedset\NodeTrait;
 class Page extends Model
 {
     use HasUrl;
-    use HasBlocks;
+    use HasBlocks {
+        getInheritedBlocks as baseGetInheritedBlocks;
+    }
     use HasMetadata;
     use IsFilterable;
     use IsSortable;
@@ -95,6 +98,15 @@ class Page extends Model
     /**
      * The options available for each page type.
      *
+     * --- controller
+     * The controller to be used for pages on the front-end (relative to /app/Http/Controllers/).
+     *
+     * --- action
+     * The action from the controller to be used for pages on the front-end.
+     *
+     * --- view
+     * The view to be used for pages on the front-end.
+     *
      * @var array
      */
     public static $map = [
@@ -128,6 +140,16 @@ class Page extends Model
                 );
             }
         });
+    }
+
+    /**
+     * Page belongs to layout.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function layout()
+    {
+        return $this->belongsTo(Layout::class, 'layout_id');
     }
 
     /**
@@ -234,16 +256,48 @@ class Page extends Model
     }
 
     /**
-     * Page belongs to layout.
+     * Get the inherited blocks for a model instance.
+     * Inherited blocks can come from page or layout (recursively).
      *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @param string|$location
+     * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function layout()
+    public function getInheritedBlocks($location)
     {
-        return $this->belongsTo(Layout::class, 'layout_id');
+        if (!method_exists($this, 'getBlockOptions')) {
+            return null;
+        }
+
+        if (static::getBlockOptions()->inherit == 'layout') {
+            return $this->layout->getBlocksInLocation($location);
+        }
+
+        return $this->baseGetInheritedBlocks($location);
     }
 
     /**
+     * Get all block locations for the given page (by layout type).
+     *
+     * @return array|null
+     */
+    public function getBlockLocations()
+    {
+        if (!$this->exists || !$this->layout || !isset(Layout::$map[$this->layout->type]['block_locations'])) {
+            return null;
+        }
+
+        $locations = [];
+
+        foreach (Layout::$map[$this->layout->type]['block_locations'] as $index => $location) {
+            $locations[] = $location;
+        }
+
+        return $locations;
+    }
+
+    /**
+     * Set the options for the HasUrl trait.
+     *
      * @return UrlOptions
      */
     public static function getUrlOptions()
@@ -258,5 +312,16 @@ class Page extends Model
 
                 return implode('/' , (array)$prefix);
             });
+    }
+
+    /**
+     * Set the options for the HasBlocks trait.
+     *
+     * @return BlockOptions
+     */
+    public static function getBlockOptions()
+    {
+        return BlockOptions::instance()
+            ->inheritFrom('layout');
     }
 }

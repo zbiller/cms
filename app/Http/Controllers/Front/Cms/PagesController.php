@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Front\Cms;
 
+use App\Models\Cms\Layout;
 use App\Models\Cms\Page;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -26,9 +27,13 @@ class PagesController extends Controller
         $action = $request->route()->action;
 
         if (isset($action['model']) && $action['model'] instanceof Page) {
-            view()->share('page', $this->page = $action['model']);
-
+            $this->page = $action['model'];
             $this->page->load('layout');
+
+            view()->share([
+                'page' => $this->page,
+                'layout' => $this->page->layout,
+            ]);
         }
     }
 

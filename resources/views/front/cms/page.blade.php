@@ -1,4 +1,4 @@
-@extends('layouts::default.' . $page->layout->blade)
+@extends('layouts::' . $page->layout->blade)
 
 @section('content')
     <h1>{{ $page->metadata->title }}</h1>

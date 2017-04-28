@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Filters\LayoutFilter;
 use App\Http\Requests\LayoutRequest;
 use App\Http\Sorts\LayoutSort;
+use App\Models\Cms\Block;
 use App\Models\Cms\Layout;
 use App\Traits\CanCrud;
 use App\Options\CrudOptions;
@@ -26,7 +27,7 @@ class LayoutsController extends Controller
         return $this->_index(function () use ($request, $filter, $sort) {
             $this->items = Layout::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
 
-            $this->vars['files'] = Layout::getFiles();
+            $this->vars['types'] = Layout::$types;
         });
     }
 
@@ -36,7 +37,8 @@ class LayoutsController extends Controller
     public function create()
     {
         return $this->_create(function () {
-            $this->vars['files'] = Layout::getFiles();
+            $this->vars['types'] = Layout::$types;
+            $this->vars['locations'] = Block::getLocations();
         });
     }
 
@@ -47,6 +49,8 @@ class LayoutsController extends Controller
      */
     public function store(LayoutRequest $request)
     {
+        $request = $this->mergeRequest($request);
+
         return $this->_store(function () use ($request) {
             $this->item = Layout::create($request->all());
         }, $request);
@@ -60,7 +64,8 @@ class LayoutsController extends Controller
     {
         return $this->_edit(function () use ($layout) {
             $this->item = $layout;
-            $this->vars['files'] = Layout::getFiles();
+            $this->vars['types'] = Layout::$types;
+            $this->vars['locations'] = Block::getLocations();
         });
     }
 
@@ -72,6 +77,8 @@ class LayoutsController extends Controller
      */
     public function update(LayoutRequest $request, Layout $layout)
     {
+        $request = $this->mergeRequest($request);
+
         return $this->_update(function () use ($request, $layout) {
             $this->item = $layout;
             $this->item->update($request->all());
@@ -104,5 +111,18 @@ class LayoutsController extends Controller
             ->setAddView('admin.cms.layouts.add')
             ->setEditRoute('admin.layouts.edit')
             ->setEditView('admin.cms.layouts.edit');
+    }
+
+    /**
+     * @param LayoutRequest $request
+     * @return LayoutRequest
+     */
+    private function mergeRequest(LayoutRequest $request)
+    {
+        $request->merge([
+            'block_locations' => $request->has('block_locations') ? implode(',' , $request->get('block_locations')) : null
+        ]);
+
+        return $request;
     }
 }

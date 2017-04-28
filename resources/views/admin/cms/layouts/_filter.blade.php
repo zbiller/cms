@@ -3,7 +3,7 @@
         {!! form()->text('search', request()->get('search') ?: null, ['placeholder' => 'Search']) !!}
     </fieldset>
     <fieldset>
-        {!! form()->select('file', $files, request('file') ?: null, ['placeholder' => 'All Layout Files']) !!}
+        {!! form()->select('type', $types, request('type') ?: null, ['placeholder' => 'All Types']) !!}
     </fieldset>
     <div>
         {!! button()->filter() !!}
