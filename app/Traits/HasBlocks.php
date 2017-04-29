@@ -20,7 +20,9 @@ trait HasBlocks
         });
 
         static::deleted(function (Model $model) {
-            $model->syncBlocks();
+            if ($model->forceDeleting !== false) {
+                $model->syncBlocks();
+            }
         });
     }
 
