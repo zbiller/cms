@@ -7,6 +7,7 @@ use App\Traits\HasUploads;
 use App\Traits\HasMetadata;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
+use DB;
 use Illuminate\Database\Eloquent\Builder;
 
 class Block extends Model
@@ -61,13 +62,21 @@ class Block extends Model
             'views_path' => 'app/Blocks/Example/Views',
             'preview_image' => 'example.jpg',
         ],
-        'Test' => [
-            'label' => 'Test Block',
-            'composer_class' => 'App\Blocks\Test\Composer',
-            'views_path' => 'app/Blocks/Test/Views',
-            'preview_image' => 'test.jpg',
-        ],
     ];
+
+    /**
+     * Boot the model.
+     *
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleted(function (Model $model) {
+            DB::table('blockables')->where('block_id', $model->id)->delete();
+        });
+    }
 
     /**
      * Get all of the records of a single entity type that are assigned to this block.
