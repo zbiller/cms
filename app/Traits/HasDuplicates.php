@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Exceptions\DuplicateException;
 use App\Options\DuplicateOptions;
 use App\Sniffers\ModelSniffer;
+use Closure;
 use DB;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
@@ -34,6 +35,28 @@ trait HasDuplicates
     }
 
     /**
+     * Register a duplicating model event with the dispatcher.
+     *
+     * @param Closure|string  $callback
+     * @return void
+     */
+    public static function duplicating($callback)
+    {
+        static::registerModelEvent('duplicating', $callback);
+    }
+
+    /**
+     * Register a duplicated model event with the dispatcher.
+     *
+     * @param Closure|string  $callback
+     * @return void
+     */
+    public static function duplicated($callback)
+    {
+        static::registerModelEvent('duplicated', $callback);
+    }
+
+    /**
      * Duplicate a model instance and it's relations.
      *
      * @return Model
@@ -43,6 +66,10 @@ trait HasDuplicates
     {
         try {
             return DB::transaction(function () {
+                if ($this->fireModelEvent('duplicating') === false) {
+                    return false;
+                }
+
                 $model = $this->duplicateModel();
 
                 if (self::$duplicateOptions->shouldDuplicateDeeply !== true) {
@@ -71,6 +98,8 @@ trait HasDuplicates
                             break;
                     }
                 }
+
+                $this->fireModelEvent('duplicated', false);
 
                 return $model;
             });
