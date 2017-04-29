@@ -11,6 +11,7 @@ use App\Http\Requests\BlockRequest;
 use App\Http\Filters\BlockFilter;
 use App\Http\Sorts\BlockSort;
 use App\Options\CrudOptions;
+use App\Exceptions\DuplicateException;
 use Illuminate\Http\Request;
 
 class BlocksController extends Controller
@@ -53,7 +54,7 @@ class BlocksController extends Controller
     /**
      * @param BlockRequest $request
      * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @throws Exception
      */
     public function store(BlockRequest $request)
     {
@@ -77,7 +78,7 @@ class BlocksController extends Controller
      * @param BlockRequest $request
      * @param Block $block
      * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @throws Exception
      */
     public function update(BlockRequest $request, Block $block)
     {
@@ -90,7 +91,7 @@ class BlocksController extends Controller
     /**
      * @param Block $block
      * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @throws Exception
      */
     public function destroy(Block $block)
     {
@@ -98,6 +99,26 @@ class BlocksController extends Controller
             $this->item = $block;
             $this->item->delete();
         });
+    }
+
+    /**
+     * @param Block $block
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws Exception
+     */
+    public function duplicate(Block $block)
+    {
+        try {
+            $duplicated = $block->saveAsDuplicate();
+
+            session()->flash('flash_success', 'Record duplicated successfully! You have been redirected to the newly duplicated record.');
+            return redirect()->route('admin.blocks.edit', $duplicated->id);
+        } catch (DuplicateException $e) {
+            session()->flash('flash_error', 'Failed duplicating the record! Please try again');
+            return back();
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
     }
 
     /**
@@ -128,7 +149,6 @@ class BlocksController extends Controller
                 ])->render(),
             ];
         } catch (Exception $e) {
-            dd($e);
             return [
                 'status' => false
             ];

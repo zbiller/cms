@@ -2,17 +2,20 @@
 
 namespace App\Models\Cms;
 
+use DB;
 use App\Models\Model;
 use App\Traits\HasUploads;
+use App\Traits\HasDuplicates;
 use App\Traits\HasMetadata;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
-use DB;
+use App\Options\DuplicateOptions;
 use Illuminate\Database\Eloquent\Builder;
 
 class Block extends Model
 {
     use HasUploads;
+    use HasDuplicates;
     use HasMetadata;
     use IsFilterable;
     use IsSortable;
@@ -242,5 +245,18 @@ class Block extends Model
                 ]
             ],
         ];
+    }
+
+    /**
+     * Set the options for the HasDuplicates trait.
+     *
+     * @return DuplicateOptions
+     */
+    public static function getDuplicateOptions()
+    {
+        return DuplicateOptions::instance()
+            ->excludeColumns([
+                'created_at', 'updated_at'
+            ]);
     }
 }

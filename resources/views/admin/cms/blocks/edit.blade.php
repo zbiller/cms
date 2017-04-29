@@ -23,6 +23,7 @@
         {!! button()->cancel('admin.blocks.index') !!}
     </section>
     <section class="actions">
+        {!! button()->duplicate('admin.blocks.duplicate', ['id' => $item->id]) !!}
         {!! button()->saveAndStay() !!}
         {!! button()->save() !!}
     </section>
