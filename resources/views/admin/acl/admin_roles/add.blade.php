@@ -23,7 +23,7 @@
         {!! button()->cancel('admin.admin_roles.index') !!}
     </section>
     <section class="actions">
-        {!! button()->saveStay() !!}
+        {!! button()->saveAndStay() !!}
         {!! button()->save() !!}
     </section>
 @endsection

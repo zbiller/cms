@@ -188,12 +188,28 @@ class ButtonHelper
     }
 
     /**
+     * Render the delete button view helper.
+     *
+     * @param string $route
+     * @param array $parameters
+     * @param array $attributes
+     * @return \Illuminate\View\View
+     */
+    public function duplicate($route, array $parameters = [], array $attributes = [])
+    {
+        return view('helpers::button.duplicate')->with([
+            'url' => route($route, $parameters),
+            'attributes' => self::buildAttributes($attributes)
+        ]);
+    }
+
+    /**
      * Render the save and stay button view helper.
      *
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function saveStay(array $attributes = [])
+    public function saveAndStay(array $attributes = [])
     {
         return view('helpers::button.save_stay')->with([
             'attributes' => self::buildAttributes($attributes)
