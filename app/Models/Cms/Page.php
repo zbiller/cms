@@ -3,13 +3,15 @@
 namespace App\Models\Cms;
 
 use App\Models\Model;
-use App\Options\BlockOptions;
 use App\Traits\HasUrl;
 use App\Traits\HasBlocks;
+use App\Traits\HasDuplicates;
 use App\Traits\HasMetadata;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
 use App\Options\UrlOptions;
+use App\Options\BlockOptions;
+use App\Options\DuplicateOptions;
 use App\Exceptions\CrudException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,6 +23,7 @@ class Page extends Model
     use HasBlocks {
         getInheritedBlocks as baseGetInheritedBlocks;
     }
+    use HasDuplicates;
     use HasMetadata;
     use IsFilterable;
     use IsSortable;
@@ -323,5 +326,21 @@ class Page extends Model
     {
         return BlockOptions::instance()
             ->inheritFrom('layout');
+    }
+
+    /**
+     * Set the options for the HasDuplicates trait.
+     *
+     * @return DuplicateOptions
+     */
+    public static function getDuplicateOptions()
+    {
+        return DuplicateOptions::instance()
+            ->excludeColumns([
+                '_lft', '_rgt', 'identifier', 'created_at', 'updated_at'
+            ])
+            ->excludeRelations([
+                'parent', 'children', 'url'
+            ]);
     }
 }

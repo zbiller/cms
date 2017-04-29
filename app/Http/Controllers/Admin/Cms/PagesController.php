@@ -10,6 +10,7 @@ use App\Http\Requests\PageRequest;
 use App\Http\Filters\PageFilter;
 use App\Http\Sorts\PageSort;
 use App\Options\CrudOptions;
+use App\Exceptions\DuplicateException;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -160,6 +161,26 @@ class PagesController extends Controller
             $this->item = Page::onlyTrashed()->findOrFail($id);
             $this->item->forceDelete();
         });
+    }
+
+    /**
+     * @param Page $page
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function duplicate(Page $page)
+    {
+        try {
+            $duplicated = $page->saveAsDuplicate();
+
+            session()->flash('flash_success', 'Record duplicated successfully! You have been redirected to the newly duplicated record.');
+            return redirect()->route('admin.pages.edit', $duplicated->id);
+        } catch (DuplicateException $e) {
+            session()->flash('flash_error', 'Failed duplicating the record! Please try again');
+            return back();
+        } catch (\Exception $e) {
+            throw new \Exception($e->getMessage());
+        }
     }
 
     /**
