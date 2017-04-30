@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Traits\CanAuthenticate;
-use App\Options\AuthenticationOptions;
+use App\Options\AuthenticateOptions;
 
 class LoginController extends Controller
 {
@@ -21,11 +21,11 @@ class LoginController extends Controller
     }
 
     /**
-     * @return AuthenticationOptions
+     * @return AuthenticateOptions
      */
-    public static function getAuthenticationOptions()
+    public static function getAuthenticateOptions()
     {
-        return AuthenticationOptions::instance()
+        return AuthenticateOptions::instance()
             ->setLoginRedirectPath('/admin')
             ->setLogoutRedirectPath('/admin/login');
     }

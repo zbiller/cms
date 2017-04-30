@@ -5,37 +5,39 @@
  * Using this trait is like using the Laravel's one, but with more power of configuring options.
  * It's role is to give more flexibility in setting additional properties that are hard-coded in the framework.
  */
+
 namespace App\Traits;
 
-use App\Options\AuthenticationOptions;
+use Exception;
+use ReflectionMethod;
+use App\Options\AuthenticateOptions;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 trait CanAuthenticate
 {
-    use ChecksTrait;
     use AuthenticatesUsers {
         logout as baseLogout;
     }
 
     /**
      * The container for all the options necessary for this trait.
-     * Options can be viewed in the App\Options\AuthenticationOptions file.
+     * Options can be viewed in the App\Options\AuthenticateOptions file.
      *
-     * @var AuthenticationOptions
+     * @var AuthenticateOptions
      */
     protected static $authenticationOptions;
 
     /**
-     * Instantiate the $AuthenticationOptions property with the necessary authentication properties.
+     * Instantiate the $AuthenticateOptions property with the necessary authentication properties.
      *
-     * @set $AuthenticationOptions
+     * @set $AuthenticateOptions
      */
     public static function bootCanAuthenticate()
     {
-        self::checkOptionsMethodDeclaration('getAuthenticationOptions');
+        self::checkAuthenticateOptions();
 
-        self::$authenticationOptions = self::getAuthenticationOptions();
+        self::$authenticationOptions = self::getAuthenticateOptions();
     }
 
     /**
@@ -120,5 +122,27 @@ trait CanAuthenticate
     protected function hasIntendedRedirectUrl()
     {
         return session()->has('intended_redirect');
+    }
+
+    /**
+     * Verify if the getAuthenticateOptions() method for setting the trait options exists and is public and static.
+     *
+     * @throws Exception
+     */
+    private static function checkAuthenticateOptions()
+    {
+        if (!method_exists(self::class, 'getAuthenticateOptions')) {
+            throw new Exception(
+                'The "' . self::class . '" must define the public static "getAuthenticateOptions()" method.'
+            );
+        }
+
+        $reflection = new ReflectionMethod(self::class, 'getAuthenticateOptions');
+
+        if (!$reflection->isPublic() || !$reflection->isStatic()) {
+            throw new Exception(
+                'The method "getAuthenticateOptions()" from the class "' . self::class . '" must be declared as both "public" and "static".'
+            );
+        }
     }
 }

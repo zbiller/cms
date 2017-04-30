@@ -6,6 +6,7 @@ use DB;
 use Route;
 use Closure;
 use Exception;
+use ReflectionMethod;
 use App\Models\Model;
 use App\Options\CrudOptions;
 use App\Exceptions\CrudException;
@@ -15,8 +16,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 trait CanCrud
 {
-    use ChecksTrait;
-
     /**
      * The container for all the options necessary for this trait.
      * Options can be viewed in the App\Options\CrudOptions file.
@@ -76,7 +75,7 @@ trait CanCrud
      */
     public static function bootCanCrud()
     {
-        self::checkOptionsMethodDeclaration('getCrudOptions');
+        self::checkCrudOptions();
 
         self::$crudOptions = self::getCrudOptions();
 
@@ -357,6 +356,28 @@ trait CanCrud
             throw new CrudException(
                 'You must set the model via the getCrudOptions() method from controller.' . PHP_EOL .
                 'Use the setModel() method from the App\Options\CrudOptions class.'
+            );
+        }
+    }
+
+    /**
+     * Verify if the getCrudOptions() method for setting the trait options exists and is public and static.
+     *
+     * @throws Exception
+     */
+    private static function checkCrudOptions()
+    {
+        if (!method_exists(self::class, 'getCrudOptions')) {
+            throw new Exception(
+                'The "' . self::class . '" must define the public static "getCrudOptions()" method.'
+            );
+        }
+
+        $reflection = new ReflectionMethod(self::class, 'getCrudOptions');
+
+        if (!$reflection->isPublic() || !$reflection->isStatic()) {
+            throw new Exception(
+                'The method "getCrudOptions()" from the class "' . self::class . '" must be declared as both "public" and "static".'
             );
         }
     }

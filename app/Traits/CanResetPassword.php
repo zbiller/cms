@@ -8,16 +8,16 @@
 
 namespace App\Traits;
 
+use Exception;
+use ReflectionMethod;
 use App\Http\Requests\ResetPasswordRequest;
 use App\Options\ResetPasswordOptions;
+use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Foundation\Auth\ResetsPasswords;
-use Illuminate\Http\Request;
 
 trait CanResetPassword
 {
-    use ChecksTrait;
-
     use ResetsPasswords {
         sendResetResponse as baseSendResetResponse;
     }
@@ -42,7 +42,7 @@ trait CanResetPassword
      */
     public static function bootCanResetPassword()
     {
-        self::checkOptionsMethodDeclaration('getResetPasswordOptions');
+        self::checkResetPasswordOptions();
 
         self::$resetPasswordOptions = self::getResetPasswordOptions();
     }
@@ -134,5 +134,27 @@ trait CanResetPassword
     {
         session()->flash('flash_error', trans($response));
         return back();
+    }
+
+    /**
+     * Verify if the getResetPasswordOptions() method for setting the trait options exists and is public and static.
+     *
+     * @throws Exception
+     */
+    private static function checkResetPasswordOptions()
+    {
+        if (!method_exists(self::class, 'getResetPasswordOptions')) {
+            throw new Exception(
+                'The "' . self::class . '" must define the public static "getResetPasswordOptions()" method.'
+            );
+        }
+
+        $reflection = new ReflectionMethod(self::class, 'getResetPasswordOptions');
+
+        if (!$reflection->isPublic() || !$reflection->isStatic()) {
+            throw new Exception(
+                'The method "getResetPasswordOptions()" from the class "' . self::class . '" must be declared as both "public" and "static".'
+            );
+        }
     }
 }

@@ -245,9 +245,7 @@ trait IsOrderable
     }
 
     /**
-     * Verifies if the getOrderOptions() method for setting the trait options exists and is public and static.
-     * This method should be called from inside the boot method of the traits using this trait.
-     * This method should be called only on traits that have "options" logic.
+     * Verify if the getOrderOptions() method for setting the trait options exists and is public and static.
      *
      * @throws Exception
      */

@@ -50,6 +50,6 @@ class OrderOptions
     {
         $this->orderWhenCreating = false;
 
-        return false;
+        return $this;
     }
 }

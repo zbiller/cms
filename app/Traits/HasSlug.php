@@ -2,14 +2,14 @@
 
 namespace App\Traits;
 
-use App\Exceptions\SlugException;
+use Exception;
+use ReflectionMethod;
 use App\Models\Model;
 use App\Options\SlugOptions;
+use App\Exceptions\SlugException;
 
 trait HasSlug
 {
-    use ChecksTrait;
-
     /**
      * The container for all the options necessary for this trait.
      * Options can be viewed in the App\Options\SlugOptions file.
@@ -25,7 +25,7 @@ trait HasSlug
      */
     public static function bootHasSlug()
     {
-        self::checkOptionsMethodDeclaration('getSlugOptions');
+        self::checkSlugOptions();
 
         self::$slugOptions = self::getSlugOptions();
 
@@ -45,7 +45,7 @@ trait HasSlug
      */
     public function generateSlug()
     {
-        self::checkSlugOptions();
+        self::validateSlugOptions();
 
         if ($this->slugHasBeenSupplied()) {
             $slug = $this->generateNonUniqueSlug();
@@ -183,7 +183,7 @@ trait HasSlug
      * @return void
      * @throws SlugException
      */
-    protected static function checkSlugOptions()
+    protected static function validateSlugOptions()
     {
         if (!count(self::$slugOptions->fromField)) {
             throw new SlugException(
@@ -198,6 +198,28 @@ trait HasSlug
                 'The model ' . self::class . ' uses the HasSlug trait' . PHP_EOL .
                 'You are required to set the field where to store the generated slug ($toField)' . PHP_EOL .
                 'You can do this from inside the getSlugOptions() method defined on the model.'
+            );
+        }
+    }
+
+    /**
+     * Verify if the getSlugOptions() method for setting the trait options exists and is public and static.
+     *
+     * @throws Exception
+     */
+    private static function checkSlugOptions()
+    {
+        if (!method_exists(self::class, 'getSlugOptions')) {
+            throw new Exception(
+                'The "' . self::class . '" must define the public static "getSlugOptions()" method.'
+            );
+        }
+
+        $reflection = new ReflectionMethod(self::class, 'getSlugOptions');
+
+        if (!$reflection->isPublic() || !$reflection->isStatic()) {
+            throw new Exception(
+                'The method "getSlugOptions()" from the class "' . self::class . '" must be declared as both "public" and "static".'
             );
         }
     }

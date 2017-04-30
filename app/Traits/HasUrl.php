@@ -10,6 +10,7 @@ use App\Options\UrlOptions;
 use App\Options\SlugOptions;
 use App\Exceptions\UrlException;
 use Illuminate\Database\Eloquent\Builder;
+use ReflectionMethod;
 
 trait HasUrl
 {
@@ -41,11 +42,11 @@ trait HasUrl
      */
     public static function bootHasUrl()
     {
-        self::checkOptionsMethodDeclaration('getUrlOptions');
+        self::checkUrlOptions();
 
         self::$urlOptions = self::getUrlOptions();
 
-        self::checkUrlOptions();
+        self::validateUrlOptions();
 
         static::addGlobalScope('url', function (Builder $builder) {
             $builder->with('url');
@@ -245,7 +246,7 @@ trait HasUrl
      * @return void
      * @throws UrlException
      */
-    protected static function checkUrlOptions()
+    protected static function validateUrlOptions()
     {
         if (!count(self::$urlOptions->fromField)) {
             throw new UrlException(
@@ -260,6 +261,28 @@ trait HasUrl
                 'The model ' . self::class . ' uses the HasUrl trait' . PHP_EOL .
                 'You are required to set the field where to store the generated url slug ($toField)' . PHP_EOL .
                 'You can do this from inside the getUrlOptions() method defined on the model.'
+            );
+        }
+    }
+
+    /**
+     * Verify if the getUrlOptions() method for setting the trait options exists and is public and static.
+     *
+     * @throws Exception
+     */
+    private static function checkUrlOptions()
+    {
+        if (!method_exists(self::class, 'getUrlOptions')) {
+            throw new Exception(
+                'The "' . self::class . '" must define the public static "getUrlOptions()" method.'
+            );
+        }
+
+        $reflection = new ReflectionMethod(self::class, 'getUrlOptions');
+
+        if (!$reflection->isPublic() || !$reflection->isStatic()) {
+            throw new Exception(
+                'The method "getUrlOptions()" from the class "' . self::class . '" must be declared as both "public" and "static".'
             );
         }
     }
