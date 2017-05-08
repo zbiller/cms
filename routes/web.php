@@ -50,6 +50,24 @@ Route::group([
         });
 
         /**
+         * Version.
+         */
+        Route::group([
+            'namespace' => 'Version',
+        ], function () {
+            /**
+             * Revisions.
+             */
+            Route::group([
+                'prefix' => 'revisions',
+            ], function () {
+                Route::get('/', ['as' => 'admin.revisions.index', 'uses' => 'RevisionsController@index']);
+                Route::post('rollback/{revision}', ['as' => 'admin.revisions.rollback', 'uses' => 'RevisionsController@rollback']);
+                Route::delete('destroy/{revision}', ['as' => 'admin.revisions.destroy', 'uses' => 'RevisionsController@destroy']);
+            });
+        });
+
+        /**
          * Access Control Level.
          */
         Route::group([
@@ -100,6 +118,7 @@ Route::group([
                 Route::get('deleted', ['as' => 'admin.pages.deleted', 'uses' => 'PagesController@deleted', 'permissions' => 'pages-deleted-list']);
                 Route::get('create/{parent?}', ['as' => 'admin.pages.create', 'uses' => 'PagesController@create', 'permissions' => 'pages-add']);
                 Route::get('edit/{page}', ['as' => 'admin.pages.edit', 'uses' => 'PagesController@edit', 'permissions' => 'pages-edit']);
+                Route::get('revision/{revision}', ['as' => 'admin.pages.revision', 'uses' => 'PagesController@revision', 'pages-edit']);
                 Route::post('store/{parent?}', ['as' => 'admin.pages.store', 'uses' => 'PagesController@store', 'permissions' => 'pages-add']);
                 Route::post('duplicate/{page}', ['as' => 'admin.pages.duplicate', 'uses' => 'PagesController@duplicate', 'permissions' => 'pages-edit']);
                 Route::put('update/{page}', ['as' => 'admin.pages.update', 'uses' => 'PagesController@update', 'permissions' => 'pages-edit']);
@@ -214,6 +233,7 @@ Route::group([
             Route::post('store', ['as' => 'admin.cars.store', 'uses' => 'CarsController@store']);
             Route::put('update/{id}', ['as' => 'admin.cars.update', 'uses' => 'CarsController@update']);
             Route::delete('destroy/{id}', ['as' => 'admin.cars.destroy', 'uses' => 'CarsController@destroy']);
+            Route::get('revision/{revision}', ['as' => 'admin.cars.revision', 'uses' => 'CarsController@revision']);
         });
     });
 });
