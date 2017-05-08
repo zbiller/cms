@@ -29,6 +29,10 @@ select, textarea, input:not(radio) {
     border-radius: 0;
 }
 
+input:disabled, textarea:disabled, select:disabled {
+    cursor: not-allowed;
+}
+
 em {
     font-style: normal;
 }

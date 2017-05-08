@@ -162,7 +162,7 @@
 .chosen-container .chosen-results li.disabled-result {
   display: list-item;
   color: #ccc;
-  cursor: default;
+  cursor: not-allowed;
 }
 .chosen-container .chosen-results li.highlighted {
   background: #4AAEE3;
@@ -291,14 +291,22 @@
 /* @end */
 /* @group Disabled Support */
 .chosen-disabled {
-  opacity: 0.5 !important;
-  cursor: default;
+  cursor: not-allowed !important;
 }
 .chosen-disabled .chosen-single {
-  cursor: default;
+  cursor: not-allowed !important;
+}
+.chosen-disabled .chosen-single span {
+  cursor: not-allowed !important;
+}
+.chosen-disabled .chosen-choices .search-choice {
+  cursor: not-allowed !important;
+}
+.chosen-disabled .chosen-choices .search-choice span {
+  cursor: not-allowed !important;
 }
 .chosen-disabled .chosen-choices .search-choice .search-choice-close {
-  cursor: default;
+  cursor: not-allowed !important;
 }
 
 /* @end */
