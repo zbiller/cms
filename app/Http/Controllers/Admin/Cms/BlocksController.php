@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Admin\Cms;
 
 use DB;
 use Exception;
-use App\Models\Cms\Block;
 use App\Http\Controllers\Controller;
+use App\Models\Cms\Block;
 use App\Traits\CanCrud;
 use App\Http\Requests\BlockRequest;
 use App\Http\Filters\BlockFilter;
@@ -139,13 +139,14 @@ class BlocksController extends Controller
             $block = Block::findOrFail($data['block_id']);
             $model = $data['blockable_type']::findOrFail($data['blockable_id']);
 
-            $model->assignBlock($block, $data['location']);
+            $model->saveAsRevision()->assignBlock($block, $data['location']);
 
             return [
                 'status' => true,
                 'html' => view('helpers::block.table')->with([
                     'model' => $model,
                     'location' => $data['location'],
+                    'disabled' => $request->get('disabled') ? true : false,
                 ])->render(),
             ];
         } catch (Exception $e) {
@@ -172,13 +173,14 @@ class BlocksController extends Controller
             $block = Block::findOrFail($data['block_id']);
             $model = $data['blockable_type']::findOrFail($data['blockable_id']);
 
-            $model->unassignBlock($block, $data['pivot_id'], $data['location']);
+            $model->saveAsRevision()->unassignBlock($block, $data['pivot_id'], $data['location']);
 
             return [
                 'status' => true,
                 'html' => view('helpers::block.table')->with([
                     'model' => $model,
                     'location' => $data['location'],
+                    'disabled' => $request->get('disabled') ? true : false,
                 ])->render(),
             ];
         } catch (Exception $e) {
