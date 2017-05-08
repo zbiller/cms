@@ -215,35 +215,35 @@
             };
 
             //initial load
-            $(document).on('click', '#open-upload-new-' + index, function (e) {
+            $(document).on('click', '#open-upload-new-' + index + ':not(.disabled)', function (e) {
                 e.preventDefault();
 
                 uploadLoad();
             });
 
             //click load
-            $(document).on('click', '#upload-new-' + index + ' ul.modal-tabs > li', function(e) {
+            $(document).on('click', '#upload-new-' + index + ':not(.disabled) ul.modal-tabs > li', function(e) {
                 e.preventDefault();
 
                 uploadLoad();
             });
 
             //scroll load
-            $('#upload-new-' + index + ' .modal-tab .uploads').on('scroll', function(e) {
+            $('#upload-new-' + index + ':not(.disabled) .modal-tab .uploads').on('scroll', function(e) {
                 e.preventDefault();
 
                 uploadScroll();
             });
 
             //search load
-            $(document).on('keyup', '#upload-new-' + index + ' .modal-tab.active input.search', function(e) {
+            $(document).on('keyup', '#upload-new-' + index + ':not(.disabled) .modal-tab.active input.search', function(e) {
                 e.preventDefault();
 
                 uploadSearch();
             });
 
             //upload new
-            $(document).on('click', '#upload-new-' + index + ' label.upload-btn > input[type="file"]', function (e) {
+            $(document).on('click', '#upload-new-' + index + ':not(.disabled) label.upload-btn > input[type="file"]', function (e) {
                 uploadUpload($(this));
             });
 
@@ -255,14 +255,14 @@
             });
 
             //cropper load
-            $(document).on('click', '.open-upload-cropper-' + index, function (e) {
+            $(document).on('click', '.open-upload-cropper-' + index + ':not(.disabled)', function (e) {
                 e.preventDefault();
 
                 uploadCrop($(this));
             });
 
             //delete current
-            $(document).on('click', '#upload-current-' + index + ' .upload-delete', function(){
+            $(document).on('click', '#upload-current-' + index + ':not(.disabled) .upload-delete', function(){
                 $('#upload-input-' + index).val('');
                 $('#open-upload-current-' + index).remove();
                 $('#open-upload-new-' + index).removeClass('half').addClass('full');

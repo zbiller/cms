@@ -54,6 +54,13 @@ class UploaderHelper
     protected $accept;
 
     /**
+     * Flag indicating whether the upload manager should be disabled or not.
+     *
+     * @var bool
+     */
+    protected $disabled = false;
+
+    /**
      * The styles a file can have.
      * Mainly, this applies to images and videos only.
      * For any other file type, the original should suffice.
@@ -91,6 +98,7 @@ class UploaderHelper
         'model' => null,
         'current' => null,
         'accept' => null,
+        'disabled' => false,
         'styles' => [
             'original'
         ],
@@ -210,6 +218,13 @@ class UploaderHelper
         return $this;
     }
 
+    public function disabled()
+    {
+        $this->disabled = true;
+
+        return $this;
+    }
+
     /**
      * Build the helpers::uploader.manager view with the generated properties.
      *
@@ -227,6 +242,7 @@ class UploaderHelper
             'styles' => $this->styles,
             'types' => $this->types,
             'accept' => $this->accept,
+            'disabled' => $this->disabled,
         ]);
 
         return $this;
@@ -247,6 +263,7 @@ class UploaderHelper
         $this->styles = $this->defaults['styles'];
         $this->types = $this->defaults['types'];
         $this->accept = $this->defaults['accept'];
+        $this->disabled = $this->defaults['disabled'];
 
         return $this;
     }
@@ -268,6 +285,7 @@ class UploaderHelper
                     $this->current = new UploadedHelper($this->model->metadata($this->field));
                 }
             } catch (Exception $e) {
+                dd($e);
                 $this->current = null;
             }
         } elseif ($this->model->{$this->field} && $this->model->{'_' . $this->field}->exists()) {

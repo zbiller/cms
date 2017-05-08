@@ -2,7 +2,7 @@
     <a id="open-upload-current-{!! $index !!}" data-popup="open" data-popup-id="upload-current-{!! $index !!}" class="open-upload-current btn blue centered left half no-margin no-responsiveness">
         View Current File
     </a>
-    <section id="upload-current-{!! $index !!}" class="upload-current popup" data-model="{{ get_class($model) }}" data-field="{{ $field }}">
+    <section id="upload-current-{!! $index !!}" class="upload-current popup {!! $disabled ? 'disabled' : '' !!}" data-model="{{ get_class($model) }}" data-field="{{ $field }}">
         <div class="modal">
             <div class="header">
                 <ul class="modal-tabs">
@@ -20,7 +20,7 @@
                 @foreach($styles as $style)
                     <div id="{!! $style !!}-{!! $index !!}" class="modal-tab {!! $loop->first ? 'active' : '' !!}">
                         @if($upload->isImage())
-                            <a class="open-upload-cropper-{{ $index }}"
+                            <a class="open-upload-cropper-{{ $index }} {!! $disabled ? 'disabled' : '' !!}"
                                data-url="{{ $current->url('original') }}"
                                data-path="{{ $current->path('original', true) }}"
                                data-style="{{ $style }}"
@@ -46,9 +46,11 @@
                 @endforeach
             </div>
             <div class="footer">
-                <a class="upload-delete btn delete red right no-margin-top no-margin-bottom no-margin-right">
-                    <i class="fa fa-times"></i>&nbsp; Delete
-                </a>
+                @if($disabled === false)
+                    <a class="upload-delete btn delete red right no-margin-top no-margin-bottom no-margin-right">
+                        <i class="fa fa-times"></i>&nbsp; Delete
+                    </a>
+                @endif
                 <a data-popup="close" class="btn cancel modal-close right no-margin-top no-margin-bottom no-margin-left">
                     <i class="fa fa-ban"></i>&nbsp; Close
                 </a>
