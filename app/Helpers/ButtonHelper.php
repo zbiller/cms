@@ -204,6 +204,22 @@ class ButtonHelper
     }
 
     /**
+     * Render the delete button view helper.
+     *
+     * @param string $route
+     * @param array $parameters
+     * @param array $attributes
+     * @return \Illuminate\View\View
+     */
+    public function rollback($route, array $parameters = [], array $attributes = [])
+    {
+        return view('helpers::button.rollback')->with([
+            'url' => route($route, $parameters),
+            'attributes' => self::buildAttributes($attributes)
+        ]);
+    }
+
+    /**
      * Render the save and stay button view helper.
      *
      * @param array $attributes
