@@ -13,12 +13,12 @@
     @endphp
     @if($blocksInLocation->count())
         @foreach($blocksInLocation as $block)
-            <tr id="{{ $block->pivot->id }}" data-block-id="{{ $block->id }}" data-pivot-id="{{ $block->pivot->id }}">
+            <tr id="{{ $block->pivot->id }}" data-block-id="{{ $block->id }}" data-pivot-id="{{ $block->pivot->id }}" class="{!! $disabled === true ? 'nodrag nodrop' : '' !!}">
                 <td>{{ $block->name ?: 'N/A' }}</td>
                 <td>{{ $block->type ?: 'N/A' }}</td>
                 <td>
                     {!! button()->action('View', route('admin.blocks.edit', $block->id), 'fa-eye', 'yellow no-margin-left no-margin-top no-margin-bottom', ['target' => '_blank']) !!}
-                    {!! button()->action('Remove', route('admin.blocks.unassign'), 'fa-times', 'block-unassign red no-margin-top no-margin-bottom no-margin-right') !!}
+                    {!! button()->action('Remove', route('admin.blocks.unassign'), 'fa-times', 'block-unassign red no-margin-top no-margin-bottom no-margin-right' . ($disabled === true ? ' disabled' : '')) !!}
                 </td>
             </tr>
         @endforeach

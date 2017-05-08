@@ -4,22 +4,25 @@
             <table class="blocks-table" cellspacing="0" cellpadding="0" border="0">
                 @include('helpers::block.table')
             </table>
-            <div class="block-assign-container" data-blockable-id="{{ $model->id }}" data-blockable-type="{{ get_class($model) }}" data-location="{{ $location }}">
-                <div class="block-assign-select-container">
-                    {!! form()->select('block', ['' => ''] + $model->getBlocksOfLocation($location)->pluck('name', 'id')->toArray(), null, ['class' => 'block-assign-select']) !!}
+            @if($disabled === false)
+                <div class="block-assign-container" data-blockable-id="{{ $model->id }}" data-blockable-type="{{ get_class($model) }}" data-location="{{ $location }}">
+                    <div class="block-assign-select-container">
+                        {!! form()->select('block', ['' => ''] + $model->getBlocksOfLocation($location)->pluck('name', 'id')->toArray(), null, ['class' => 'block-assign-select']) !!}
+                    </div>
+                    <div class="block-assign-btn-container">
+                        <a href="#" class="block-assign btn green no-margin right">
+                            <i class="fa fa-plus"></i>&nbsp; Assign
+                        </a>
+                    </div>
                 </div>
-                <div class="block-assign-btn-container">
-                    <a href="#" class="block-assign btn green no-margin right">
-                        <i class="fa fa-plus"></i>&nbsp; Assign
-                    </a>
-                </div>
-            </div>
+            @endif
         </div>
     @endforeach
 
     @section('bottom_scripts')
         <script type="text/javascript">
             var token = '{{ csrf_token() }}';
+            var disabled = '{{ $disabled }}';
 
             var assignBlock = function (_this) {
                 var assignContainer = _this.closest('.block-assign-container'),
@@ -36,7 +39,8 @@
                             block_id: assignSelect.val(),
                             blockable_id: assignContainer.data('blockable-id'),
                             blockable_type: assignContainer.data('blockable-type'),
-                            location: assignContainer.data('location')
+                            location: assignContainer.data('location'),
+                            disabled: disabled
                         },
                         beforeSend: function () {
                             blocksTab.css({opacity: 0.5});
@@ -72,7 +76,8 @@
                         block_id: currentRow.attr('data-block-id'),
                         blockable_id: assignContainer.data('blockable-id'),
                         blockable_type: assignContainer.data('blockable-type'),
-                        location: assignContainer.data('location')
+                        location: assignContainer.data('location'),
+                        disabled: disabled
                     },
                     beforeSend: function () {
                         blocksTab.css({opacity: 0.5});
@@ -127,7 +132,7 @@
                     assignBlock($(this));
                 });
 
-                $(document).on('click', 'a.block-unassign', function (e) {
+                $(document).on('click', 'a.block-unassign:not(.disabled)', function (e) {
                     e.preventDefault();
 
                     unassignBlock($(this));

@@ -89,6 +89,12 @@ main {
         background: darken($colorTowerGray, 10%);
     }
 
+    &.disabled {
+        pointer-events: none;
+        cursor: not-allowed !important;
+        background: lighten($colorTowerGray, 15%) !important;
+    }
+
     &.centered {
         text-align: center;
     }

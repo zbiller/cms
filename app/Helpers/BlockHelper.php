@@ -135,13 +135,15 @@ class BlockHelper
      * Build the block containers html.
      *
      * @param Model $model
+     * @param bool $disabled
      * @return \Illuminate\View\View
      */
-    public function containers(Model $model)
+    public function containers(Model $model, $disabled = false)
     {
         return view('helpers::block.containers')->with([
             'model' => $model,
             'locations' => $model->getBlockLocations(),
+            'disabled' => $disabled,
         ]);
     }
 
