@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin\Cms;
 
+use DB;
+use App\Http\Controllers\Controller;
 use App\Models\Cms\Page;
 use App\Models\Cms\Layout;
-use App\Http\Controllers\Controller;
+use App\Models\Version\Revision;
 use App\Traits\CanCrud;
 use App\Http\Requests\PageRequest;
 use App\Http\Filters\PageFilter;
@@ -161,6 +163,24 @@ class PagesController extends Controller
             $this->item = Page::onlyTrashed()->findOrFail($id);
             $this->item->forceDelete();
         });
+    }
+
+    public function revision(Revision $revision)
+    {
+        DB::beginTransaction();
+
+        session()->flash('revision_rollback_url', url()->previous());
+
+        $item = $revision->revisionable;
+        $item->rollbackToRevision($revision);
+
+        return view('admin.cms.pages.revision')->with([
+            'item' => $item,
+            'revision' => $revision,
+            'layouts' => Layout::all(),
+            'types' => Page::$types,
+            'actives' => Page::$actives,
+        ]);
     }
 
     /**

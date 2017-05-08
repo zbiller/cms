@@ -5,12 +5,14 @@ namespace App\Models\Cms;
 use App\Models\Model;
 use App\Traits\HasUrl;
 use App\Traits\HasBlocks;
+use App\Traits\HasRevisions;
 use App\Traits\HasDuplicates;
 use App\Traits\HasMetadata;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
 use App\Options\UrlOptions;
 use App\Options\BlockOptions;
+use App\Options\RevisionOptions;
 use App\Options\DuplicateOptions;
 use App\Exceptions\CrudException;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,10 +21,11 @@ use Kalnoy\Nestedset\NodeTrait;
 
 class Page extends Model
 {
-    use HasUrl;
     use HasBlocks {
         getInheritedBlocks as baseGetInheritedBlocks;
     }
+    use HasUrl;
+    use HasRevisions;
     use HasDuplicates;
     use HasMetadata;
     use IsFilterable;
@@ -326,6 +329,16 @@ class Page extends Model
     {
         return BlockOptions::instance()
             ->inheritFrom('layout');
+    }
+
+    /**
+     * @return RevisionOptions
+     */
+    public static function getRevisionOptions()
+    {
+        return RevisionOptions::instance()
+            ->limitRevisionsTo(100)
+            ->relationsToRevision('blocks');
     }
 
     /**
