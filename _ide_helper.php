@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.4.15 on 2017-04-29.
+ * Generated for Laravel 5.4.15 on 2017-05-07.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -13463,6 +13463,34 @@ namespace App\Facades {
         }
         
     }         
+
+    class RelationFacade {
+        
+        /**
+         * Verify if a given relation is direct or not.
+         *
+         * @param string $relation
+         * @return bool 
+         * @static 
+         */
+        public static function isDirect($relation)
+        {
+            return \App\Helpers\RelationHelper::isDirect($relation);
+        }
+        
+        /**
+         * Verify if a given relation is pivoted or not.
+         *
+         * @param string $relation
+         * @return bool 
+         * @static 
+         */
+        public static function isPivoted($relation)
+        {
+            return \App\Helpers\RelationHelper::isPivoted($relation);
+        }
+        
+    }         
 }
     
     
@@ -15482,6 +15510,8 @@ namespace {
     class Uploader extends \App\Facades\UploaderFacade {}
     
     class FormAdmin extends \App\Facades\FormAdminFacade {}
+    
+    class Relation extends \App\Facades\RelationFacade {}
     
 }
 

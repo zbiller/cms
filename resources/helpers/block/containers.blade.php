@@ -9,7 +9,7 @@
                     {!! form()->select('block', ['' => ''] + $model->getBlocksOfLocation($location)->pluck('name', 'id')->toArray(), null, ['class' => 'block-assign-select']) !!}
                 </div>
                 <div class="block-assign-btn-container">
-                    <a href="#" class="block-assign btn blue no-margin right">
+                    <a href="#" class="block-assign btn green no-margin right">
                         <i class="fa fa-plus"></i>&nbsp; Assign
                     </a>
                 </div>

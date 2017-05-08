@@ -132,7 +132,7 @@ class BlockHelper
     }
 
     /**
-     * Build the block tabs html.
+     * Build the block containers html.
      *
      * @param Model $model
      * @return \Illuminate\View\View

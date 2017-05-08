@@ -94,16 +94,6 @@ if (!function_exists('button')) {
     }
 }
 
-if (!function_exists('block')) {
-    /**
-     * @return \App\Helpers\BlockHelper
-     */
-    function block()
-    {
-        return new App\Helpers\BlockHelper();
-    }
-}
-
 if (!function_exists('page')) {
     /**
      * @return \App\Helpers\PageHelper
@@ -114,6 +104,26 @@ if (!function_exists('page')) {
     }
 }
 
+if (!function_exists('block')) {
+    /**
+     * @return \App\Helpers\BlockHelper
+     */
+    function block()
+    {
+        return new App\Helpers\BlockHelper();
+    }
+}
+
+if (!function_exists('revision')) {
+    /**
+     * @return \App\Helpers\RevisionHelper
+     */
+    function revision()
+    {
+        return new App\Helpers\RevisionHelper();
+    }
+}
+
 if (!function_exists('js')) {
     /**
      * @return \App\Helpers\JavascriptHelper
@@ -121,6 +131,16 @@ if (!function_exists('js')) {
     function js()
     {
         return new App\Helpers\JavascriptHelper();
+    }
+}
+
+if (!function_exists('relation')) {
+    /**
+     * @return \App\Helpers\RelationHelper
+     */
+    function relation()
+    {
+        return new App\Helpers\RelationHelper();
     }
 }
 
