@@ -218,6 +218,13 @@ class UploaderHelper
         return $this;
     }
 
+    /**
+     * Set the $disabled property to true.
+     * This means that the current uploader instance will be disabled.
+     * No upload or crop will be available, just viewing the existing uploaded file.
+     *
+     * @return $this
+     */
     public function disabled()
     {
         $this->disabled = true;
@@ -282,10 +289,9 @@ class UploaderHelper
         if (str_contains($this->field, 'metadata')) {
             try {
                 if (Storage::disk(config('upload.storage.disk'))->exists($this->model->metadata($this->field))) {
-                    $this->current = new UploadedHelper($this->model->metadata($this->field));
+                    $this->current = uploaded($this->model->metadata($this->field));
                 }
             } catch (Exception $e) {
-                dd($e);
                 $this->current = null;
             }
         } elseif ($this->model->{$this->field} && $this->model->{'_' . $this->field}->exists()) {

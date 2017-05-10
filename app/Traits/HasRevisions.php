@@ -91,11 +91,11 @@ trait HasRevisions
     public function createNewRevision()
     {
         try {
-            if ($this->fireModelEvent('revisioning') === false) {
+            if (!$this->shouldCreateRevision()) {
                 return false;
             }
 
-            if (!$this->shouldCreateRevision()) {
+            if ($this->fireModelEvent('revisioning') === false) {
                 return false;
             }
 
@@ -163,8 +163,13 @@ trait HasRevisions
                 $this->rollbackModelToRevision($revision);
 
                 foreach ($revision->metadata->relations as $relation => $attributes) {
-                    $this->rollbackDirectRelationToRevision($relation, $attributes);
-                    $this->rollbackPivotedRelationToRevision($relation, $attributes);
+                    if (Relation::isDirect($attributes->type)) {
+                        $this->rollbackDirectRelationToRevision($relation, $attributes);
+                    }
+
+                    if (Relation::isPivoted($attributes->type)) {
+                        $this->rollbackPivotedRelationToRevision($relation, $attributes);
+                    }
                 }
             });
 
@@ -416,19 +421,17 @@ trait HasRevisions
      */
     protected function rollbackDirectRelationToRevision($relation, $attributes)
     {
-        if (Relation::isDirect($attributes->type)) {
-            foreach ($attributes->records->items as $item) {
-                $rel = $this->{$relation}()->findOrNew(
-                    isset($item->{$attributes->records->primary_key}) ?
-                        $item->{$attributes->records->primary_key} : null
-                );
+        foreach ($attributes->records->items as $item) {
+            $rel = $this->{$relation}()->findOrNew(
+                isset($item->{$attributes->records->primary_key}) ?
+                    $item->{$attributes->records->primary_key} : null
+            );
 
-                foreach ($item as $field => $value) {
-                    $rel->attributes[$field] = $value;
-                }
-
-                $rel->save();
+            foreach ($item as $field => $value) {
+                $rel->attributes[$field] = $value;
             }
+
+            $rel->save();
         }
     }
 
@@ -451,34 +454,32 @@ trait HasRevisions
      */
     protected function rollbackPivotedRelationToRevision($relation, $attributes)
     {
-        if (Relation::isPivoted($attributes->type)) {
-            foreach ($attributes->records->items as $item) {
-                $rel = $this->{$relation}()->getRelated()->findOrNew(
-                    isset($item->{$attributes->records->primary_key}) ?
-                        $item->{$attributes->records->primary_key} : null
-                );
+        foreach ($attributes->records->items as $item) {
+            $rel = $this->{$relation}()->getRelated()->findOrNew(
+                isset($item->{$attributes->records->primary_key}) ?
+                    $item->{$attributes->records->primary_key} : null
+            );
 
-                if ($rel->exists === false) {
-                    foreach ($item as $field => $value) {
-                        $rel->attributes[$field] = $value;
-                    }
-
-                    $rel->save();
+            if ($rel->exists === false) {
+                foreach ($item as $field => $value) {
+                    $rel->attributes[$field] = $value;
                 }
-            }
 
-            $this->{$relation}()->detach();
-
-            foreach ($attributes->pivots->items as $item) {
-                $this->{$relation}()->attach(
-                    $item->{$attributes->pivots->related_key},
-                    array_except((array)$item, [
-                        $attributes->pivots->primary_key,
-                        $attributes->pivots->foreign_key,
-                        $attributes->pivots->related_key,
-                    ])
-                );
+                $rel->save();
             }
+        }
+
+        $this->{$relation}()->detach();
+
+        foreach ($attributes->pivots->items as $item) {
+            $this->{$relation}()->attach(
+                $item->{$attributes->pivots->related_key},
+                array_except((array)$item, [
+                    $attributes->pivots->primary_key,
+                    $attributes->pivots->foreign_key,
+                    $attributes->pivots->related_key,
+                ])
+            );
         }
     }
 

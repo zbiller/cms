@@ -2,13 +2,12 @@
 
 namespace App\Traits;
 
+use Exception;
+use ReflectionMethod;
+use InvalidArgumentException;
 use App\Models\Model;
 use App\Options\OrderOptions;
-use ArrayAccess;
-use Exception;
 use Illuminate\Database\Eloquent\Builder;
-use InvalidArgumentException;
-use ReflectionMethod;
 
 trait IsOrderable
 {
@@ -104,9 +103,9 @@ trait IsOrderable
      */
     public static function setNewOrder($ids, $start = 0)
     {
-        if (!is_array($ids) && !($ids instanceof ArrayAccess)) {
+        if (!is_array($ids)) {
             throw new InvalidArgumentException(
-                'You must pass an array or ArrayAccess object to setNewOrder'
+                'You must pass an array to setNewOrder'
             );
         }
 

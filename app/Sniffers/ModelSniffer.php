@@ -2,8 +2,8 @@
 
 namespace App\Sniffers;
 
-use ReflectionMethod;
 use SplFileObject;
+use ReflectionMethod;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
 

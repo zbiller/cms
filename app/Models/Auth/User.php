@@ -7,18 +7,18 @@ use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
 use App\Scopes\SelectUserScope;
 use App\Scopes\JoinPersonScope;
-use App\Options\CacheOptions;
 use App\Notifications\ResetPasswordNotification;
+use App\Options\CacheOptions;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use Notifiable;
     use HasRoles;
     use IsFilterable;
     use IsSortable;
+    use Notifiable;
 
     /**
      * The database table.
@@ -131,6 +131,16 @@ class User extends Authenticatable
     public function getAuthIdentifierName()
     {
         return $this->getTable() . '.' . $this->getKeyName();
+    }
+
+    /**
+     * Get the unique identifier for the user.
+     *
+     * @return mixed
+     */
+    public function getAuthIdentifier()
+    {
+        return $this->{$this->getKeyName()};
     }
 
     /**

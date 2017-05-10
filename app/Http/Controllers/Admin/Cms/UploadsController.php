@@ -65,7 +65,7 @@ class UploadsController extends Controller
 
         return response()->json([
             'status' => $request->get('page') > 1 && !$uploads->count() ? false : true,
-            'html' => $request->get('page') > 1 && !$uploads->count() ? '' : view('helpers::uploader.manager.items')->with([
+            'html' => $request->get('page') > 1 && !$uploads->count() ? '' : view('helpers::uploader.partials.items')->with([
                 'type' => $type,
                 'uploads' => $uploads,
             ])->render()
@@ -229,7 +229,7 @@ class UploadsController extends Controller
                 'status' => true,
                 'message' => 'Upload successful!',
                 'type' => snake_case(Upload::$types[$file->getType()]),
-                'html' => view('helpers::uploader.manager.items')->with([
+                'html' => view('helpers::uploader.partials.items')->with([
                     'type' => snake_case(Upload::$types[$file->getType()]),
                     'uploads' => $collection,
                 ])->render()
@@ -288,7 +288,7 @@ class UploadsController extends Controller
 
         return response()->json([
             'status' => true,
-            'html' => view('helpers::uploader.manager.crop')->with([
+            'html' => view('helpers::uploader.partials.crop')->with([
                 'index' => $index,
                 'url' => $url,
                 'path' => $path,

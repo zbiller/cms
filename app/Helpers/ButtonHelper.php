@@ -5,6 +5,8 @@ namespace App\Helpers;
 class ButtonHelper
 {
     /**
+     * Render the default button view helper.
+     *
      * @param string $text
      * @param string $url
      * @param string|null $icon
@@ -127,7 +129,7 @@ class ButtonHelper
     }
 
     /**
-     * Render the clear button view helper.
+     * Render the view button view helper.
      *
      * @param string $route
      * @param array $parameters
@@ -143,7 +145,7 @@ class ButtonHelper
     }
 
     /**
-     * Render the clear button view helper.
+     * Render the download button view helper.
      *
      * @param string $route
      * @param array $parameters
@@ -188,7 +190,7 @@ class ButtonHelper
     }
 
     /**
-     * Render the delete button view helper.
+     * Render the duplicate button view helper.
      *
      * @param string $route
      * @param array $parameters
@@ -204,7 +206,7 @@ class ButtonHelper
     }
 
     /**
-     * Render the delete button view helper.
+     * Render the rollback button view helper.
      *
      * @param string $route
      * @param array $parameters
@@ -233,6 +235,8 @@ class ButtonHelper
     }
 
     /**
+     * Build the attributes for a button (HTML style).
+     *
      * @param array $attributes
      * @return array
      */

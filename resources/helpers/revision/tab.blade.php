@@ -1,3 +1,3 @@
 <a href="#tab-revisions">Revisions</a>
 
-@include('helpers::revision.scripts')
+@include('helpers::revision.partials.scripts')

@@ -13,6 +13,7 @@ $(window).load(function(){
     tabs();
     pagination();
     popups();
+    sluggify();
     setups();
     helpers();
 
@@ -332,6 +333,28 @@ function popups()
             $('section.popup:visible ul.modal-tabs > li').removeClass('active');
             $('section.popup:visible div.modal-tab').removeClass('active');
         };
+}
+
+/**
+ * @return void
+ */
+function sluggify()
+{
+    var from = $('#slug-from');
+    var to = $('#slug-to');
+
+    if (from.length && to.length) {
+        from.bind('keyup blur', function() {
+            to.val(
+                $(this).val().toString().toLowerCase()
+                    .replace(/\s+/g, '-')
+                    .replace(/[^\w\-]+/g, '')
+                    .replace(/\-\-+/g, '-')
+                    .replace(/^-+/, '')
+                    .replace(/-+$/, '')
+            );
+        });
+    }
 }
 
 /**

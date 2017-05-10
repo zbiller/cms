@@ -177,6 +177,16 @@ class Menu extends Model
     }
 
     /**
+     * Page belongs to layout.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function layout()
+    {
+        return $this->belongsTo(Layout::class, 'layout_id');
+    }
+
+    /**
      * Get the url of the menu.
      * If the actual "url" column contains any value, return that.
      * Otherwise, match the "entity_id" and "entity_type" on a record and return it's url.
@@ -265,15 +275,5 @@ class Menu extends Model
     public function scopeWhereLocation($query, $location)
     {
         $query->where('location', $location);
-    }
-
-    /**
-     * Page belongs to layout.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function layout()
-    {
-        return $this->belongsTo(Layout::class, 'layout_id');
     }
 }

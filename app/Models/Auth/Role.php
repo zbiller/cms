@@ -4,20 +4,20 @@ namespace App\Models\Auth;
 
 use App\Models\Model;
 use App\Traits\HasPermissions;
-use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
-use App\Options\CacheOptions;
+use App\Traits\IsCacheable;
 use App\Contracts\RoleContract;
+use App\Options\CacheOptions;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Role extends Model implements RoleContract
 {
     use HasPermissions;
-    use IsCacheable;
     use IsFilterable;
     use IsSortable;
+    use IsCacheable;
 
     /**
      * The database table

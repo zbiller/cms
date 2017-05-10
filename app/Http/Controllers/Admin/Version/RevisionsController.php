@@ -31,7 +31,7 @@ class RevisionsController extends Controller
 
             return [
                 'status' => true,
-                'html' => view('helpers::revision.table')->with([
+                'html' => view('helpers::revision.partials.table')->with([
                     'revisions' => $revisions,
                     'route' => $route,
                 ])->render()
@@ -88,7 +88,7 @@ class RevisionsController extends Controller
 
                 return [
                     'status' => true,
-                    'html' => view('helpers::revision.table')->with([
+                    'html' => view('helpers::revision.partials.table')->with([
                         'revisions' => $revisions,
                         'route' => $route,
                     ])->render()

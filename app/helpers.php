@@ -124,16 +124,6 @@ if (!function_exists('revision')) {
     }
 }
 
-if (!function_exists('js')) {
-    /**
-     * @return \App\Helpers\JavascriptHelper
-     */
-    function js()
-    {
-        return new App\Helpers\JavascriptHelper();
-    }
-}
-
 if (!function_exists('relation')) {
     /**
      * @return \App\Helpers\RelationHelper
@@ -169,10 +159,10 @@ if (!function_exists('array_search_key_recursive')) {
     /**
      * @param string|int $needle
      * @param array $haystack
-     * @param bool $match
+     * @param bool $regexp
      * @return mixed|null
      */
-    function array_search_key_recursive($needle, array $haystack = [], $match = false)
+    function array_search_key_recursive($needle, array $haystack = [], $regexp = false)
     {
         $array = new \RecursiveIteratorIterator(
             new \RecursiveArrayIterator($haystack),
@@ -180,7 +170,7 @@ if (!function_exists('array_search_key_recursive')) {
         );
 
         foreach ($array as $key => $value) {
-            if ($match ? str_is($key, $needle) : $key === $needle) {
+            if ($regexp ? str_is($key, $needle) : $key === $needle) {
                 return $value;
             }
         }

@@ -27,5 +27,3 @@
         {!! button()->save() !!}
     </section>
 @endsection
-
-{!! js()->sluggify('name', 'slug') !!}

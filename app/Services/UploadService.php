@@ -4,11 +4,11 @@ namespace App\Services;
 
 use DB;
 use Storage;
-use Validator;
 use Image;
+use FFMpeg;
+use Validator;
 use Closure;
 use Exception;
-use FFMpeg;
 use App\Models\Model;
 use App\Models\Upload\Upload;
 use App\Http\Requests\UploadRequest;

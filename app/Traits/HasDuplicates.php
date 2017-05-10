@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use DB;
+use Relation;
 use Closure;
 use Exception;
 use ReflectionMethod;
@@ -77,25 +78,12 @@ trait HasDuplicates
                 }
 
                 foreach ($this->getRelationsForDuplication() as $relation => $attributes) {
-                    switch ($attributes['type']) {
-                        case 'Illuminate\Database\Eloquent\Relations\HasOne':
-                            $this->duplicateDirectRelation($model, $relation);
-                            break;
-                        case 'Illuminate\Database\Eloquent\Relations\HasMany':
-                            $this->duplicateDirectRelation($model, $relation);
-                            break;
-                        case 'Illuminate\Database\Eloquent\Relations\MorphOne':
-                            $this->duplicateDirectRelation($model, $relation);
-                            break;
-                        case 'Illuminate\Database\Eloquent\Relations\MorphMany':
-                            $this->duplicateDirectRelation($model, $relation);
-                            break;
-                        case 'Illuminate\Database\Eloquent\Relations\BelongsToMany':
-                            $this->duplicatePivotedRelation($model, $relation);
-                            break;
-                        case 'Illuminate\Database\Eloquent\Relations\MorphToMany':
-                            $this->duplicatePivotedRelation($model, $relation);
-                            break;
+                    if (Relation::isDirect($attributes['type'])) {
+                        $this->duplicateDirectRelation($model, $relation);
+                    }
+
+                    if (Relation::isPivoted($attributes['type'])) {
+                        $this->duplicatePivotedRelation($model, $relation);
                     }
                 }
 

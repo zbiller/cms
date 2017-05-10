@@ -4,13 +4,13 @@ namespace App\Traits;
 
 use DB;
 use Exception;
+use ReflectionMethod;
 use App\Models\Model;
 use App\Models\Cms\Url;
 use App\Options\UrlOptions;
 use App\Options\SlugOptions;
 use App\Exceptions\UrlException;
 use Illuminate\Database\Eloquent\Builder;
-use ReflectionMethod;
 
 trait HasUrl
 {
@@ -111,7 +111,7 @@ trait HasUrl
      * @return void
      * @throws UrlException
      */
-    protected function createUrl()
+    public function createUrl()
     {
         if (!$this->getAttribute(self::$urlOptions->toField)) {
             return;
@@ -134,7 +134,7 @@ trait HasUrl
      * @return void
      * @throws UrlException
      */
-    protected function updateUrl()
+    public function updateUrl()
     {
         if (!$this->getAttribute(self::$urlOptions->toField)) {
             return;
@@ -163,7 +163,7 @@ trait HasUrl
      * @return void
      * @throws UrlException
      */
-    protected function deleteUrl()
+    public function deleteUrl()
     {
         try {
             $this->url()->delete();

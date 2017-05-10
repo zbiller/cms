@@ -26,13 +26,13 @@ class UploadRequest extends Request
         if (config('upload.database.save') === true) {
             return [
                 'name' => [
-                    'required'
+                    'required',
                 ],
                 'original_name' => [
-                    'required'
+                    'required',
                 ],
                 'path' => [
-                    'required'
+                    'required',
                 ],
                 'full_path' => [
                     'required',
@@ -40,18 +40,18 @@ class UploadRequest extends Request
                         ->ignore($this->route('upload') ? $this->route('upload')->id : null)
                 ],
                 'extension' => [
-                    'required'
+                    'required',
                 ],
                 'size' => [
                     'required',
-                    'numeric'
+                    'numeric',
                 ],
                 'mime' => [
-                    'required'
+                    'required',
                 ],
                 'type' => [
                     'required',
-                    'numeric'
+                    'numeric',
                 ],
             ];
         }

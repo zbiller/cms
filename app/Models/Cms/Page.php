@@ -3,15 +3,15 @@
 namespace App\Models\Cms;
 
 use App\Models\Model;
-use App\Traits\HasUrl;
 use App\Traits\HasBlocks;
+use App\Traits\HasUrl;
 use App\Traits\HasRevisions;
 use App\Traits\HasDuplicates;
 use App\Traits\HasMetadata;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
-use App\Options\UrlOptions;
 use App\Options\BlockOptions;
+use App\Options\UrlOptions;
 use App\Options\RevisionOptions;
 use App\Options\DuplicateOptions;
 use App\Exceptions\CrudException;
@@ -302,6 +302,17 @@ class Page extends Model
     }
 
     /**
+     * Set the options for the HasBlocks trait.
+     *
+     * @return BlockOptions
+     */
+    public static function getBlockOptions()
+    {
+        return BlockOptions::instance()
+            ->inheritFrom('layout');
+    }
+
+    /**
      * Set the options for the HasUrl trait.
      *
      * @return UrlOptions
@@ -318,17 +329,6 @@ class Page extends Model
 
                 return implode('/' , (array)$prefix);
             });
-    }
-
-    /**
-     * Set the options for the HasBlocks trait.
-     *
-     * @return BlockOptions
-     */
-    public static function getBlockOptions()
-    {
-        return BlockOptions::instance()
-            ->inheritFrom('layout');
     }
 
     /**
@@ -353,7 +353,7 @@ class Page extends Model
                 '_lft', '_rgt', 'identifier', 'created_at', 'updated_at'
             ])
             ->excludeRelations([
-                'parent', 'children', 'url'
+                'parent', 'children', 'url', 'layout'
             ]);
     }
 }

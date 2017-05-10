@@ -24,7 +24,7 @@
                     <div id="{!! $type !!}" class="modal-tab {!! $loop->first ? 'active' : '' !!}">
                         <input type="text" placeholder="Search for {!! str_plural($type) !!}" class="search full" />
                         <div class="uploads">
-                            @include('helpers::uploader.manager.items')
+                            @include('helpers::uploader.partials.items')
                         </div>
                     </div>
                 @endforeach

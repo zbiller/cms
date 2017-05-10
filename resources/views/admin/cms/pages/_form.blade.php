@@ -3,8 +3,8 @@
 <div id="tab-1" class="tab">
     {!! form_admin()->select('layout_id', 'Layout', $layouts->pluck('name', 'id')) !!}
     {!! form_admin()->select('type', 'Type', $types) !!}
-    {!! form_admin()->text('name') !!}
-    {!! form_admin()->text('slug') !!}
+    {!! form_admin()->text('name', 'Name', null, $item->exists ? [] : ['id' => 'slug-from']) !!}
+    {!! form_admin()->text('slug', 'Slug', null, $item->exists ? [] : ['id' => 'slug-to']) !!}
     {!! auth()->user()->isDeveloper() ? form_admin()->text('identifier') : '' !!}
     {!! form_admin()->select('active', 'Active', $actives) !!}
 </div>
@@ -21,9 +21,6 @@
 
 @if($item->exists)
     {!! block()->containers($item) !!}
-@endif
-
-@if($item->exists)
     {!! revision()->container($item) !!}
 @endif
 

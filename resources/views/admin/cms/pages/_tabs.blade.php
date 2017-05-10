@@ -4,8 +4,5 @@
 
 @if($item->exists)
     {!! block()->tabs($item) !!}
-@endif
-
-@if($item->exists)
     {!! revision()->tab($item, 'admin.pages.revision') !!}
 @endif

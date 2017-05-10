@@ -128,7 +128,7 @@ class BlockMakeCommand extends Command
      */
     protected function getComposerStub()
     {
-        return resource_path('stubs/blocks/composer.stub');
+        return app_path('Console/Commands/Stubs/Blocks/composer.stub');
     }
 
     /**
@@ -138,7 +138,7 @@ class BlockMakeCommand extends Command
      */
     protected function getAdminViewStub()
     {
-        return resource_path('stubs/blocks/admin.view.stub');
+        return app_path('Console/Commands/Stubs/Blocks/admin.view.stub');
     }
 
     /**
@@ -148,7 +148,7 @@ class BlockMakeCommand extends Command
      */
     protected function getFrontViewStub()
     {
-        return resource_path('stubs/blocks/front.view.stub');
+        return app_path('Console/Commands/Stubs/Blocks/front.view.stub');
     }
 
     /**

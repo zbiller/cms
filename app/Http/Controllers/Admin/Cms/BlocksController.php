@@ -143,7 +143,7 @@ class BlocksController extends Controller
 
             return [
                 'status' => true,
-                'html' => view('helpers::block.table')->with([
+                'html' => view('helpers::block.partials.table')->with([
                     'model' => $model,
                     'location' => $data['location'],
                     'disabled' => $request->get('disabled') ? true : false,
@@ -173,11 +173,11 @@ class BlocksController extends Controller
             $block = Block::findOrFail($data['block_id']);
             $model = $data['blockable_type']::findOrFail($data['blockable_id']);
 
-            $model->saveAsRevision()->unassignBlock($block, $data['pivot_id'], $data['location']);
+            $model->saveAsRevision()->unassignBlock($block, $data['location'], $data['pivot_id']);
 
             return [
                 'status' => true,
-                'html' => view('helpers::block.table')->with([
+                'html' => view('helpers::block.partials.table')->with([
                     'model' => $model,
                     'location' => $data['location'],
                     'disabled' => $request->get('disabled') ? true : false,

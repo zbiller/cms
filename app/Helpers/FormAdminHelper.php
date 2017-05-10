@@ -2,8 +2,8 @@
 
 namespace App\Helpers;
 
-use Collective\Html\FormFacade;
 use Illuminate\Support\Collection;
+use Collective\Html\FormFacade;
 
 class FormAdminHelper
 {

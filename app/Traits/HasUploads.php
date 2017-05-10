@@ -60,7 +60,7 @@ trait HasUploads
     {
         if (starts_with($key, '_')) {
             if (Storage::disk(config('upload.storage.disk'))->exists($this->{ltrim($key, '_')})) {
-                return new UploadedHelper($this->{ltrim($key, '_')});
+                return uploaded($this->{ltrim($key, '_')});
             }
         }
 

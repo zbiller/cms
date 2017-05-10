@@ -3,18 +3,32 @@
 namespace App\Traits;
 
 use Exception;
+use ReflectionMethod;
 use App\Models\Model;
 use App\Models\Cms\Block;
+use App\Options\BlockOptions;
 use App\Exceptions\BlockException;
 
 trait HasBlocks
 {
+    /**
+     * The container for all the options necessary for this trait.
+     * Options can be viewed in the App\Options\ResetPasswordOptions file.
+     *
+     * @var BlockOptions
+     */
+    protected static $blockOptions;
+
     /**
      * Boot the trait.
      * Remove blocks on save and delete if one or many locations from model's instance have been changed/removed.
      */
     public static function bootHasBlocks()
     {
+        self::checkBlockOptions();
+
+        self::$blockOptions = self::getBlockOptions();
+
         static::saved(function (Model $model) {
             $model->syncBlocks($model->getBlockLocations());
         });
@@ -81,30 +95,22 @@ trait HasBlocks
      */
     public function getInheritedBlocks($location)
     {
-        if (!method_exists($this, 'getBlockOptions')) {
+        if (!self::$blockOptions->inherit) {
             return null;
         }
 
-        $options = static::getBlockOptions();
-
-        if ($options->inherit && $options->inherit instanceof Model && $options->inherit->exists) {
-            $blocks = $options->inherit->getBlocksInLocation($location);
+        if (self::$blockOptions->inherit instanceof Model && self::$blockOptions->inherit->exists) {
+            $blocks = self::$blockOptions->inherit->getBlocksInLocation($location);
 
             if ($blocks->count() > 0) {
                 return $blocks;
             }
 
             if (
-                method_exists($options->inherit, 'getBlockOptions') &&
-                (
-                    is_string($options->inherit->getBlockOptions()->inherit) ||
-                    (
-                        $options->inherit->getBlockOptions()->inherit instanceof Model &&
-                        get_class($options->inherit->getBlockOptions()->inherit) != get_class($this)
-                    )
-                )
+                self::$blockOptions->inherit->getBlockOptions()->inherit instanceof Model &&
+                get_class(self::$blockOptions->inherit->getBlockOptions()->inherit) != get_class($this)
             ) {
-                return $options->inherit->getInheritedBlocks($location);
+                return self::$blockOptions->inherit->getInheritedBlocks($location);
             }
         }
 
@@ -118,9 +124,9 @@ trait HasBlocks
      */
     public function getBlockLocations()
     {
-        if (method_exists($this, 'getBlockOptions')) {
-            return static::getBlockOptions()->locations;
-        }
+        if (is_array(self::$blockOptions->locations)) {
+            return self::$blockOptions->locations;
+        };
 
         return null;
     }
@@ -175,12 +181,12 @@ trait HasBlocks
      * Delete the record from "blockables" table.
      *
      * @param Block $block
-     * @param int $pivot
      * @param string $location
+     * @param int $pivot
      * @return bool
      * @throws BlockException
      */
-    public function unassignBlock(Block $block, $pivot, $location)
+    public function unassignBlock(Block $block, $location, $pivot)
     {
         try {
             $this->blocks()
@@ -222,6 +228,28 @@ trait HasBlocks
                     $e->getMessage(), $e->getCode(), $e
                 );
             }
+        }
+    }
+
+    /**
+     * Verify if the getResetPasswordOptions() method for setting the trait options exists and is public and static.
+     *
+     * @throws Exception
+     */
+    private static function checkBlockOptions()
+    {
+        if (!method_exists(self::class, 'getBlockOptions')) {
+            throw new Exception(
+                'The "' . self::class . '" must define the public static "getBlockOptions()" method.'
+            );
+        }
+
+        $reflection = new ReflectionMethod(self::class, 'getBlockOptions');
+
+        if (!$reflection->isPublic() || !$reflection->isStatic()) {
+            throw new Exception(
+                'The method "getBlockOptions()" from the class "' . self::class . '" must be declared as both "public" and "static".'
+            );
         }
     }
 }

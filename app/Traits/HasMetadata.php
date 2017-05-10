@@ -49,7 +49,7 @@ trait HasMetadata
      * @param array|string $string
      * @return bool
      */
-    public function isJsonFormat($string)
+    protected function isJsonFormat($string)
     {
         if (!is_string($string)) {
             return false;

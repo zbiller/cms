@@ -2,10 +2,10 @@
 
 namespace App\Traits;
 
-use App\Options\CacheOptions;
-use App\Exceptions\CacheException;
 use Exception;
 use ReflectionMethod;
+use App\Options\CacheOptions;
+use App\Exceptions\CacheException;
 
 trait IsCacheable
 {

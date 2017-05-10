@@ -2,11 +2,11 @@
 
 namespace App\Models\Upload;
 
-use App\Helpers\UploadedHelper;
 use App\Models\Model;
 use App\Services\UploadService;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
+use App\Helpers\UploadedHelper;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -101,7 +101,7 @@ class Upload extends Model
      */
     public function getHelperAttribute()
     {
-        return new UploadedHelper($this->attributes['full_path']);
+        return uploaded($this->attributes['full_path']);
     }
 
     /**

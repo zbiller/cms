@@ -23,10 +23,10 @@ class LoginRequest extends Request
     {
         return [
             'username' => [
-                'required'
+                'required',
             ],
             'password' => [
-                'required'
+                'required',
             ],
         ];
     }
