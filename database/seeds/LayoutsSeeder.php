@@ -18,17 +18,10 @@ class LayoutsSeeder extends Seeder
         /**
          * Create layouts for all files inside the resources/layouts/default directory.
          */
-        foreach (Layout::getFiles() as $key => $file) {
-            if (!$key) {
-                throw new Exception(
-                    'Please create at least one layout file in "resources/layouts/default" directory'
-                );
-            }
-
+        foreach (Layout::$map as $type => $options) {
             Layout::create([
-                'name' => title_case(trim(str_replace(['.blade.php', '_', '-', '.'], ' ', $file))),
-                'identifier' => str_slug(trim(str_replace(['.blade.php', '_', '-', '.'], ' ', $file))),
-                'file' => $file
+                'name' => Layout::$types[$type],
+                'type' => $type,
             ]);
         }
     }
