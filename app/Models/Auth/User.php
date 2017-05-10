@@ -49,15 +49,6 @@ class User extends Authenticatable
     ];
 
     /**
-     * The relations that are eager loaded.
-     *
-     * @var array
-     */
-    protected $with = [
-        'person',
-    ];
-
-    /**
      * Super user.
      *
      * @const
@@ -121,70 +112,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the user's first name.
-     *
-     * @return mixed
-     */
-    public function getFirstNameAttribute()
-    {
-        if (isset($this->attributes['first_name'])) {
-            return $this->attributes['first_name'];
-        } elseif ($this->person) {
-            return $this->person->first_name;
-        }
-
-        return null;
-    }
-
-    /**
-     * Get the user's last name.
-     *
-     * @return mixed
-     */
-    public function getLastNameAttribute()
-    {
-        if (isset($this->attributes['last_name'])) {
-            return $this->attributes['last_name'];
-        } elseif ($this->person) {
-            return $this->person->last_name;
-        }
-
-        return null;
-    }
-
-    /**
-     * Get the user's phone.
-     *
-     * @return mixed
-     */
-    public function getPhoneAttribute()
-    {
-        if (isset($this->attributes['phone'])) {
-            return $this->attributes['phone'];
-        } elseif ($this->person) {
-            return $this->person->phone;
-        }
-
-        return null;
-    }
-
-    /**
-     * Get the user's email.
-     *
-     * @return mixed
-     */
-    public function getEmailAttribute()
-    {
-        if (isset($this->attributes['email'])) {
-            return $this->attributes['email'];
-        } elseif ($this->person->email) {
-            return $this->person->email;
-        }
-
-        return null;
-    }
-
-    /**
      * Override route model binding default column value.
      * This is done because the user is joined with person by the global scope.
      * Otherwise, the model binding will throw an "ambiguous column" error.
@@ -193,7 +120,17 @@ class User extends Authenticatable
      */
     public function getRouteKeyName()
     {
-        return 'users.id';
+        return $this->getTable() . '.' . $this->getKeyName();
+    }
+
+    /**
+     * Get the name of the unique identifier for the user.
+     *
+     * @return string
+     */
+    public function getAuthIdentifierName()
+    {
+        return $this->getTable() . '.' . $this->getKeyName();
     }
 
     /**

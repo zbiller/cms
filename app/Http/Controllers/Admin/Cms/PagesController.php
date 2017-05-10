@@ -184,28 +184,6 @@ class PagesController extends Controller
     }
 
     /**
-     * @param Revision $revision
-     * @return \Illuminate\View\View
-     */
-    public function revision(Revision $revision)
-    {
-        DB::beginTransaction();
-
-        session()->flash('revision_rollback_url', url()->previous());
-
-        $item = $revision->revisionable;
-        $item->rollbackToRevision($revision);
-
-        return view('admin.cms.pages.revision')->with([
-            'item' => $item,
-            'revision' => $revision,
-            'layouts' => Layout::all(),
-            'types' => Page::$types,
-            'actives' => Page::$actives,
-        ]);
-    }
-
-    /**
      * @param Page $page
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
