@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin\Cms;
 
+use App\Models\Version\Draft;
+use App\Models\Version\Revision;
 use DB;
 use Exception;
 use App\Http\Controllers\Controller;
@@ -122,90 +124,6 @@ class BlocksController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @return array
-     */
-    public function assign(Request $request)
-    {
-        $this->validate($request, [
-            'block_id' => 'required|numeric',
-            'blockable_id' => 'required|numeric',
-            'blockable_type' => 'required',
-            'location' => 'required',
-        ]);
-
-        try {
-            $data = $request->all();
-            $block = Block::findOrFail($data['block_id']);
-            $model = $data['blockable_type']::findOrFail($data['blockable_id']);
-
-            $model->saveAsRevision()->assignBlock($block, $data['location']);
-
-            return [
-                'status' => true,
-                'html' => view('helpers::block.partials.table')->with([
-                    'model' => $model,
-                    'location' => $data['location'],
-                    'disabled' => $request->get('disabled') ? true : false,
-                ])->render(),
-            ];
-        } catch (Exception $e) {
-            return [
-                'status' => false
-            ];
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function unassign(Request $request)
-    {
-        $this->validate($request, [
-            'block_id' => 'required|numeric',
-            'pivot_id' => 'required|numeric',
-            'location' => 'required ',
-        ]);
-
-        try {
-            $data = $request->all();
-            $block = Block::findOrFail($data['block_id']);
-            $model = $data['blockable_type']::findOrFail($data['blockable_id']);
-
-            $model->saveAsRevision()->unassignBlock($block, $data['location'], $data['pivot_id']);
-
-            return [
-                'status' => true,
-                'html' => view('helpers::block.partials.table')->with([
-                    'model' => $model,
-                    'location' => $data['location'],
-                    'disabled' => $request->get('disabled') ? true : false,
-                ])->render(),
-            ];
-        } catch (Exception $e) {
-            return [
-                'status' => false
-            ];
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return void
-     */
-    public function order(Request $request)
-    {
-        if ($request->has('items')) {
-            foreach ($request->get('items') as $ord => $id) {
-                DB::table('blockables')->where('id', $id)->update([
-                    'ord' => $ord
-                ]);
-            }
-        }
-    }
-
-    /**
      * @return CrudOptions
      */
     public static function getCrudOptions()
@@ -218,5 +136,80 @@ class BlocksController extends Controller
             ->setAddView('admin.cms.blocks.add')
             ->setEditRoute('admin.blocks.edit')
             ->setEditView('admin.cms.blocks.edit');
+    }
+
+
+
+
+
+
+
+
+
+    public function get(Request $request)
+    {
+        $this->validate($request, [
+            'blockable_id' => 'required|numeric',
+            'blockable_type' => 'required',
+        ]);
+
+        try {
+            $class = $request->get('blockable_type');
+            $id = $request->get('blockable_id');
+            $model = $class::findOrFail($id);
+
+            if ($request->has('draft') && ($draft = Draft::find((int)$request->get('draft')))) {
+                DB::beginTransaction();
+
+                $model = $draft->draftable;
+                $model->publishDraft($draft);
+            }
+
+            if ($request->has('revision') && ($revision = Revision::find((int)$request->get('revision')))) {
+                DB::beginTransaction();
+
+                $model = $revision->revisionable;
+                $model->rollbackToRevision($revision);
+            }
+
+            return [
+                'status' => true,
+                'html' => view('helpers::block.partials.blocks')->with([
+                    'model' => $model,
+                    'blocks' => $model->blocks,
+                    'locations' => $model->getBlockLocations(),
+                    'disabled' => $request->get('disabled') ? true : false,
+                ])->render(),
+            ];
+        } catch (Exception $e) {
+            return [
+                'status' => false
+            ];
+        }
+    }
+
+    public function row(Request $request)
+    {
+        $this->validate($request, [
+            'block_id' => 'required|numeric',
+        ]);
+
+        try {
+            $block = Block::findOrFail($request->get('block_id'));
+
+            return [
+                'status' => true,
+                'data' => [
+                    'id' => $block->id,
+                    'name' => $block->name ?: 'N/A',
+                    'type' => $block->type ?: 'N/A',
+                    'url' => route('admin.blocks.edit', $block->id),
+                ],
+            ];
+        } catch (Exception $e) {
+            return [
+                'status' => false
+            ];
+        }
     }
 }

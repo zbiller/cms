@@ -3,6 +3,9 @@
 namespace App\Helpers;
 
 use App\Models\Model;
+use App\Models\Version\Draft;
+use App\Models\Version\Revision;
+use DB;
 use Illuminate\Database\Eloquent\Collection;
 
 class BlockHelper
@@ -124,10 +127,10 @@ class BlockHelper
      * @param Model $model
      * @return \Illuminate\View\View
      */
-    public function tabs(Model $model)
+    public function tab(Model $model)
     {
-        return view('helpers::block.tabs')->with([
-            'locations' => $model->getBlockLocations(),
+        return view('helpers::block.tab')->with([
+            'model' => $model,
         ]);
     }
 
@@ -135,14 +138,17 @@ class BlockHelper
      * Build the block containers html.
      *
      * @param Model $model
+     * @param Draft $draft
+     * @param Revision $revision
      * @param bool $disabled
      * @return \Illuminate\View\View
      */
-    public function containers(Model $model, $disabled = false)
+    public function container(Model $model, Draft $draft = null, Revision $revision = null, $disabled = false)
     {
-        return view('helpers::block.containers')->with([
+        return view('helpers::block.container')->with([
             'model' => $model,
-            'locations' => $model->getBlockLocations(),
+            'draft' => $draft,
+            'revision' => $revision,
             'disabled' => $disabled,
         ]);
     }

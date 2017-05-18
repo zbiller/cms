@@ -2,12 +2,14 @@
 
 namespace App\Traits;
 
+use DB;
 use Exception;
 use ReflectionMethod;
 use App\Models\Model;
 use App\Models\Cms\Block;
 use App\Options\BlockOptions;
 use App\Exceptions\BlockException;
+use Illuminate\Http\Request;
 
 trait HasBlocks
 {
@@ -30,12 +32,12 @@ trait HasBlocks
         self::$blockOptions = self::getBlockOptions();
 
         static::saved(function (Model $model) {
-            $model->syncBlocks($model->getBlockLocations());
+            $model->saveBlocks();
         });
 
         static::deleted(function (Model $model) {
             if ($model->forceDeleting !== false) {
-                $model->syncBlocks();
+                $model->blocks()->detach();
             }
         });
     }
@@ -145,27 +147,72 @@ trait HasBlocks
     }
 
     /**
+     * Save all of the blocks of a model instance.
+     * Saving is done on a provided or existing request object.
+     * The logic of this method will look for the "blocks" key in the request.
+     * Mandatory request format is an array of keys with their values composed of the block id and location.
+     * [0 => [id => 1, location => header], 1 => [id => 1, location => footer]...]
+     *
+     * @param Request|null $request
+     * @return bool|void
+     * @throws BlockException
+     */
+    public function saveBlocks(Request $request = null)
+    {
+        $request = $request ?: request();
+        $blocks = $request->get('blocks');
+
+        try {
+            DB::transaction(function () use ($blocks) {
+                $this->blocks()->detach();
+
+                if ($blocks && is_array($blocks) && !empty($blocks)) {
+                    ksort($blocks);
+
+                    foreach ($blocks as $data) {
+                        foreach ($data as $id => $attributes) {
+                            if (($id && isset($attributes['location'])) && ($block = Block::find($id))) {
+                                $this->assignBlock($block, $attributes['location'], isset($attributes['ord']) ? $attributes['ord'] : null);
+                            }
+
+                        }
+                    }
+                }
+            });
+
+            return true;
+        } catch (Exception $e) {
+            throw new BlockException(
+                $e->getMessage(), $e->getCode(), $e
+            );
+        }
+    }
+
+    /**
      * Assign a block to this model instance, matching the given location.
      *
      * @param Block $block
      * @param string $location
+     * @param int|null $order
      * @return bool
      * @throws BlockException
      */
-    public function assignBlock(Block $block, $location)
+    public function assignBlock(Block $block, $location, $order = null)
     {
-        $order = 1;
+        if (!$order || !is_numeric($order)) {
+            $order = 1;
 
-        if ($last = $this->getBlocksInLocation($location)->last()) {
-            if ($last->pivot && $last->pivot->ord) {
-                $order = $last->pivot->ord + 1;
+            if ($last = $this->getBlocksInLocation($location)->last()) {
+                if ($last->pivot && $last->pivot->ord) {
+                    $order = $last->pivot->ord + 1;
+                }
             }
         }
 
         try {
             $this->blocks()->save($block, [
                 'location' => $location,
-                'ord' => $order
+                'ord' => (int)$order
             ]);
 
             return true;

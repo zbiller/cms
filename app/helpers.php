@@ -114,6 +114,16 @@ if (!function_exists('block')) {
     }
 }
 
+if (!function_exists('draft')) {
+    /**
+     * @return \App\Helpers\DraftHelper
+     */
+    function draft()
+    {
+        return new App\Helpers\DraftHelper();
+    }
+}
+
 if (!function_exists('revision')) {
     /**
      * @return \App\Helpers\RevisionHelper
@@ -131,6 +141,19 @@ if (!function_exists('relation')) {
     function relation()
     {
         return new App\Helpers\RelationHelper();
+    }
+}
+
+if (! function_exists('vd')) {
+    /**
+     * @param  mixed
+     * @return void
+     */
+    function vd(...$args)
+    {
+        foreach ($args as $x) {
+            (new Illuminate\Support\Debug\Dumper)->dump($x);
+        }
     }
 }
 

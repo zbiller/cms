@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.4.18 on 2017-05-10.
+ * Generated for Laravel 5.4.22 on 2017-05-11.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -1354,13 +1354,13 @@ namespace Illuminate\Support\Facades {
          *
          * @param string $command
          * @param array $parameters
-         * @return void 
+         * @return \Illuminate\Foundation\Bus\PendingDispatch 
          * @static 
          */
         public static function queue($command, $parameters = array())
         {
             //Method inherited from \Illuminate\Foundation\Console\Kernel            
-            \App\Console\Kernel::queue($command, $parameters);
+            return \App\Console\Kernel::queue($command, $parameters);
         }
         
         /**
@@ -1913,6 +1913,31 @@ namespace Illuminate\Support\Facades {
         public static function guest()
         {
             return \Illuminate\Auth\SessionGuard::guest();
+        }
+        
+        /**
+         * Register a custom macro.
+         *
+         * @param string $name
+         * @param callable $macro
+         * @return void 
+         * @static 
+         */
+        public static function macro($name, $macro)
+        {
+            \Illuminate\Auth\SessionGuard::macro($name, $macro);
+        }
+        
+        /**
+         * Checks if macro is registered.
+         *
+         * @param string $name
+         * @return bool 
+         * @static 
+         */
+        public static function hasMacro($name)
+        {
+            return \Illuminate\Auth\SessionGuard::hasMacro($name);
         }
         
     }         
@@ -4079,7 +4104,7 @@ namespace Illuminate\Support\Facades {
          *
          * @param string|\Closure $listener
          * @param bool $wildcard
-         * @return mixed 
+         * @return \Closure 
          * @static 
          */
         public static function makeListener($listener, $wildcard = false)
@@ -5574,6 +5599,31 @@ namespace Illuminate\Support\Facades {
         public static function setQueue($queue)
         {
             return \Illuminate\Mail\Mailer::setQueue($queue);
+        }
+        
+        /**
+         * Register a custom macro.
+         *
+         * @param string $name
+         * @param callable $macro
+         * @return void 
+         * @static 
+         */
+        public static function macro($name, $macro)
+        {
+            \Illuminate\Mail\Mailer::macro($name, $macro);
+        }
+        
+        /**
+         * Checks if macro is registered.
+         *
+         * @param string $name
+         * @return bool 
+         * @static 
+         */
+        public static function hasMacro($name)
+        {
+            return \Illuminate\Mail\Mailer::hasMacro($name);
         }
         
     }         
@@ -13144,8 +13194,12 @@ namespace App\Facades {
         }
         
         /**
+         * Set the $disabled property to true.
          * 
+         * This means that the current uploader instance will be disabled.
+         * No upload or crop will be available, just viewing the existing uploaded file.
          *
+         * @return $this 
          * @static 
          */
         public static function disabled()
@@ -13549,6 +13603,30 @@ namespace App\Facades {
             return \App\Helpers\RelationHelper::isPivoted($relation);
         }
         
+        /**
+         * Verify if a given direct relation is of type parent.
+         *
+         * @param string $relation
+         * @return bool 
+         * @static 
+         */
+        public static function isParent($relation)
+        {
+            return \App\Helpers\RelationHelper::isParent($relation);
+        }
+        
+        /**
+         * Verify if a given direct relation is of type child.
+         *
+         * @param string $relation
+         * @return bool 
+         * @static 
+         */
+        public static function isChild($relation)
+        {
+            return \App\Helpers\RelationHelper::isChild($relation);
+        }
+        
     }         
 }
     
@@ -13618,6 +13696,18 @@ namespace {
     class View extends \Illuminate\Support\Facades\View {}
     
     class Eloquent extends \Illuminate\Database\Eloquent\Model {    
+        /**
+         * Create and return and un-saved model instance.
+         *
+         * @param array $attributes
+         * @return \Illuminate\Database\Eloquent\Model 
+         * @static 
+         */
+        public static function make($attributes = array())
+        {
+            return \Illuminate\Database\Eloquent\Builder::make($attributes);
+        }
+        
         /**
          * Register a new global scope.
          *
@@ -14037,6 +14127,18 @@ namespace {
         public static function without($relations)
         {
             return \Illuminate\Database\Eloquent\Builder::without($relations);
+        }
+        
+        /**
+         * Create a new instance of the model being queried.
+         *
+         * @param array $attributes
+         * @return \Illuminate\Database\Eloquent\Model 
+         * @static 
+         */
+        public static function newModelInstance($attributes = array())
+        {
+            return \Illuminate\Database\Eloquent\Builder::newModelInstance($attributes);
         }
         
         /**

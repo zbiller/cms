@@ -1,23 +1,42 @@
-@if($locations && is_array($locations) && !empty($locations))
-    @foreach($locations as $location)
-        <div id="tab-{{ $location }}-blocks" class="tab">
-            <table class="blocks-table" cellspacing="0" cellpadding="0" border="0">
-                @include('helpers::block.partials.table')
-            </table>
-            @if($disabled === false)
-                <div class="block-assign-container" data-blockable-id="{{ $model->id }}" data-blockable-type="{{ get_class($model) }}" data-location="{{ $location }}">
-                    <div class="block-assign-select-container">
-                        {!! form()->select('block', ['' => ''] + $model->getBlocksOfLocation($location)->pluck('name', 'id')->toArray(), null, ['class' => 'block-assign-select']) !!}
-                    </div>
-                    <div class="block-assign-btn-container">
-                        <a href="#" class="block-assign btn green no-margin right">
-                            <i class="fa fa-plus"></i>&nbsp; Assign
-                        </a>
-                    </div>
-                </div>
-            @endif
-        </div>
-    @endforeach
+<div id="tab-blocks" class="tab">
+    <div class="loading loading-blocks">
+        <img src="{{ asset('/build/assets/img/admin/loading.gif') }}" />
+    </div>
+    <div
+        class="blocks-container"
+        data-blockable-id="{{ $model->id }}"
+        data-blockable-type="{{ get_class($model) }}"
+        data-draft="{{ $draft && $draft->exists ? $draft->id : null }}"
+        data-revision="{{ $revision && $revision->exists ? $revision->id : null }}"
+        data-disabled="{{ $disabled }}"
+    ></div>
+</div>
 
-    @include('helpers::block.partials.scripts')
-@endif
+<script type="x-template" id="block-row-template">
+    <tr id="#index#" data-block-id="#block_id#" data-index="#index#" class="{!! $disabled === true ? 'nodrag nodrop' : '' !!}">
+        <td>#block_name#</td>
+        <td>#block_type#</td>
+        <td>
+            <a href="#block_url#" class="btn yellow no-margin-top no-margin-bottom no-margin-left" target="_blank">
+                <i class="fa fa-eye"></i>&nbsp; View
+            </a>
+            <a href="#" class="block-unassign btn red no-margin-top no-margin-bottom no-margin-right {!! $disabled === true ? 'disabled' : '' !!}">
+                <i class="fa fa-times"></i>&nbsp; Remove
+            </a>
+        </td>
+    </tr>
+</script>
+<script type="x-template" id="no-block-row-template">
+    <tr class="no-blocks-assigned nodrag nodrop">
+        <td colspan="10">
+            There are no blocks assigned to this location
+        </td>
+    </tr>
+</script>
+<script type="x-template" id="block-request-template">
+    {!! form()->hidden('blocks[#index#][#block_id#]', '#block_id#', ['class' => 'block-input', 'data-index' => '#index#']) !!}
+    {!! form()->hidden('blocks[#index#][#block_id#][location]', '#block_location#', ['class' => 'block-input', 'data-index' => '#index#']) !!}
+    {!! form()->hidden('blocks[#index#][#block_id#][ord]', '#block_ord#', ['class' => 'block-input', 'data-index' => '#index#']) !!}
+</script>
+
+@php DB::rollBack(); @endphp

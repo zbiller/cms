@@ -1,5 +1,3 @@
-@if($locations && is_array($locations) && !empty($locations))
-    @foreach($locations as $location)
-        <a href="#tab-{{ $location }}-blocks">{{ title_case(str_replace(['-', '_'], ' ', $location)) }} Blocks</a>
-    @endforeach
-@endif
+<a href="#tab-blocks">Blocks</a>
+
+@include('helpers::block.partials.scripts')
