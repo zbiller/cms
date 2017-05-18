@@ -5,6 +5,7 @@ namespace App\Models\Cms;
 use App\Models\Model;
 use App\Traits\HasBlocks;
 use App\Traits\HasUrl;
+use App\Traits\HasDrafts;
 use App\Traits\HasRevisions;
 use App\Traits\HasDuplicates;
 use App\Traits\HasMetadata;
@@ -12,6 +13,7 @@ use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
 use App\Options\BlockOptions;
 use App\Options\UrlOptions;
+use App\Options\DraftOptions;
 use App\Options\RevisionOptions;
 use App\Options\DuplicateOptions;
 use App\Exceptions\CrudException;
@@ -25,6 +27,7 @@ class Page extends Model
         getInheritedBlocks as baseGetInheritedBlocks;
     }
     use HasUrl;
+    use HasDrafts;
     use HasRevisions;
     use HasDuplicates;
     use HasMetadata;
@@ -329,6 +332,16 @@ class Page extends Model
 
                 return implode('/' , (array)$prefix);
             });
+    }
+
+    /**
+     * @return DraftOptions
+     */
+    public static function getDraftOptions()
+    {
+        return DraftOptions::instance()
+            ->relationsToDraft('blocks')
+            ->doNotDeletePublishedDrafts();
     }
 
     /**

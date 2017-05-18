@@ -11,7 +11,7 @@
         <a href="#tab-1">Primary Information</a>
         <a href="#tab-2">Manage Content</a>
         <a href="#tab-3">Meta Tags</a>
-        {!! block()->tabs($item) !!}
+        {!! block()->tab($item) !!}
     </section>
 
     <section class="view">
@@ -34,7 +34,7 @@
                 {!! form_admin()->textarea('metadata[meta_description]', 'Meta Description', null, ['disabled']) !!}
                 {!! form_admin()->textarea('metadata[meta_keywords]', 'Meta Keywords', null, ['disabled']) !!}
             </div>
-            {!! block()->containers($item, true) !!}
+            {!! block()->container($item, null, $revision, true) !!}
         {!! form()->close() !!}
 </section>
 @endsection

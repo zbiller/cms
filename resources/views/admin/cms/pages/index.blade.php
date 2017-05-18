@@ -21,10 +21,12 @@
 @endsection
 
 @section('footer')
-    {!! button()->action('Deleted Pages', route('admin.pages.deleted'), 'fa-trash', 'red no-margin-left') !!}
-
     <section class="actions">
         {!! button()->update() !!}
-        {!! button()->add('admin.pages.create') !!}
+        {!! button()->action('Deleted Pages', route('admin.pages.deleted'), 'fa-trash', 'red') !!}
+        <a class="btn green">
+            <i class="fa fa-question"></i>&nbsp; Limbo Drafts
+        </a>
+        {!! button()->add(route('admin.pages.create')) !!}
     </section>
 @endsection

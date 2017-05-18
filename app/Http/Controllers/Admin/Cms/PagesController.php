@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Admin\Cms;
 
 use DB;
+use Exception;
 use App\Http\Controllers\Controller;
 use App\Models\Cms\Page;
 use App\Models\Cms\Layout;
+use App\Models\Version\Draft;
 use App\Models\Version\Revision;
 use App\Traits\CanCrud;
 use App\Http\Requests\PageRequest;
@@ -165,11 +167,41 @@ class PagesController extends Controller
         });
     }
 
-    public function revision(Revision $revision)
+    /**
+     * @param Draft $draft
+     * @return \Illuminate\View\View
+     */
+    public function draft(Draft $draft)
     {
+        if (!session('draft_back_url_' . $draft->id)) {
+            session()->put('draft_back_url_' . $draft->id, url()->previous());
+        }
+
         DB::beginTransaction();
 
-        session()->flash('revision_rollback_url', url()->previous());
+        $item = $draft->draftable;
+        $item->publishDraft($draft);
+
+        return view('admin.cms.pages.draft')->with([
+            'item' => $item,
+            'draft' => $draft,
+            'layouts' => Layout::all(),
+            'types' => Page::$types,
+            'actives' => Page::$actives,
+        ]);
+    }
+
+    /**
+     * @param Revision $revision
+     * @return \Illuminate\View\View
+     */
+    public function revision(Revision $revision)
+    {
+        if (!session('revision_back_url_' . $revision->id)) {
+            session()->put('revision_back_url_' . $revision->id, url()->previous());
+        }
+
+        DB::beginTransaction();
 
         $item = $revision->revisionable;
         $item->rollbackToRevision($revision);
@@ -191,15 +223,15 @@ class PagesController extends Controller
     public function duplicate(Page $page)
     {
         try {
-            $duplicated = $page->saveAsDuplicate();
+            $duplicate = $page->saveAsDuplicate();
 
-            session()->flash('flash_success', 'Record duplicated successfully! You have been redirected to the newly duplicated record.');
-            return redirect()->route('admin.pages.edit', $duplicated->id);
+            session()->flash('flash_success', 'The record was successfully duplicated! You have been redirected to the newly duplicated record.');
+            return redirect()->route('admin.pages.edit', $duplicate->id);
         } catch (DuplicateException $e) {
             session()->flash('flash_error', 'Failed duplicating the record! Please try again');
             return back();
-        } catch (\Exception $e) {
-            throw new \Exception($e->getMessage());
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
         }
     }
 

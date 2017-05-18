@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Relation;
 use Closure;
 use Exception;
@@ -176,7 +177,7 @@ trait HasRevisions
                 }
             });
 
-            return $this->fresh();
+            return true;
         } catch (Exception $e) {
             throw new RevisionException(
                 'Could not rollback the record to the specified revision!', $e->getCode(), $e
@@ -229,6 +230,13 @@ trait HasRevisions
     protected function shouldCreateRevision()
     {
         $fields = self::$revisionOptions->revisionFields;
+
+        if (
+            array_key_exists(SoftDeletes::class, class_uses($this)) &&
+            array_key_exists($this->getDeletedAtColumn(), $this->getDirty())
+        ) {
+            return false;
+        }
 
         if ($fields && is_array($fields) && !empty($fields)) {
             return $this->isDirty($fields);

@@ -1,5 +1,9 @@
 {!! validation('admin')->errors() !!}
 
+{!! form()->hidden('_class', \App\Models\Cms\Page::class) !!}
+{!! form()->hidden('_request', \App\Http\Requests\PageRequest::class) !!}
+{!! form()->hidden('_id', $item->exists ? $item->id : null) !!}
+
 <div id="tab-1" class="tab">
     {!! form_admin()->select('layout_id', 'Layout', $layouts->pluck('name', 'id')) !!}
     {!! form_admin()->select('type', 'Type', $types) !!}
@@ -20,7 +24,8 @@
 </div>
 
 @if($item->exists)
-    {!! block()->containers($item) !!}
+    {!! block()->container($item) !!}
+    {!! draft()->container($item) !!}
     {!! revision()->container($item) !!}
 @endif
 

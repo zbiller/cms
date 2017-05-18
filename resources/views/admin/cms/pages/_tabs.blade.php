@@ -3,6 +3,7 @@
 <a href="#tab-3">Meta Tags</a>
 
 @if($item->exists)
-    {!! block()->tabs($item) !!}
+    {!! block()->tab($item) !!}
+    {!! draft()->tab($item, 'admin.pages.draft') !!}
     {!! revision()->tab($item, 'admin.pages.revision') !!}
 @endif

@@ -23,7 +23,8 @@
         {!! button()->cancel('admin.pages.index') !!}
     </section>
     <section class="actions">
-        {!! button()->duplicate('admin.pages.duplicate', ['id' => $item->id]) !!}
+        {!! button()->duplicate(route('admin.pages.duplicate', $item->id)) !!}
+        {!! button()->saveAsDraft(route('admin.drafts.save')) !!}
         {!! button()->saveAndStay() !!}
         {!! button()->save() !!}
     </section>

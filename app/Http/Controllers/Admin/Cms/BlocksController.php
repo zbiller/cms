@@ -113,7 +113,7 @@ class BlocksController extends Controller
         try {
             $duplicated = $block->saveAsDuplicate();
 
-            session()->flash('flash_success', 'Record duplicated successfully! You have been redirected to the newly duplicated record.');
+            session()->flash('flash_success', 'The record was successfully duplicated! You have been redirected to the newly duplicated record.');
             return redirect()->route('admin.blocks.edit', $duplicated->id);
         } catch (DuplicateException $e) {
             session()->flash('flash_error', 'Failed duplicating the record! Please try again');

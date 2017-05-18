@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Version\Draft;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -33,6 +34,7 @@ class CreatePagesTable extends Migration
 
             $table->timestamps();
             $table->softDeletes();
+            Draft::column($table);
 
             $table->foreign('layout_id')->references('id')->on('layouts')->onDelete('cascade')->onUpdate('cascade');
         });

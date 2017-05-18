@@ -26,7 +26,7 @@ class PageRequest extends Request
         return [
             'layout_id' => [
                 'required',
-                'numeric'
+                'numeric',
             ],
             'type' => [
                 'required',

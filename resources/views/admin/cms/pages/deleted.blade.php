@@ -35,8 +35,8 @@
                         <td>{{ $item->url ? $item->url->url : 'N/A' }}</td>
                         <td>{{ isset($actives[$item->active]) ? $actives[$item->active] : 'N/A' }}</td>
                         <td>
-                            {!! button()->restore('admin.pages.restore', ['id' => $item->id]) !!}
-                            {!! button()->delete('admin.pages.delete', ['id' => $item->id]) !!}
+                            {!! button()->restore(route('admin.pages.restore', $item->id)) !!}
+                            {!! button()->delete(route('admin.pages.delete', $item->id)) !!}
                         </td>
                     </tr>
                 @endforeach
