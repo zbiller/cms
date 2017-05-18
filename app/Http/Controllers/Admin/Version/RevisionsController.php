@@ -4,37 +4,45 @@ namespace App\Http\Controllers\Admin\Version;
 
 use DB;
 use Exception;
+use Throwable;
 use App\Http\Controllers\Controller;
 use App\Models\Version\Revision;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Collection;
 
 class RevisionsController extends Controller
 {
     /**
+     * The revisions belonging to the revisionable model instance.
+     *
+     * @var Collection
+     */
+    protected $revisions;
+
+    /**
+     * The route to redirect back to.
+     *
+     * @var string
+     */
+    protected $route;
+
+    /**
+     * Get the revisions.
+     *
      * @param Request $request
      * @return \Illuminate\View\View
      */
-    public function index(Request $request)
+    public function getRevisions(Request $request)
     {
-        $this->validate($request, [
-            'revisionable_id' => 'required|numeric',
-            'revisionable_type' => 'required',
-            'route' => 'required',
-        ]);
+        $this->validateRevisionableAjaxData($request);
 
         try {
-            $route = $request->get('route');
-            $revisions = Revision::with('user')->whereRevisionable(
-                $request->get('revisionable_id'),
-                $request->get('revisionable_type')
-            )->newest()->get();
+            $this->revisions = $this->getRevisionRecords($request);
+            $this->route = $request->get('route');
 
             return [
                 'status' => true,
-                'html' => view('helpers::revision.partials.table')->with([
-                    'revisions' => $revisions,
-                    'route' => $route,
-                ])->render()
+                'html' => $this->buildTableHtml(),
             ];
 
         } catch (Exception $e) {
@@ -45,18 +53,26 @@ class RevisionsController extends Controller
     }
 
     /**
+     * Rollback a revision.
+     *
      * @param Revision $revision
      * @return array|mixed
      */
-    public function rollback(Revision $revision)
+    public function rollbackRevision(Revision $revision)
     {
         try {
+            $redirect = session()->pull('revision_back_url_' . $revision->id);
             $revision->revisionable->rollbackToRevision($revision);
-            session()->flash('flash_success', 'The record was successfully rolled back to the specified revision!');
 
-            return request()->ajax() ?
-                ['status' => true] :
-                redirect(session('revision_rollback_url') ?: url()->previous());
+            session()->flash('flash_success', 'The revision was successfully rolled back!');
+
+            if (request()->ajax()) {
+                return [
+                    'status' => true
+                ];
+            }
+
+            return $redirect ? redirect($redirect) : back();
         } catch (Exception $e) {
             return [
                 'status' => false,
@@ -65,33 +81,26 @@ class RevisionsController extends Controller
     }
 
     /**
+     * Remove a revision.
+     *
      * @param Request $request
      * @param Revision $revision
      * @return array|mixed
      */
-    public function destroy(Request $request, Revision $revision)
+    public function removeRevision(Request $request, Revision $revision)
     {
-        $this->validate($request, [
-            'revisionable_id' => 'required|numeric',
-            'revisionable_type' => 'required',
-        ]);
+        $this->validateRevisionableAjaxData($request);
 
         try {
             return DB::transaction(function () use ($request, $revision) {
                 $revision->delete();
 
-                $route = $request->get('route');
-                $revisions = Revision::with('user')->whereRevisionable(
-                    $request->get('revisionable_id'),
-                    $request->get('revisionable_type')
-                )->newest()->get();
+                $this->revisions = $this->getRevisionRecords($request);
+                $this->route = $request->get('route');
 
                 return [
                     'status' => true,
-                    'html' => view('helpers::revision.partials.table')->with([
-                        'revisions' => $revisions,
-                        'route' => $route,
-                    ])->render()
+                    'html' => $this->buildTableHtml(),
                 ];
             });
         } catch (Exception $e) {
@@ -99,5 +108,50 @@ class RevisionsController extends Controller
                 'status' => false,
             ];
         }
+    }
+
+    /**
+     * Get the revisions belonging to a revisionable model.
+     *
+     * @param Request $request
+     * @return mixed
+     */
+    protected function getRevisionRecords(Request $request)
+    {
+        return Revision::with('user')->whereRevisionable(
+            $request->get('revisionable_id'),
+            $request->get('revisionable_type')
+        )->newest()->get();
+    }
+
+    /**
+     * Populate the revision helper table with the updated revisions and route.
+     * Return the html as string.
+     *
+     * @return mixed
+     * @throws Exception
+     * @throws Throwable
+     */
+    protected function buildTableHtml()
+    {
+        return view('helpers::revision.partials.table')->with([
+            'revisions' => $this->revisions,
+            'route' => $this->route,
+        ])->render();
+    }
+
+    /**
+     * Validate the revisionable data coming from an ajax request from the revision helper.
+     *
+     * @param Request $request
+     * @return void
+     */
+    protected function validateRevisionableAjaxData(Request $request)
+    {
+        $this->validate($request, [
+            'revisionable_id' => 'required|numeric',
+            'revisionable_type' => 'required',
+            'route' => 'required',
+        ]);
     }
 }

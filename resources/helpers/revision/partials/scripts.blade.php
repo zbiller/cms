@@ -7,7 +7,7 @@
         var listRevisions = function () {
             $.ajax({
                 type : 'GET',
-                url: '{{ route('admin.revisions.index') }}',
+                url: '{{ route('admin.revisions.get') }}',
                 data: {
                     _token: token,
                     revisionable_id: revisionsTable.data('revisionable-id'),
@@ -52,7 +52,7 @@
                     if (data.status == true) {
                         location.reload();
                     } else {
-                        init.FlashMessage('error', 'Could not rollback the record! Please try again.');
+                        init.FlashMessage('error', 'Could not rollback the revision! Please try again.');
                     }
                 },
                 error: function (err) {
@@ -89,16 +89,14 @@
         };
 
         $(function () {
-            $(document).on('click', 'a[href="#tab-revisions"]', function (e) {
-                listRevisions();
-
-                $(this).off(e);
-            });
+            listRevisions();
 
             $(document).on('click', '.revision-rollback', function (e) {
                 e.preventDefault();
 
-                rollbackRevision($(this));
+                if (confirm('Are you sure you want to rollback this revision?')) {
+                    rollbackRevision($(this));
+                }
             });
 
             $(document).on('click', '.revision-delete', function (e) {
@@ -108,4 +106,4 @@
             });
         });
     </script>
-@endsection
+@append

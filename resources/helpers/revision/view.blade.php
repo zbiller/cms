@@ -1,6 +1,6 @@
 @section('footer')
     <section class="actions left">
-        {!! button()->action('Back To Original', url()->previous(), 'fa-chevron-left') !!}
+        {!! button()->action('Back To Original', session('revision_back_url_' . $revision->id), 'fa-chevron-left') !!}
     </section>
     <section class="actions">
         {!! button()->rollback('admin.revisions.rollback', ['id' => $revision->id]) !!}
@@ -17,9 +17,4 @@
     </script>
 @append
 
-@php
-    DB::rollBack();
-    session()->keep([
-        'revision_rollback_url'
-    ]);
-@endphp
+@php DB::rollBack(); @endphp

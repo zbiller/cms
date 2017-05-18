@@ -85,7 +85,7 @@ trait HasRevisions
     /**
      * Create a new revision record for the model instance.
      *
-     * @return bool
+     * @return Revision
      * @throws RevisionException
      */
     public function createNewRevision()
@@ -99,18 +99,19 @@ trait HasRevisions
                 return false;
             }
 
-            DB::transaction(function () {
-                $this->revisions()->create([
+            $revision = DB::transaction(function () {
+                $revision = $this->revisions()->create([
                     'user_id' => auth()->user() ? auth()->user()->id : null,
                     'metadata' => $this->buildRevisionData(),
                 ]);
 
                 $this->clearOldRevisions();
+                $this->fireModelEvent('revisioned', false);
+
+                return $revision;
             });
 
-            $this->fireModelEvent('revisioned', false);
-
-            return true;
+            return $revision;
         } catch (Exception $e) {
             throw new RevisionException(
                 'Could not create a revision for the record!', $e->getCode(), $e
@@ -122,22 +123,24 @@ trait HasRevisions
      * Manually save a new revision for a model instance.
      * This method should be called manually only where and if needed.
      *
-     * @return $this
+     * @return Revision
      * @throws RevisionException
      */
     public function saveAsRevision()
     {
         try {
-            DB::transaction(function () {
-                $this->revisions()->create([
+            $revision = DB::transaction(function () {
+                $revision = $this->revisions()->create([
                     'user_id' => auth()->user() ? auth()->user()->id : null,
                     'metadata' => $this->buildRevisionData(),
                 ]);
 
                 $this->clearOldRevisions();
+
+                return $revision;
             });
 
-            return $this;
+            return $revision;
         } catch (Exception $e) {
             throw new RevisionException(
                 'Could not save the revision for the record!', $e->getCode(), $e
@@ -149,7 +152,7 @@ trait HasRevisions
      * Rollback the model instance to the given revision instance.
      *
      * @param Revision $revision
-     * @return bool
+     * @return Model
      * @throws RevisionException
      */
     public function rollbackToRevision(Revision $revision)
@@ -173,7 +176,7 @@ trait HasRevisions
                 }
             });
 
-            return true;
+            return $this->fresh();
         } catch (Exception $e) {
             throw new RevisionException(
                 'Could not rollback the record to the specified revision!', $e->getCode(), $e
