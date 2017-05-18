@@ -17,8 +17,8 @@
                 <td>{{ $item->name ?: 'N/A' }}</td>
                 <td>{{ isset($types[$item->type]) ? $types[$item->type] : 'N/A' }}</td>
                 <td>
-                    {!! button()->edit('admin.blocks.edit', ['id' => $item->id]) !!}
-                    {!! button()->delete('admin.blocks.destroy', ['id' => $item->id]) !!}
+                    {!! button()->edit(route('admin.blocks.edit', $item->id)) !!}
+                    {!! button()->delete(route('admin.blocks.destroy', $item->id)) !!}
                 </td>
             </tr>
         @endforeach

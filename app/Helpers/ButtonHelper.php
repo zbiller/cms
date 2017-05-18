@@ -5,7 +5,7 @@ namespace App\Helpers;
 class ButtonHelper
 {
     /**
-     * Render the default button view helper.
+     * Render a default link.
      *
      * @param string $text
      * @param string $url
@@ -26,71 +26,90 @@ class ButtonHelper
     }
 
     /**
-     * Render the add button view helper.
+     * Render a default submit button.
      *
-     * @param string $route
-     * @param array $parameters
+     * @param string $text
+     * @param string $url
+     * @param string|null $icon
+     * @param string|null $class
+     * @param string|null $confirm
+     * @param array $attributes
+     * @return $this
+     */
+    public function submit($text, $url, $icon = null, $class = null, $confirm = null, $attributes = [])
+    {
+        return view('helpers::button.submit')->with([
+            'text' => $text,
+            'url' => $url,
+            'icon' => $icon,
+            'class' => $class,
+            'confirm' => $confirm,
+            'attributes' => self::buildAttributes($attributes)
+        ]);
+    }
+
+    /**
+     * Render the add button.
+     *
+     * @param string $url
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function add($route, array $parameters = [], array $attributes = [])
+    public function add($url, array $attributes = [])
     {
         return view('helpers::button.add')->with([
-            'url' => route($route, $parameters),
+            'url' => $url,
             'attributes' => self::buildAttributes($attributes)
         ]);
     }
 
     /**
-     * Render the edit button view helper.
+     * Render the edit button.
      *
-     * @param string $route
-     * @param array $parameters
+     * @param string $url
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function edit($route, array $parameters = [], array $attributes = [])
+    public function edit($url, array $attributes = [])
     {
         return view('helpers::button.edit')->with([
-            'url' => route($route, $parameters),
+            'url' => $url,
             'attributes' => self::buildAttributes($attributes)
         ]);
     }
 
     /**
-     * Render the delete button view helper.
+     * Render the delete button.
      *
-     * @param string $route
-     * @param array $parameters
+     * @param string $url
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function delete($route, array $parameters = [], array $attributes = [])
+    public function delete($url, array $attributes = [])
     {
         return view('helpers::button.delete')->with([
-            'url' => route($route, $parameters),
+            'url' => $url,
             'attributes' => self::buildAttributes($attributes)
         ]);
     }
 
     /**
-     * Render the cancel button view helper.
+     * Render the cancel button.
      *
-     * @param string $route
-     * @param array $parameters
+     * @param string $url
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function cancel($route, array $parameters = [], array $attributes = [])
+    public function cancel($url, array $attributes = [])
     {
         return view('helpers::button.cancel')->with([
-            'url' => route($route, $parameters),
+            'url' => $url,
             'attributes' => self::buildAttributes($attributes)
         ]);
     }
 
     /**
-     * Render the update button view helper.
+     * Render the update button.
      *
      * @param array $attributes
      * @return \Illuminate\View\View
@@ -103,7 +122,7 @@ class ButtonHelper
     }
 
     /**
-     * Render the filter button view helper.
+     * Render the filter button.
      *
      * @param array $attributes
      * @return \Illuminate\View\View
@@ -116,7 +135,7 @@ class ButtonHelper
     }
 
     /**
-     * Render the clear button view helper.
+     * Render the clear button.
      *
      * @param array $attributes
      * @return \Illuminate\View\View
@@ -129,49 +148,31 @@ class ButtonHelper
     }
 
     /**
-     * Render the view button view helper.
+     * Render the view button.
      *
-     * @param string $route
-     * @param array $parameters
+     * @param string $url
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function view($route, array $parameters = [], array $attributes = [])
+    public function view($url, array $attributes = [])
     {
         return view('helpers::button.view')->with([
-            'url' => route($route, $parameters),
+            'url' => $url,
             'attributes' => self::buildAttributes($attributes)
         ]);
     }
 
     /**
-     * Render the download button view helper.
+     * Render the download button.
      *
-     * @param string $route
-     * @param array $parameters
+     * @param string $url
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function download($route, array $parameters = [], array $attributes = [])
+    public function download($url, array $attributes = [])
     {
         return view('helpers::button.download')->with([
-            'url' => route($route, $parameters),
-            'attributes' => self::buildAttributes($attributes)
-        ]);
-    }
-
-    /**
-     * Render the restore button view helper.
-     *
-     * @param string $route
-     * @param array $parameters
-     * @param array $attributes
-     * @return \Illuminate\View\View
-     */
-    public function restore($route, array $parameters = [], array $attributes = [])
-    {
-        return view('helpers::button.restore')->with([
-            'url' => route($route, $parameters),
+            'url' => $url,
             'attributes' => self::buildAttributes($attributes)
         ]);
     }
@@ -190,39 +191,97 @@ class ButtonHelper
     }
 
     /**
-     * Render the duplicate button view helper.
+     * Render the publish button.
      *
-     * @param string $route
-     * @param array $parameters
+     * @param string $url
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function duplicate($route, array $parameters = [], array $attributes = [])
+    public function publish($url, array $attributes = [])
     {
-        return view('helpers::button.duplicate')->with([
-            'url' => route($route, $parameters),
+        return view('helpers::button.publish')->with([
+            'url' => $url,
             'attributes' => self::buildAttributes($attributes)
         ]);
     }
 
     /**
-     * Render the rollback button view helper.
+     * Render the rollback button.
      *
-     * @param string $route
-     * @param array $parameters
+     * @param string $url
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function rollback($route, array $parameters = [], array $attributes = [])
+    public function rollback($url, array $attributes = [])
     {
         return view('helpers::button.rollback')->with([
-            'url' => route($route, $parameters),
+            'url' => $url,
             'attributes' => self::buildAttributes($attributes)
         ]);
     }
 
     /**
-     * Render the save and stay button view helper.
+     * Render the duplicate button.
+     *
+     * @param string $url
+     * @param array $attributes
+     * @return \Illuminate\View\View
+     */
+    public function duplicate($url, array $attributes = [])
+    {
+        return view('helpers::button.duplicate')->with([
+            'url' => $url,
+            'attributes' => self::buildAttributes($attributes)
+        ]);
+    }
+
+    /**
+     * Render the restore button.
+     *
+     * @param string $url
+     * @param array $attributes
+     * @return \Illuminate\View\View
+     */
+    public function restore($url, array $attributes = [])
+    {
+        return view('helpers::button.restore')->with([
+            'url' => $url,
+            'attributes' => self::buildAttributes($attributes)
+        ]);
+    }
+
+    /**
+     * Render the save elsewhere button.
+     *
+     * @param string $url
+     * @param array $attributes
+     * @return \Illuminate\View\View
+     */
+    public function saveElsewhere($url, array $attributes = [])
+    {
+        return view('helpers::button.save_elsewhere')->with([
+            'url' => $url,
+            'attributes' => self::buildAttributes($attributes)
+        ]);
+    }
+
+    /**
+     * Render the save new button.
+     *
+     * @param string $url
+     * @param array $attributes
+     * @return \Illuminate\View\View
+     */
+    public function saveAsNew($url, array $attributes = [])
+    {
+        return view('helpers::button.save_new')->with([
+            'url' => $url,
+            'attributes' => self::buildAttributes($attributes)
+        ]);
+    }
+
+    /**
+     * Render save and stay button.
      *
      * @param array $attributes
      * @return \Illuminate\View\View
@@ -230,6 +289,21 @@ class ButtonHelper
     public function saveAndStay(array $attributes = [])
     {
         return view('helpers::button.save_stay')->with([
+            'attributes' => self::buildAttributes($attributes)
+        ]);
+    }
+
+    /**
+     * Render the save as draft button.
+     *
+     * @param string $url
+     * @param array $attributes
+     * @return \Illuminate\View\View
+     */
+    public function saveAsDraft($url, array $attributes = [])
+    {
+        return view('helpers::button.save_draft')->with([
+            'url' => $url,
             'attributes' => self::buildAttributes($attributes)
         ]);
     }

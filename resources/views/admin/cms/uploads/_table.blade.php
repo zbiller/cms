@@ -22,9 +22,9 @@
                     {{ $item->size_mb . ' MB' }}
                 </td>
                 <td>
-                    {!! button()->download('admin.uploads.download', ['id' => $item->id]) !!}
-                    {!! button()->view('admin.uploads.show', ['id' => $item->id], ['target' => '_blank', 'title' => 'view cacat']) !!}
-                    {!! button()->delete('admin.uploads.destroy', ['id' => $item->id]) !!}
+                    {!! button()->download(route('admin.uploads.download', $item->id)) !!}
+                    {!! button()->view(route('admin.uploads.show', $item->id), ['target' => '_blank']) !!}
+                    {!! button()->delete(route('admin.uploads.destroy', $item->id)) !!}
                 </td>
             </tr>
         @endforeach

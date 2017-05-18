@@ -23,6 +23,6 @@
 @section('footer')
     <section class="actions">
         {!! button()->update() !!}
-        {!! button()->add('admin.menus.create', ['location' => $location]) !!}
+        {!! button()->add(route('admin.menus.create', $location)) !!}
     </section>
 @endsection

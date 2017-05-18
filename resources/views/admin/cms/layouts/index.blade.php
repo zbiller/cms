@@ -21,6 +21,6 @@
 
     <section class="actions">
         {!! button()->update() !!}
-        {!! button()->add('admin.layouts.create') !!}
+        {!! button()->add(route('admin.layouts.create')) !!}
     </section>
 @endsection

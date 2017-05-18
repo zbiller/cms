@@ -20,7 +20,7 @@
 
 @section('footer')
     <section class="actions left">
-        {!! button()->cancel('admin.menus.index', ['location' => $location]) !!}
+        {!! button()->cancel(route('admin.menus.index', $location)) !!}
     </section>
     <section class="actions">
         {!! button()->saveAndStay() !!}

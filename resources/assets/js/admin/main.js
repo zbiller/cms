@@ -7,7 +7,6 @@ $(window).load(function(){
     menu();
     buttons();
     inputs();
-    filter();
     sort();
     order();
     tabs();
@@ -92,28 +91,84 @@ function menu() {
  * @return void
  */
 function buttons() {
-    //update button
-    var updateButton = $('a.update');
-
-    updateButton.click(function (e) {
+    //save
+    $(document).on('click', 'a.btn-save', function (e) {
         e.preventDefault();
+
+        $('form.form').submit();
+    });
+
+    //save stay
+    $(document).on('click', 'a.save-stay', function (e) {
+        e.preventDefault();
+
+        $('form.form').append('<input type="hidden" name="save_stay" value="1" />').submit();
+    });
+
+    //save elsewhere
+    $(document).on('click', 'a.save-elsewhere', function (e) {
+        e.preventDefault();
+
+        $('form.form').attr('action', $(this).data('url')).submit();
+    });
+
+    //save new
+    $(document).on('click', 'a.save-new', function (e) {
+        e.preventDefault();
+
+        $('form.form').attr('action', $(this).data('url')).submit();
+    });
+
+    //save draft
+    $(document).on('click', 'a.save-draft', function (e) {
+        e.preventDefault();
+
+        $('form.form').attr('action', $(this).data('url')).submit();
+    });
+
+    //publish
+    $(document).on('click', 'a.btn-publish', function (e) {
+        e.preventDefault();
+
+        if (confirm('Are you sure you want to publish this draft?')) {
+            $('form.form').attr('action', $(this).data('url')).submit();
+        }
+
+        return false;
+    });
+
+    //filter
+    $(document).on('click', 'a.btn-filter', function (e) {
+        e.preventDefault();
+
+        $(this).closest('section.filters').find('form').submit();
+    });
+
+    //clear
+    $(document).on('click', 'a.btn-clear', function (e) {
+        e.preventDefault();
+
+        window.location.href = window.location.href.split('?')[0];
+    });
+
+    //update
+    $(document).on('click', 'a.btn-update', function (e) {
+        e.preventDefault();
+
         location.reload();
     });
 
-    //save button
-    var saveButton = $('a.save');
-
-    saveButton.click(function (e) {
+    //submit
+    $(document).on('click', 'button.btn-submit', function (e) {
         e.preventDefault();
-        $('.form').submit();
-    });
 
-    //save stay button
-    var saveStayButton = $('a.save-stay');
+        var shouldConfirm = $(this).data('confirm') ? true : false;
 
-    saveStayButton.click(function (e) {
-        e.preventDefault();
-        $('.form').append('<input type="hidden" name="save_stay" value="1" />').submit();
+        if (!shouldConfirm || (shouldConfirm && confirm('{{ $confirm }}'))) {
+            $('form:first-of-type').attr('action', $(this).data('url')).submit();
+        }
+
+        return false;
     });
 }
 
@@ -124,26 +179,6 @@ function inputs() {
     //set file input display file name
     $('label.file-input > input[type="file"]').change(function (){
         $(this).next().html($(this).val().split('\\').pop());
-    });
-}
-
-/**
- * @return void
- */
-function filter() {
-    var filterContainer = $('section.filters'),
-        filterForm = $('section.filters > form'),
-        filterButton = $('section.filters a.filter'),
-        clearButton = $('section.filters a.clear');
-
-    //trigger filter submit
-    filterButton.click(function () {
-        filterForm.submit();
-    });
-
-    //clear filters
-    clearButton.click(function () {
-        window.location.href = window.location.href.split('?')[0];
     });
 }
 

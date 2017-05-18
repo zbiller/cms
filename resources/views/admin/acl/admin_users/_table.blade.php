@@ -25,8 +25,8 @@
                 <td>{{ $item->last_name ?: 'N/A' }}</td>
                 <td>{{ $item->email ?: 'N/A' }}</td>
                 <td>
-                    {!! button()->edit('admin.admin_users.edit', ['id' => $item->id]) !!}
-                    {!! button()->delete('admin.admin_users.destroy', ['id' => $item->id]) !!}
+                    {!! button()->edit(route('admin.admin_users.edit', $item->id)) !!}
+                    {!! button()->delete(route('admin.admin_users.destroy', $item->id)) !!}
                 </td>
             </tr>
         @endforeach

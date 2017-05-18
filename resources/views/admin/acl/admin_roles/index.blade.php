@@ -21,6 +21,6 @@
 
     <section class="actions">
         {!! button()->update() !!}
-        {!! button()->add('admin.admin_roles.create') !!}
+        {!! button()->add(route('admin.admin_roles.create')) !!}
     </section>
 @endsection

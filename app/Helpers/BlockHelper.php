@@ -5,7 +5,6 @@ namespace App\Helpers;
 use App\Models\Model;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
-use DB;
 use Illuminate\Database\Eloquent\Collection;
 
 class BlockHelper

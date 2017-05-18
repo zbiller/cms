@@ -20,7 +20,7 @@
 
 @section('footer')
     <section class="actions left">
-        {!! button()->cancel('admin.layouts.index') !!}
+        {!! button()->cancel(route('admin.layouts.index')) !!}
     </section>
     <section class="actions">
         {!! button()->saveAndStay() !!}

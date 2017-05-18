@@ -21,6 +21,6 @@
 
     <section class="actions">
         {!! button()->update() !!}
-        {!! button()->add('admin.blocks.create') !!}
+        {!! button()->add(route('admin.blocks.create')) !!}
     </section>
 @endsection
