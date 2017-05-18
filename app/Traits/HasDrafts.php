@@ -94,17 +94,19 @@ trait HasDrafts
                 return false;
             }
 
-            DB::transaction(function () use ($data, $draft) {
+            $model = DB::transaction(function () use ($data, $draft) {
                 if ($this->exists === false || $this->wasRecentlyCreated === true) {
-                    $this->saveLimboDraft($data);
+                    $model = $this->saveLimboDraft($data);
                 } else {
-                    $this->saveRegularDraft($data, $draft);
+                    $model = $this->saveRegularDraft($data, $draft);
                 }
+
+                $this->fireModelEvent('drafted', false);
+
+                return $model;
             });
 
-            $this->fireModelEvent('drafted', false);
-
-            return true;
+            return $model;
         } catch (Exception $e) {
             throw new DraftException(
                 'Could not save the draft for the record!', $e->getCode(), $e
@@ -131,15 +133,17 @@ trait HasDrafts
     public function publishDraft(Draft $draft = null)
     {
         try {
-            DB::transaction(function () use ($draft) {
+            $model = DB::transaction(function () use ($draft) {
                 if ($draft === null) {
-                    $this->publishLimboDraft();
+                    $model = $this->publishLimboDraft();
                 } else {
-                    $this->publishRegularDraft($draft);
+                    $model = $this->publishRegularDraft($draft);
                 }
+
+                return $model;
             });
 
-            return true;
+            return $model;
         } catch (Exception $e) {
             throw new DraftException(
                 'Could not publish the record!', $e->getCode(), $e
@@ -211,7 +215,7 @@ trait HasDrafts
      * Save a "limbo" draft.
      *
      * @param array $data
-     * @return void
+     * @return Model
      */
     protected function saveLimboDraft(array $data = [])
     {
@@ -220,6 +224,8 @@ trait HasDrafts
         $this->newQueryWithoutScopes()->where($model->getKeyName(), $model->getKey())->update([
             $this->getDraftedAtColumn() => $this->fromDateTime($this->freshTimestamp())
         ]);
+
+        return $model;
     }
 
     /**
@@ -228,7 +234,7 @@ trait HasDrafts
      *
      * @param array $data
      * @param Draft $draft
-     * @return void
+     * @return Model
      */
     protected function saveRegularDraft(array $data = [], Draft $draft = null)
     {
@@ -238,28 +244,32 @@ trait HasDrafts
         ];
 
         if ($draft && $draft->exists) {
-            $draft->update($attributes);
+            $draft->update($attributes, ['touch' => false]);
         } else {
-            $this->drafts()->create($attributes);
+            $draft = $this->drafts()->create($attributes);
         }
+
+        return $draft;
     }
 
     /**
      * Publish a "limbo" draft.
      *
-     * @return void
+     * @return Model
      */
     protected function publishLimboDraft()
     {
         $this->{$this->getDraftedAtColumn()} = null;
         $this->save();
+
+        return $this->fresh();
     }
 
     /**
      * Publish a "regular" draft.
      *
      * @param Draft $draft
-     * @return void
+     * @return Model
      */
     protected function publishRegularDraft(Draft $draft)
     {
@@ -284,6 +294,8 @@ trait HasDrafts
         if ($this->shouldDeletePublishedDraft()) {
             $draft->delete();
         }
+
+        return $this->fresh();
     }
 
     /**
@@ -427,21 +439,23 @@ trait HasDrafts
         ];
 
         if (isset($params[$relation]) && !empty($params[$relation])) {
-            $relations = DB::transaction(function () use ($relation, $params) {
-                $this->{$relation}()->detach();
+            DB::beginTransaction();
 
-                foreach ($params[$relation] as $index => $data) {
-                    if (is_array($data)) {
-                        foreach ($data as $id => $attributes) {
-                            $this->{$relation}()->attach($id, $attributes);
-                        }
-                    } else {
-                        $this->{$relation}()->attach($data);
+            $this->{$relation}()->detach();
+
+            foreach ($params[$relation] as $index => $parameters) {
+                if (is_array($parameters)) {
+                    foreach ($parameters as $id => $attributes) {
+                        $this->{$relation}()->attach($id, $attributes);
                     }
+                } else {
+                    $this->{$relation}()->attach($parameters);
                 }
+            }
 
-                return $this->{$relation}()->get();
-            });
+            $relations = $this->{$relation}()->get();
+
+            DB::rollBack();
 
             if ($relations->count() > 0) {
                 foreach ($relations as $index => $model) {

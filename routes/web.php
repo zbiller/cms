@@ -61,9 +61,23 @@ Route::group([
             Route::group([
                 'prefix' => 'revisions',
             ], function () {
-                Route::get('/', ['as' => 'admin.revisions.index', 'uses' => 'RevisionsController@index']);
-                Route::post('rollback/{revision}', ['as' => 'admin.revisions.rollback', 'uses' => 'RevisionsController@rollback']);
-                Route::delete('destroy/{revision}', ['as' => 'admin.revisions.destroy', 'uses' => 'RevisionsController@destroy']);
+                Route::get('/', ['as' => 'admin.revisions.get', 'uses' => 'RevisionsController@getRevisions']);
+                Route::match(['post', 'put'], 'rollback/{revision}', ['as' => 'admin.revisions.rollback', 'uses' => 'RevisionsController@rollbackRevision']);
+                Route::delete('destroy/{revision}', ['as' => 'admin.revisions.remove', 'uses' => 'RevisionsController@removeRevision']);
+            });
+
+            /**
+             * Drafts.
+             */
+            Route::group([
+                'prefix' => 'drafts',
+            ], function () {
+                Route::get('/', ['as' => 'admin.drafts.get', 'uses' => 'DraftsController@getDrafts']);
+                Route::match(['post', 'put'], 'save', ['as' => 'admin.drafts.save', 'uses' => 'DraftsController@saveDraft']);
+                Route::match(['post', 'put'], 'create/{draft}', ['as' => 'admin.drafts.create', 'uses' => 'DraftsController@createDraft']);
+                Route::match(['post', 'put'], 'update/{draft}', ['as' => 'admin.drafts.update', 'uses' => 'DraftsController@updateDraft']);
+                Route::match(['post', 'put'], 'publish/{draft}', ['as' => 'admin.drafts.publish', 'uses' => 'DraftsController@publishDraft']);
+                Route::delete('destroy/{draft}', ['as' => 'admin.drafts.remove', 'uses' => 'DraftsController@removeDraft']);
             });
         });
 
@@ -118,6 +132,7 @@ Route::group([
                 Route::get('deleted', ['as' => 'admin.pages.deleted', 'uses' => 'PagesController@deleted', 'permissions' => 'pages-deleted-list']);
                 Route::get('create/{parent?}', ['as' => 'admin.pages.create', 'uses' => 'PagesController@create', 'permissions' => 'pages-add']);
                 Route::get('edit/{page}', ['as' => 'admin.pages.edit', 'uses' => 'PagesController@edit', 'permissions' => 'pages-edit']);
+                Route::get('draft/{draft}', ['as' => 'admin.pages.draft', 'uses' => 'PagesController@draft', 'pages-edit']);
                 Route::get('revision/{revision}', ['as' => 'admin.pages.revision', 'uses' => 'PagesController@revision', 'pages-edit']);
                 Route::post('store/{parent?}', ['as' => 'admin.pages.store', 'uses' => 'PagesController@store', 'permissions' => 'pages-add']);
                 Route::post('duplicate/{page}', ['as' => 'admin.pages.duplicate', 'uses' => 'PagesController@duplicate', 'permissions' => 'pages-edit']);
@@ -175,15 +190,14 @@ Route::group([
                 'prefix' => 'blocks',
             ], function () {
                 Route::get('/', ['as' => 'admin.blocks.index', 'uses' => 'BlocksController@index', 'permissions' => 'blocks-list']);
+                Route::get('get', ['as' => 'admin.blocks.get', 'uses' => 'BlocksController@get', 'permissions' => 'blocks-list']);
                 Route::get('create/{type?}', ['as' => 'admin.blocks.create', 'uses' => 'BlocksController@create', 'permissions' => 'blocks-add']);
                 Route::get('edit/{block}', ['as' => 'admin.blocks.edit', 'uses' => 'BlocksController@edit', 'permissions' => 'blocks-edit']);
+                Route::post('row', ['as' => 'admin.blocks.row', 'uses' => 'BlocksController@row', 'permissions' => 'blocks-list']);
                 Route::post('store', ['as' => 'admin.blocks.store', 'uses' => 'BlocksController@store', 'permissions' => 'blocks-add']);
                 Route::post('duplicate/{block}', ['as' => 'admin.blocks.duplicate', 'uses' => 'BlocksController@duplicate', 'permissions' => 'blocks-edit']);
                 Route::put('update/{block}', ['as' => 'admin.blocks.update', 'uses' => 'BlocksController@update', 'permissions' => 'blocks-edit']);
                 Route::delete('destroy/{block}', ['as' => 'admin.blocks.destroy', 'uses' => 'BlocksController@destroy', 'permissions' => 'blocks-delete']);
-                Route::post('assign', ['as' => 'admin.blocks.assign', 'uses' => 'BlocksController@assign', 'permissions' => 'blocks-edit']);
-                Route::post('unassign', ['as' => 'admin.blocks.unassign', 'uses' => 'BlocksController@unassign', 'permissions' => 'blocks-edit']);
-                Route::post('order', ['as' => 'admin.blocks.order', 'uses' => 'BlocksController@order', 'permissions' => 'blocks-list']);
             });
 
             /**
@@ -230,6 +244,7 @@ Route::group([
             Route::get('/', ['as' => 'admin.cars.index', 'uses' => 'CarsController@index']);
             Route::get('create', ['as' => 'admin.cars.create', 'uses' => 'CarsController@create']);
             Route::get('edit/{id}', ['as' => 'admin.cars.edit', 'uses' => 'CarsController@edit']);
+            Route::get('draft/{draft}', ['as' => 'admin.cars.draft', 'uses' => 'CarsController@draft', 'pages-edit']);
             Route::post('store', ['as' => 'admin.cars.store', 'uses' => 'CarsController@store']);
             Route::put('update/{id}', ['as' => 'admin.cars.update', 'uses' => 'CarsController@update']);
             Route::delete('destroy/{id}', ['as' => 'admin.cars.destroy', 'uses' => 'CarsController@destroy']);
@@ -242,9 +257,5 @@ Route::group([
  * Page Routes.
  */
 foreach (page()->query()->active()->defaultOrder()->get() as $page) {
-    Route::get($page->url->url, [
-        'as' => $page->routeName,
-        'uses' => $page->routeController . '@' . $page->routeAction,
-        'model' => $page
-    ]);
+    Route::get($page->url->url, ['as' => $page->routeName, 'uses' => $page->routeController . '@' . $page->routeAction, 'model' => $page]);
 }
