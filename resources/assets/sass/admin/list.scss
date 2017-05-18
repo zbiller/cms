@@ -116,7 +116,7 @@ section.list {
                 }
             }
 
-            a {
+            a:not(.btn) {
                 color: $colorPictonBlue;
                 font-family: 'Open Sans Semibold';
                 text-decoration: none;

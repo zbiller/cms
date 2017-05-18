@@ -71,6 +71,29 @@ td .upload-aligned-image {
     max-width: 100%;
 }
 
+.loading-blocks {
+    display: none;
+    text-align: center;
+}
+
+.block-location-title {
+    @include font-size(12px);
+
+    display: block;
+    float: left;
+    width: 100%;
+    padding: 0 0 2px;
+    margin: 50px 0 15px 0;
+    border-bottom: 1px solid $colorPictonBlue;
+    font-family: 'Open Sans Bold', sans-serif;
+    color: $colorPictonBlue;
+    text-transform: uppercase;
+
+    &:first-of-type {
+        margin: 0 0 15px 0;
+    }
+}
+
 .block-item {
     @include clear-padding();
 
@@ -168,6 +191,44 @@ td .upload-aligned-image {
     }
 }
 
+/* Draft Styles */
+#tab-drafts {
+    min-height: 52px;
+}
+
+.loading-drafts {
+    display: none;
+    text-align: center;
+}
+
+.drafts-table {
+    thead > tr > td:first-of-type {
+        width: 8px;
+        text-align: center;
+    }
+
+    tbody {
+        tr > td:first-of-type {
+            width: 8px;
+            text-align: center;
+        }
+
+        tr.no-drafts > td {
+            text-align: left !important;
+        }
+    }
+}
+
+.actions-drafts {
+    width: 265px;
+    padding: 10px;
+
+    @include media-query('tablet') {
+        display: table-cell;
+        width: 117px;
+    }
+}
+
 /* Revision Styles */
 #tab-revisions {
     min-height: 52px;
@@ -190,7 +251,7 @@ td .upload-aligned-image {
             text-align: center;
         }
 
-        tr.no-blocks-assigned > td {
+        tr.no-revisions > td {
             text-align: left !important;
         }
     }
