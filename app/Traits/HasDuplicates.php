@@ -199,14 +199,21 @@ trait HasDuplicates
      */
     private function duplicateModelWithExcluding()
     {
-        $attributes = null;
+        $except = [];
         $excluded = self::$duplicateOptions->excludedColumns;
 
-        if ($excluded && is_array($excluded) && !empty($excluded)) {
-            $attributes = $excluded;
+        if ($this->usesTimestamps()) {
+            $except = array_merge($except, [
+                $this->getCreatedAtColumn(),
+                $this->getUpdatedAtColumn()
+            ]);
         }
 
-        return $this->replicate($attributes);
+        if ($excluded && is_array($excluded) && !empty($excluded)) {
+            $except = array_merge($except, $excluded);
+        }
+
+        return $this->replicate($except);
     }
 
     /**

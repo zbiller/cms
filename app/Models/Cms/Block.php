@@ -255,8 +255,6 @@ class Block extends Model
     public static function getDuplicateOptions()
     {
         return DuplicateOptions::instance()
-            ->excludeColumns([
-                'created_at', 'updated_at'
-            ]);
+            ->uniqueColumns('name');
     }
 }
