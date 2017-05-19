@@ -15,7 +15,7 @@
         {!! form()->select('mechanics[]', $mechanics->pluck('name', 'id'), request('mechanics') ?: null, ['placeholder' => 'All Mechanics']) !!}
     </fieldset>
     <div>
-        {!! button()->filter() !!}
-        {!! button()->clear() !!}
+        {!! button()->filterRecords() !!}
+        {!! button()->clearFilters() !!}
     </div>
 {!! form()->close() !!}

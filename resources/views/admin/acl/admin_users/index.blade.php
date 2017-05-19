@@ -20,7 +20,7 @@
     {!! pagination('admin')->render($items) !!}
 
     <section class="actions">
-        {!! button()->update() !!}
-        {!! button()->add(route('admin.admin_users.create')) !!}
+        {!! button()->updatePage() !!}
+        {!! button()->addRecord(route('admin.admin_users.create')) !!}
     </section>
 @endsection

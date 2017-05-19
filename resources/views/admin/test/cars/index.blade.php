@@ -20,7 +20,7 @@
     {!! pagination('admin')->render($items) !!}
 
     <section class="actions">
-        {!! button()->update() !!}
-        {!! button()->add('admin.cars.create') !!}
+        {!! button()->updatePage() !!}
+        {!! button()->addRecord('admin.cars.create') !!}
     </section>
 @endsection

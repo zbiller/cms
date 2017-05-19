@@ -1,3 +1,0 @@
-{!! form()->open(['url' => $url, 'method' => 'POST', 'class' => 'left']) !!}
-{!! form()->button('<i class="fa fa-undo"></i>&nbsp; Rollback', ['type' => 'submit', 'class' => 'btn-rollback btn green', 'onclick' => 'return confirm("Are you sure you want to rollback this revision?")']) !!}
-{!! form()->close() !!}

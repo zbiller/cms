@@ -20,11 +20,11 @@
 
 @section('footer')
     <section class="actions left">
-        {!! button()->cancel('admin.cars.index') !!}
+        {!! button()->cancelAction(route('admin.cars.index')) !!}
     </section>
     <section class="actions">
         {!! button()->saveAndStay() !!}
-        {!! button()->save() !!}
+        {!! button()->saveRecord() !!}
     </section>
 @endsection
 

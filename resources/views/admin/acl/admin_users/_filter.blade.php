@@ -3,7 +3,7 @@
         {!! form()->text('search', request()->get('search') ?: null, ['placeholder' => 'Search']) !!}
     </fieldset>
     <div>
-        {!! button()->filter() !!}
-        {!! button()->clear() !!}
+        {!! button()->filterRecords() !!}
+        {!! button()->clearFilters() !!}
     </div>
 {!! form()->close() !!}

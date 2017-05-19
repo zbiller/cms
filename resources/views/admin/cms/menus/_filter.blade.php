@@ -9,7 +9,7 @@
         {!! form()->select('active', $actives, request('active') ?: null, ['placeholder' => 'Active']) !!}
     </fieldset>
     <div>
-        {!! button()->filter() !!}
-        {!! button()->clear() !!}
+        {!! button()->filterRecords() !!}
+        {!! button()->clearFilters() !!}
     </div>
 {!! form()->close() !!}

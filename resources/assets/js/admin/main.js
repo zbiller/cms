@@ -92,7 +92,7 @@ function menu() {
  */
 function buttons() {
     //save
-    $(document).on('click', 'a.btn-save', function (e) {
+    $(document).on('click', 'a.btn-save-record', function (e) {
         e.preventDefault();
 
         $('form.form').submit();
@@ -127,7 +127,7 @@ function buttons() {
     });
 
     //publish
-    $(document).on('click', 'a.btn-publish', function (e) {
+    $(document).on('click', 'a.btn-publish-draft', function (e) {
         e.preventDefault();
 
         if (confirm('Are you sure you want to publish this draft?')) {
@@ -138,21 +138,21 @@ function buttons() {
     });
 
     //filter
-    $(document).on('click', 'a.btn-filter', function (e) {
+    $(document).on('click', 'a.btn-filter-records', function (e) {
         e.preventDefault();
 
         $(this).closest('section.filters').find('form').submit();
     });
 
     //clear
-    $(document).on('click', 'a.btn-clear', function (e) {
+    $(document).on('click', 'a.btn-clear-filters', function (e) {
         e.preventDefault();
 
         window.location.href = window.location.href.split('?')[0];
     });
 
     //update
-    $(document).on('click', 'a.btn-update', function (e) {
+    $(document).on('click', 'a.btn-update-page', function (e) {
         e.preventDefault();
 
         location.reload();

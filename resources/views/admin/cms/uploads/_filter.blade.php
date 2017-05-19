@@ -14,7 +14,7 @@
         {!! form_admin()->calendar('end_date', false, request('end_date') !== null ? request('end_date') : null, ['placeholder' => 'Date To', 'style' => 'width: 48%;']) !!}
     </fieldset>
     <div>
-        {!! button()->filter() !!}
-        {!! button()->clear() !!}
+        {!! button()->filterRecords() !!}
+        {!! button()->clearFilters() !!}
     </div>
 {!! form()->close() !!}

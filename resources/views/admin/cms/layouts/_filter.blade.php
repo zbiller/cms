@@ -6,7 +6,7 @@
         {!! form()->select('type', $types, request('type') ?: null, ['placeholder' => 'All Types']) !!}
     </fieldset>
     <div>
-        {!! button()->filter() !!}
-        {!! button()->clear() !!}
+        {!! button()->filterRecords() !!}
+        {!! button()->clearFilters() !!}
     </div>
 {!! form()->close() !!}

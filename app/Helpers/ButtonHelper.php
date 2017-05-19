@@ -2,6 +2,12 @@
 
 namespace App\Helpers;
 
+use App\Models\Model;
+use App\Traits\HasDrafts;
+use Exception;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Throwable;
+
 class ButtonHelper
 {
     /**
@@ -55,9 +61,9 @@ class ButtonHelper
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function add($url, array $attributes = [])
+    public function addRecord($url, array $attributes = [])
     {
-        return view('helpers::button.add')->with([
+        return view('helpers::button.add_record')->with([
             'url' => $url,
             'attributes' => self::buildAttributes($attributes)
         ]);
@@ -70,9 +76,9 @@ class ButtonHelper
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function edit($url, array $attributes = [])
+    public function editRecord($url, array $attributes = [])
     {
-        return view('helpers::button.edit')->with([
+        return view('helpers::button.edit_record')->with([
             'url' => $url,
             'attributes' => self::buildAttributes($attributes)
         ]);
@@ -85,9 +91,9 @@ class ButtonHelper
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function delete($url, array $attributes = [])
+    public function deleteRecord($url, array $attributes = [])
     {
-        return view('helpers::button.delete')->with([
+        return view('helpers::button.delete_record')->with([
             'url' => $url,
             'attributes' => self::buildAttributes($attributes)
         ]);
@@ -100,9 +106,9 @@ class ButtonHelper
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function cancel($url, array $attributes = [])
+    public function cancelAction($url, array $attributes = [])
     {
-        return view('helpers::button.cancel')->with([
+        return view('helpers::button.cancel_action')->with([
             'url' => $url,
             'attributes' => self::buildAttributes($attributes)
         ]);
@@ -114,9 +120,9 @@ class ButtonHelper
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function update(array $attributes = [])
+    public function updatePage(array $attributes = [])
     {
-        return view('helpers::button.update')->with([
+        return view('helpers::button.update_page')->with([
             'attributes' => self::buildAttributes($attributes)
         ]);
     }
@@ -127,9 +133,9 @@ class ButtonHelper
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function filter(array $attributes = [])
+    public function filterRecords(array $attributes = [])
     {
-        return view('helpers::button.filter')->with([
+        return view('helpers::button.filter_records')->with([
             'attributes' => self::buildAttributes($attributes)
         ]);
     }
@@ -140,9 +146,9 @@ class ButtonHelper
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function clear(array $attributes = [])
+    public function clearFilters(array $attributes = [])
     {
-        return view('helpers::button.clear')->with([
+        return view('helpers::button.clear_filters')->with([
             'attributes' => self::buildAttributes($attributes)
         ]);
     }
@@ -154,9 +160,9 @@ class ButtonHelper
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function view($url, array $attributes = [])
+    public function viewRecord($url, array $attributes = [])
     {
-        return view('helpers::button.view')->with([
+        return view('helpers::button.view_record')->with([
             'url' => $url,
             'attributes' => self::buildAttributes($attributes)
         ]);
@@ -169,9 +175,9 @@ class ButtonHelper
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function download($url, array $attributes = [])
+    public function downloadFile($url, array $attributes = [])
     {
-        return view('helpers::button.download')->with([
+        return view('helpers::button.download_file')->with([
             'url' => $url,
             'attributes' => self::buildAttributes($attributes)
         ]);
@@ -183,9 +189,9 @@ class ButtonHelper
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function save(array $attributes = [])
+    public function saveRecord(array $attributes = [])
     {
-        return view('helpers::button.save')->with([
+        return view('helpers::button.save_record')->with([
             'attributes' => self::buildAttributes($attributes)
         ]);
     }
@@ -197,10 +203,44 @@ class ButtonHelper
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function publish($url, array $attributes = [])
+    public function publishDraft($url, array $attributes = [])
     {
-        return view('helpers::button.publish')->with([
+        return view('helpers::button.publish_draft')->with([
             'url' => $url,
+            'attributes' => self::buildAttributes($attributes)
+        ]);
+    }
+
+    /**
+     * Render the publish button.
+     *
+     * @param string $url
+     * @param Model $model
+     * @param array $attributes
+     * @return \Illuminate\View\View
+     */
+    public function publishLimboDraft($url, Model $model, array $attributes = [])
+    {
+        return view('helpers::button.publish_limbo_draft')->with([
+            'url' => $url,
+            'model' => $model,
+            'attributes' => self::buildAttributes($attributes)
+        ]);
+    }
+
+    /**
+     * Render the delete button.
+     *
+     * @param string $url
+     * @param Model $model
+     * @param array $attributes
+     * @return \Illuminate\View\View
+     */
+    public function deleteLimboDraft($url, Model $model, array $attributes = [])
+    {
+        return view('helpers::button.delete_limbo_draft')->with([
+            'url' => $url,
+            'model' => $model,
             'attributes' => self::buildAttributes($attributes)
         ]);
     }
@@ -212,9 +252,9 @@ class ButtonHelper
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function rollback($url, array $attributes = [])
+    public function rollbackRevision($url, array $attributes = [])
     {
-        return view('helpers::button.rollback')->with([
+        return view('helpers::button.rollback_revision')->with([
             'url' => $url,
             'attributes' => self::buildAttributes($attributes)
         ]);
@@ -227,9 +267,9 @@ class ButtonHelper
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function duplicate($url, array $attributes = [])
+    public function duplicateRecord($url, array $attributes = [])
     {
-        return view('helpers::button.duplicate')->with([
+        return view('helpers::button.duplicate_record')->with([
             'url' => $url,
             'attributes' => self::buildAttributes($attributes)
         ]);
@@ -242,9 +282,9 @@ class ButtonHelper
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function restore($url, array $attributes = [])
+    public function restoreRecord($url, array $attributes = [])
     {
-        return view('helpers::button.restore')->with([
+        return view('helpers::button.restore_record')->with([
             'url' => $url,
             'attributes' => self::buildAttributes($attributes)
         ]);
@@ -303,6 +343,51 @@ class ButtonHelper
     public function saveAsDraft($url, array $attributes = [])
     {
         return view('helpers::button.save_draft')->with([
+            'url' => $url,
+            'attributes' => self::buildAttributes($attributes)
+        ]);
+    }
+
+    /**
+     * Render the deleted button.
+     *
+     * @param string $url
+     * @param array $attributes
+     * @return \Illuminate\View\View
+     */
+    public function deletedRecords($url, array $attributes = [])
+    {
+        return view('helpers::button.deleted_records')->with([
+            'url' => $url,
+            'attributes' => self::buildAttributes($attributes)
+        ]);
+    }
+
+    /**
+     * Render the limbo drafts button.
+     *
+     * @param string $url
+     * @param array $attributes
+     * @return \Illuminate\View\View
+     */
+    public function draftedRecords($url, array $attributes = [])
+    {
+        return view('helpers::button.drafted_records')->with([
+            'url' => $url,
+            'attributes' => self::buildAttributes($attributes)
+        ]);
+    }
+
+    /**
+     * Render the back button.
+     *
+     * @param string $url
+     * @param array $attributes
+     * @return \Illuminate\View\View
+     */
+    public function goBack($url, array $attributes = [])
+    {
+        return view('helpers::button.go_back')->with([
             'url' => $url,
             'attributes' => self::buildAttributes($attributes)
         ]);

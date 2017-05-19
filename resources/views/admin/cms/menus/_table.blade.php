@@ -25,8 +25,8 @@
                 <td>{{ isset($types[$item->type]) ? $types[$item->type] : 'N/A' }}</td>
                 <td>{{ isset($actives[$item->active]) ? $actives[$item->active] : 'N/A' }}</td>
                 <td>
-                    {!! button()->edit(route('admin.menus.edit', ['location' => $location, 'id' => $item->id])) !!}
-                    {!! button()->delete(route('admin.menus.destroy', ['location' => $location, 'id' => $item->id])) !!}
+                    {!! button()->editRecord(route('admin.menus.edit', ['location' => $location, 'id' => $item->id])) !!}
+                    {!! button()->deleteRecord(route('admin.menus.destroy', ['location' => $location, 'id' => $item->id])) !!}
                 </td>
             </tr>
         @endforeach

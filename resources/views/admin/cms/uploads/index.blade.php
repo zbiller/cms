@@ -24,7 +24,7 @@
     {!! pagination('admin')->render($items) !!}
 
     <section class="actions">
-        {!! button()->update() !!}
+        {!! button()->updatePage() !!}
         {!! form()->open(['url' => route('admin.uploads.delete'), 'method' => 'DELETE', 'class' => 'right']) !!}
         {!! form()->button('<i class="fa fa-trash"></i>&nbsp; Remove unused uploads', ['type' => 'submit', 'class' => 'btn blue no-margin-right', 'onclick' => 'return confirm("Are you sure? All unused uploads will be permanently deleted.")']) !!}
         {!! form()->close() !!}

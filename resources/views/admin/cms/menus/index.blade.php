@@ -22,7 +22,7 @@
 
 @section('footer')
     <section class="actions">
-        {!! button()->update() !!}
-        {!! button()->add(route('admin.menus.create', $location)) !!}
+        {!! button()->updatePage() !!}
+        {!! button()->addRecord(route('admin.menus.create', $location)) !!}
     </section>
 @endsection
