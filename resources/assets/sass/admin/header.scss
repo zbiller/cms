@@ -5,6 +5,7 @@ header {
     @include clear-padding();
 
     display: block;
+    /*display: none;*/
     z-index: z-index('header');
     position: fixed;
     top: 0;

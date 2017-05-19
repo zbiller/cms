@@ -229,6 +229,14 @@ td .upload-aligned-image {
     }
 }
 
+.actions-drafted {
+    width: 252px !important;
+
+    @include media-query('tablet') {
+        width: 117px !important;
+    }
+}
+
 /* Revision Styles */
 #tab-revisions {
     min-height: 52px;

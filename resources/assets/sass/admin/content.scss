@@ -1,18 +1,19 @@
 @import 'init';
 
-#loading {
-    /*z-index: 1;
+/*#loading {
+    z-index: 1;
     position: fixed;
     width: 100%;
     height: 100%;
-    background: $colorWhite url('/build/assets/img/admin/img/loading.gif') no-repeat center;*/
-}
+    background: $colorWhite url('/build/assets/img/admin/loading.gif') no-repeat center;
+}*/
 
 main {
     @include calc(width, '100% - 250px');
 
     z-index: z-index('content');
     display: block;
+    /*display: none;*/
     float: right;
     margin: 82px 0;
 
@@ -130,6 +131,26 @@ main {
 
     &.no-margin-left {
         margin-left: 0;
+    }
+
+    &.double-margin {
+        margin: 30px 10px;
+    }
+
+    &.double-margin-top {
+        margin-top: 30px;
+    }
+
+    &.double-margin-bottom {
+        margin-bottom: 30px;
+    }
+
+    &.double-margin-right {
+        margin-right: 10px;
+    }
+
+    &.double-margin-left {
+        margin-left: 10px;
     }
 
     &.gray {
