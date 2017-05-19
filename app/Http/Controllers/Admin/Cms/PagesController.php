@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin\Cms;
 
+use App\Exceptions\DraftException;
 use DB;
 use Exception;
 use App\Http\Controllers\Controller;
@@ -165,6 +166,54 @@ class PagesController extends Controller
             $this->item = Page::onlyTrashed()->findOrFail($id);
             $this->item->forceDelete();
         });
+    }
+
+    public function drafts(Request $request, PageFilter $filter, PageSort $sort)
+    {
+        $items = Page::onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+
+        return view('admin.cms.pages.drafts')->with([
+            'items' => $items,
+            'layouts' => Layout::all(),
+            'types' => Page::$types,
+            'actives' => Page::$actives,
+        ]);
+    }
+
+    public function limbo(PageRequest $request, $id)
+    {
+        try {
+            $item = Page::onlyDrafts()->findOrFail($id);
+
+            switch ($request->method()) {
+                case 'GET':
+                    return view('admin.cms.pages.limbo')->with([
+                        'item' => $item,
+                        'layouts' => Layout::all(),
+                        'types' => Page::$types,
+                        'actives' => Page::$actives,
+                    ]);
+
+                    break;
+                case 'PUT':
+                    try {
+                        $item->saveAsDraft($request->all());
+
+                        session()->flash('flash_success', 'The draft was successfully saved!');
+                        return redirect()->route('admin.pages.drafts');
+                    } catch (DraftException $e) {
+                        session()->flash('flash_error', $e->getMessage());
+                        return redirect()->route('admin.pages.drafts');
+                    } catch (Exception $e) {
+                        throw new Exception($e->getMessage());
+                    }
+
+                    break;
+            }
+        } catch (ModelNotFoundException $e) {
+            session()->flash('flash_error', 'You are trying to access a draft that does not exist!');
+            return redirect()->route('admin.pages.drafts');
+        }
     }
 
     /**

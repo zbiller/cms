@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Version;
 
 use DB;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Validator;
 use Exception;
 use Throwable;
@@ -220,6 +221,47 @@ class DraftsController extends Controller
     }
 
     /**
+     * Publish a limbo draft.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws Exception
+     */
+    public function publishLimboDraft(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            '_class' => 'required',
+            '_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            session()->flash('flash_error', 'Could not publish the draft! Please try again.');
+            return back();
+        }
+
+        try {
+            $class = $request->get('_class');
+            $id = $request->get('_id');
+            $data = $request->except(['_token', '_method', '_back', '_class', '_id']);
+            $model = $class::onlyDrafts()->findOrFail($id);
+
+            if (!empty($data)) {
+                $model->saveAsDraft($data);
+            }
+
+            $model->publishDraft();
+
+            session()->flash('flash_success', 'The draft was successfully published!');
+            return $request->get('_back') ? redirect($request->get('_back')) : back();
+        } catch (ModelNotFoundException $e) {
+            session()->flash('flash_error', 'You are trying to publish a draft that does not exist!');
+            return $request->get('_back') ? redirect($request->get('_back')) : back();
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
+        }
+    }
+
+    /**
      * Remove a draft.
      *
      * @param Request $request
@@ -246,6 +288,45 @@ class DraftsController extends Controller
             return [
                 'status' => false,
             ];
+        }
+    }
+
+    /**
+     * Delete a limbo draft.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws Exception
+     */
+    public function deleteLimboDraft(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            '_class' => 'required',
+            '_id' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            session()->flash('flash_error', 'Could not delete the draft! Please try again.');
+            return back();
+        }
+
+        try {
+            $class = $request->get('_class');
+            $id = $request->get('_id');
+            $model = $class::onlyDrafts()->findOrFail($id);
+
+            $model->deleteDraft();
+
+            session()->flash('flash_success', 'The draft was successfully deleted!');
+            return back();
+        } catch (ModelNotFoundException $e) {
+            session()->flash('flash_error', 'You are trying to delete a draft that does not exist!');
+            return back();
+        } catch (DraftException $e) {
+            session()->flash('flash_error', $e->getMessage());
+            return back();
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
         }
     }
 

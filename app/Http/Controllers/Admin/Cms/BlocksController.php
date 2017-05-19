@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Cms;
 
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
+use App\Traits\HasDrafts;
 use DB;
 use Exception;
 use App\Http\Controllers\Controller;
@@ -14,6 +15,7 @@ use App\Http\Filters\BlockFilter;
 use App\Http\Sorts\BlockSort;
 use App\Options\CrudOptions;
 use App\Exceptions\DuplicateException;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 
 class BlocksController extends Controller
@@ -156,7 +158,7 @@ class BlocksController extends Controller
         try {
             $class = $request->get('blockable_type');
             $id = $request->get('blockable_id');
-            $model = $class::findOrFail($id);
+            $model = $class::withoutGlobalScopes()->findOrFail($id);
 
             if ($request->has('draft') && ($draft = Draft::find((int)$request->get('draft')))) {
                 DB::beginTransaction();
@@ -182,6 +184,7 @@ class BlocksController extends Controller
                 ])->render(),
             ];
         } catch (Exception $e) {
+            dd($e);
             return [
                 'status' => false
             ];

@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use DB;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Relation;
 use Closure;
 use Exception;
@@ -95,7 +96,7 @@ trait HasDrafts
             }
 
             $model = DB::transaction(function () use ($data, $draft) {
-                if ($this->exists === false || $this->wasRecentlyCreated === true) {
+                if ($this->wasRecentlyCreated || !$this->exists || !is_null($this->{$this->getDraftedAtColumn()})) {
                     $model = $this->saveLimboDraft($data);
                 } else {
                     $model = $this->saveRegularDraft($data, $draft);
@@ -147,6 +148,32 @@ trait HasDrafts
         } catch (Exception $e) {
             throw new DraftException(
                 'Could not publish the record!', $e->getCode(), $e
+            );
+        }
+    }
+
+    /**
+     * Delete a draft.
+     * If the $id parameter is specified, the script will try to delete a record from the "drafts" table.
+     * Otherwise, the script will perform a "limbo" delete, meaning that it will force delete the original entity record.
+     *
+     * @param int|null $id
+     * @return void
+     * @throws DraftException
+     */
+    public function deleteDraft($id = null)
+    {
+        try {
+            if ($id && ($draft = Draft::find($id))) {
+                $draft->delete();
+
+                return;
+            }
+
+            $this->deleteLimboDraft();
+        } catch (Exception $e) {
+            throw new DraftException(
+                'Could not delete the draft!', $e->getCode, $e
             );
         }
     }
@@ -219,7 +246,12 @@ trait HasDrafts
      */
     protected function saveLimboDraft(array $data = [])
     {
-        $model = $this->create($data);
+        if ($this->exists) {
+            $model = $this;
+            $model->update($data);
+        } else {
+            $model = $this->create($data);
+        }
 
         $this->newQueryWithoutScopes()->where($model->getKeyName(), $model->getKey())->update([
             $this->getDraftedAtColumn() => $this->fromDateTime($this->freshTimestamp())
@@ -296,6 +328,26 @@ trait HasDrafts
         }
 
         return $this->fresh();
+    }
+
+    /**
+     * Delete a "limbo" draft.
+     * Meaning: delete the actual original loaded entity type
+     *
+     * @return void
+     */
+    protected function deleteLimboDraft()
+    {
+        if (!$this->exists || is_null($this->{$this->getDraftedAtColumn()})) {
+            return;
+        }
+
+
+        if (array_key_exists(SoftDeletes::class, class_uses($this))) {
+            $this->forceDelete();
+        } else {
+            $this->delete();
+        }
     }
 
     /**

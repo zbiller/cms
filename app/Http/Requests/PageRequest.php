@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Cms\Page;
 use Illuminate\Validation\Rule;
 
 class PageRequest extends Request
@@ -23,6 +24,18 @@ class PageRequest extends Request
      */
     public function rules()
     {
+        if ($this->isMethod('get')) {
+            return [];
+        }
+
+        $model = null;
+
+        if ($this->route('page')) {
+            $model = $this->route('page');
+        } elseif ($this->route('id')) {
+            $model = Page::withDrafts()->withTrashed()->find($this->route('id'));
+        }
+
         return [
             'layout_id' => [
                 'required',
@@ -38,13 +51,11 @@ class PageRequest extends Request
             ],
             'slug' => [
                 'required',
-                Rule::unique('pages', 'slug')
-                    ->ignore($this->route('page') ? $this->route('page')->id : null)
+                Rule::unique('pages', 'slug')->ignore($model && $model->exists ? $model->id : null)
             ],
             'identifier' => [
                 $this->get('identifier') !== null ?
-                    Rule::unique('pages', 'identifier')
-                        ->ignore($this->route('page') ? $this->route('page')->id : null) :
+                    Rule::unique('pages', 'identifier')->ignore($model && $model->exists ? $model->id : null) :
                     null
             ],
         ];

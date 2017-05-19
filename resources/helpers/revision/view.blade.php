@@ -3,7 +3,7 @@
         {!! button()->action('Back To Original', session('revision_back_url_' . $revision->id), 'fa-chevron-left') !!}
     </section>
     <section class="actions">
-        {!! button()->rollback(route('admin.revisions.rollback', $revision->id)) !!}
+        {!! button()->rollbackRevision(route('admin.revisions.rollback', $revision->id)) !!}
     </section>
 @endsection
 

@@ -77,7 +77,9 @@ Route::group([
                 Route::match(['post', 'put'], 'create/{draft}', ['as' => 'admin.drafts.create', 'uses' => 'DraftsController@createDraft']);
                 Route::match(['post', 'put'], 'update/{draft}', ['as' => 'admin.drafts.update', 'uses' => 'DraftsController@updateDraft']);
                 Route::match(['post', 'put'], 'publish/{draft}', ['as' => 'admin.drafts.publish', 'uses' => 'DraftsController@publishDraft']);
-                Route::delete('destroy/{draft}', ['as' => 'admin.drafts.remove', 'uses' => 'DraftsController@removeDraft']);
+                Route::match(['post', 'put'], 'publish-limbo', ['as' => 'admin.drafts.publish_limbo', 'uses' => 'DraftsController@publishLimboDraft']);
+                Route::delete('remove/{draft}', ['as' => 'admin.drafts.remove', 'uses' => 'DraftsController@removeDraft']);
+                Route::delete('delete-limbo', ['as' => 'admin.drafts.delete_limbo', 'uses' => 'DraftsController@deleteLimboDraft']);
             });
         });
 
@@ -132,13 +134,31 @@ Route::group([
                 Route::get('deleted', ['as' => 'admin.pages.deleted', 'uses' => 'PagesController@deleted', 'permissions' => 'pages-deleted-list']);
                 Route::get('create/{parent?}', ['as' => 'admin.pages.create', 'uses' => 'PagesController@create', 'permissions' => 'pages-add']);
                 Route::get('edit/{page}', ['as' => 'admin.pages.edit', 'uses' => 'PagesController@edit', 'permissions' => 'pages-edit']);
-                Route::get('draft/{draft}', ['as' => 'admin.pages.draft', 'uses' => 'PagesController@draft', 'pages-edit']);
-                Route::get('revision/{revision}', ['as' => 'admin.pages.revision', 'uses' => 'PagesController@revision', 'pages-edit']);
                 Route::post('store/{parent?}', ['as' => 'admin.pages.store', 'uses' => 'PagesController@store', 'permissions' => 'pages-add']);
-                Route::post('duplicate/{page}', ['as' => 'admin.pages.duplicate', 'uses' => 'PagesController@duplicate', 'permissions' => 'pages-edit']);
                 Route::put('update/{page}', ['as' => 'admin.pages.update', 'uses' => 'PagesController@update', 'permissions' => 'pages-edit']);
-                Route::put('restore/{id}', ['as' => 'admin.pages.restore', 'uses' => 'PagesController@restore', 'permissions' => 'pages-deleted-edit']);
                 Route::delete('destroy/{page}', ['as' => 'admin.pages.destroy', 'uses' => 'PagesController@destroy', 'permissions' => 'pages-delete']);
+
+                /**
+                 * Draft Actions.
+                 */
+                Route::get('drafts', ['as' => 'admin.pages.drafts', 'uses' => 'PagesController@drafts', 'pages-edit']);
+                Route::get('draft/{draft}', ['as' => 'admin.pages.draft', 'uses' => 'PagesController@draft', 'pages-edit']);
+                Route::match(['get', 'put'], 'limbo/{id}', ['as' => 'admin.pages.limbo', 'uses' => 'PagesController@limbo', 'pages-edit']);
+
+                /**
+                 * Revision Actions.
+                 */
+                Route::get('revision/{revision}', ['as' => 'admin.pages.revision', 'uses' => 'PagesController@revision', 'pages-edit']);
+
+                /**
+                 * Duplicate Actions.
+                 */
+                Route::post('duplicate/{page}', ['as' => 'admin.pages.duplicate', 'uses' => 'PagesController@duplicate', 'permissions' => 'pages-edit']);
+
+                /**
+                 * Soft Delete Actions.
+                 */
+                Route::put('restore/{id}', ['as' => 'admin.pages.restore', 'uses' => 'PagesController@restore', 'permissions' => 'pages-deleted-edit']);
                 Route::delete('delete/{id}', ['as' => 'admin.pages.delete', 'uses' => 'PagesController@delete', 'permissions' => 'pages-deleted-delete']);
 
                 /**
@@ -256,6 +276,8 @@ Route::group([
 /**
  * Page Routes.
  */
-foreach (page()->query()->active()->defaultOrder()->get() as $page) {
-    Route::get($page->url->url, ['as' => $page->routeName, 'uses' => $page->routeController . '@' . $page->routeAction, 'model' => $page]);
+if (!app()->runningInConsole()) {
+    foreach (page()->query()->active()->defaultOrder()->get() as $page) {
+        Route::get($page->url->url, ['as' => $page->routeName, 'uses' => $page->routeController . '@' . $page->routeAction, 'model' => $page]);
+    }
 }

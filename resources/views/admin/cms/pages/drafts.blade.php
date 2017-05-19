@@ -3,7 +3,7 @@
 @section('header')
     @parent
 
-    <h1>Pages</h1>
+    <h1>Page Drafts</h1>
 @endsection
 
 @section('content')
@@ -24,7 +24,7 @@
                     <td class="sortable" data-sort="active">
                         <i class="fa fa-sort"></i>&nbsp; Active
                     </td>
-                    <td class="actions-deleted">Actions</td>
+                    <td class="actions-drafted">Actions</td>
                 </tr>
             </thead>
             <tbody>
@@ -35,8 +35,9 @@
                         <td>{{ $item->url ? $item->url->url : 'N/A' }}</td>
                         <td>{{ isset($actives[$item->active]) ? $actives[$item->active] : 'N/A' }}</td>
                         <td>
-                            {!! button()->restoreRecord(route('admin.pages.restore', $item->id)) !!}
-                            {!! button()->deleteRecord(route('admin.pages.delete', $item->id)) !!}
+                            {!! button()->publishLimboDraft(route('admin.drafts.publish_limbo'), $item) !!}
+                            {!! button()->editRecord(route('admin.pages.limbo', $item->id)) !!}
+                            {!! button()->deleteLimboDraft(route('admin.drafts.delete_limbo'), $item) !!}
                         </td>
                     </tr>
                 @endforeach

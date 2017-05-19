@@ -22,11 +22,9 @@
 
 @section('footer')
     <section class="actions">
-        {!! button()->update() !!}
-        {!! button()->action('Deleted Pages', route('admin.pages.deleted'), 'fa-trash', 'red') !!}
-        <a class="btn green">
-            <i class="fa fa-question"></i>&nbsp; Limbo Drafts
-        </a>
-        {!! button()->add(route('admin.pages.create')) !!}
+        {!! button()->updatePage() !!}
+        {!! button()->deletedRecords(route('admin.pages.deleted')) !!}
+        {!! button()->draftedRecords(route('admin.pages.drafts')) !!}
+        {!! button()->addRecord(route('admin.pages.create')) !!}
     </section>
 @endsection

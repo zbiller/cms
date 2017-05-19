@@ -5,7 +5,8 @@
     <section class="actions">
         {!! button()->saveAsNew(route('admin.drafts.create', $draft->id)) !!}
         {!! button()->saveElsewhere(route('admin.drafts.update', $draft->id)) !!}
-        {!! button()->publish(route('admin.drafts.publish', $draft->id)) !!}
+        {!! button()->publishDraft(route('admin.drafts.publish', $draft->id)) !!}
     </section>
 @endsection
+
 @php DB::rollBack(); @endphp

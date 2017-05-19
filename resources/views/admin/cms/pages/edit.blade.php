@@ -20,13 +20,13 @@
 
 @section('footer')
     <section class="actions left">
-        {!! button()->cancel('admin.pages.index') !!}
+        {!! button()->cancelAction(route('admin.pages.index')) !!}
     </section>
     <section class="actions">
-        {!! button()->duplicate(route('admin.pages.duplicate', $item->id)) !!}
+        {!! button()->duplicateRecord(route('admin.pages.duplicate', $item->id)) !!}
         {!! button()->saveAsDraft(route('admin.drafts.save')) !!}
         {!! button()->saveAndStay() !!}
-        {!! button()->save() !!}
+        {!! button()->saveRecord() !!}
     </section>
 @endsection
 
