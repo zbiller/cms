@@ -3,33 +3,37 @@
 <div id="tab-1" class="tab">
     {!! form_admin()->text('name') !!}
     <br /><br /><br /><br />
-    <table id="permissions" cellspacing="0" cellpadding="0" border="0">
-        <thead>
-            <tr>
-                <td>Permissions</td>
-                @for($i = 1; $i <= 4; $i++)
-                    <td>
-                        {!! form()->checkbox('dummy') !!}&nbsp; All
-                    </td>
-                @endfor
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($permissions as $group => $permissions)
-                <tr>
-                    <td>{{ $group }}</td>
-                    @foreach($permissions as $permission)
-                        <td>
+    <div class="permissions">
+        @foreach($permissions as $name => $group)
+            <div class="permission-group">
+                <div class="permission-header">
+                    <span>{{ $name }}</span>
+                    {!! form()->checkbox('dummy') !!}&nbsp;
+                </div>
+                <div class="permission-content">
+                    @foreach($group as $permission)
+                        <div>
+                            <span>{{ $permission->label }}</span>
                             {!! form()->checkbox('permissions[]', $permission->id) !!}&nbsp;
-                            {{ $permission->label }}
-                        </td>
+                        </div>
                     @endforeach
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+                </div>
+            </div>
+        @endforeach
+    </div>
 </div>
 
 @section('bottom_scripts')
     {!! JsValidator::formRequest(App\Http\Requests\AdminRoleRequest::class, '.form') !!}
+
+    <script type="text/javascript">
+        $('input[type="checkbox"][name="dummy"]').click(function () {
+            var dummy = $(this);
+            var permissions = $(this).closest('.permission-header').next('.permission-content');
+
+            permissions.children('div').each(function (index, selector) {
+                $(selector).find('input[type="checkbox"]').prop('checked', dummy.prop('checked'));
+            });
+        });
+    </script>
 @append

@@ -19,180 +19,242 @@ class PermissionsSeeder extends Seeder
      * @var array
      */
     private $adminMap = [
-        'Pages' => [
+        'Drafts' => [
             'List' => [
-                'name' => 'pages-list',
-                'group' => 'Pages',
+                'group' => 'Drafts',
                 'label' => 'List',
+                'name' => 'drafts-list',
             ],
-            'Add' => [
-                'name' => 'pages-add',
-                'group' => 'Pages',
-                'label' => 'Add',
+            'Save' => [
+                'group' => 'Drafts',
+                'label' => 'Save',
+                'name' => 'drafts-save',
             ],
-            'Edit' => [
-                'name' => 'pages-edit',
-                'group' => 'Pages',
-                'label' => 'Edit',
+            'Publish' => [
+                'group' => 'Drafts',
+                'label' => 'Publish',
+                'name' => 'drafts-publish',
             ],
             'Delete' => [
-                'name' => 'pages-delete',
-                'group' => 'Pages',
+                'group' => 'Drafts',
                 'label' => 'Delete',
+                'name' => 'drafts-delete',
             ],
         ],
-        'Pages Deleted' => [
+        'Revisions' => [
             'List' => [
-                'name' => 'pages-deleted-list',
-                'group' => 'Pages Deleted',
+                'group' => 'Revisions',
                 'label' => 'List',
+                'name' => 'revisions-list',
             ],
-            'Add' => [
-                'name' => 'pages-deleted-add',
-                'group' => 'Pages Deleted',
-                'label' => 'Add',
-            ],
-            'Edit' => [
-                'name' => 'pages-deleted-edit',
-                'group' => 'Pages Deleted',
-                'label' => 'Edit',
+            'Rollback' => [
+                'group' => 'Revisions',
+                'label' => 'Rollback',
+                'name' => 'revisions-rollback',
             ],
             'Delete' => [
-                'name' => 'pages-deleted-delete',
-                'group' => 'Pages Deleted',
+                'group' => 'Revisions',
                 'label' => 'Delete',
-            ],
-        ],
-        'Menus' => [
-            'List' => [
-                'name' => 'menus-list',
-                'group' => 'Menus',
-                'label' => 'List',
-            ],
-            'Add' => [
-                'name' => 'menus-add',
-                'group' => 'Menus',
-                'label' => 'Add',
-            ],
-            'Edit' => [
-                'name' => 'menus-edit',
-                'group' => 'Menus',
-                'label' => 'Edit',
-            ],
-            'Delete' => [
-                'name' => 'menus-delete',
-                'group' => 'Menus',
-                'label' => 'Delete',
-            ],
-        ],
-        'Blocks' => [
-            'List' => [
-                'name' => 'blocks-list',
-                'group' => 'Blocks',
-                'label' => 'List',
-            ],
-            'Add' => [
-                'name' => 'blocks-add',
-                'group' => 'Blocks',
-                'label' => 'Add',
-            ],
-            'Edit' => [
-                'name' => 'blocks-edit',
-                'group' => 'Blocks',
-                'label' => 'Edit',
-            ],
-            'Delete' => [
-                'name' => 'blocks-delete',
-                'group' => 'Blocks',
-                'label' => 'Delete',
-            ],
-        ],
-        'Layouts' => [
-            'List' => [
-                'name' => 'layouts-list',
-                'group' => 'Layouts',
-                'label' => 'List',
-            ],
-            'Add' => [
-                'name' => 'layouts-add',
-                'group' => 'Layouts',
-                'label' => 'Add',
-            ],
-            'Edit' => [
-                'name' => 'layouts-edit',
-                'group' => 'Layouts',
-                'label' => 'Edit',
-            ],
-            'Delete' => [
-                'name' => 'layouts-delete',
-                'group' => 'Layouts',
-                'label' => 'Delete',
+                'name' => 'revisions-delete',
             ],
         ],
         'Uploads' => [
             'List' => [
-                'name' => 'uploads-list',
                 'group' => 'Uploads',
                 'label' => 'List',
+                'name' => 'uploads-list',
             ],
-            'Add' => [
-                'name' => 'uploads-add',
+            'Upload' => [
                 'group' => 'Uploads',
-                'label' => 'Add',
+                'label' => 'Upload',
+                'name' => 'uploads-upload',
             ],
-            'Edit' => [
-                'name' => 'uploads-edit',
+            'Select' => [
                 'group' => 'Uploads',
-                'label' => 'Edit',
+                'label' => 'Select',
+                'name' => 'uploads-select',
+            ],
+            'Download' => [
+                'group' => 'Uploads',
+                'label' => 'Download',
+                'name' => 'uploads-download',
+            ],
+            'Crop' => [
+                'group' => 'Uploads',
+                'label' => 'Crop',
+                'name' => 'uploads-crop',
             ],
             'Delete' => [
-                'name' => 'uploads-delete',
                 'group' => 'Uploads',
                 'label' => 'Delete',
+                'name' => 'uploads-delete',
+            ],
+        ],
+        'Pages' => [
+            'List' => [
+                'group' => 'Pages',
+                'label' => 'List',
+                'name' => 'pages-list',
+            ],
+            'Add' => [
+                'group' => 'Pages',
+                'label' => 'Add',
+                'name' => 'pages-add',
+            ],
+            'Edit' => [
+                'group' => 'Pages',
+                'label' => 'Edit',
+                'name' => 'pages-edit',
+            ],
+            'Delete' => [
+                'group' => 'Pages',
+                'label' => 'Delete',
+                'name' => 'pages-delete',
+            ],
+            'Duplicate' => [
+                'group' => 'Pages',
+                'label' => 'Duplicate',
+                'name' => 'pages-duplicate',
+            ],
+            'Deleted' => [
+                'group' => 'Pages',
+                'label' => 'Deleted',
+                'name' => 'pages-deleted',
+            ],
+            'Restore' => [
+                'group' => 'Pages',
+                'label' => 'Restore',
+                'name' => 'pages-restore',
+            ],
+            'Force Delete' => [
+                'group' => 'Pages',
+                'label' => 'Force Delete',
+                'name' => 'pages-force-delete',
+            ],
+        ],
+        'Blocks' => [
+            'List' => [
+                'group' => 'Blocks',
+                'label' => 'List',
+                'name' => 'blocks-list',
+            ],
+            'Add' => [
+                'group' => 'Blocks',
+                'label' => 'Add',
+                'name' => 'blocks-add',
+            ],
+            'Edit' => [
+                'group' => 'Blocks',
+                'label' => 'Edit',
+                'name' => 'blocks-edit',
+            ],
+            'Delete' => [
+                'group' => 'Blocks',
+                'label' => 'Delete',
+                'name' => 'blocks-delete',
+            ],
+            'Duplicate' => [
+                'group' => 'Blocks',
+                'label' => 'Duplicate',
+                'name' => 'blocks-duplicate',
+            ],
+            'Assign' => [
+                'group' => 'Blocks',
+                'label' => 'Assign',
+                'name' => 'blocks-assign',
+            ],
+            'Un-Assign' => [
+                'group' => 'Blocks',
+                'label' => 'Un-Assign',
+                'name' => 'blocks-unassign',
+            ],
+        ],
+        'Menus' => [
+            'List' => [
+                'group' => 'Menus',
+                'label' => 'List',
+                'name' => 'menus-list',
+            ],
+            'Add' => [
+                'group' => 'Menus',
+                'label' => 'Add',
+                'name' => 'menus-add',
+            ],
+            'Edit' => [
+                'group' => 'Menus',
+                'label' => 'Edit',
+                'name' => 'menus-edit',
+            ],
+            'Delete' => [
+                'group' => 'Menus',
+                'label' => 'Delete',
+                'name' => 'menus-delete',
+            ],
+        ],
+        'Layouts' => [
+            'List' => [
+                'group' => 'Layouts',
+                'label' => 'List',
+                'name' => 'layouts-list',
+            ],
+            'Add' => [
+                'group' => 'Layouts',
+                'label' => 'Add',
+                'name' => 'layouts-add',
+            ],
+            'Edit' => [
+                'group' => 'Layouts',
+                'label' => 'Edit',
+                'name' => 'layouts-edit',
+            ],
+            'Delete' => [
+                'group' => 'Layouts',
+                'label' => 'Delete',
+                'name' => 'layouts-delete',
             ],
         ],
         'Admin Roles' => [
             'List' => [
-                'name' => 'admin-roles-list',
                 'group' => 'Admin Roles',
                 'label' => 'List',
+                'name' => 'admin-roles-list',
             ],
             'Add' => [
-                'name' => 'admin-roles-add',
                 'group' => 'Admin Roles',
                 'label' => 'Add',
+                'name' => 'admin-roles-add',
             ],
             'Edit' => [
-                'name' => 'admin-roles-edit',
                 'group' => 'Admin Roles',
                 'label' => 'Edit',
+                'name' => 'admin-roles-edit',
             ],
             'Delete' => [
-                'name' => 'admin-roles-delete',
                 'group' => 'Admin Roles',
                 'label' => 'Delete',
+                'name' => 'admin-roles-delete',
             ],
         ],
         'Admin Users' => [
             'List' => [
-                'name' => 'admin-users-list',
                 'group' => 'Admin Users',
                 'label' => 'List',
+                'name' => 'admin-users-list',
             ],
             'Add' => [
-                'name' => 'admin-users-add',
                 'group' => 'Admin Users',
                 'label' => 'Add',
+                'name' => 'admin-users-add',
             ],
             'Edit' => [
-                'name' => 'admin-users-edit',
                 'group' => 'Admin Users',
                 'label' => 'Edit',
+                'name' => 'admin-users-edit',
             ],
             'Delete' => [
-                'name' => 'admin-users-delete',
                 'group' => 'Admin Users',
                 'label' => 'Delete',
+                'name' => 'admin-users-delete',
             ],
         ],
     ];

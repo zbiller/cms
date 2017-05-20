@@ -16,6 +16,7 @@ class PagesSeeder extends Seeder
     public function run()
     {
         DB::table('pages')->delete();
+        DB::table('urls')->where('urlable_type', Page::class)->delete();
 
         /**
          * Get the default or first layout.
