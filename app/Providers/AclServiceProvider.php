@@ -61,8 +61,60 @@ class AclServiceProvider extends ServiceProvider
     protected function registerBladeExtensions()
     {
         $this->app->afterResolving('blade.compiler', function (BladeCompiler $blade) {
+            $blade->directive('permission', function ($permission) {
+                return "<?php if(auth()->check() && (auth()->user()->isDeveloper() || auth()->user()->hasPermission({$permission}))): ?>";
+            });
+
+            $blade->directive('elsepermission', function () {
+                return "<?php else: ?>";
+            });
+
+            $blade->directive('endpermission', function () {
+                return "<?php endif; ?>";
+            });
+
+            $blade->directive('haspermission', function ($permission) {
+                return "<?php if(auth()->check() && (auth()->user()->isDeveloper() || auth()->user()->hasPermission({$permission}))): ?>";
+            });
+
+            $blade->directive('elsehaspermission', function () {
+                return "<?php else: ?>";
+            });
+
+            $blade->directive('endhaspermission', function () {
+                return "<?php endif; ?>";
+            });
+
+            $blade->directive('hasanypermission', function ($permissions) {
+                return "<?php if(auth()->check() && (auth()->user()->isDeveloper() || auth()->user()->hasAnyPermission({$permissions}))): ?>";
+            });
+
+            $blade->directive('elsehasanypermission', function () {
+                return "<?php else: ?>";
+            });
+
+            $blade->directive('endhasanypermission', function () {
+                return "<?php endif; ?>";
+            });
+
+            $blade->directive('hasallpermissions', function ($permissions) {
+                return "<?php if(auth()->check() && (auth()->user()->isDeveloper() || auth()->user()->hasAllPermissions({$permissions}))): ?>";
+            });
+
+            $blade->directive('elsehasallpermissions', function () {
+                return "<?php else: ?>";
+            });
+
+            $blade->directive('endhasallpermissions', function () {
+                return "<?php endif; ?>";
+            });
+
             $blade->directive('role', function ($role) {
                 return "<?php if(auth()->check() && auth()->user()->hasRole({$role})): ?>";
+            });
+
+            $blade->directive('elserole', function () {
+                return '<?php else: ?>';
             });
 
             $blade->directive('endrole', function () {
@@ -73,6 +125,10 @@ class AclServiceProvider extends ServiceProvider
                 return "<?php if(auth()->check() && auth()->user()->hasRole({$role})): ?>";
             });
 
+            $blade->directive('elsehasrole', function () {
+                return '<?php else: ?>';
+            });
+
             $blade->directive('endhasrole', function () {
                 return '<?php endif; ?>';
             });
@@ -81,12 +137,20 @@ class AclServiceProvider extends ServiceProvider
                 return "<?php if(auth()->check() && auth()->user()->hasAnyRole({$roles})): ?>";
             });
 
+            $blade->directive('elsehasanyrole', function () {
+                return '<?php else: ?>';
+            });
+
             $blade->directive('endhasanyrole', function () {
                 return '<?php endif; ?>';
             });
 
             $blade->directive('hasallroles', function ($roles) {
                 return "<?php if(auth()->check() && auth()->user()->hasAllRoles({$roles})): ?>";
+            });
+
+            $blade->directive('elsehasallroles', function () {
+                return '<?php else: ?>';
             });
 
             $blade->directive('endhasallroles', function () {
