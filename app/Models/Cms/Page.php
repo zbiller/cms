@@ -81,7 +81,7 @@ class Page extends Model
      *
      * @const
      */
-    const TYPE_DEFAULT = 1;
+    const TYPE_NORMAL = 1;
     const TYPE_SPECIAL = 2;
 
     /**
@@ -100,18 +100,16 @@ class Page extends Model
      * @var array
      */
     public static $types = [
-        self::TYPE_DEFAULT => 'Default',
+        self::TYPE_NORMAL => 'Normal',
         self::TYPE_SPECIAL => 'Special',
     ];
 
     /**
      * The options available for each page type.
      *
-     * --- controller
-     * The controller to be used for pages on the front-end (relative to /app/Http/Controllers/).
-     *
      * --- action
      * The action from the controller to be used for pages on the front-end.
+     * The controller in discussion is the one defined in the routeUrlTo() method from the getUrlOptions() method.
      *
      * --- view
      * The view to be used for pages on the front-end.
@@ -119,14 +117,12 @@ class Page extends Model
      * @var array
      */
     public static $map = [
-        self::TYPE_DEFAULT => [
-            'controller' => 'Front\Cms\PagesController',
-            'action' => 'index',
+        self::TYPE_NORMAL => [
+            'action' => 'normal',
             'view' => 'front.cms.page',
         ],
         self::TYPE_SPECIAL => [
-            'controller' => 'Front\Cms\PagesController',
-            'action' => 'index',
+            'action' => 'special',
             'view' => 'front.cms.page',
         ],
     ];
@@ -159,27 +155,6 @@ class Page extends Model
     public function layout()
     {
         return $this->belongsTo(Layout::class, 'layout_id');
-    }
-
-    /**
-     * Get the page's forwarding for route definition.
-     *
-     * @return mixed
-     */
-    public function getRouteNameAttribute()
-    {
-        return isset($this->attributes['identifier']) && !empty($this->attributes['identifier']) ?
-            'page.' . $this->attributes['identifier'] : null;
-    }
-
-    /**
-     * Get the page's controller for route definition.
-     *
-     * @return mixed
-     */
-    public function getRouteControllerAttribute()
-    {
-        return self::$map[$this->attributes['type']]['controller'];
     }
 
     /**
@@ -323,6 +298,7 @@ class Page extends Model
     public static function getUrlOptions()
     {
         return UrlOptions::instance()
+            ->routeUrlTo('App\Http\Controllers\Front\Cms\PagesController', 'show')
             ->generateUrlSlugFrom('slug')
             ->saveUrlSlugTo('slug')
             ->prefixUrlWith(function ($prefix, $model) {

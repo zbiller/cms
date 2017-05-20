@@ -5,6 +5,24 @@ namespace App\Options;
 class UrlOptions
 {
     /**
+     * The controller where the laravel router should dispatch the request.
+     * This is used when a URI is accessed by a user.
+     * The format of this property should be Full\Namespace\Of\Controller
+     *
+     * @var string
+     */
+    public $routeController;
+
+    /**
+     * The controller where the laravel router should dispatch the request.
+     * This is used when a URI is accessed by a user.
+     * The format of this property should be simply the name of the method residing inside the $routeController
+     *
+     * @var string
+     */
+    public $routeAction;
+
+    /**
      * The field used to generate the url slug from.
      *
      * @var string
@@ -47,6 +65,21 @@ class UrlOptions
     public static function instance(): UrlOptions
     {
         return new static();
+    }
+
+    /**
+     * Set the $urlRoute to work with in the App\Traits\HasUrl trait.
+     *
+     * @param string $controller
+     * @param string $action
+     * @return UrlOptions
+     */
+    public function routeUrlTo($controller, $action): UrlOptions
+    {
+        $this->routeController = $controller;
+        $this->routeAction = $action;
+
+        return $this;
     }
 
     /**

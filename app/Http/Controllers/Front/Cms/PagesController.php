@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Front\Cms;
 
-use App\Models\Cms\Layout;
-use App\Models\Cms\Page;
 use App\Http\Controllers\Controller;
+use App\Models\Cms\Page;
 use Illuminate\Http\Request;
 
 class PagesController extends Controller
@@ -17,6 +16,8 @@ class PagesController extends Controller
     protected $page;
 
     /**
+     * Setup the page environment.
+     *
      * @param Request $request
      * @set Page $page
      */
@@ -28,6 +29,11 @@ class PagesController extends Controller
 
         if (isset($action['model']) && $action['model'] instanceof Page) {
             $this->page = $action['model'];
+
+            if ($this->page->active != Page::ACTIVE_YES) {
+                abort(404);
+            }
+
             $this->page->load('layout');
 
             view()->share([
@@ -38,9 +44,31 @@ class PagesController extends Controller
     }
 
     /**
+     * Dispatch to the correct controller action based on the page type.
+     *
+     * @return mixed
+     */
+    public function show()
+    {
+        return $this->{$this->page->route_action}();
+    }
+
+    /**
+     * Method to execute when viewing a page of type "normal".
+     *
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function normal()
+    {
+        return view($this->page->routeView);
+    }
+
+    /**
+     * Method to execute when viewing a page of type "special".
+     *
+     * @return \Illuminate\View\View
+     */
+    public function special()
     {
         return view($this->page->routeView);
     }

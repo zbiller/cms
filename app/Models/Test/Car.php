@@ -99,6 +99,7 @@ class Car extends Model
     public static function getUrlOptions()
     {
         return UrlOptions::instance()
+            ->routeUrlTo('App\Http\Controllers\Front\Cms\PagesController', 'show')
             ->generateUrlSlugFrom('slug')
             ->saveUrlSlugTo('slug')
             ->prefixUrlWith('cars');

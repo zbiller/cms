@@ -274,10 +274,17 @@ Route::group([
 });
 
 /**
- * Page Routes.
+ * Dynamic Routes.
  */
-if (!app()->runningInConsole()) {
-    foreach (page()->query()->active()->defaultOrder()->get() as $page) {
-        Route::get($page->url->url, ['as' => $page->routeName, 'uses' => $page->routeController . '@' . $page->routeAction, 'model' => $page]);
+Route::get('{url}', function ($url = '/') {
+    try {
+        $url = \App\Models\Cms\Url::whereUrl($url)->firstOrFail();
+        $model = $url->urlable;
+
+        return (new Illuminate\Routing\ControllerDispatcher(app()))->dispatch(app(Illuminate\Routing\Route::class)->setAction([
+            'model' => $model
+        ]), app($model->getUrlOptions()->routeController), $model->getUrlOptions()->routeAction);
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        abort(404);
     }
-}
+})->where('url', '(.*)');

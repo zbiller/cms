@@ -185,7 +185,7 @@ trait HasSlug
      */
     protected static function validateSlugOptions()
     {
-        if (!count(self::$slugOptions->fromField)) {
+        if (!self::$slugOptions->fromField) {
             throw new SlugException(
                 'The model ' . self::class . ' uses the HasSlug trait' . PHP_EOL .
                 'You are required to set the field from where to generate the slug ($fromField)' . PHP_EOL .
@@ -193,7 +193,7 @@ trait HasSlug
             );
         }
 
-        if (!strlen(self::$slugOptions->toField)) {
+        if (!self::$slugOptions->toField) {
             throw new SlugException(
                 'The model ' . self::class . ' uses the HasSlug trait' . PHP_EOL .
                 'You are required to set the field where to store the generated slug ($toField)' . PHP_EOL .

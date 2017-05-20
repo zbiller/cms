@@ -248,7 +248,15 @@ trait HasUrl
      */
     protected static function validateUrlOptions()
     {
-        if (!count(self::$urlOptions->fromField)) {
+        if (!self::$urlOptions->routeController || !self::$urlOptions->routeAction) {
+            throw new UrlException(
+                'The model ' . self::class . ' uses the HasUrl trait' . PHP_EOL .
+                'You are required to set the routing from where Laravel will dispatch it\'s route requests.' . PHP_EOL .
+                'You can do this from inside the getUrlOptions() method defined on the model.'
+            );
+        }
+
+        if (!self::$urlOptions->fromField) {
             throw new UrlException(
                 'The model ' . self::class . ' uses the HasUrl trait' . PHP_EOL .
                 'You are required to set the field from where to generate the url slug ($fromField)' . PHP_EOL .
@@ -256,7 +264,7 @@ trait HasUrl
             );
         }
 
-        if (!strlen(self::$urlOptions->toField)) {
+        if (!self::$urlOptions->toField) {
             throw new UrlException(
                 'The model ' . self::class . ' uses the HasUrl trait' . PHP_EOL .
                 'You are required to set the field where to store the generated url slug ($toField)' . PHP_EOL .
