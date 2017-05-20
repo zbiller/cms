@@ -61,9 +61,9 @@ Route::group([
             Route::group([
                 'prefix' => 'revisions',
             ], function () {
-                Route::get('/', ['as' => 'admin.revisions.get', 'uses' => 'RevisionsController@getRevisions']);
-                Route::match(['post', 'put'], 'rollback/{revision}', ['as' => 'admin.revisions.rollback', 'uses' => 'RevisionsController@rollbackRevision']);
-                Route::delete('destroy/{revision}', ['as' => 'admin.revisions.remove', 'uses' => 'RevisionsController@removeRevision']);
+                Route::get('/', ['as' => 'admin.revisions.get', 'uses' => 'RevisionsController@getRevisions', 'permissions' => 'revisions-list']);
+                Route::match(['post', 'put'], 'rollback/{revision}', ['as' => 'admin.revisions.rollback', 'uses' => 'RevisionsController@rollbackRevision', 'permissions' => 'revisions-rollback']);
+                Route::delete('destroy/{revision}', ['as' => 'admin.revisions.remove', 'uses' => 'RevisionsController@removeRevision', 'permissions' => 'revisions-delete']);
             });
 
             /**
@@ -72,14 +72,14 @@ Route::group([
             Route::group([
                 'prefix' => 'drafts',
             ], function () {
-                Route::get('/', ['as' => 'admin.drafts.get', 'uses' => 'DraftsController@getDrafts']);
-                Route::match(['post', 'put'], 'save', ['as' => 'admin.drafts.save', 'uses' => 'DraftsController@saveDraft']);
-                Route::match(['post', 'put'], 'create/{draft}', ['as' => 'admin.drafts.create', 'uses' => 'DraftsController@createDraft']);
-                Route::match(['post', 'put'], 'update/{draft}', ['as' => 'admin.drafts.update', 'uses' => 'DraftsController@updateDraft']);
-                Route::match(['post', 'put'], 'publish/{draft}', ['as' => 'admin.drafts.publish', 'uses' => 'DraftsController@publishDraft']);
-                Route::match(['post', 'put'], 'publish-limbo', ['as' => 'admin.drafts.publish_limbo', 'uses' => 'DraftsController@publishLimboDraft']);
-                Route::delete('remove/{draft}', ['as' => 'admin.drafts.remove', 'uses' => 'DraftsController@removeDraft']);
-                Route::delete('delete-limbo', ['as' => 'admin.drafts.delete_limbo', 'uses' => 'DraftsController@deleteLimboDraft']);
+                Route::get('/', ['as' => 'admin.drafts.get', 'uses' => 'DraftsController@getDrafts', 'permissions' => 'drafts-list']);
+                Route::match(['post', 'put'], 'save', ['as' => 'admin.drafts.save', 'uses' => 'DraftsController@saveDraft', 'permissions' => 'drafts-save']);
+                Route::match(['post', 'put'], 'create/{draft}', ['as' => 'admin.drafts.create', 'uses' => 'DraftsController@createDraft', 'permissions' => 'drafts-save']);
+                Route::match(['post', 'put'], 'update/{draft}', ['as' => 'admin.drafts.update', 'uses' => 'DraftsController@updateDraft', 'permissions' => 'drafts-save']);
+                Route::match(['post', 'put'], 'publish/{draft}', ['as' => 'admin.drafts.publish', 'uses' => 'DraftsController@publishDraft', 'permissions' => 'drafts-publish']);
+                Route::match(['post', 'put'], 'publish-limbo', ['as' => 'admin.drafts.publish_limbo', 'uses' => 'DraftsController@publishLimboDraft', 'permissions' => 'drafts-publish']);
+                Route::delete('remove/{draft}', ['as' => 'admin.drafts.remove', 'uses' => 'DraftsController@removeDraft', 'permissions' => 'drafts-delete']);
+                Route::delete('delete-limbo', ['as' => 'admin.drafts.delete_limbo', 'uses' => 'DraftsController@deleteLimboDraft', 'permissions' => 'drafts-delete']);
             });
         });
 
@@ -131,7 +131,7 @@ Route::group([
                 'prefix' => 'pages',
             ], function () {
                 Route::get('/', ['as' => 'admin.pages.index', 'uses' => 'PagesController@index', 'permissions' => 'pages-list']);
-                Route::get('deleted', ['as' => 'admin.pages.deleted', 'uses' => 'PagesController@deleted', 'permissions' => 'pages-deleted-list']);
+                Route::get('deleted', ['as' => 'admin.pages.deleted', 'uses' => 'PagesController@deleted', 'permissions' => 'pages-deleted']);
                 Route::get('create/{parent?}', ['as' => 'admin.pages.create', 'uses' => 'PagesController@create', 'permissions' => 'pages-add']);
                 Route::get('edit/{page}', ['as' => 'admin.pages.edit', 'uses' => 'PagesController@edit', 'permissions' => 'pages-edit']);
                 Route::post('store/{parent?}', ['as' => 'admin.pages.store', 'uses' => 'PagesController@store', 'permissions' => 'pages-add']);
@@ -141,25 +141,25 @@ Route::group([
                 /**
                  * Draft Actions.
                  */
-                Route::get('drafts', ['as' => 'admin.pages.drafts', 'uses' => 'PagesController@drafts', 'pages-edit']);
-                Route::get('draft/{draft}', ['as' => 'admin.pages.draft', 'uses' => 'PagesController@draft', 'pages-edit']);
-                Route::match(['get', 'put'], 'limbo/{id}', ['as' => 'admin.pages.limbo', 'uses' => 'PagesController@limbo', 'pages-edit']);
+                Route::get('drafts', ['as' => 'admin.pages.drafts', 'uses' => 'PagesController@drafts', 'permissions' => 'drafts-list']);
+                Route::get('draft/{draft}', ['as' => 'admin.pages.draft', 'uses' => 'PagesController@draft', 'permissions' => 'drafts-publish']);
+                Route::match(['get', 'put'], 'limbo/{id}', ['as' => 'admin.pages.limbo', 'uses' => 'PagesController@limbo', 'permissions' => 'drafts-save']);
 
                 /**
                  * Revision Actions.
                  */
-                Route::get('revision/{revision}', ['as' => 'admin.pages.revision', 'uses' => 'PagesController@revision', 'pages-edit']);
+                Route::get('revision/{revision}', ['as' => 'admin.pages.revision', 'uses' => 'PagesController@revision', 'permissions' => 'revisions-rollback']);
 
                 /**
                  * Duplicate Actions.
                  */
-                Route::post('duplicate/{page}', ['as' => 'admin.pages.duplicate', 'uses' => 'PagesController@duplicate', 'permissions' => 'pages-edit']);
+                Route::post('duplicate/{page}', ['as' => 'admin.pages.duplicate', 'uses' => 'PagesController@duplicate', 'permissions' => 'pages-duplicate']);
 
                 /**
-                 * Soft Delete Actions.
+                 * Deleted Actions.
                  */
-                Route::put('restore/{id}', ['as' => 'admin.pages.restore', 'uses' => 'PagesController@restore', 'permissions' => 'pages-deleted-edit']);
-                Route::delete('delete/{id}', ['as' => 'admin.pages.delete', 'uses' => 'PagesController@delete', 'permissions' => 'pages-deleted-delete']);
+                Route::put('restore/{id}', ['as' => 'admin.pages.restore', 'uses' => 'PagesController@restore', 'permissions' => 'pages-restore']);
+                Route::delete('delete/{id}', ['as' => 'admin.pages.delete', 'uses' => 'PagesController@delete', 'permissions' => 'pages-force-delete']);
 
                 /**
                  * Tree Actions.
@@ -215,9 +215,13 @@ Route::group([
                 Route::get('edit/{block}', ['as' => 'admin.blocks.edit', 'uses' => 'BlocksController@edit', 'permissions' => 'blocks-edit']);
                 Route::post('row', ['as' => 'admin.blocks.row', 'uses' => 'BlocksController@row', 'permissions' => 'blocks-list']);
                 Route::post('store', ['as' => 'admin.blocks.store', 'uses' => 'BlocksController@store', 'permissions' => 'blocks-add']);
-                Route::post('duplicate/{block}', ['as' => 'admin.blocks.duplicate', 'uses' => 'BlocksController@duplicate', 'permissions' => 'blocks-edit']);
                 Route::put('update/{block}', ['as' => 'admin.blocks.update', 'uses' => 'BlocksController@update', 'permissions' => 'blocks-edit']);
                 Route::delete('destroy/{block}', ['as' => 'admin.blocks.destroy', 'uses' => 'BlocksController@destroy', 'permissions' => 'blocks-delete']);
+
+                /**
+                 * Duplicate Actions.
+                 */
+                Route::post('duplicate/{block}', ['as' => 'admin.blocks.duplicate', 'uses' => 'BlocksController@duplicate', 'permissions' => 'blocks-duplicate']);
             });
 
             /**
@@ -242,13 +246,13 @@ Route::group([
             ], function () {
                 Route::get('/', ['as' => 'admin.uploads.index', 'uses' => 'UploadsController@index', 'permissions' => 'uploads-list']);
                 Route::get('show/{upload}', ['as' => 'admin.uploads.show', 'uses' => 'UploadsController@show', 'permissions' => 'uploads-list']);
-                Route::get('download/{upload}', ['as' => 'admin.uploads.download', 'uses' => 'UploadsController@download', 'permissions' => 'uploads-edit']);
+                Route::get('download/{upload}', ['as' => 'admin.uploads.download', 'uses' => 'UploadsController@download', 'permissions' => 'uploads-download']);
                 Route::get('get/{type?}', ['as' => 'admin.uploads.get', 'uses' => 'UploadsController@get', 'permissions' => 'uploads-list']);
-                Route::get('crop', ['as' => 'admin.uploads.crop', 'uses' => 'UploadsController@crop', 'permissions' => 'uploads-edit']);
-                Route::post('store', ['as' => 'admin.uploads.store', 'uses' => 'UploadsController@store', 'permissions' => 'uploads-add']);
-                Route::post('upload', ['as' => 'admin.uploads.upload', 'uses' => 'UploadsController@upload', 'permissions' => 'uploads-add']);
-                Route::post('set', ['as' => 'admin.uploads.set', 'uses' => 'UploadsController@set', 'permissions' => 'uploads-edit']);
-                Route::post('cut', ['as' => 'admin.uploads.cut', 'uses' => 'UploadsController@cut', 'permissions' => 'uploads-edit']);
+                Route::get('crop', ['as' => 'admin.uploads.crop', 'uses' => 'UploadsController@crop', 'permissions' => 'uploads-crop']);
+                Route::post('store', ['as' => 'admin.uploads.store', 'uses' => 'UploadsController@store', 'permissions' => 'uploads-upload']);
+                Route::post('upload', ['as' => 'admin.uploads.upload', 'uses' => 'UploadsController@upload', 'permissions' => 'uploads-upload']);
+                Route::post('set', ['as' => 'admin.uploads.set', 'uses' => 'UploadsController@set', 'permissions' => 'uploads-select']);
+                Route::post('cut', ['as' => 'admin.uploads.cut', 'uses' => 'UploadsController@cut', 'permissions' => 'uploads-crop']);
                 Route::delete('destroy/{upload}', ['as' => 'admin.uploads.destroy', 'uses' => 'UploadsController@destroy', 'permissions' => 'uploads-delete']);
                 Route::delete('delete', ['as' => 'admin.uploads.delete', 'uses' => 'UploadsController@delete', 'permissions' => 'uploads-delete']);
             });

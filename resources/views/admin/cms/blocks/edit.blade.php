@@ -28,4 +28,3 @@
         {!! button()->saveRecord() !!}
     </section>
 @endsection
-

@@ -17,10 +17,10 @@
                 <td>{{ $block->name ?: 'N/A' }}</td>
                 <td>{{ $block->type ?: 'N/A' }}</td>
                 <td>
-                    <a href="{{ route('admin.blocks.edit', $block->id) }}" class="btn yellow no-margin-top no-margin-bottom no-margin-left" target="_blank">
+                    <a href="{{ route('admin.blocks.edit', $block->id) }}" class="btn yellow no-margin-top no-margin-bottom no-margin-left {!! !(auth()->user()->isDeveloper() || auth()->user()->hasPermission('blocks-edit')) ? 'disabled' : '' !!}" target="_blank">
                         <i class="fa fa-eye"></i>&nbsp; View
                     </a>
-                    <a href="#" class="block-unassign btn red no-margin-top no-margin-bottom no-margin-right {!! $disabled === true ? 'disabled' : '' !!}">
+                    <a href="#" class="block-unassign btn red no-margin-top no-margin-bottom no-margin-right {!! $disabled === true || !(auth()->user()->isDeveloper() || auth()->user()->hasPermission('blocks-unassign')) ? 'disabled' : '' !!}">
                         <i class="fa fa-times"></i>&nbsp; Remove
                     </a>
                 </td>

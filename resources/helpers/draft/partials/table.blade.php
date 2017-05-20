@@ -14,13 +14,13 @@
                 <td>{{ $draft->user ? $draft->user->full_name : 'N/A' }}</td>
                 <td>{{ $draft->created_at ?: 'N/A' }}</td>
                 <td>
-                    <a href="{{ route('admin.drafts.publish', $draft->id) }}" class="draft-publish btn green no-margin-left no-margin-top no-margin-bottom">
+                    <a href="{{ route('admin.drafts.publish', $draft->id) }}" class="draft-publish btn green no-margin-left no-margin-top no-margin-bottom {!! !(auth()->user()->isDeveloper() || auth()->user()->hasPermission('drafts-publish')) ? 'disabled' : '' !!}">
                         <i class="fa fa-check-square-o"></i>&nbsp; Publish
                     </a>
-                    <a href="{{ route($route, $draft->id) }}" class="btn yellow no-margin-top no-margin-bottom">
+                    <a href="{{ route($route, $draft->id) }}" class="btn yellow no-margin-top no-margin-bottom {!! !(auth()->user()->isDeveloper() || auth()->user()->hasPermission('drafts-publish')) ? 'disabled' : '' !!}">
                         <i class="fa fa-eye"></i>&nbsp; View
                     </a>
-                    <a href="{{ route('admin.drafts.remove', $draft->id) }}" class="draft-delete btn red no-margin-top no-margin-bottom no-margin-right">
+                    <a href="{{ route('admin.drafts.remove', $draft->id) }}" class="draft-delete btn red no-margin-top no-margin-bottom no-margin-right {!! !(auth()->user()->isDeveloper() || auth()->user()->hasPermission('drafts-delete')) ? 'disabled' : '' !!}">
                         <i class="fa fa-times"></i>&nbsp; Remove
                     </a>
                 </td>

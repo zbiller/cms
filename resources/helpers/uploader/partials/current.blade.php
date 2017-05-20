@@ -20,13 +20,13 @@
                 @foreach($styles as $style)
                     <div id="{!! $style !!}-{!! $index !!}" class="modal-tab {!! $loop->first ? 'active' : '' !!}">
                         @if($upload->isImage())
-                            <a class="open-upload-cropper-{{ $index }} {!! $disabled ? 'disabled' : '' !!}"
-                               data-url="{{ $current->url('original') }}"
-                               data-path="{{ $current->path('original', true) }}"
-                               data-style="{{ $style }}"
-                            >
+                            @permission('uploads-crop')
+                                <a class="open-upload-cropper-{{ $index }} {!! $disabled ? 'disabled' : '' !!}" data-url="{{ $current->url('original') }}" data-path="{{ $current->path('original', true) }}" data-style="{{ $style }}">
+                                    <img src="{!! $current->url($style) !!}" />
+                                </a>
+                            @elsepermission
                                 <img src="{!! $current->url($style) !!}" />
-                            </a>
+                            @endpermission
                         @elseif($upload->isVideo())
                             <video controls>
                                 <source src="{{ $current->url($style) }}" type="video/{{ $current->getExtension() }}">
@@ -57,5 +57,7 @@
             </div>
         </div>
     </section>
-    <div id="upload-crop-container-{{ $index }}"></div>
+    @permission('uploads-crop')
+        <div id="upload-crop-container-{{ $index }}"></div>
+    @endpermission
 @endif

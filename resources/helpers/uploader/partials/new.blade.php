@@ -1,4 +1,4 @@
-<a id="open-upload-new-{!! $index !!}" data-popup="open" data-popup-id="upload-new-{!! $index !!}" class="open-upload-new btn gray centered bordered left no-margin no-responsiveness {!! $current ? 'half' : 'full' !!} {!! $disabled ? 'disabled' : '' !!}">
+<a id="open-upload-new-{!! $index !!}" data-popup="open" data-popup-id="upload-new-{!! $index !!}" class="open-upload-new btn gray centered bordered left no-margin no-responsiveness {!! $current ? 'half' : 'full' !!} {!! $disabled || !(auth()->user()->isDeveloper() || auth()->user()->hasPermission('uploads-list')) ? 'disabled' : '' !!}">
     Choose Upload
 </a>
 @if($disabled === false)
@@ -30,14 +30,18 @@
                 @endforeach
             </div>
             <div class="footer">
-                <label class="upload-btn green left">
-                    <i class="fa fa-upload"></i>&nbsp; Upload New
-                    <input type="file" name="file" accept="{!! $accept && is_array($accept) && !empty($accept) ? '.' . implode(',.', $accept) : '*' !!}">
-                </label>
+                @permission('uploads-upload')
+                    <label class="upload-btn green left">
+                        <i class="fa fa-upload"></i>&nbsp; Upload New
+                        <input type="file" name="file" accept="{!! $accept && is_array($accept) && !empty($accept) ? '.' . implode(',.', $accept) : '*' !!}">
+                    </label>
+                @endpermission
                 <span class="upload-message"></span>
-                <a id="upload-save-{!! $index !!}" class="btn blue right no-margin">
-                    <i class="fa fa-check"></i>&nbsp; Save
-                </a>
+                @permission('uploads-select')
+                    <a id="upload-save-{!! $index !!}" class="btn blue right no-margin">
+                        <i class="fa fa-check"></i>&nbsp; Save
+                    </a>
+                @endpermission
                 <div class="progress" style="display: none;">
                     <div class="bar" style="width: 0%;"></div>
                 </div>

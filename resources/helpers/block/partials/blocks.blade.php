@@ -8,21 +8,23 @@
             </table>
 
             @if($disabled === false)
-                <div class="block-assign-container">
-                    <div class="block-assign-select-container">
-                        <select class="block-assign-select">
-                            <option value="" selected="selected"></option>
-                            @foreach($model->getBlocksOfLocation($location) as $block)
-                                <option value="{{ $block->id }}">{{ $block->name }}</option>
-                            @endforeach
-                        </select>
+                @permission('blocks-assign')
+                    <div class="block-assign-container">
+                        <div class="block-assign-select-container">
+                            <select class="block-assign-select">
+                                <option value="" selected="selected"></option>
+                                @foreach($model->getBlocksOfLocation($location) as $block)
+                                    <option value="{{ $block->id }}">{{ $block->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="block-assign-btn-container">
+                            <a href="#" class="block-assign btn green no-margin right">
+                                <i class="fa fa-plus"></i>&nbsp; Assign
+                            </a>
+                        </div>
                     </div>
-                    <div class="block-assign-btn-container">
-                        <a href="#" class="block-assign btn green no-margin right">
-                            <i class="fa fa-plus"></i>&nbsp; Assign
-                        </a>
-                    </div>
-                </div>
+                @endpermission
             @endif
         </div>
     @endforeach
