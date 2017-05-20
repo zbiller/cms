@@ -26,6 +26,10 @@ class AdminUsersController extends Controller
     {
         return $this->_index(function () use ($request, $filter, $sort) {
             $this->items = User::notDeveloper()->only('admin')->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+
+            $this->vars = [
+                'roles' => Role::only(Role::TYPE_ADMIN)->exclude('admin')->get(),
+            ];
         });
     }
 
