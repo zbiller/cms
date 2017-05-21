@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Cms\Block;
 use DB;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Relation;
@@ -135,10 +136,10 @@ trait HasDrafts
     {
         try {
             $model = DB::transaction(function () use ($draft) {
-                if ($draft === null) {
-                    $model = $this->publishLimboDraft();
-                } else {
+                if ($draft && $draft->exists) {
                     $model = $this->publishRegularDraft($draft);
+                } else {
+                    $model = $this->publishLimboDraft();
                 }
 
                 return $model;
@@ -272,7 +273,7 @@ trait HasDrafts
     {
         $attributes = [
             'user_id' => auth()->user() ? auth()->user()->id : null,
-            'metadata' => $this->buildDraftData($data),
+            'metadata' => $this->buildDraftData($data, $draft),
         ];
 
         if ($draft && $draft->exists) {
@@ -354,9 +355,10 @@ trait HasDrafts
      * Build the entire data array for further json insert into the drafts table.
      *
      * @param array $params
+     * @param Draft $draft
      * @return array
      */
-    protected function buildDraftData(array $params = [])
+    protected function buildDraftData(array $params = [], Draft $draft = null)
     {
         $data = $this->buildDraftDataFromModel($params);
 
@@ -373,7 +375,7 @@ trait HasDrafts
             }
 
             if (Relation::isPivoted($attributes['type'])) {
-                $data['relations'][$relation] = $this->buildDraftDataFromPivotedRelation($params, $relation, $attributes);
+                $data['relations'][$relation] = $this->buildDraftDataFromPivotedRelation($params, $relation, $attributes, $draft);
             }
         }
 
@@ -470,10 +472,39 @@ trait HasDrafts
      * @param array $params
      * @param string $relation
      * @param array $attributes
+     * @param Draft $draft
      * @return array
      */
-    protected function buildDraftDataFromPivotedRelation(array $params = [], $relation, array $attributes = [])
+    protected function buildDraftDataFromPivotedRelation(array $params = [], $relation, array $attributes = [], Draft $draft = null)
     {
+        if (!function_exists('attach_from_existing_or_new_related')) {
+            /**
+             * @param Model $model
+             * @param int $id
+             * @param string $relation
+             * @param array $attributes
+             * @param Draft|null $draft
+             */
+            function attach_from_existing_or_new_related(Model $model, $id, $relation, array $attributes = [], Draft $draft = null) {
+                $related = $model->{$relation}()->getRelated()->findOrNew($id);
+
+                if ($related->exists) {
+                    $model->{$relation}()->attach($id, $attributes);
+                } elseif ($draft->exists) {
+                    foreach ($draft->metadata->relations->{$relation}->records->items as $item) {
+                        if (isset($item->id) && $item->id == $id) {
+                            foreach ((array)$item as $field => $value) {
+                                $related->{$field} = $value;
+                            }
+
+                            $related->save();
+                            $model->{$relation}()->attach($id, $attributes);
+                        }
+                    }
+                }
+            };
+        }
+
         $data = [
             'type' => $attributes['type'],
             'class' => get_class($attributes['model']),
@@ -498,10 +529,10 @@ trait HasDrafts
             foreach ($params[$relation] as $index => $parameters) {
                 if (is_array($parameters)) {
                     foreach ($parameters as $id => $attributes) {
-                        $this->{$relation}()->attach($id, $attributes);
+                        attach_from_existing_or_new_related($this, $id, $relation, $attributes, $draft);
                     }
                 } else {
-                    $this->{$relation}()->attach($parameters);
+                    attach_from_existing_or_new_related($this, $parameters, $relation, $attributes, $draft);
                 }
             }
 
@@ -650,7 +681,7 @@ trait HasDrafts
             );
 
             if ($rel->exists === false) {
-                foreach ($item as $field => $value) {
+                foreach ((array)$item as $field => $value) {
                     $rel->attributes[$field] = $value;
                 }
 

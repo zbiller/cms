@@ -190,11 +190,13 @@ class DraftsController extends Controller
             $data = $request->except(['_token', '_method']);
             $redirect = session()->pull('draft_back_url_' . $draft->id);
 
-            if (!empty($data)) {
-                $model->saveAsDraft($data, $draft);
-            }
+            DB::transaction(function () use ($model, $draft, $data) {
+                if (!empty($data)) {
+                    $model->saveAsDraft($data, $draft);
+                }
 
-            $model->publishDraft($draft->fresh());
+                $model->publishDraft($draft->fresh());
+            });
 
             session()->flash('flash_success', 'The draft was successfully published!');
 
@@ -204,6 +206,7 @@ class DraftsController extends Controller
 
             return $redirect ? redirect($redirect) : back();
         } catch (DraftException $e) {
+            dd($e);
             session()->flash('flash_error', $e->getMessage());
 
             if (request()->ajax()) {
@@ -245,11 +248,13 @@ class DraftsController extends Controller
             $data = $request->except(['_token', '_method', '_back', '_class', '_id']);
             $model = $class::onlyDrafts()->findOrFail($id);
 
-            if (!empty($data)) {
-                $model->saveAsDraft($data);
-            }
+            DB::transaction(function () use ($model, $data) {
+                if (!empty($data)) {
+                    $model->saveAsDraft($data);
+                }
 
-            $model->publishDraft();
+                $model->publishDraft();
+            });
 
             session()->flash('flash_success', 'The draft was successfully published!');
             return $request->get('_back') ? redirect($request->get('_back')) : back();
