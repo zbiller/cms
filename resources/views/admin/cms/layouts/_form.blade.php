@@ -7,7 +7,7 @@
 </div>
 
 @if($item->exists)
-    {!! block()->containers($item) !!}
+    {!! block()->container($item) !!}
 @endif
 
 @section('bottom_scripts')

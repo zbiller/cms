@@ -62,7 +62,7 @@
 <body>
     <main>
         @section('content')
-            <a href="{{ route('home') }}">return to homepage</a>
+            <a href="{{ url('/') }}">return to homepage</a>
         @show
     </main>
 </body>

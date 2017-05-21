@@ -48,6 +48,14 @@ elixir(function (mix) {
             'admin/main.css'
         ], 'public/assets/css/admin/app.css')
 
+        .styles([
+            'front/icons.css',
+            'front/bootstrap.css',
+            'front/animate.css',
+            'front/swiper.css',
+            'front/layout.css'
+        ], 'public/assets/css/front/app.css')
+
         .scripts([
             'libs/jquery.js',
             'libs/jquery-ui.js',
@@ -68,8 +76,24 @@ elixir(function (mix) {
             './public/vendor/jsvalidation/js/jsvalidation.js'
         ], 'public/assets/js/admin/app.js')
 
+        .scripts([
+            'front/jquery.js',
+            'front/migrate.js',
+            'front/bootstrap.js',
+            'front/easing.js',
+            'front/back-to-top.js',
+            'front/scroll.js',
+            'front/wow.js',
+            'front/swiper.js',
+            'front/masonry.js',
+            'front/images-loaded.js',
+            'front/layout.js'
+        ], 'public/assets/js/front/app.js')
+
         .version([
             'assets/css/admin/app.css',
-            'assets/js/admin/app.js'
+            'assets/js/admin/app.js',
+            'assets/css/front/app.css',
+            'assets/js/front/app.js'
         ]);
 });

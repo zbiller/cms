@@ -67,7 +67,7 @@ class Layout extends Model
         self::TYPE_DEFAULT => [
             'file' => 'default/default.blade.php',
             'block_locations' => [
-                'header', 'footer', 'sidebar'
+                'header', 'content', 'footer'
             ],
         ],
         self::TYPE_HOME => [

@@ -45,7 +45,7 @@ class Block extends Model
      * --- Label:
      * The pretty formatted block type name.
      *
-     * --- Compose Class:
+     * --- Composer Class:
      * The full namespace to the block's view composer.
      *
      * --- Views Path:
@@ -64,6 +64,36 @@ class Block extends Model
             'composer_class' => 'App\Blocks\Example\Composer',
             'views_path' => 'app/Blocks/Example/Views',
             'preview_image' => 'example.jpg',
+        ],
+        'Features' => [
+            'label' => 'Features',
+            'composer_class' => 'App\Blocks\Features\Composer',
+            'views_path' => 'app/Blocks/Features/Views',
+            'preview_image' => 'features.jpg',
+        ],
+        'Clients' => [
+            'label' => 'Clients',
+            'composer_class' => 'App\Blocks\Clients\Composer',
+            'views_path' => 'app/Blocks/Clients/Views',
+            'preview_image' => 'clients.jpg',
+        ],
+        'Team' => [
+            'label' => 'Team',
+            'composer_class' => 'App\Blocks\Team\Composer',
+            'views_path' => 'app/Blocks/Team/Views',
+            'preview_image' => 'team.jpg',
+        ],
+        'Copyright' => [
+            'label' => 'Copyright',
+            'composer_class' => 'App\Blocks\Copyright\Composer',
+            'views_path' => 'app/Blocks/Copyright/Views',
+            'preview_image' => 'copyright.jpg',
+        ],
+        'Wallpaper' => [
+            'label' => 'Wallpaper',
+            'composer_class' => 'App\Blocks\Wallpaper\Composer',
+            'views_path' => 'app/Blocks/Wallpaper/Views',
+            'preview_image' => 'wallpaper.jpg',
         ],
     ];
 
@@ -230,6 +260,20 @@ class Block extends Model
                             'ratio' => true,
                         ]
                     ],
+                    'metadata[footer_logo]' => [
+                        'logo_default' => [
+                            'width' => '85',
+                            'height' => '21',
+                            'ratio' => true,
+                        ],
+                    ],
+                    'metadata[header_wallpaper]' => [
+                        'wallpaper_default' => [
+                            'width' => '1920',
+                            'height' => '400',
+                            'ratio' => true,
+                        ],
+                    ],
                     'metadata[items][*][image]' => [
                         'first_style' => [
                             'width' => '400',
@@ -239,6 +283,25 @@ class Block extends Model
                         'second_style' => [
                             'width' => '100',
                             'height' => '400',
+                            'ratio' => true,
+                        ],
+                    ],
+                    'metadata[items][*][client_image]' => [
+                        'default' => [
+                            'width' => '203',
+                            'height' => '77',
+                            'ratio' => true,
+                        ],
+                    ],
+                    'metadata[items][*][team_image]' => [
+                        'desktop' => [
+                            'width' => '770',
+                            'height' => '860',
+                            'ratio' => true,
+                        ],
+                        'mobile' => [
+                            'width' => '385',
+                            'height' => '430',
                             'ratio' => true,
                         ],
                     ],

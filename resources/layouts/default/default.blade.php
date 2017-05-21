@@ -1,13 +1,15 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html lang="en" class="no-js">
 <head>
-    @include('layouts::admin.partials._head')
+    @include('layouts::default.partials._head')
 </head>
 <body>
+    @include('layouts::default.partials._header')
+
     <main>
         @yield('content')
     </main>
 
-    @include('layouts::admin.partials._footer')
+    @include('layouts::default.partials._footer')
 </body>
 </html>

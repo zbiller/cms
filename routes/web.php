@@ -283,11 +283,14 @@ Route::group([
 Route::get('{url}', function ($url = '/') {
     try {
         $url = \App\Models\Cms\Url::whereUrl($url)->firstOrFail();
-        $model = $url->urlable;
 
-        return (new Illuminate\Routing\ControllerDispatcher(app()))->dispatch(app(Illuminate\Routing\Route::class)->setAction([
-            'model' => $model
-        ]), app($model->getUrlOptions()->routeController), $model->getUrlOptions()->routeAction);
+        if ($model = $url->urlable) {
+            return (new Illuminate\Routing\ControllerDispatcher(app()))->dispatch(app(Illuminate\Routing\Route::class)->setAction([
+                'model' => $model
+            ]), app($model->getUrlOptions()->routeController), $model->getUrlOptions()->routeAction);
+        } else {
+            abort(404);
+        }
     } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
         abort(404);
     }

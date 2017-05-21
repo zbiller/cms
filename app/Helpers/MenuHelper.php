@@ -2,6 +2,7 @@
 
 namespace App\Helpers;
 
+use App\Models\Cms\Menu;
 use Closure;
 use Illuminate\Support\Collection;
 
@@ -13,6 +14,16 @@ class MenuHelper
      * @var Collection
      */
     protected $items;
+
+
+
+    public function get($location)
+    {
+        return Menu::active()->whereIsRoot()->whereLocation($location)->get();
+    }
+
+
+
 
     /**
      * Generate a new menu.
