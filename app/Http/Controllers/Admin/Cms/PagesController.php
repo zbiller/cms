@@ -138,7 +138,7 @@ class PagesController extends Controller
     {
         return $this->_restore(function () use ($id) {
             $this->item = Page::onlyTrashed()->findOrFail($id);
-            $this->item->doNotGenerateUrl()->restore();
+            $this->item->doNotGenerateUrl()->doNotSaveBlocks()->restore();
         });
     }
 
@@ -289,7 +289,7 @@ class PagesController extends Controller
      */
     public function fixTree()
     {
-        app(Page::class)->doNotGenerateUrl()->fixTree();
+        app(Page::class)->doNotGenerateUrl()->doNotSaveBlocks()->fixTree();
 
         return back();
     }
@@ -380,7 +380,7 @@ class PagesController extends Controller
 
         $this->rebuildTreeBranch($branch, $tree);
 
-        return app(Page::class)->doNotGenerateUrl()->rebuildTree($tree);
+        return app(Page::class)->doNotGenerateUrl()->doNotSaveBlocks()->rebuildTree($tree);
     }
 
     /**

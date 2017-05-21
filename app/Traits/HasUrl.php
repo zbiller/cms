@@ -25,7 +25,7 @@ trait HasUrl
     protected static $urlOptions;
 
     /**
-     * Flag to manually disable the url generation only for the current request.
+     * Flag to manually enable/disable the url generation only for the current request.
      *
      * @var bool
      */

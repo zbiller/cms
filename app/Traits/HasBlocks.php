@@ -22,6 +22,13 @@ trait HasBlocks
     protected static $blockOptions;
 
     /**
+     * Flag to manually enable/disable the blocks savings only for the current request.
+     *
+     * @var bool
+     */
+    protected static $shouldSaveBlocks = true;
+
+    /**
      * Boot the trait.
      * Remove blocks on save and delete if one or many locations from model's instance have been changed/removed.
      */
@@ -32,7 +39,9 @@ trait HasBlocks
         self::$blockOptions = self::getBlockOptions();
 
         static::saved(function (Model $model) {
-            $model->saveBlocks();
+            if (self::$shouldSaveBlocks === true) {
+                $model->saveBlocks();
+            }
         });
 
         static::deleted(function (Model $model) {
@@ -52,6 +61,18 @@ trait HasBlocks
         return $this->morphToMany(Block::class, 'blockable')->withPivot([
             'id', 'location', 'ord'
         ])->withTimestamps();
+    }
+
+    /**
+     * Disable the url generation manually only for the current request.
+     *
+     * @return static
+     */
+    public function doNotSaveBlocks()
+    {
+        self::$shouldSaveBlocks = false;
+
+        return $this;
     }
 
     /**
