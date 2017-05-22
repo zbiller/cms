@@ -1,1 +1,1 @@
-{!! uploader()->field('metadata[header_wallpaper]')->label('Image')->model($item)->types('image')->manager() !!}
+{!! uploader()->field('metadata[header_wallpaper]')->label('Image')->model($item)->manager() !!}

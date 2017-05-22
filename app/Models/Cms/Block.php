@@ -307,6 +307,17 @@ class Block extends Model
                     ],
                 ]
             ],
+            'videos' => [
+                'styles' => [
+                    'metadata[header_wallpaper]' => [
+                        'wallpaper_default' => [
+                            'width' => '600',
+                            'height' => '400',
+                            'ratio' => true,
+                        ],
+                    ],
+                ]
+            ]
         ];
     }
 
