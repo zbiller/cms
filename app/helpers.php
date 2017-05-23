@@ -134,6 +134,16 @@ if (!function_exists('revision')) {
     }
 }
 
+if (!function_exists('preview')) {
+    /**
+     * @return \App\Helpers\PreviewHelper
+     */
+    function preview()
+    {
+        return new App\Helpers\PreviewHelper();
+    }
+}
+
 if (!function_exists('relation')) {
     /**
      * @return \App\Helpers\RelationHelper

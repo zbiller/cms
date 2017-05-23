@@ -12,7 +12,6 @@ use App\Traits\CanCrud;
 use App\Http\Requests\PageRequest;
 use App\Http\Filters\PageFilter;
 use App\Http\Sorts\PageSort;
-use App\Options\CrudOptions;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -197,6 +196,24 @@ class PagesController extends Controller
     }
 
     /**
+     * @param PageRequest $request
+     * @param Page|null $page
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws Exception
+     */
+    public function preview(PageRequest $request, Page $page = null)
+    {
+        return $this->_preview(function () use ($page, $request) {
+            if ($page && $page->exists) {
+                $this->item = $page;
+                $this->item->update($request->all());
+            } else {
+                $this->item = Page::create($request->all());
+            }
+        });
+    }
+
+    /**
      * @param Request $request
      * @param PageFilter $filter
      * @param PageSort $sort
@@ -234,6 +251,12 @@ class PagesController extends Controller
         }, $draft);
     }
 
+    /**
+     * @param PageRequest $request
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws Exception
+     */
     public function limbo(PageRequest $request, $id)
     {
         return $this->_limbo(function () {

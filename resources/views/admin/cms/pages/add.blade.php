@@ -23,6 +23,7 @@
         {!! button()->cancelAction(route('admin.pages.index')) !!}
     </section>
     <section class="actions">
+        {!! button()->previewRecord(route('admin.pages.preview', $item->id)) !!}
         {!! button()->saveAsDraft(route('admin.drafts.save')) !!}
         {!! button()->saveAndStay() !!}
         {!! button()->saveRecord() !!}

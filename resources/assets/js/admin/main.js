@@ -99,28 +99,28 @@ function buttons() {
     });
 
     //save stay
-    $(document).on('click', 'a.save-stay', function (e) {
+    $(document).on('click', 'a.btn-save-stay', function (e) {
         e.preventDefault();
 
         $('form.form').append('<input type="hidden" name="save_stay" value="1" />').submit();
     });
 
     //save elsewhere
-    $(document).on('click', 'a.save-elsewhere', function (e) {
+    $(document).on('click', 'a.btn-save-elsewhere', function (e) {
         e.preventDefault();
 
         $('form.form').attr('action', $(this).data('url')).submit();
     });
 
     //save new
-    $(document).on('click', 'a.save-new', function (e) {
+    $(document).on('click', 'a.btn-save-new', function (e) {
         e.preventDefault();
 
         $('form.form').attr('action', $(this).data('url')).submit();
     });
 
     //save draft
-    $(document).on('click', 'a.save-draft', function (e) {
+    $(document).on('click', 'a.btn-save-draft', function (e) {
         e.preventDefault();
 
         $('form.form').attr('action', $(this).data('url')).submit();
@@ -135,6 +135,13 @@ function buttons() {
         }
 
         return false;
+    });
+
+    //preview
+    $(document).on('click', 'a.btn-preview-record', function (e) {
+        e.preventDefault();
+
+        $('form.form').attr('action', $(this).data('url')).attr('target', '_blank').submit();
     });
 
     //filter

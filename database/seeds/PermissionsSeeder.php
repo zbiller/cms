@@ -116,6 +116,11 @@ class PermissionsSeeder extends Seeder
                 'label' => 'Duplicate',
                 'name' => 'pages-duplicate',
             ],
+            'Preview' => [
+                'group' => 'Pages',
+                'label' => 'Preview',
+                'name' => 'pages-preview',
+            ],
             'Deleted' => [
                 'group' => 'Pages',
                 'label' => 'Deleted',

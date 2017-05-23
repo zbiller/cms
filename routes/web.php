@@ -139,6 +139,22 @@ Route::group([
                 Route::delete('destroy/{page}', ['as' => 'admin.pages.destroy', 'uses' => 'PagesController@destroy', 'permissions' => 'pages-delete']);
 
                 /**
+                 * Deleted Actions.
+                 */
+                Route::put('restore/{id}', ['as' => 'admin.pages.restore', 'uses' => 'PagesController@restore', 'permissions' => 'pages-restore']);
+                Route::delete('delete/{id}', ['as' => 'admin.pages.delete', 'uses' => 'PagesController@delete', 'permissions' => 'pages-force-delete']);
+
+                /**
+                 * Duplicate Actions.
+                 */
+                Route::post('duplicate/{page}', ['as' => 'admin.pages.duplicate', 'uses' => 'PagesController@duplicate', 'permissions' => 'pages-duplicate']);
+
+                /**
+                 * Preview Actions.
+                 */
+                Route::match(['post', 'put'], 'preview/{page?}', ['as' => 'admin.pages.preview', 'uses' => 'PagesController@preview', 'permissions' => 'pages-preview']);
+
+                /**
                  * Draft Actions.
                  */
                 Route::get('drafts', ['as' => 'admin.pages.drafts', 'uses' => 'PagesController@drafts', 'permissions' => 'drafts-list']);
@@ -149,17 +165,6 @@ Route::group([
                  * Revision Actions.
                  */
                 Route::get('revision/{revision}', ['as' => 'admin.pages.revision', 'uses' => 'PagesController@revision', 'permissions' => 'revisions-rollback']);
-
-                /**
-                 * Duplicate Actions.
-                 */
-                Route::post('duplicate/{page}', ['as' => 'admin.pages.duplicate', 'uses' => 'PagesController@duplicate', 'permissions' => 'pages-duplicate']);
-
-                /**
-                 * Deleted Actions.
-                 */
-                Route::put('restore/{id}', ['as' => 'admin.pages.restore', 'uses' => 'PagesController@restore', 'permissions' => 'pages-restore']);
-                Route::delete('delete/{id}', ['as' => 'admin.pages.delete', 'uses' => 'PagesController@delete', 'permissions' => 'pages-force-delete']);
 
                 /**
                  * Tree Actions.

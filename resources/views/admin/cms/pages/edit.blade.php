@@ -24,6 +24,7 @@
     </section>
     <section class="actions">
         {!! button()->duplicateRecord(route('admin.pages.duplicate', $item->id)) !!}
+        {!! button()->previewRecord(route('admin.pages.preview', $item->id)) !!}
         {!! button()->saveAsDraft(route('admin.drafts.save')) !!}
         {!! button()->saveAndStay() !!}
         {!! button()->saveRecord() !!}

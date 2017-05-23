@@ -3,10 +3,6 @@
 namespace App\Helpers;
 
 use App\Models\Model;
-use App\Traits\HasDrafts;
-use Exception;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Throwable;
 
 class ButtonHelper
 {
@@ -270,6 +266,21 @@ class ButtonHelper
     public function duplicateRecord($url, array $attributes = [])
     {
         return view('helpers::button.duplicate_record')->with([
+            'url' => $url,
+            'attributes' => self::buildAttributes($attributes)
+        ]);
+    }
+
+    /**
+     * Render the duplicate button.
+     *
+     * @param string $url
+     * @param array $attributes
+     * @return \Illuminate\View\View
+     */
+    public function previewRecord($url, array $attributes = [])
+    {
+        return view('helpers::button.preview_record')->with([
             'url' => $url,
             'attributes' => self::buildAttributes($attributes)
         ]);

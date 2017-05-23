@@ -19,8 +19,10 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Routing\ControllerDispatcher;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
+use Illuminate\Routing\Route as Router;
 
 trait CanCrud
 {
@@ -375,6 +377,48 @@ trait CanCrud
 
             session()->flash('flash_success', __('crud.duplicate_success'));
         }, $request);
+    }
+
+    /**
+     * This method should be called inside the controller's preview() method.
+     * The closure should only attempt to create/update the record from the database.
+     *
+     * $this->item = $model;
+     * $this->item->update($request->all());
+     *
+     * OR
+     *
+     * $this->item = Model::create($request->all());
+     *
+     * @param Closure|null $function
+     * @return RedirectResponse|mixed
+     * @throws Exception
+     */
+    public function _preview(Closure $function = null)
+    {
+        $this->checkCrudMethod();
+        $this->checkCrudModel();
+        $this->initCrudModel();
+
+        if (!in_array(HasUrl::class, class_uses($this->model))) {
+            session()->flash('flash_error', 'You cannot preview an entity that does not have an URL!');
+            return back();
+        }
+
+        try {
+            DB::beginTransaction();
+
+            if ($function) {
+                call_user_func($function);
+            }
+
+            session()->flash('is_preview', true);
+            return (new ControllerDispatcher(app()))->dispatch(app(Router::class)->setAction([
+                'model' => $this->item
+            ]), app($this->item->getUrlOptions()->routeController), $this->item->getUrlOptions()->routeAction);
+        } catch (Exception $e) {
+            throw $e;
+        }
     }
 
     /**

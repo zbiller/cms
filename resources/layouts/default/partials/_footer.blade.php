@@ -23,3 +23,5 @@
 
 @section('bottom_styles') @show
 @section('bottom_scripts') @show
+
+@php preview()->handle(); @endphp
