@@ -474,7 +474,7 @@ function tree()
             var request = {};
 
             $(tree.data('table')).css({opacity: 0.5});
-            $('a.btn.add').attr('href', tree.data('add-url'));
+            $('a.btn.btn-add-record').attr('href', tree.data('add-url'));
 
             $.each(query.params(), function (index, obj) {
                 request[obj.name] = obj.value;
@@ -485,7 +485,7 @@ function tree()
                 type: 'GET',
                 data: request,
                 success: function(data){
-                    $('a.btn.add').attr('href', $('a.btn.add').attr('href') + '/' + (parseInt(node.id) ? node.id : ''));
+                    $('a.btn.btn-add-record').attr('href', $('a.btn.btn-add-record').attr('href') + '/' + (parseInt(node.id) ? node.id : ''));
                     $(tree.data('container')).html(data);
                     $(tree.data('table')).css({opacity: 1});
 

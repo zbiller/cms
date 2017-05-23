@@ -164,6 +164,10 @@ trait HasRevisions
             });
 
             DB::transaction(function () use ($revision) {
+                if (self::$revisionOptions->createRevisionWhenRollingBack === true) {
+                    $this->saveAsRevision();
+                }
+
                 $this->rollbackModelToRevision($revision);
 
                 foreach ($revision->metadata->relations as $relation => $attributes) {

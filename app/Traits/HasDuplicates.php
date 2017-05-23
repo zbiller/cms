@@ -234,7 +234,7 @@ trait HasDuplicates
         foreach ($unique as $i => $column) {
             $original = $value = $model->{$column};
 
-            while (static::where($column, $value)->first()) {
+            while (static::withoutGlobalScopes()->where($column, $value)->first()) {
                 $value = $original . ' (' . ++$i . ')';
 
                 $model->{$column} = $value;

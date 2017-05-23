@@ -3,18 +3,22 @@
 namespace App\Http\Controllers\Admin\Cms;
 
 use App\Http\Controllers\Controller;
+use App\Models\Cms\Layout;
+use App\Models\Cms\Block;
 use App\Http\Filters\LayoutFilter;
 use App\Http\Requests\LayoutRequest;
 use App\Http\Sorts\LayoutSort;
-use App\Models\Cms\Block;
-use App\Models\Cms\Layout;
 use App\Traits\CanCrud;
-use App\Options\CrudOptions;
 use Illuminate\Http\Request;
 
 class LayoutsController extends Controller
 {
     use CanCrud;
+
+    /**
+     * @var string
+     */
+    protected $model = Layout::class;
 
     /**
      * @param Request $request
@@ -26,7 +30,7 @@ class LayoutsController extends Controller
     {
         return $this->_index(function () use ($request, $filter, $sort) {
             $this->items = Layout::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
-
+            $this->view = view('admin.cms.layouts.index');
             $this->vars['types'] = Layout::$types;
         });
     }
@@ -37,8 +41,11 @@ class LayoutsController extends Controller
     public function create()
     {
         return $this->_create(function () {
-            $this->vars['types'] = Layout::$types;
-            $this->vars['locations'] = Block::getLocations();
+            $this->view = view('admin.cms.layouts.add');
+            $this->vars = [
+                'types' => Layout::$types,
+                'locations' => Block::getLocations(),
+            ];
         });
     }
 
@@ -49,10 +56,9 @@ class LayoutsController extends Controller
      */
     public function store(LayoutRequest $request)
     {
-        $request = $this->mergeRequest($request);
-
         return $this->_store(function () use ($request) {
             $this->item = Layout::create($request->all());
+            $this->redirect = redirect()->route('admin.layouts.index');
         }, $request);
     }
 
@@ -64,8 +70,11 @@ class LayoutsController extends Controller
     {
         return $this->_edit(function () use ($layout) {
             $this->item = $layout;
-            $this->vars['types'] = Layout::$types;
-            $this->vars['locations'] = Block::getLocations();
+            $this->view = view('admin.cms.layouts.edit');
+            $this->vars = [
+                'types' => Layout::$types,
+                'locations' => Block::getLocations(),
+            ];
         });
     }
 
@@ -77,10 +86,10 @@ class LayoutsController extends Controller
      */
     public function update(LayoutRequest $request, Layout $layout)
     {
-        $request = $this->mergeRequest($request);
-
         return $this->_update(function () use ($request, $layout) {
             $this->item = $layout;
+            $this->redirect = redirect()->route('admin.layouts.index');
+
             $this->item->update($request->all());
         }, $request);
     }
@@ -94,35 +103,9 @@ class LayoutsController extends Controller
     {
         return $this->_destroy(function () use ($layout) {
             $this->item = $layout;
+            $this->redirect = redirect()->route('admin.layouts.index');
+
             $this->item->delete();
         });
-    }
-
-    /**
-     * @return CrudOptions
-     */
-    public static function getCrudOptions()
-    {
-        return CrudOptions::instance()
-            ->setModel(app(Layout::class))
-            ->setListRoute('admin.layouts.index')
-            ->setListView('admin.cms.layouts.index')
-            ->setAddRoute('admin.layouts.create')
-            ->setAddView('admin.cms.layouts.add')
-            ->setEditRoute('admin.layouts.edit')
-            ->setEditView('admin.cms.layouts.edit');
-    }
-
-    /**
-     * @param LayoutRequest $request
-     * @return LayoutRequest
-     */
-    private function mergeRequest(LayoutRequest $request)
-    {
-        $request->merge([
-            'block_locations' => $request->has('block_locations') ? implode(',' , $request->get('block_locations')) : null
-        ]);
-
-        return $request;
     }
 }

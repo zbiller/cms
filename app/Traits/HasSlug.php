@@ -171,7 +171,7 @@ trait HasSlug
      */
     protected function slugAlreadyExists($slug)
     {
-        return (bool)static::where(self::$slugOptions->toField, $slug)
+        return (bool)static::withoutGlobalScopes()->where(self::$slugOptions->toField, $slug)
             ->where($this->getKeyName(), '!=', $this->getKey() ?: '0')
             ->first();
     }

@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Admin\Cms;
 
-use App\Exceptions\DraftException;
-use DB;
 use Exception;
 use App\Http\Controllers\Controller;
 use App\Models\Cms\Page;
@@ -15,13 +13,17 @@ use App\Http\Requests\PageRequest;
 use App\Http\Filters\PageFilter;
 use App\Http\Sorts\PageSort;
 use App\Options\CrudOptions;
-use App\Exceptions\DuplicateException;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PagesController extends Controller
 {
     use CanCrud;
+
+    /**
+     * @var string
+     */
+    protected $model = Page::class;
 
     /**
      * @param Request $request
@@ -36,29 +38,15 @@ class PagesController extends Controller
 
         return $this->_index(function () use ($request, $filter, $sort) {
             $query = Page::whereIsRoot()->filtered($request, $filter);
-            $request->has('sort') ? $query->sorted($request, $sort) : $query->defaultOrder();
+
+            if ($request->has('sort')) {
+                $query->sorted($request, $sort);
+            } else {
+                $query->defaultOrder();
+            }
 
             $this->items = $query->get();
-
-            $this->vars = [
-                'layouts' => Layout::all(),
-                'types' => Page::$types,
-                'actives' => Page::$actives,
-            ];
-        });
-    }
-
-    /**
-     * @param Request $request
-     * @param PageFilter $filter
-     * @param PageSort $sort
-     * @return \Illuminate\View\View
-     */
-    public function deleted(Request $request, PageFilter $filter, PageSort $sort)
-    {
-        return $this->_deleted(function () use ($request, $filter, $sort) {
-            $this->items = Page::onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
-
+            $this->view = view('admin.cms.pages.index');
             $this->vars = [
                 'layouts' => Layout::all(),
                 'types' => Page::$types,
@@ -74,6 +62,7 @@ class PagesController extends Controller
     public function create(Page $parent = null)
     {
         return $this->_create(function () use ($parent) {
+            $this->view = view('admin.cms.pages.add');
             $this->vars = [
                 'parent' => $parent->exists ? $parent : null,
                 'layouts' => Layout::all(),
@@ -92,9 +81,8 @@ class PagesController extends Controller
     public function store(PageRequest $request, Page $parent = null)
     {
         return $this->_store(function () use ($request, $parent) {
-            $this->item = Page::create(
-                $request->all(), $parent->exists ? $parent : null
-            );
+            $this->item = Page::create($request->all(), $parent->exists ? $parent : null);
+            $this->redirect = redirect()->route('admin.pages.index');
         }, $request);
     }
 
@@ -106,7 +94,7 @@ class PagesController extends Controller
     {
         return $this->_edit(function () use ($page) {
             $this->item = $page;
-
+            $this->view = view('admin.cms.pages.edit');
             $this->vars = [
                 'layouts' => Layout::all(),
                 'types' => Page::$types,
@@ -121,25 +109,14 @@ class PagesController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function update(Page $page, PageRequest $request)
+    public function update(PageRequest $request, Page $page)
     {
         return $this->_update(function () use ($page, $request) {
             $this->item = $page;
+            $this->redirect = redirect()->route('admin.pages.index');
+
             $this->item->update($request->all());
         }, $request);
-    }
-
-    /**
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
-     */
-    public function restore($id)
-    {
-        return $this->_restore(function () use ($id) {
-            $this->item = Page::onlyTrashed()->findOrFail($id);
-            $this->item->doNotGenerateUrl()->doNotSaveBlocks()->restore();
-        });
     }
 
     /**
@@ -151,7 +128,43 @@ class PagesController extends Controller
     {
         return $this->_destroy(function () use ($page) {
             $this->item = $page;
+            $this->redirect = redirect()->route('admin.pages.index');
+
             $this->item->delete();
+        });
+    }
+
+    /**
+     * @param Request $request
+     * @param PageFilter $filter
+     * @param PageSort $sort
+     * @return \Illuminate\View\View
+     */
+    public function deleted(Request $request, PageFilter $filter, PageSort $sort)
+    {
+        return $this->_deleted(function () use ($request, $filter, $sort) {
+            $this->items = Page::onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->view = view('admin.cms.pages.deleted');
+            $this->vars = [
+                'layouts' => Layout::all(),
+                'types' => Page::$types,
+                'actives' => Page::$actives,
+            ];
+        });
+    }
+
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function restore($id)
+    {
+        return $this->_restore(function () use ($id) {
+            $this->item = Page::onlyTrashed()->findOrFail($id);
+            $this->redirect = redirect()->route('admin.pages.deleted');
+
+            $this->item->doNotGenerateUrl()->doNotSaveBlocks()->restore();
         });
     }
 
@@ -164,104 +177,10 @@ class PagesController extends Controller
     {
         return $this->_delete(function () use ($id) {
             $this->item = Page::onlyTrashed()->findOrFail($id);
+            $this->redirect = redirect()->route('admin.pages.deleted');
+
             $this->item->forceDelete();
         });
-    }
-
-    public function drafts(Request $request, PageFilter $filter, PageSort $sort)
-    {
-        $items = Page::onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
-
-        return view('admin.cms.pages.drafts')->with([
-            'items' => $items,
-            'layouts' => Layout::all(),
-            'types' => Page::$types,
-            'actives' => Page::$actives,
-        ]);
-    }
-
-    public function limbo(PageRequest $request, $id)
-    {
-        try {
-            $item = Page::onlyDrafts()->findOrFail($id);
-
-            switch ($request->method()) {
-                case 'GET':
-                    return view('admin.cms.pages.limbo')->with([
-                        'item' => $item,
-                        'layouts' => Layout::all(),
-                        'types' => Page::$types,
-                        'actives' => Page::$actives,
-                    ]);
-
-                    break;
-                case 'PUT':
-                    try {
-                        $item->saveAsDraft($request->all());
-
-                        session()->flash('flash_success', 'The draft was successfully saved!');
-                        return redirect()->route('admin.pages.drafts');
-                    } catch (DraftException $e) {
-                        session()->flash('flash_error', $e->getMessage());
-                        return redirect()->route('admin.pages.drafts');
-                    } catch (Exception $e) {
-                        throw new Exception($e->getMessage());
-                    }
-
-                    break;
-            }
-        } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', 'You are trying to access a draft that does not exist!');
-            return redirect()->route('admin.pages.drafts');
-        }
-    }
-
-    /**
-     * @param Draft $draft
-     * @return \Illuminate\View\View
-     */
-    public function draft(Draft $draft)
-    {
-        if (!session('draft_back_url_' . $draft->id)) {
-            session()->put('draft_back_url_' . $draft->id, url()->previous());
-        }
-
-        DB::beginTransaction();
-
-        $item = $draft->draftable;
-        $item->publishDraft($draft);
-
-        return view('admin.cms.pages.draft')->with([
-            'item' => $item,
-            'draft' => $draft,
-            'layouts' => Layout::all(),
-            'types' => Page::$types,
-            'actives' => Page::$actives,
-        ]);
-    }
-
-    /**
-     * @param Revision $revision
-     * @return \Illuminate\View\View
-     */
-    public function revision(Revision $revision)
-    {
-        if (!session('revision_back_url_' . $revision->id)) {
-            session()->put('revision_back_url_' . $revision->id, url()->previous());
-        }
-
-        DB::beginTransaction();
-
-        $item = $revision->revisionable;
-        $item->rollbackToRevision($revision);
-
-        return view('admin.cms.pages.revision')->with([
-            'item' => $item,
-            'revision' => $revision,
-            'layouts' => Layout::all(),
-            'types' => Page::$types,
-            'actives' => Page::$actives,
-        ]);
     }
 
     /**
@@ -271,17 +190,82 @@ class PagesController extends Controller
      */
     public function duplicate(Page $page)
     {
-        try {
-            $duplicate = $page->saveAsDuplicate();
+        return $this->_duplicate(function () use ($page) {
+            $this->item = $page->saveAsDuplicate();
+            $this->redirect = redirect()->route('admin.pages.edit', $this->item->id);
+        });
+    }
 
-            session()->flash('flash_success', 'The record was successfully duplicated! You have been redirected to the newly duplicated record.');
-            return redirect()->route('admin.pages.edit', $duplicate->id);
-        } catch (DuplicateException $e) {
-            session()->flash('flash_error', 'Failed duplicating the record! Please try again');
-            return back();
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
+    /**
+     * @param Request $request
+     * @param PageFilter $filter
+     * @param PageSort $sort
+     * @return \Illuminate\View\View
+     */
+    public function drafts(Request $request, PageFilter $filter, PageSort $sort)
+    {
+        return $this->_drafts(function () use ($request, $filter, $sort) {
+            $this->items = Page::onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->view = view('admin.cms.pages.drafts');
+            $this->vars = [
+                'layouts' => Layout::all(),
+                'types' => Page::$types,
+                'actives' => Page::$actives,
+            ];
+        });
+    }
+
+    /**
+     * @param Draft $draft
+     * @return \Illuminate\View\View
+     */
+    public function draft(Draft $draft)
+    {
+        return $this->_draft(function () use ($draft) {
+            $this->item = $draft->draftable;
+            $this->item->publishDraft($draft);
+
+            $this->view = view('admin.cms.pages.draft');
+            $this->vars = [
+                'layouts' => Layout::all(),
+                'types' => Page::$types,
+                'actives' => Page::$actives,
+            ];
+        }, $draft);
+    }
+
+    public function limbo(PageRequest $request, $id)
+    {
+        return $this->_limbo(function () {
+            $this->view = view('admin.cms.pages.limbo');
+            $this->vars = [
+                'layouts' => Layout::all(),
+                'types' => Page::$types,
+                'actives' => Page::$actives,
+            ];
+        }, function () use ($request) {
+            $this->item->saveAsDraft($request->all());
+            $this->redirect = redirect()->route('admin.pages.drafts');
+        }, $id, $request);
+    }
+
+    /**
+     * @param Revision $revision
+     * @return \Illuminate\View\View
+     */
+    public function revision(Revision $revision)
+    {
+        return $this->_revision(function () use ($revision) {
+            $this->item = $revision->revisionable;
+            $this->item->rollbackToRevision($revision);
+
+            $this->view = view('admin.cms.pages.revision');
+            $this->vars = [
+                'layouts' => Layout::all(),
+                'types' => Page::$types,
+                'actives' => Page::$actives,
+            ];
+        }, $revision);
     }
 
     /**
@@ -443,22 +427,5 @@ class PagesController extends Controller
 
             $this->rebuildChildrenUrls($child);
         }
-    }
-
-    /**
-     * @return CrudOptions
-     */
-    public static function getCrudOptions()
-    {
-        return CrudOptions::instance()
-            ->setModel(app(Page::class))
-            ->setListRoute('admin.pages.index')
-            ->setListView('admin.cms.pages.index')
-            ->setAddRoute('admin.pages.create')
-            ->setAddView('admin.cms.pages.add')
-            ->setEditRoute('admin.pages.edit')
-            ->setEditView('admin.cms.pages.edit')
-            ->setDeletedRoute('admin.pages.deleted')
-            ->setDeletedView('admin.cms.pages.deleted');
     }
 }

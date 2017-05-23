@@ -8,7 +8,6 @@ use App\Traits\CanCrud;
 use App\Http\Requests\MenuRequest;
 use App\Http\Filters\MenuFilter;
 use App\Http\Sorts\MenuSort;
-use App\Options\CrudOptions;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -17,21 +16,9 @@ class MenusController extends Controller
     use CanCrud;
 
     /**
-     * @var object|string
+     * @var string
      */
-    public static $location;
-
-    /**
-     * @param Request $request
-     */
-    public function __construct(Request $request)
-    {
-        if ($location = $request->route()->parameter('location')) {
-            self::$location = $location;
-        }
-
-        parent::__construct();
-    }
+    protected $model = Menu::class;
 
     /**
      * @return \Illuminate\View\View
@@ -57,10 +44,15 @@ class MenusController extends Controller
 
         return $this->_index(function () use ($request, $filter, $sort, $location) {
             $query = Menu::whereIsRoot()->whereLocation($location)->filtered($request, $filter);
-            $request->has('sort') ? $query->sorted($request, $sort) : $query->defaultOrder();
+
+            if ($request->has('sort')) {
+                $query->sorted($request, $sort);
+            } else {
+                $query->defaultOrder();
+            }
 
             $this->items = $query->get();
-
+            $this->view = view('admin.cms.menus.index');
             $this->vars = [
                 'location' => $location,
                 'types' => Menu::$types,
@@ -77,6 +69,7 @@ class MenusController extends Controller
     public function create($location, Menu $parent = null)
     {
         return $this->_create(function () use ($location, $parent) {
+            $this->view = view('admin.cms.menus.add');
             $this->vars = [
                 'location' => $location,
                 'parent' => $parent->exists ? $parent : null,
@@ -100,12 +93,9 @@ class MenusController extends Controller
             'location' => $location
         ]);
 
-        //dd($request->all());
-
-        return $this->_store(function () use ($request, $parent) {
-            $this->item = Menu::create(
-                $request->all(), $parent->exists ? $parent : null
-            );
+        return $this->_store(function () use ($request, $location, $parent) {
+            $this->item = Menu::create($request->all(), $parent->exists ? $parent : null);
+            $this->redirect = redirect()->route('admin.menus.index', $location);
         }, $request);
     }
 
@@ -119,7 +109,7 @@ class MenusController extends Controller
     {
         return $this->_edit(function () use ($location, $menu) {
             $this->item = $menu;
-
+            $this->view = view('admin.cms.menus.edit');
             $this->vars = [
                 'location' => $location,
                 'types' => Menu::$types,
@@ -140,6 +130,8 @@ class MenusController extends Controller
     {
         return $this->_update(function () use ($location, $menu, $request) {
             $this->item = $menu;
+            $this->redirect = redirect()->route('admin.menus.index', $location);
+
             $this->item->update($request->all());
         }, $request);
     }
@@ -154,6 +146,8 @@ class MenusController extends Controller
     {
         return $this->_destroy(function () use ($location, $menu) {
             $this->item = $menu;
+            $this->redirect = redirect()->route('admin.menus.index', $location);
+
             $this->item->delete();
         });
     }
@@ -315,22 +309,5 @@ class MenusController extends Controller
 
             $array[] = $_item;
         }
-    }
-
-    /**
-     * @return CrudOptions
-     */
-    public static function getCrudOptions()
-    {
-        return CrudOptions::instance()
-            ->setModel(app(Menu::class))
-            ->setListRoute('admin.menus.index', self::$location ? ['location' => self::$location] : [])
-            ->setListView('admin.cms.menus.index')
-            ->setAddRoute('admin.menus.create', self::$location ? ['location' => self::$location] : [])
-            ->setAddView('admin.cms.menus.add')
-            ->setEditRoute('admin.menus.edit', self::$location ? ['location' => self::$location] : [])
-            ->setEditView('admin.cms.menus.edit')
-            ->setDeletedRoute('admin.menus.deleted', self::$location ? ['location' => self::$location] : [])
-            ->setDeletedView('admin.cms.menus.deleted');
     }
 }

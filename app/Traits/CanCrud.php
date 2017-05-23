@@ -6,24 +6,24 @@ use DB;
 use Route;
 use Closure;
 use Exception;
-use ReflectionMethod;
-use App\Models\Model;
-use App\Options\CrudOptions;
+use App\Models\Version\Draft;
+use App\Models\Version\Revision;
 use App\Exceptions\CrudException;
-use Illuminate\Http\Request;
+use App\Exceptions\DuplicateException;
+use App\Exceptions\UrlException;
+use App\Exceptions\DraftException;
+use App\Exceptions\RevisionException;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 
 trait CanCrud
 {
-    /**
-     * The container for all the options necessary for this trait.
-     * Options can be viewed in the App\Options\CrudOptions file.
-     *
-     * @var CrudOptions
-     */
-    protected static $crudOptions;
-
     /**
      * The collection of existing records from the database.
      * Setting the $items should be done at controller level, in the callback.
@@ -41,6 +41,22 @@ trait CanCrud
     protected $item;
 
     /**
+     * The view to be returned for a given request.
+     * Setting the $view should be done at controller level, in the callback.
+     *
+     * @var View
+     */
+    protected $view;
+
+    /**
+     * The redirect to be returned for a given request.
+     * Setting the $redirect should be done at controller level, in the callback.
+     *
+     * @var RedirectResponse
+     */
+    protected $redirect;
+
+    /**
      * All the variables that will be assigned to the view.
      * You can also use this property to assign variables to the view at controller level, in the callback.
      *
@@ -54,96 +70,123 @@ trait CanCrud
      *
      * @var array
      */
-    protected static $methods = [
-        'index' => 'GET',
-        'deleted' => 'GET',
-        'create' => 'GET',
-        'edit' => 'GET',
-        'store' => 'POST',
-        'update' => 'PUT',
-        'restore' => 'PUT',
-        'destroy' => 'DELETE',
-        'delete' => 'DELETE',
+    protected static $crudMethods = [
+        'index' => [
+            'GET',
+        ],
+        'create' => [
+            'GET',
+        ],
+        'store' => [
+            'POST',
+        ],
+        'edit' => [
+            'GET',
+        ],
+        'update' => [
+            'PUT',
+        ],
+        'destroy' => [
+            'DELETE',
+        ],
+        'deleted' => [
+            'GET',
+        ],
+        'restore' => [
+            'PUT',
+        ],
+        'delete' => [
+            'DELETE',
+        ],
+        'drafts' => [
+            'GET',
+        ],
+        'draft' => [
+            'GET',
+        ],
+        'limbo' => [
+            'GET',
+            'PUT',
+        ],
     ];
 
     /**
-     * Instantiate the $CrudOptions property with the necessary crud properties.
-     * Make necessary checks.
-     *
-     * @set $model
-     * @throws CrudException
+     * The list of exceptions that are soft (no throwable).
+     * When the script fails with one of these exceptions, instead of throwing it, it will output an error message to the user.
+     * 
+     * @var array
      */
-    public static function bootCanCrud()
-    {
-        self::checkCrudOptions();
-
-        self::$crudOptions = self::getCrudOptions();
-
-        self::checkCrudMethod();
-        self::checkCrudModel();
-    }
+    protected static $softExceptions = [
+        CrudException::class,
+        UploadException::class,
+        DraftException::class,
+        RevisionException::class,
+        UrlException::class,
+        DuplicateException::class,
+    ];
 
     /**
      * This method should be called inside the controller's index() method.
-     * The closure should at least set the $items collection.
+     * The closure should at least set the $items and $view properties.
+     *
      * $this->items = Model::get();
+     * $this->view = view('view.file');
+     *
+     * Additionally you can also set variables to be available in the view.
+     *
+     * $this->vars['var_1'] = $var1;
+     * $this->vars['var_2'] = $var2;
      *
      * @param Closure|null $function
-     * @return \Illuminate\View\View
+     * @return View
+     * @throws Exception
      */
     public function _index(Closure $function = null)
     {
-        if ($function) {
-            call_user_func($function);
-        }
+        return $this->performGetCrudRequest(function () use ($function) {
+            if ($function) {
+                call_user_func($function);
+            }
 
-        $this->vars['items'] = $this->items;
+            $this->checkCrudItems();
+            $this->initCrudItems();
 
-        return view(self::$crudOptions->listView)->with($this->vars);
-    }
-
-    /**
-     * This method should be called inside the controller's deleted() method.
-     * The closure should at least set the $items collection.
-     *
-     * @param Closure|null $function
-     * @return $this
-     */
-    public function _deleted(Closure $function = null)
-    {
-        if ($function) {
-            call_user_func($function);
-        }
-
-        $this->vars['items'] = $this->items;
-
-        return view(self::$crudOptions->deletedView)->with($this->vars);
+            $this->vars['items'] = $this->items;
+        });
     }
 
     /**
      * This method should be called inside the controller's create() method.
-     * The closure is totally optional. Although you could use it to assign variables to the view.
-     * $this->vars['variable'] = $variable;
+     * The closure should at least set the $view property.
      *
+     * $this->view = view('view.file');
+     *
+     * Additionally you can also set variables to be available in the view.
+     *
+     * $this->vars['var_1'] = $var1;
+     * $this->vars['var_2'] = $var2;
      *
      * @param Closure|null $function
-     * @return \Illuminate\View\View
+     * @return View
+     * @throws Exception
      */
     public function _create(Closure $function = null)
     {
-        if ($function) {
-            call_user_func($function);
-        }
+        return $this->performGetCrudRequest(function () use ($function) {
+            if ($function) {
+                call_user_func($function);
+            }
 
-        $this->vars['item'] = $this->item ?: self::$crudOptions->model;
-
-        return view(self::$crudOptions->addView)->with($this->vars);
+            $this->vars['item'] = $this->model;
+        });
     }
 
     /**
      * This method should be called inside the controller's store() method.
-     * The closure should at least create the database record.
+     * The closure should at least create the database record and set the $redirect property.
+     *
      * $this->item = Model::create($request()->all());
+     * $this->redirect = redirect()->route('redirect.route');
      *
      * @param Closure|null $function
      * @param Request|null $request
@@ -152,233 +195,617 @@ trait CanCrud
      */
     public function _store(Closure $function = null, Request $request = null)
     {
-        try {
+        return $this->performNonGetCrudRequest(function () use ($function, $request) {
             if ($function) {
-                DB::transaction($function);
+                call_user_func($function);
             }
 
             session()->flash('flash_success', __('crud.create_success'));
-            return request()->has('save_stay') ? back() : redirect()->route(self::$crudOptions->listRoute, self::$crudOptions->listRouteParameters);
-        } catch (CrudException $e) {
-            session()->flash('flash_error', $e->getMessage());
-            return back()->withInput($request->all());
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
+        }, $request);
     }
 
     /**
      * This method should be called inside the controller's edit() method.
      * The closure should at least attempt to find the record in the database.
-     * $this->item = Model::findOrFail($id);
+     *
+     * $this->item = Model::findOrFail($id); OR $this->item = $model; (if implicit route model binding)
+     * $this->view = view('view.file');
+     *
+     * Although not required but strongly recommended is to also set a redirect in case somethind fails.
+     *
+     * $this->redirect = redirect()->route('redirect.route');
+     *
+     * Additionally you can also set variables to be available in the view.
+     *
+     * $this->vars['var_1'] = $var1;
+     * $this->vars['var_2'] = $var2;
      *
      * @param Closure|null $function
-     * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      * @throws Exception
      */
     public function _edit(Closure $function = null)
     {
-        try {
+        return $this->performGetCrudRequest(function () use ($function) {
             if ($function) {
                 call_user_func($function);
             }
 
-            $this->vars['item'] = $this->item ?: self::$crudOptions->model;
-
-            return view(self::$crudOptions->editView)->with($this->vars);
-        } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', __('crud.does_not_exist'));
-        } catch (CrudException $e) {
-            session()->flash('flash_error', $e->getMessage());
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
-
-        return redirect(
-            route(self::$crudOptions->listRoute, self::$crudOptions->listRouteParameters) .
-            (($query = parse_url(url()->previous(), PHP_URL_QUERY)) ? '?' . $query : '')
-        );
+            $this->vars['item'] = $this->item ?: $this->model;
+        });
     }
 
     /**
      * This method should be called inside the controller's update() method.
-     * The closure should at least attempt to find and update the record in the database.
+     * The closure should at least attempt to find and update the record in the database and to set the $redirect property.
+     *
      * $this->item = Model::findOrFail($id)->update($request->all());
+     * $this->redirect = redirect()->route('redirect.route');
      *
      * @param Closure|null $function
      * @param Request|null $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      * @throws Exception
      */
     public function _update(Closure $function = null, Request $request = null)
     {
-        try {
+        return $this->performNonGetCrudRequest(function () use ($function, $request) {
             if ($function) {
-                DB::transaction($function);
+                call_user_func($function);
             }
 
             session()->flash('flash_success', __('crud.update_success'));
-        } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', __('crud.does_not_exist'));
-        } catch (CrudException $e) {
-            session()->flash('flash_error', $e->getMessage());
-            return back()->withInput($request->all());
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
-
-        return request()->has('save_stay') ? back() : redirect(
-            route(self::$crudOptions->listRoute, self::$crudOptions->listRouteParameters) .
-            (($query = parse_url(url()->previous(), PHP_URL_QUERY)) ? '?' . $query : '')
-        );
-    }
-
-    /**
-     * This method should be called inside the controller's restore() method.
-     * The closure should at least attempt to restore the record in the database.
-     * $this->item = Model::findOrFail($id)->restore($request->all());
-     *
-     * @param Closure|null $function
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws Exception
-     */
-    public function _restore(Closure $function = null)
-    {
-        try {
-            if ($function) {
-                DB::transaction($function);
-            }
-
-            session()->flash('flash_success', __('crud.restore_success'));
-        } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', __('crud.does_not_exist'));
-        } catch (CrudException $e) {
-            session()->flash('flash_error', $e->getMessage());
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
-
-        return redirect(
-            route(self::$crudOptions->deletedRoute, self::$crudOptions->deletedRouteParameters) .
-            (($query = parse_url(url()->previous(), PHP_URL_QUERY)) ? '?' . $query : '')
-        );
+        }, $request);
     }
 
     /**
      * This method should be called inside the controller's destroy() method.
-     * The closure should at least attempt to find and delete the record from the database.
+     * The closure should at least attempt to find and delete the record from the database and to set the $redirect property.
+     *
      * $this->item = Model::findOrFail($id)->delete();
+     * $this->redirect = redirect()->route('redirect.route');
      *
      * @param Closure|null $function
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      * @throws Exception
      */
     public function _destroy(Closure $function = null)
     {
-        try {
+        return $this->performNonGetCrudRequest(function () use ($function) {
             if ($function) {
-                DB::transaction($function);
+                call_user_func($function);
             }
 
             session()->flash('flash_success', __('crud.delete_success'));
-        } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', __('crud.does_not_exist'));
-        } catch (CrudException $e) {
-            session()->flash('flash_error', $e->getMessage());
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
+        });
+    }
 
-        return redirect(
-            route(self::$crudOptions->listRoute, self::$crudOptions->listRouteParameters) .
-            (($query = parse_url(url()->previous(), PHP_URL_QUERY)) ? '?' . $query : '')
-        );
+    /**
+     * This method should be called inside the controller's deleted() method.
+     * The closure should at least set the $items and $view properties.
+     *
+     * $this->items = Model::get();
+     * $this->view = view('view.file');
+     *
+     * Additionally you can also set variables to be available in the view.
+     *
+     * $this->vars['var_1'] = $var1;
+     * $this->vars['var_2'] = $var2;
+     *
+     * @param Closure|null $function
+     * @return View
+     * @throws Exception
+     */
+    public function _deleted(Closure $function = null)
+    {
+        return $this->performGetCrudRequest(function () use ($function) {
+            if ($function) {
+                call_user_func($function);
+            }
+
+            $this->checkCrudItems();
+            $this->initCrudItems();
+
+            $this->vars['items'] = $this->items;
+        });
+    }
+
+    /**
+     * This method should be called inside the controller's restore() method.
+     * The closure should at least attempt to find and delete the record from the database and to set the $redirect property.
+     *
+     * $this->item = Model::findOrFail($id)->restore();
+     * $this->redirect = redirect()->route('redirect.route');
+     *
+     * @param Closure|null $function
+     * @return RedirectResponse
+     * @throws Exception
+     */
+    public function _restore(Closure $function = null)
+    {
+        return $this->performNonGetCrudRequest(function () use ($function) {
+            if ($function) {
+                call_user_func($function);
+            }
+
+            session()->flash('flash_success', __('crud.restore_success'));
+        });
     }
 
     /**
      * This method should be called inside the controller's delete() method.
-     * The closure should at least attempt to find and delete the record from the database.
+     * The closure should at least attempt to find and delete the record from the database and to set the $redirect property.
+     *
      * $this->item = Model::findOrFail($id)->forceDelete();
+     * $this->redirect = redirect()->route('redirect.route');
      *
      * @param Closure|null $function
-     * @return \Illuminate\Http\RedirectResponse
+     * @return RedirectResponse
      * @throws Exception
      */
     public function _delete(Closure $function = null)
     {
-        try {
+        return $this->performNonGetCrudRequest(function () use ($function) {
             if ($function) {
-                DB::transaction($function);
+                call_user_func($function);
             }
 
             session()->flash('flash_success', __('crud.delete_success'));
+        });
+    }
+
+    /**
+     * This method should be called inside the controller's duplicate() method.
+     * The closure should at least attempt to duplicate the record from the database and to set the $redirect property.
+     *
+     * $this->item = Model::findOrFail($id)->forceDelete();
+     * $this->redirect = redirect()->route('redirect.route');
+     *
+     * @param Closure|null $function
+     * @param Request|null $request
+     * @return RedirectResponse
+     * @throws Exception
+     */
+    public function _duplicate(Closure $function = null, Request $request = null)
+    {
+        return $this->performNonGetCrudRequest(function () use ($function, $request) {
+            if ($function) {
+                call_user_func($function);
+            }
+
+            session()->flash('flash_success', __('crud.duplicate_success'));
+        }, $request);
+    }
+
+    /**
+     * This method should be called inside the controller's index() method.
+     * The closure should at least set the $items and $view properties.
+     *
+     * $this->items = Model::get();
+     * $this->view = view('view.file');
+     *
+     * Additionally you can also set variables to be available in the view.
+     *
+     * $this->vars['var_1'] = $var1;
+     * $this->vars['var_2'] = $var2;
+     *
+     * @param Closure|null $function
+     * @return View
+     * @throws Exception
+     */
+    public function _drafts(Closure $function = null)
+    {
+        return $this->performGetCrudRequest(function () use ($function) {
+            if ($function) {
+                call_user_func($function);
+            }
+
+            $this->checkCrudItems();
+            $this->initCrudItems();
+
+            $this->vars['items'] = $this->items;
+        });
+    }
+
+    /**
+     * This method should be called inside the controller's draft() method.
+     * The closure should at least set the $item and $view properties and publish the draft.
+     *
+     * $this->item = $draft->draftable;
+     * $this->item->publishDraft($draft);
+     * $this->view = view('view.file');
+     *
+     * Additionally you can also set variables to be available in the view.
+     *
+     * $this->vars['var_1'] = $var1;
+     * $this->vars['var_2'] = $var2;
+     *
+     * @param Closure $function
+     * @param Draft $draft
+     * @return RedirectResponse|View
+     * @throws Exception
+     */
+    public function _draft(Closure $function, Draft $draft)
+    {
+        return $this->performGetCrudRequest(function () use ($function, $draft) {
+            DB::beginTransaction();
+
+            if (!session('draft_back_url_' . $draft->id)) {
+                session()->put('draft_back_url_' . $draft->id, url()->previous());
+            }
+
+            if ($function) {
+                call_user_func($function);
+            }
+
+            $this->vars['item'] = $this->item;
+            $this->vars['draft'] = $draft;
+        });
+    }
+
+    /**
+     * This method should be called inside the controller's revision() method.
+     * The closure should at least set the $item and $view properties and publish the draft.
+     *
+     * $this->item = $revision->revisionable;
+     * $this->item->rollbackToRevision($revision);
+     * $this->view = view('view.file');
+     *
+     * Additionally you can also set variables to be available in the view.
+     *
+     * $this->vars['var_1'] = $var1;
+     * $this->vars['var_2'] = $var2;
+     *
+     * @param Closure $function
+     * @param Revision $revision
+     * @return RedirectResponse|View
+     * @throws Exception
+     */
+    public function _revision(Closure $function, Revision $revision)
+    {
+        return $this->performGetCrudRequest(function () use ($function, $revision) {
+            DB::beginTransaction();
+
+            if (!session('revision_back_url_' . $revision->id)) {
+                session()->put('revision_back_url_' . $revision->id, url()->previous());
+            }
+
+            if ($function) {
+                call_user_func($function);
+            }
+
+            $this->vars['item'] = $this->item;
+            $this->vars['revision'] = $revision;
+        });
+    }
+
+    /**
+     * This method should be called inside the controller's limbo() method.
+     * There are 2 closures to be used here, because the same controller action is used for both "GET" and "PUT".
+     *
+     * For the "GET" request the closure should at least set the $view property.
+     * $this->view = view('view.file');
+     *
+     * Additionally you can also set variables to be available in the view.
+     *
+     * $this->vars['var_1'] = $var1;
+     * $this->vars['var_2'] = $var2;
+     *
+     * For the "PUT" request, the closure should at least save the draft and set the $redirect property.
+     *
+     * $this->item->saveAsDraft($request->all());
+     * $this->redirect = redirect()->route('redirect.route');
+     *
+     * @param Closure $getFunction
+     * @param Closure $putFunction
+     * @param int $id
+     * @param Request $request
+     * @return $this|RedirectResponse|\Illuminate\Routing\Redirector
+     * @throws Exception
+     */
+    public function _limbo(Closure $getFunction, Closure $putFunction, $id, Request $request)
+    {
+        try {
+            $this->item = app($this->model)->onlyDrafts()->findOrFail($id);
+
+            switch ($request->method()) {
+                case 'GET':
+                    if ($query = parse_url(url()->previous(), PHP_URL_QUERY)) {
+                        session()->put('crud_query', $query);
+                    }
+
+                    if ($getFunction) {
+                        call_user_func($getFunction);
+                    }
+
+                    $this->vars['item'] = $this->item;
+
+                    return $this->view->with($this->vars);
+                    break;
+                case 'PUT':
+                    try {
+                        if ($putFunction) {
+                            call_user_func($putFunction);
+                        }
+
+                        session()->flash('flash_success', __('crud.draft_save_success'));
+                    } catch (DraftException $e) {
+                        session()->flash('flash_error', $e->getMessage());
+                    } catch (Exception $e) {
+                        session()->flash('flash_error', $e->getMessage());
+
+                        if (!in_array(get_class($e), self::$softExceptions)) {
+                            throw $e;
+                        }
+                    }
+
+                    if ($this->redirect) {
+                        $query = session()->pull('crud_query');
+
+                        return redirect($this->redirect->getTargetUrl() . ($query ? '?' . $query : ''));
+                    }
+
+                    return back();
+                    break;
+            }
         } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', __('crud.does_not_exist'));
-        } catch (CrudException $e) {
-            session()->flash('flash_error', $e->getMessage());
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
+            session()->flash('flash_error', __('crud.draft_not_found'));
+
+            if ($this->redirect) {
+                $query = session()->pull('crud_query');
+
+                return redirect($this->redirect->getTargetUrl() . ($query ? '?' . $query : ''));
+            }
+
+            return back();
+        }
+    }
+
+    /**
+     * Perform a get crud request based on a closure.
+     * The general logic resides on this method.
+     * This means that the $function parameter should be a closure representing the special logic.
+     *
+     * @param Closure $function
+     * @return RedirectResponse|View
+     * @throws Exception
+     */
+    protected function performGetCrudRequest(Closure $function)
+    {
+        $this->checkCrudMethod();
+        $this->checkCrudModel();
+        $this->initCrudModel();
+
+        if ($query = parse_url(url()->previous(), PHP_URL_QUERY)) {
+            session()->put('crud_query', $query);
         }
 
-        return redirect(
-            route(self::$crudOptions->deletedRoute, self::$crudOptions->deletedRouteParameters) .
-            (($query = parse_url(url()->previous(), PHP_URL_QUERY)) ? '?' . $query : '')
-        );
+        try {
+            call_user_func($function);
+
+            $this->checkCrudView();
+            $this->initCrudView();
+
+            return $this->view->with($this->vars);
+        } catch (ModelNotFoundException $e) {
+            session()->flash('flash_error', __('crud.model_not_found'));
+        } catch (Exception $e) {
+            session()->flash('flash_error', $e->getMessage());
+
+            if (!in_array(get_class($e), self::$softExceptions)) {
+                throw $e;
+            }
+        }
+
+        if ($this->redirect) {
+            $query = session()->pull('crud_query');
+
+            return redirect($this->redirect->getTargetUrl() . ($query ? '?' . $query : ''));
+        }
+
+        return back();
+    }
+
+    /**
+     * Perform a non-get crud request based on a closure.
+     * The general logic resides on this method.
+     * This means that the $function parameter should be a closure representing the special logic.
+     *
+     * @param Closure $function
+     * @param Request|null $request
+     * @return RedirectResponse
+     * @throws Exception
+     */
+    protected function performNonGetCrudRequest(Closure $function, Request $request = null)
+    {
+        $this->checkCrudMethod();
+        $this->checkCrudModel();
+        $this->initCrudModel();
+
+        try {
+            DB::beginTransaction();
+
+            call_user_func($function);
+
+            $this->checkCrudRedirect();
+            $this->initCrudRedirect();
+
+            if (!session()->has('crud_query')) {
+                session()->put('crud_query', parse_url(url()->previous(), PHP_URL_QUERY));
+            }
+
+            DB::commit();
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+
+            session()->flash('flash_error', __('crud.model_not_found'));
+        } catch (Exception $e) {
+            DB::rollBack();
+
+            if (in_array(get_class($e), self::$softExceptions)) {
+                session()->flash('flash_error', $e->getMessage());
+                return back()->withInput($request ? $request->all() : []);
+            }
+
+            throw $e;
+        }
+
+        if ($request && $request->has('save_stay')) {
+            return back();
+        }
+
+        if ($this->redirect) {
+            $query = session()->pull('crud_query');
+
+            return redirect($this->redirect->getTargetUrl() . ($query ? '?' . $query : ''));
+        }
+
+        return back();
     }
 
     /**
      * Verify if the current action runs under the appropriate CRUD method.
      *
-     * @throws CrudException
+     * @throws Exception
+     * @return void
      */
-    private static function checkCrudMethod()
+    protected function checkCrudMethod()
     {
         list($controller, $action) = explode('@', Route::getCurrentRoute()->getActionName());
 
-        if (isset(self::$methods[$action])) {
-            if (request()->method() != self::$methods[$action]) {
-                throw new CrudException(
-                    'Action ' . $action . '() must use the ' . self::$methods[$action] . ' request method!'
+        if (isset(self::$crudMethods[$action])) {
+            if (!in_array(request()->method(), self::$crudMethods[$action])) {
+                throw new Exception(
+                    'Action ' . $action . '() of class ' . get_class($this) . ' must use the ' . self::$crudMethods[$action] . ' request method!' . PHP_EOL .
+                    'Please set this in your route definition for this request.'
                 );
             }
         }
     }
 
     /**
-     * Verify if the $model property has been properly set on the controller.
-     * This property should contain the model class, as string.
+     * Verify if the protected $model property has been properly set on the controller.
      *
-     * @throws CrudException
+     * @throws Exception
+     * @return void
      */
-    private static function checkCrudModel()
+    protected function checkCrudModel()
     {
-        if (!(self::$crudOptions->model instanceof Model)) {
-            throw new CrudException(
-                'You must set the model via the getCrudOptions() method from controller.' . PHP_EOL .
-                'Use the setModel() method from the App\Options\CrudOptions class.'
+        if (!isset($this->model) || !$this->model || !is_string($this->model) || !class_exists($this->model)) {
+            throw new Exception(
+                'The $model property is not defined or is incorrect.' . PHP_EOL .
+                'Please define a protected property $model on the ' . get_class($this) . ' class.' . PHP_EOL .
+                'The $model should contain the entity\'s model full class name you wish to crud, as string.' . PHP_EOL .
+                'Example: protected $model = "Full\Namespace\Model\Class";'
             );
         }
     }
 
     /**
-     * Verify if the getCrudOptions() method for setting the trait options exists and is public and static.
+     * Verify if the $view property has been properly assigned inside the callback of the given method.
      *
      * @throws Exception
+     * @return void
      */
-    private static function checkCrudOptions()
+    protected function checkCrudView()
     {
-        if (!method_exists(self::class, 'getCrudOptions')) {
+        list($controller, $action) = explode('@', Route::getCurrentRoute()->getActionName());
+
+        if (!$this->view || (!($this->view instanceof View) && !is_string($this->view))) {
             throw new Exception(
-                'The "' . self::class . '" must define the public static "getCrudOptions()" method.'
+                'The $view property is not defined or is incorrect.' . PHP_EOL .
+                'Please instantiate the $view property on the ' . $controller . ' inside the callback of the ' . $action . '() method.' . PHP_EOL .
+                'The $view should be either a string, or an instance of the Illuminate\View\View class.' . PHP_EOL .
+                'Example: $this->view = view("view.file");'
             );
         }
+    }
 
-        $reflection = new ReflectionMethod(self::class, 'getCrudOptions');
+    /**
+     * Verify if the $redirect property has been properly assigned inside the callback of the given method.
+     *
+     * @throws Exception
+     * @return void
+     */
+    protected function checkCrudRedirect()
+    {
+        list($controller, $action) = explode('@', Route::getCurrentRoute()->getActionName());
 
-        if (!$reflection->isPublic() || !$reflection->isStatic()) {
+        if (!$this->redirect || (!($this->redirect instanceof RedirectResponse) && !is_string($this->redirect))) {
             throw new Exception(
-                'The method "getCrudOptions()" from the class "' . self::class . '" must be declared as both "public" and "static".'
+                'The $redirect property is not defined or is incorrect.' . PHP_EOL .
+                'Please instantiate the $redirect property on the ' . $controller . ' inside the callback of the ' . $action . '() method.' . PHP_EOL .
+                'The $redirect should be either a string representing a URL, or an instance of the Illuminate\Http\RedirectResponse class.' . PHP_EOL .
+                'Example: $this->redirect = redirect()->route("redirect.route");'
             );
+        }
+    }
+
+    /**
+     * Verify if the $redirect property has been properly assigned inside the callback of the given method.
+     *
+     * @throws Exception
+     * @return void
+     */
+    protected function checkCrudItems()
+    {
+        list($controller, $action) = explode('@', Route::getCurrentRoute()->getActionName());
+
+        if (!$this->items || (!($this->items instanceof Collection) && !($this->items instanceof LengthAwarePaginator) && !is_array($this->items))) {
+            throw new Exception(
+                'The $items property is not defined or is incorrect.' . PHP_EOL .
+                'Please instantiate the $items property on the ' . $controller . ' inside the callback of the ' . $action . '() method.' . PHP_EOL .
+                'The $items should be either an array or an instance of Illuminate\Database\Eloquent\Collection or Illuminate\Contracts\Pagination\LengthAwarePaginator.' . PHP_EOL .
+                'Example: $this->items = Model::queryScope()->paginate();'
+            );
+        }
+    }
+
+    /**
+     * Instantiate the $model property to a Model representation based on the class provided.
+     *
+     * @return void
+     */
+    protected function initCrudModel()
+    {
+        if (!($this->model instanceof Model)) {
+            $this->model = app($this->model);
+        }
+    }
+
+    /**
+     * Instantiate the $view property to a View representation based on the string provided.
+     *
+     * @return void
+     */
+    protected function initCrudView()
+    {
+        if (!($this->view instanceof View)) {
+            $this->view = view($this->view);
+        }
+    }
+
+    /**
+     * Instantiate the $view property to a View representation based on the string provided.
+     *
+     * @return void
+     */
+    protected function initCrudRedirect()
+    {
+        if (!($this->redirect instanceof RedirectResponse)) {
+            $this->redirect = redirect($this->redirect);
+        }
+    }
+
+    /**
+     * Instantiate the $view property to a View representation based on the string provided.
+     *
+     * @return void
+     */
+    protected function initCrudItems()
+    {
+        if (!($this->items instanceof Collection) && !($this->items instanceof LengthAwarePaginator)) {
+            $this->items = collect($this->items);
         }
     }
 }

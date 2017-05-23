@@ -36,6 +36,15 @@ class RevisionOptions
     public $revisionRelations;
 
     /**
+     * Flag indicating whether to create a revision for the model, when rolling back another revision of that model.
+     * If set to "true", before rolling back a revision, the original model instance's data will be stored to a new revision.
+     * If set to "false", after rolling back a revision, the original model instance's data will NOT be stored to a new revision.
+     *
+     * @var bool
+     */
+    public $createRevisionWhenRollingBack = true;
+
+    /**
      * Get a fresh instance of this class.
      *
      * @return RevisionOptions
@@ -92,6 +101,18 @@ class RevisionOptions
     public function relationsToRevision(...$relations): RevisionOptions
     {
         $this->revisionRelations = array_flatten($relations);
+
+        return $this;
+    }
+
+    /**
+     * Set the $createRevisionWhenRollingBack to work with in the App\Traits\HasRevisions trait.
+     *
+     * @return RevisionOptions
+     */
+    public function disableRevisioningWhenRollingBack(): RevisionOptions
+    {
+        $this->createRevisionWhenRollingBack = false;
 
         return $this;
     }

@@ -17,6 +17,11 @@ class AdminRolesController extends Controller
     use CanCrud;
 
     /**
+     * @var string
+     */
+    protected $model = Role::class;
+
+    /**
      * @param Request $request
      * @param AdminRoleFilter $filter
      * @param AdminRoleSort $sort
@@ -26,6 +31,7 @@ class AdminRolesController extends Controller
     {
         return $this->_index(function () use ($request, $filter, $sort) {
             $this->items = Role::only(Role::TYPE_ADMIN)->exclude('admin')->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->view = view('admin.acl.admin_roles.index');
         });
     }
 
@@ -35,6 +41,7 @@ class AdminRolesController extends Controller
     public function create()
     {
         return $this->_create(function () {
+            $this->view = view('admin.acl.admin_roles.add');
             $this->vars['permissions'] = Permission::getGrouped();
         });
     }
@@ -46,10 +53,12 @@ class AdminRolesController extends Controller
      */
     public function store(AdminRoleRequest $request)
     {
-        return $this->_store(function () use ($request) {
-            $request = self::mergeRequest($request);
+        $request = $this->mergeRequest($request);
 
+        return $this->_store(function () use ($request) {
             $this->item = Role::create($request->all());
+            $this->redirect = redirect()->route('admin.admin_roles.index');
+
             $this->item->permissions()->attach((array)$request->get('permissions'));
         }, $request);
     }
@@ -62,6 +71,7 @@ class AdminRolesController extends Controller
     {
         return $this->_edit(function () use ($role) {
             $this->item = $role;
+            $this->view = view('admin.acl.admin_roles.edit');
             $this->vars['permissions'] = Permission::getGrouped();
         });
     }
@@ -74,10 +84,12 @@ class AdminRolesController extends Controller
      */
     public function update(AdminRoleRequest $request, Role $role)
     {
-        return $this->_update(function () use ($request, $role) {
-            $request = self::mergeRequest($request);
+        $request = $this->mergeRequest($request);
 
+        return $this->_update(function () use ($request, $role) {
             $this->item = $role;
+            $this->redirect = redirect()->route('admin.admin_roles.index');
+
             $this->item->update($request->all());
             $this->item->permissions()->sync((array)$request->get('permissions'));
         }, $request);
@@ -92,30 +104,17 @@ class AdminRolesController extends Controller
     {
         return $this->_destroy(function () use ($role) {
             $this->item = $role;
+            $this->redirect = redirect()->route('admin.admin_roles.index');
+
             $this->item->delete();
         });
-    }
-
-    /**
-     * @return CrudOptions
-     */
-    public static function getCrudOptions()
-    {
-        return CrudOptions::instance()
-            ->setModel(app(Role::class))
-            ->setListRoute('admin.admin_roles.index')
-            ->setListView('admin.acl.admin_roles.index')
-            ->setAddRoute('admin.admin_roles.create')
-            ->setAddView('admin.acl.admin_roles.add')
-            ->setEditRoute('admin.admin_roles.edit')
-            ->setEditView('admin.acl.admin_roles.edit');
     }
 
     /**
      * @param Request $request
      * @return Request
      */
-    protected static function mergeRequest(Request $request)
+    protected function mergeRequest(Request $request)
     {
         $request->merge([
             'type' => Role::TYPE_ADMIN

@@ -2,25 +2,26 @@
 
 namespace App\Http\Controllers\Admin\Cms;
 
-use App\Models\Version\Draft;
-use App\Models\Version\Revision;
-use App\Traits\HasDrafts;
 use DB;
 use Exception;
 use App\Http\Controllers\Controller;
 use App\Models\Cms\Block;
+use App\Models\Version\Draft;
+use App\Models\Version\Revision;
 use App\Traits\CanCrud;
 use App\Http\Requests\BlockRequest;
 use App\Http\Filters\BlockFilter;
 use App\Http\Sorts\BlockSort;
-use App\Options\CrudOptions;
-use App\Exceptions\DuplicateException;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Http\Request;
 
 class BlocksController extends Controller
 {
     use CanCrud;
+
+    /**
+     * @var string
+     */
+    protected $model = Block::class;
 
     /**
      * @param Request $request
@@ -32,7 +33,7 @@ class BlocksController extends Controller
     {
         return $this->_index(function () use ($request, $filter, $sort) {
             $this->items = Block::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
-
+            $this->view = view('admin.cms.blocks.index');
             $this->vars['types'] = Block::getTypes();
         });
     }
@@ -51,6 +52,7 @@ class BlocksController extends Controller
         }
 
         return $this->_create(function () use ($type) {
+            $this->view = view('admin.cms.blocks.add');
             $this->vars['type'] = $type;
         });
     }
@@ -64,6 +66,7 @@ class BlocksController extends Controller
     {
         return $this->_store(function () use ($request) {
             $this->item = Block::create($request->all());
+            $this->redirect = redirect()->route('admin.blocks.index');
         }, $request);
     }
 
@@ -75,6 +78,7 @@ class BlocksController extends Controller
     {
         return $this->_edit(function () use ($block) {
             $this->item = $block;
+            $this->view = view('admin.cms.blocks.edit');
         });
     }
 
@@ -88,6 +92,8 @@ class BlocksController extends Controller
     {
         return $this->_update(function () use ($request, $block) {
             $this->item = $block;
+            $this->redirect = redirect()->route('admin.blocks.index');
+
             $this->item->update($request->all());
         }, $request);
     }
@@ -101,6 +107,8 @@ class BlocksController extends Controller
     {
         return $this->_destroy(function () use ($block) {
             $this->item = $block;
+            $this->redirect = redirect()->route('admin.blocks.index');
+
             $this->item->delete();
         });
     }
@@ -112,42 +120,16 @@ class BlocksController extends Controller
      */
     public function duplicate(Block $block)
     {
-        try {
-            $duplicated = $block->saveAsDuplicate();
-
-            session()->flash('flash_success', 'The record was successfully duplicated! You have been redirected to the newly duplicated record.');
-            return redirect()->route('admin.blocks.edit', $duplicated->id);
-        } catch (DuplicateException $e) {
-            session()->flash('flash_error', 'Failed duplicating the record! Please try again');
-            return back();
-        } catch (Exception $e) {
-            throw new Exception($e->getMessage());
-        }
+        return $this->_duplicate(function () use ($block) {
+            $this->item = $block->saveAsDuplicate();
+            $this->redirect = redirect()->route('admin.blocks.edit', $this->item->id);
+        });
     }
 
     /**
-     * @return CrudOptions
+     * @param Request $request
+     * @return array
      */
-    public static function getCrudOptions()
-    {
-        return CrudOptions::instance()
-            ->setModel(app(Block::class))
-            ->setListRoute('admin.blocks.index')
-            ->setListView('admin.cms.blocks.index')
-            ->setAddRoute('admin.blocks.create')
-            ->setAddView('admin.cms.blocks.add')
-            ->setEditRoute('admin.blocks.edit')
-            ->setEditView('admin.cms.blocks.edit');
-    }
-
-
-
-
-
-
-
-
-
     public function get(Request $request)
     {
         $this->validate($request, [
@@ -191,6 +173,10 @@ class BlocksController extends Controller
         }
     }
 
+    /**
+     * @param Request $request
+     * @return array
+     */
     public function row(Request $request)
     {
         $this->validate($request, [
