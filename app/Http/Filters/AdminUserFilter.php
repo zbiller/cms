@@ -24,6 +24,8 @@ class AdminUserFilter extends Filter
         return [
             'search' => 'operator:like|condition:or|columns:username,person.first_name,person.last_name,person.email,person.phone',
             'roles' => 'operator:in|condition:or|columns:roles.role_id',
+            'start_date' => 'operator:date >=|condition:or|columns:created_at',
+            'end_date' => 'operator:date <=|condition:or|columns:created_at',
         ];
     }
 

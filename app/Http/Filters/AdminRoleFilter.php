@@ -23,6 +23,9 @@ class AdminRoleFilter extends Filter
     {
         return [
             'search' => 'operator:like|condition:or|columns:name',
+            'permissions' => 'operator:in|condition:or|columns:permissions.permission_id',
+            'start_date' => 'operator:date >=|condition:or|columns:created_at',
+            'end_date' => 'operator:date <=|condition:or|columns:created_at',
         ];
     }
 

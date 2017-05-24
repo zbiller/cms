@@ -25,6 +25,8 @@ class MenuFilter extends Filter
             'search' => 'operator:like|condition:or|columns:name,url',
             'type' => 'operator:=|condition:or|columns:type',
             'active' => 'operator:=|condition:or|columns:active',
+            'start_date' => 'operator:date >=|condition:or|columns:created_at',
+            'end_date' => 'operator:date <=|condition:or|columns:created_at',
         ];
     }
 

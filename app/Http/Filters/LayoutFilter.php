@@ -24,6 +24,8 @@ class LayoutFilter extends Filter
         return [
             'search' => 'operator:like|condition:or|columns:name,identifier',
             'type' => 'operator:=|condition:or|columns:type',
+            'start_date' => 'operator:date >=|condition:or|columns:created_at',
+            'end_date' => 'operator:date <=|condition:or|columns:created_at',
         ];
     }
 

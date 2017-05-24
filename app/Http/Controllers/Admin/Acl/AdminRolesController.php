@@ -30,8 +30,19 @@ class AdminRolesController extends Controller
     public function index(Request $request, AdminRoleFilter $filter, AdminRoleSort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
+            $permissions = [];
+
+            foreach (Permission::getGrouped() as $group => $perms) {
+                foreach ($perms as $permission) {
+                    $permissions[$group][$permission->id] = $permission->label;
+                }
+            }
+
             $this->items = Role::only(Role::TYPE_ADMIN)->exclude('admin')->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
             $this->view = view('admin.acl.admin_roles.index');
+            $this->vars = [
+                'permissions' => $permissions,
+            ];
         });
     }
 

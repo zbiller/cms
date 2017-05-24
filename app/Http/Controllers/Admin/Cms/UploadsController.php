@@ -158,28 +158,6 @@ class UploadsController extends Controller
     }
 
     /**
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function delete()
-    {
-        foreach (Upload::all() as $item) {
-            try {
-                (new UploadService($item->full_path))->unload();
-
-                session()->flash('flash_success', 'All unused records have been successfully removed.');
-            } catch (QueryException $e) {
-                continue;
-            } catch (UploadException $e) {
-                session()->flash('flash_error', $e->getMessage());
-            } catch (Exception $e) {
-                session()->flash('flash_error', 'Something went wrong! Please try again.');
-            }
-        }
-
-        return back();
-    }
-
-    /**
      * @param Upload $upload
      * @return \Illuminate\Http\RedirectResponse
      * @throws UploadException
