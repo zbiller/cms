@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCarsTables extends Migration
+class CreateTestTables extends Migration
 {
     /**
      * Run the migrations.
@@ -42,7 +42,7 @@ class CreateCarsTables extends Migration
             Upload::column('audio', $table);
             Upload::column('file', $table);
 
-            $table->text('metadata');
+            $table->longText('metadata');
 
             $table->timestamps();
 

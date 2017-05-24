@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDraftsTable extends Migration
+class CreateVersionTables extends Migration
 {
     /**
      * Run the migrations.
@@ -18,7 +18,19 @@ class CreateDraftsTable extends Migration
 
             $table->integer('user_id')->unsigned()->index()->nullable();
             $table->morphs('draftable');
-            $table->text('metadata');
+            $table->longText('metadata');
+
+            $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
+        });
+
+        Schema::create('revisions', function (Blueprint $table) {
+            $table->increments('id');
+
+            $table->integer('user_id')->unsigned()->index()->nullable();
+            $table->morphs('revisionable');
+            $table->longText('metadata');
 
             $table->timestamps();
 
@@ -34,5 +46,6 @@ class CreateDraftsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('revisions');
+        Schema::dropIfExists('drafts');
     }
 }
