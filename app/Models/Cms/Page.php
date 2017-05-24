@@ -2,6 +2,7 @@
 
 namespace App\Models\Cms;
 
+use Exception;
 use App\Models\Model;
 use App\Traits\HasBlocks;
 use App\Traits\HasUrl;
@@ -17,7 +18,6 @@ use App\Options\DraftOptions;
 use App\Options\RevisionOptions;
 use App\Options\DuplicateOptions;
 use App\Exceptions\CrudException;
-use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Kalnoy\Nestedset\NodeTrait;

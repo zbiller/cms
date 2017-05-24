@@ -109,8 +109,6 @@ class PagesController extends Controller
      */
     public function update(PageRequest $request, Page $page)
     {
-        $request->merge(['layout_id' => 10]);
-
         return $this->_update(function () use ($page, $request) {
             $this->item = $page;
             $this->redirect = redirect()->route('admin.pages.index');
