@@ -139,7 +139,7 @@ Route::group([
                 Route::delete('destroy/{page}', ['as' => 'admin.pages.destroy', 'uses' => 'PagesController@destroy', 'permissions' => 'pages-delete']);
 
                 /**
-                 * Deleted Actions.
+                 * Soft Delete Actions.
                  */
                 Route::put('restore/{id}', ['as' => 'admin.pages.restore', 'uses' => 'PagesController@restore', 'permissions' => 'pages-restore']);
                 Route::delete('delete/{id}', ['as' => 'admin.pages.delete', 'uses' => 'PagesController@delete', 'permissions' => 'pages-force-delete']);
@@ -165,6 +165,11 @@ Route::group([
                  * Revision Actions.
                  */
                 Route::get('revision/{revision}', ['as' => 'admin.pages.revision', 'uses' => 'PagesController@revision', 'permissions' => 'revisions-rollback']);
+
+                /**
+                 * Ajax Actions.
+                 */
+                Route::get('get-layouts/{type?}', ['as' => 'admin.pages.get_layouts', 'uses' => 'PagesController@getLayouts']);
 
                 /**
                  * Tree Actions.

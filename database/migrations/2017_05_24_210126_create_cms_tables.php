@@ -50,7 +50,7 @@ class CreateCmsTables extends Migration
             $table->string('identifier')->unique()->nullable();
 
             $table->longText('metadata');
-            $table->string('canonical');
+            $table->string('canonical')->nullable();
 
             $table->tinyInteger('active')->default(1);
             $table->tinyInteger('type')->default(1);

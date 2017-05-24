@@ -17,6 +17,7 @@ use App\Options\DraftOptions;
 use App\Options\RevisionOptions;
 use App\Options\DuplicateOptions;
 use App\Exceptions\CrudException;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Kalnoy\Nestedset\NodeTrait;
@@ -114,29 +115,59 @@ class Page extends Model
      * --- view
      * The view to be used for pages on the front-end.
      *
+     * --- layouts
+     * The list of layout types that can be assigned to a page of that type.
+     *
      * @var array
      */
     public static $map = [
         self::TYPE_NORMAL => [
             'action' => 'normal',
             'view' => 'front.cms.page',
+            'layouts' => [
+                Layout::TYPE_DEFAULT,
+                Layout::TYPE_HOME,
+            ],
         ],
         self::TYPE_SPECIAL => [
             'action' => 'special',
             'view' => 'front.cms.page',
+            'layouts' => [
+                Layout::TYPE_DEFAULT,
+            ],
         ],
     ];
 
     /**
      * Boot the model.
-     * On delete verify if page has children.
-     * If it does, don't delete the page and throw an exception.
+     *
+     * On save verify if the selected layout can be assigned to a page of the selected type.
+     * On delete verify if page has children. If it does, don't delete the page and throw an exception.
      *
      * @return void
      */
     public static function boot()
     {
         parent::boot();
+
+        static::saving(function (Model $model) {
+            if ($model->layout_id) {
+                try {
+                    $layout = Layout::findOrFail($model->layout_id);
+
+                    if (
+                        !isset(static::$map[$model->type]['layouts']) ||
+                        !in_array($layout->type, static::$map[$model->type]['layouts'])
+                    ) {
+                        throw new Exception;
+                    }
+                } catch (Exception $e) {
+                    throw new CrudException(
+                        'The layout selected does not match the page type!'
+                    );
+                }
+            }
+        });
 
         static::deleting(function (Model $model) {
             if ($model->children()->count() > 0) {
@@ -316,8 +347,7 @@ class Page extends Model
     public static function getDraftOptions()
     {
         return DraftOptions::instance()
-            ->relationsToDraft('blocks')
-            ->doNotDeletePublishedDrafts();
+            ->relationsToDraft('blocks');
     }
 
     /**

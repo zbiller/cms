@@ -60,4 +60,16 @@ class PageRequest extends Request
             ],
         ];
     }
+
+    /**
+     * Get the pretty name of attributes.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'layout_id' => 'layout',
+        ];
+    }
 }

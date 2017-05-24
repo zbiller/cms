@@ -120,6 +120,17 @@ class Layout extends Model
     }
 
     /**
+     * Filter the query by the given identifier.
+     *
+     * @param Builder $query
+     * @param string $identifier
+     */
+    public function scopeWhereIdentifier($query, $identifier)
+    {
+        $query->where('identifier', $identifier);
+    }
+
+    /**
      * Filter the query by the given type.
      *
      * @param Builder $query
@@ -131,14 +142,14 @@ class Layout extends Model
     }
 
     /**
-     * Filter the query by the given identifier.
+     * Filter the query by the given types.
      *
      * @param Builder $query
-     * @param string $identifier
+     * @param array $types
      */
-    public function scopeWhereIdentifier($query, $identifier)
+    public function scopeWhereTypeIn($query, array $types = [])
     {
-        $query->where('identifier', $identifier);
+        $query->whereIn('type', $types);
     }
 
     /**

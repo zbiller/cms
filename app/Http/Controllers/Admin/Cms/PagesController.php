@@ -64,7 +64,6 @@ class PagesController extends Controller
             $this->view = view('admin.cms.pages.add');
             $this->vars = [
                 'parent' => $parent->exists ? $parent : null,
-                'layouts' => Layout::all(),
                 'types' => Page::$types,
                 'actives' => Page::$actives,
             ];
@@ -95,7 +94,7 @@ class PagesController extends Controller
             $this->item = $page;
             $this->view = view('admin.cms.pages.edit');
             $this->vars = [
-                'layouts' => Layout::all(),
+                'layouts' => Layout::whereTypeIn(Page::$map[$page->type]['layouts'])->get(),
                 'types' => Page::$types,
                 'actives' => Page::$actives,
             ];
@@ -110,6 +109,8 @@ class PagesController extends Controller
      */
     public function update(PageRequest $request, Page $page)
     {
+        $request->merge(['layout_id' => 10]);
+
         return $this->_update(function () use ($page, $request) {
             $this->item = $page;
             $this->redirect = redirect()->route('admin.pages.index');
@@ -289,6 +290,26 @@ class PagesController extends Controller
                 'actives' => Page::$actives,
             ];
         }, $revision);
+    }
+
+    /**
+     * @param int|null $type
+     * @return array
+     */
+    public function getLayouts($type = null)
+    {
+        if (isset(Page::$map[$type]['layouts']) && !empty(Page::$map[$type]['layouts'])) {
+            $layouts = Layout::whereTypeIn(Page::$map[$type]['layouts'])->get();
+
+            return [
+                'status' => true,
+                'layouts' => $layouts->pluck('name', 'id'),
+            ];
+        }
+
+        return [
+            'status' => false
+        ];
     }
 
     /**
