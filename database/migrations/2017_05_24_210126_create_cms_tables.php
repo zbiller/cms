@@ -71,6 +71,8 @@ class CreateCmsTables extends Migration
             $table->longText('metadata');
 
             $table->timestamps();
+            $table->softDeletes();
+            Draft::column($table);
         });
 
         Schema::create('menus', function (Blueprint $table) {

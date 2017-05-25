@@ -25,7 +25,7 @@ class RevisionOptions
      *
      * @var array
      */
-    public $revisionFields;
+    public $revisionFields = [];
 
     /**
      * The model's relations that should be revisionable.
@@ -33,7 +33,7 @@ class RevisionOptions
      *
      * @var array
      */
-    public $revisionRelations;
+    public $revisionRelations = [];
 
     /**
      * Flag indicating whether to create a revision for the model, when rolling back another revision of that model.

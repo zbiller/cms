@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Cms\Block;
 use Illuminate\Validation\Rule;
 
 class BlockRequest extends Request
@@ -23,11 +24,22 @@ class BlockRequest extends Request
      */
     public function rules()
     {
+        if ($this->isMethod('get')) {
+            return [];
+        }
+
+        $model = null;
+
+        if ($this->route('block')) {
+            $model = $this->route('block');
+        } elseif ($this->route('id')) {
+            $model = Block::withDrafts()->withTrashed()->find($this->route('id'));
+        }
+
         return [
             'name' => [
                 'required',
-                Rule::unique('blocks', 'name')
-                    ->ignore($this->route('block') ? $this->route('block')->id : null)
+                Rule::unique('blocks', 'name')->ignore($model && $model->exists ? $model->id : null)
             ],
             'type' => [
                 'required',

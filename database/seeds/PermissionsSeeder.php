@@ -158,11 +158,6 @@ class PermissionsSeeder extends Seeder
                 'label' => 'Delete',
                 'name' => 'blocks-delete',
             ],
-            'Duplicate' => [
-                'group' => 'Blocks',
-                'label' => 'Duplicate',
-                'name' => 'blocks-duplicate',
-            ],
             'Assign' => [
                 'group' => 'Blocks',
                 'label' => 'Assign',
@@ -172,6 +167,26 @@ class PermissionsSeeder extends Seeder
                 'group' => 'Blocks',
                 'label' => 'Un-Assign',
                 'name' => 'blocks-unassign',
+            ],
+            'Duplicate' => [
+                'group' => 'Blocks',
+                'label' => 'Duplicate',
+                'name' => 'blocks-duplicate',
+            ],
+            'Deleted' => [
+                'group' => 'Blocks',
+                'label' => 'Deleted',
+                'name' => 'blocks-deleted',
+            ],
+            'Restore' => [
+                'group' => 'Blocks',
+                'label' => 'Restore',
+                'name' => 'blocks-restore',
+            ],
+            'Force Delete' => [
+                'group' => 'Blocks',
+                'label' => 'Force Delete',
+                'name' => 'blocks-force-delete',
             ],
         ],
         'Menus' => [

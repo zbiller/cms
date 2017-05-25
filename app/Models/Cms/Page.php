@@ -356,7 +356,7 @@ class Page extends Model
     public static function getRevisionOptions()
     {
         return RevisionOptions::instance()
-            ->limitRevisionsTo(100)
+            ->limitRevisionsTo(500)
             ->relationsToRevision('blocks');
     }
 

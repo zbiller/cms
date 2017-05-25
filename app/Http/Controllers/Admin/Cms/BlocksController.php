@@ -34,7 +34,9 @@ class BlocksController extends Controller
         return $this->_index(function () use ($request, $filter, $sort) {
             $this->items = Block::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
             $this->view = view('admin.cms.blocks.index');
-            $this->vars['types'] = Block::getTypes();
+            $this->vars = [
+                'types' => Block::getTypes(),
+            ];
         });
     }
 
@@ -114,6 +116,53 @@ class BlocksController extends Controller
     }
 
     /**
+     * @param Request $request
+     * @param BlockFilter $filter
+     * @param BlockSort $sort
+     * @return \Illuminate\View\View
+     */
+    public function deleted(Request $request, BlockFilter $filter, BlockSort $sort)
+    {
+        return $this->_deleted(function () use ($request, $filter, $sort) {
+            $this->items = Block::onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->view = view('admin.cms.blocks.deleted');
+            $this->vars = [
+                'types' => Block::getTypes(),
+            ];
+        });
+    }
+
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function restore($id)
+    {
+        return $this->_restore(function () use ($id) {
+            $this->item = Block::onlyTrashed()->findOrFail($id);
+            $this->redirect = redirect()->route('admin.blocks.deleted');
+
+            $this->item->restore();
+        });
+    }
+
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function delete($id)
+    {
+        return $this->_delete(function () use ($id) {
+            $this->item = Block::onlyTrashed()->findOrFail($id);
+            $this->redirect = redirect()->route('admin.blocks.deleted');
+
+            $this->item->forceDelete();
+        });
+    }
+
+    /**
      * @param Block $block
      * @return \Illuminate\Http\RedirectResponse
      * @throws Exception
@@ -124,6 +173,67 @@ class BlocksController extends Controller
             $this->item = $block->saveAsDuplicate();
             $this->redirect = redirect()->route('admin.blocks.edit', $this->item->id);
         });
+    }
+
+    /**
+     * @param Request $request
+     * @param BlockFilter $filter
+     * @param BlockSort $sort
+     * @return \Illuminate\View\View
+     */
+    public function drafts(Request $request, BlockFilter $filter, BlockSort $sort)
+    {
+        return $this->_drafts(function () use ($request, $filter, $sort) {
+            $this->items = Block::onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->view = view('admin.cms.blocks.drafts');
+            $this->vars = [
+                'types' => Block::getTypes(),
+            ];
+        });
+    }
+
+    /**
+     * @param Draft $draft
+     * @return \Illuminate\View\View
+     */
+    public function draft(Draft $draft)
+    {
+        return $this->_draft(function () use ($draft) {
+            $this->item = $draft->draftable;
+            $this->item->publishDraft($draft);
+
+            $this->view = view('admin.cms.blocks.draft');
+        }, $draft);
+    }
+
+    /**
+     * @param BlockRequest $request
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws Exception
+     */
+    public function limbo(BlockRequest $request, $id)
+    {
+        return $this->_limbo(function () {
+            $this->view = view('admin.cms.blocks.limbo');
+        }, function () use ($request) {
+            $this->item->saveAsDraft($request->all());
+            $this->redirect = redirect()->route('admin.blocks.drafts');
+        }, $id, $request);
+    }
+
+    /**
+     * @param Revision $revision
+     * @return \Illuminate\View\View
+     */
+    public function revision(Revision $revision)
+    {
+        return $this->_revision(function () use ($revision) {
+            $this->item = $revision->revisionable;
+            $this->item->rollbackToRevision($revision);
+
+            $this->view = view('admin.cms.blocks.revision');
+        }, $revision);
     }
 
     /**
@@ -166,7 +276,6 @@ class BlocksController extends Controller
                 ])->render(),
             ];
         } catch (Exception $e) {
-            dd($e);
             return [
                 'status' => false
             ];

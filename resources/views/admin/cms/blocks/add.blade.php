@@ -23,6 +23,7 @@
         {!! button()->cancelAction(route('admin.blocks.index')) !!}
     </section>
     <section class="actions">
+        {!! button()->saveAsDraft(route('admin.drafts.save')) !!}
         {!! button()->saveAndStay() !!}
         {!! button()->saveRecord() !!}
     </section>

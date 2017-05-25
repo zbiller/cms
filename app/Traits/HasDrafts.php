@@ -491,14 +491,16 @@ trait HasDrafts
                 if ($related->exists) {
                     $model->{$relation}()->attach($id, $attributes);
                 } elseif ($draft->exists) {
-                    foreach ($draft->metadata->relations->{$relation}->records->items as $item) {
-                        if (isset($item->id) && $item->id == $id) {
-                            foreach ((array)$item as $field => $value) {
-                                $related->{$field} = $value;
-                            }
+                    if (isset($draft->metadata->relations->{$relation}->records->items)) {
+                        foreach ($draft->metadata->relations->{$relation}->records->items as $item) {
+                            if (isset($item->id) && $item->id == $id) {
+                                foreach ((array)$item as $field => $value) {
+                                    $related->{$field} = $value;
+                                }
 
-                            $related->save();
-                            $model->{$relation}()->attach($id, $attributes);
+                                $related->save();
+                                $model->{$relation}()->attach($id, $attributes);
+                            }
                         }
                     }
                 }

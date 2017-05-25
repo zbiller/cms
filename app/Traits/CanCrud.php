@@ -554,10 +554,6 @@ trait CanCrud
 
             switch ($request->method()) {
                 case 'GET':
-                    if ($query = parse_url(url()->previous(), PHP_URL_QUERY)) {
-                        session()->put('crud_query', $query);
-                    }
-
                     if ($getFunction) {
                         call_user_func($getFunction);
                     }
@@ -583,25 +579,12 @@ trait CanCrud
                         }
                     }
 
-                    if ($this->redirect) {
-                        $query = session()->pull('crud_query');
-
-                        return redirect($this->redirect->getTargetUrl() . ($query ? '?' . $query : ''));
-                    }
-
-                    return back();
+                    return $this->redirect ?: back();
                     break;
             }
         } catch (ModelNotFoundException $e) {
             session()->flash('flash_error', __('crud.draft_not_found'));
-
-            if ($this->redirect) {
-                $query = session()->pull('crud_query');
-
-                return redirect($this->redirect->getTargetUrl() . ($query ? '?' . $query : ''));
-            }
-
-            return back();
+            return $this->redirect ?: back();
         }
     }
 
@@ -620,8 +603,10 @@ trait CanCrud
         $this->checkCrudModel();
         $this->initCrudModel();
 
-        if ($query = parse_url(url()->previous(), PHP_URL_QUERY)) {
+        if ($query = parse_url(url()->current(), PHP_URL_QUERY)) {
             session()->put('crud_query', $query);
+        } else {
+            session()->forget('crud_query');
         }
 
         try {

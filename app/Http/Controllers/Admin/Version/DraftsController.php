@@ -206,7 +206,6 @@ class DraftsController extends Controller
 
             return $redirect ? redirect($redirect) : back();
         } catch (DraftException $e) {
-            dd($e);
             session()->flash('flash_error', $e->getMessage());
 
             if (request()->ajax()) {

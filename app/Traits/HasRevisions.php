@@ -170,13 +170,15 @@ trait HasRevisions
 
                 $this->rollbackModelToRevision($revision);
 
-                foreach ($revision->metadata->relations as $relation => $attributes) {
-                    if (Relation::isDirect($attributes->type)) {
-                        $this->rollbackDirectRelationToRevision($relation, $attributes);
-                    }
+                if (isset($revision->metadata->relations)) {
+                    foreach ($revision->metadata->relations as $relation => $attributes) {
+                        if (Relation::isDirect($attributes->type)) {
+                            $this->rollbackDirectRelationToRevision($relation, $attributes);
+                        }
 
-                    if (Relation::isPivoted($attributes->type)) {
-                        $this->rollbackPivotedRelationToRevision($relation, $attributes);
+                        if (Relation::isPivoted($attributes->type)) {
+                            $this->rollbackPivotedRelationToRevision($relation, $attributes);
+                        }
                     }
                 }
             });

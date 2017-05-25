@@ -131,7 +131,6 @@ Route::group([
                 'prefix' => 'pages',
             ], function () {
                 Route::get('/', ['as' => 'admin.pages.index', 'uses' => 'PagesController@index', 'permissions' => 'pages-list']);
-                Route::get('deleted', ['as' => 'admin.pages.deleted', 'uses' => 'PagesController@deleted', 'permissions' => 'pages-deleted']);
                 Route::get('create/{parent?}', ['as' => 'admin.pages.create', 'uses' => 'PagesController@create', 'permissions' => 'pages-add']);
                 Route::get('edit/{page}', ['as' => 'admin.pages.edit', 'uses' => 'PagesController@edit', 'permissions' => 'pages-edit']);
                 Route::post('store/{parent?}', ['as' => 'admin.pages.store', 'uses' => 'PagesController@store', 'permissions' => 'pages-add']);
@@ -141,6 +140,7 @@ Route::group([
                 /**
                  * Soft Delete Actions.
                  */
+                Route::get('deleted', ['as' => 'admin.pages.deleted', 'uses' => 'PagesController@deleted', 'permissions' => 'pages-deleted']);
                 Route::put('restore/{id}', ['as' => 'admin.pages.restore', 'uses' => 'PagesController@restore', 'permissions' => 'pages-restore']);
                 Route::delete('delete/{id}', ['as' => 'admin.pages.delete', 'uses' => 'PagesController@delete', 'permissions' => 'pages-force-delete']);
 
@@ -229,9 +229,28 @@ Route::group([
                 Route::delete('destroy/{block}', ['as' => 'admin.blocks.destroy', 'uses' => 'BlocksController@destroy', 'permissions' => 'blocks-delete']);
 
                 /**
+                 * Soft Delete Actions.
+                 */
+                Route::get('deleted', ['as' => 'admin.blocks.deleted', 'uses' => 'BlocksController@deleted', 'permissions' => 'blocks-deleted']);
+                Route::put('restore/{id}', ['as' => 'admin.blocks.restore', 'uses' => 'BlocksController@restore', 'permissions' => 'blocks-restore']);
+                Route::delete('delete/{id}', ['as' => 'admin.blocks.delete', 'uses' => 'BlocksController@delete', 'permissions' => 'blocks-force-delete']);
+
+                /**
                  * Duplicate Actions.
                  */
                 Route::post('duplicate/{block}', ['as' => 'admin.blocks.duplicate', 'uses' => 'BlocksController@duplicate', 'permissions' => 'blocks-duplicate']);
+
+                /**
+                 * Draft Actions.
+                 */
+                Route::get('drafts', ['as' => 'admin.blocks.drafts', 'uses' => 'BlocksController@drafts', 'permissions' => 'drafts-list']);
+                Route::get('draft/{draft}', ['as' => 'admin.blocks.draft', 'uses' => 'BlocksController@draft', 'permissions' => 'drafts-publish']);
+                Route::match(['get', 'put'], 'limbo/{id}', ['as' => 'admin.blocks.limbo', 'uses' => 'BlocksController@limbo', 'permissions' => 'drafts-save']);
+
+                /**
+                 * Revision Actions.
+                 */
+                Route::get('revision/{revision}', ['as' => 'admin.blocks.revision', 'uses' => 'BlocksController@revision', 'permissions' => 'revisions-rollback']);
             });
 
             /**

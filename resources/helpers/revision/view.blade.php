@@ -10,9 +10,7 @@
 @section('bottom_scripts')
     <script type="text/javascript">
         $(function () {
-            setTimeout(function () {
-                tinymce.activeEditor.getBody().setAttribute('contenteditable', false);
-            }, 1500);
+            disable.form();
         });
     </script>
 @append

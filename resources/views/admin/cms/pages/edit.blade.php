@@ -15,7 +15,7 @@
         {!! form_admin()->model($item, ['url' => route('admin.pages.update', ['id' => $item->id]), 'method' => 'PUT', 'class' => 'form', 'files' => true]) !!}
             @include('admin.cms.pages._form')
         {!! form()->close() !!}
-</section>
+    </section>
 @endsection
 
 @section('footer')

@@ -5,20 +5,28 @@ namespace App\Models\Cms;
 use DB;
 use App\Models\Model;
 use App\Traits\HasUploads;
+use App\Traits\HasDrafts;
+use App\Traits\HasRevisions;
 use App\Traits\HasDuplicates;
 use App\Traits\HasMetadata;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
+use App\Options\DraftOptions;
+use App\Options\RevisionOptions;
 use App\Options\DuplicateOptions;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Block extends Model
 {
     use HasUploads;
+    use HasDrafts;
+    use HasRevisions;
     use HasDuplicates;
     use HasMetadata;
     use IsFilterable;
     use IsSortable;
+    use SoftDeletes;
 
     /**
      * The database table.
@@ -234,6 +242,34 @@ class Block extends Model
     }
 
     /**
+     * @return DraftOptions
+     */
+    public static function getDraftOptions()
+    {
+        return DraftOptions::instance();
+    }
+
+    /**
+     * @return RevisionOptions
+     */
+    public static function getRevisionOptions()
+    {
+        return RevisionOptions::instance()
+            ->limitRevisionsTo(500);
+    }
+
+    /**
+     * Set the options for the HasDuplicates trait.
+     *
+     * @return DuplicateOptions
+     */
+    public static function getDuplicateOptions()
+    {
+        return DuplicateOptions::instance()
+            ->uniqueColumns('name');
+    }
+
+    /**
      * Get the specific upload config parts for this model.
      *
      * @return array
@@ -319,16 +355,5 @@ class Block extends Model
                 ]
             ]
         ];
-    }
-
-    /**
-     * Set the options for the HasDuplicates trait.
-     *
-     * @return DuplicateOptions
-     */
-    public static function getDuplicateOptions()
-    {
-        return DuplicateOptions::instance()
-            ->uniqueColumns('name');
     }
 }

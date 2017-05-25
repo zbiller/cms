@@ -17,22 +17,22 @@
     <section class="view">
         {!! form_admin()->model($item, ['class' => 'form']) !!}
             <div id="tab-1" class="tab">
-                {!! form_admin()->select('layout_id', 'Layout', $layouts->pluck('name', 'id'), null, ['disabled']) !!}
-                {!! form_admin()->select('type', 'Type', $types, null, ['disabled']) !!}
-                {!! form_admin()->text('name', 'Name', null, ['disabled']) !!}
-                {!! form_admin()->text('slug', 'Slug', null, ['disabled']) !!}
-                {!! auth()->user()->isDeveloper() ? form_admin()->text('identifier', 'Identifier', null, ['disabled']) : '' !!}
-                {!! form_admin()->select('active', 'Active', $actives, null, ['disabled']) !!}
+                {!! form_admin()->select('layout_id', 'Layout', $layouts->pluck('name', 'id')) !!}
+                {!! form_admin()->select('type', 'Type', $types) !!}
+                {!! form_admin()->text('name', 'Name') !!}
+                {!! form_admin()->text('slug', 'Slug') !!}
+                {!! auth()->user()->isDeveloper() ? form_admin()->text('identifier', 'Identifier') : '' !!}
+                {!! form_admin()->select('active', 'Active', $actives) !!}
             </div>
             <div id="tab-2" class="tab">
-                {!! form_admin()->text('metadata[title]', 'Title', null, ['disabled']) !!}
-                {!! form_admin()->text('metadata[subtitle]', 'Subtitle', null, ['disabled']) !!}
-                {!! form_admin()->editor('metadata[content]', 'Content', null, ['disabled']) !!}
+                {!! form_admin()->text('metadata[title]', 'Title') !!}
+                {!! form_admin()->text('metadata[subtitle]', 'Subtitle') !!}
+                {!! form_admin()->editor('metadata[content]', 'Content') !!}
             </div>
             <div id="tab-3" class="tab">
-                {!! form_admin()->text('metadata[meta_title]', 'Meta Title', null, ['disabled']) !!}
-                {!! form_admin()->textarea('metadata[meta_description]', 'Meta Description', null, ['disabled']) !!}
-                {!! form_admin()->textarea('metadata[meta_keywords]', 'Meta Keywords', null, ['disabled']) !!}
+                {!! form_admin()->text('metadata[meta_title]', 'Meta Title') !!}
+                {!! form_admin()->textarea('metadata[meta_description]', 'Meta Description') !!}
+                {!! form_admin()->textarea('metadata[meta_keywords]', 'Meta Keywords') !!}
             </div>
             {!! block()->container($item, null, $revision, true) !!}
         {!! form()->close() !!}

@@ -21,6 +21,8 @@
 
     <section class="actions">
         {!! button()->updatePage() !!}
+        {!! button()->deletedRecords(route('admin.blocks.deleted')) !!}
+        {!! button()->draftedRecords(route('admin.blocks.drafts')) !!}
         {!! button()->addRecord(route('admin.blocks.create')) !!}
     </section>
 @endsection

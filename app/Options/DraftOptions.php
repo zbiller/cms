@@ -10,7 +10,7 @@ class DraftOptions
      *
      * @var array
      */
-    public $draftFields;
+    public $draftFields = [];
 
     /**
      * The model's relations that should be draftable.
@@ -18,7 +18,7 @@ class DraftOptions
      *
      * @var array
      */
-    public $draftRelations;
+    public $draftRelations = [];
 
     /**
      * Flag indicating whether to delete the just published draft.
