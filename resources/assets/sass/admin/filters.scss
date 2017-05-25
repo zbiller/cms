@@ -4,6 +4,28 @@ section.filters {
     margin: 0 0 20px 0;
     padding: 0 5px;
 
+    &.filters-inside {
+        margin: 0 0 20px 0;
+        padding: 0;
+        border: 0;
+
+        fieldset {
+            margin: 0;
+
+            @include media-query('tablet') {
+                margin: 15px 0;
+            }
+        }
+
+        div {
+            margin: 0;
+
+            @include media-query('tablet') {
+                margin: 15px 0;
+            }
+        }
+    }
+
     form {
         fieldset {
             width: 200px;

@@ -192,3 +192,38 @@ var clipboard = {
         return succeed;
     }
 };
+
+var disable = {
+    form: function () {
+        setTimeout(function () {
+            //disable normal inputs
+            $('form.form input').attr('disabled', true);
+            $('form.form textarea').attr('disabled', true);
+            $('form.form select').attr('disabled', true);
+
+            //disable uploader
+            $('form.form .upload-current').addClass('disabled');
+            $('form.form .upload-current').find('.open-upload-cropper').addClass('disabled');
+            $('form.form .upload-current').find('.upload-delete').remove();
+            $('form.form .open-upload-new').addClass('disabled');
+            $('form.form .upload-new').remove();
+
+            //disable chosen selects
+            $('form.form select.select-input').prop('disabled', true).trigger("chosen:updated");
+
+            //disable block specific buttons
+            $('form.form #block-add-item').remove();
+            $('form.form .block-move-item-up').remove();
+            $('form.form .block-move-item-down').remove();
+            $('form.form .block-delete-item').remove();
+            $('form.form .block-item br').remove();
+        }, 500);
+
+        setTimeout(function () {
+            //disable tinymce editors
+            if (tinymce.activeEditor) {
+                tinymce.activeEditor.getBody().setAttribute('contenteditable', false);
+            }
+        }, 1000);
+    }
+};

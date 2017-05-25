@@ -32,6 +32,7 @@ elixir(function (mix) {
             'admin/view.scss',
             'admin/popup.scss',
             'admin/upload.scss',
+            'admin/analytics.scss',
             'admin/custom.scss'
         ], 'resources/assets/css/admin/main.css')
 

@@ -13,6 +13,20 @@ div.tab {
     }
 }
 
+.section-title {
+    @include font-size(14px);
+
+    display: block;
+    float: left;
+    width: 100%;
+    padding: 0 0 2px;
+    margin: 0 0 30px 0;
+    border-bottom: 1px solid $colorPictonBlue;
+    font-family: 'Open Sans Bold', sans-serif;
+    color: $colorPictonBlue;
+    text-transform: uppercase;
+}
+
 .form {
     fieldset {
         display: block;

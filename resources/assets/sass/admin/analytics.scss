@@ -1,0 +1,13 @@
+@import 'init';
+
+#analytics-chart {
+    margin: 120px 0 10px 0;
+
+    @include media-query('tablet') {
+        margin: 130px 0 10px 0;
+    }
+
+    @include media-query('phablet') {
+        margin: 250px 0 10px 0;
+    }
+}

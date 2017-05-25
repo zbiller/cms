@@ -172,6 +172,7 @@ return [
         Proengsoft\JsValidation\JsValidationServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
+        Spatie\Analytics\AnalyticsServiceProvider::class,
 
         /*
          * Application Service Providers
@@ -246,6 +247,7 @@ return [
         'Image' => Intervention\Image\Facades\Image::class,
         'JsValidator' => Proengsoft\JsValidation\Facades\JsValidatorFacade::class,
         'FFMpeg' => Pbmedia\LaravelFFMpeg\FFMpegFacade::class,
+        'Analytics' => Spatie\Analytics\AnalyticsFacade::class,
 
         /**
          * Application Facades

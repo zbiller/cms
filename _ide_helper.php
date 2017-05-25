@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.4.22 on 2017-05-11.
+ * Generated for Laravel 5.4.23 on 2017-05-25.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -4774,6 +4774,17 @@ namespace Illuminate\Support\Facades {
         public static function forUser($user)
         {
             return \Illuminate\Auth\Access\Gate::forUser($user);
+        }
+        
+        /**
+         * Get all of the defined abilities.
+         *
+         * @return array 
+         * @static 
+         */
+        public static function abilities()
+        {
+            return \Illuminate\Auth\Access\Gate::abilities();
         }
         
     }         
@@ -9976,7 +9987,7 @@ namespace Illuminate\Support\Facades {
          * Store the uploaded file on the disk.
          *
          * @param string $path
-         * @param \Illuminate\Http\UploadedFile $file
+         * @param \Illuminate\Http\File|\Illuminate\Http\UploadedFile $file
          * @param array $options
          * @return string|false 
          * @static 
@@ -12112,6 +12123,20 @@ namespace Collective\Html {
         }
         
         /**
+         * Create a search input field.
+         *
+         * @param string $name
+         * @param string $value
+         * @param array $options
+         * @return \Illuminate\Support\HtmlString 
+         * @static 
+         */
+        public static function search($name, $value = null, $options = array())
+        {
+            return \Collective\Html\FormBuilder::search($name, $value, $options);
+        }
+        
+        /**
          * Create an e-mail input field.
          *
          * @param string $name
@@ -12256,13 +12281,14 @@ namespace Collective\Html {
          * @param string $name
          * @param array $list
          * @param string $selected
-         * @param array $options
+         * @param array $selectAttributes
+         * @param array $optionsAttributes
          * @return \Illuminate\Support\HtmlString 
          * @static 
          */
-        public static function select($name, $list = array(), $selected = null, $options = array())
+        public static function select($name, $list = array(), $selected = null, $selectAttributes = array(), $optionsAttributes = array())
         {
-            return \Collective\Html\FormBuilder::select($name, $list, $selected, $options);
+            return \Collective\Html\FormBuilder::select($name, $list, $selected, $selectAttributes, $optionsAttributes);
         }
         
         /**
@@ -12318,12 +12344,13 @@ namespace Collective\Html {
          * @param string $display
          * @param string $value
          * @param string $selected
+         * @param array $attributes
          * @return \Illuminate\Support\HtmlString 
          * @static 
          */
-        public static function getSelectOption($display, $value, $selected)
+        public static function getSelectOption($display, $value, $selected, $attributes = array())
         {
-            return \Collective\Html\FormBuilder::getSelectOption($display, $value, $selected);
+            return \Collective\Html\FormBuilder::getSelectOption($display, $value, $selected, $attributes);
         }
         
         /**
@@ -12588,18 +12615,6 @@ namespace Collective\Html {
         public static function entities($value)
         {
             return \Collective\Html\HtmlBuilder::entities($value);
-        }
-        
-        /**
-         * Convert all applicable characters to HTML entities.
-         *
-         * @param string $value
-         * @return string 
-         * @static 
-         */
-        public static function escapeAll($value)
-        {
-            return \Collective\Html\HtmlBuilder::escapeAll($value);
         }
         
         /**
@@ -13099,6 +13114,36 @@ namespace Pbmedia\LaravelFFMpeg {
          *
          * @static 
          */
+        public static function newTemporaryFile()
+        {
+            return \Pbmedia\LaravelFFMpeg\FFMpeg::newTemporaryFile();
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function cleanupTemporaryFiles()
+        {
+            return \Pbmedia\LaravelFFMpeg\FFMpeg::cleanupTemporaryFiles();
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function fromFilesystem($filesystem)
+        {
+            return \Pbmedia\LaravelFFMpeg\FFMpeg::fromFilesystem($filesystem);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
         public static function fromDisk($diskName)
         {
             return \Pbmedia\LaravelFFMpeg\FFMpeg::fromDisk($diskName);
@@ -13112,6 +13157,124 @@ namespace Pbmedia\LaravelFFMpeg {
         public static function open($path)
         {
             return \Pbmedia\LaravelFFMpeg\FFMpeg::open($path);
+        }
+        
+    }         
+}
+    
+namespace Spatie\Analytics {
+
+    class AnalyticsFacade {
+        
+        /**
+         * 
+         *
+         * @param string $viewId
+         * @return $this 
+         * @static 
+         */
+        public static function setViewId($viewId)
+        {
+            return \Spatie\Analytics\Analytics::setViewId($viewId);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function fetchVisitorsAndPageViews($period)
+        {
+            return \Spatie\Analytics\Analytics::fetchVisitorsAndPageViews($period);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function fetchTotalVisitorsAndPageViews($period)
+        {
+            return \Spatie\Analytics\Analytics::fetchTotalVisitorsAndPageViews($period);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function fetchMostVisitedPages($period, $maxResults = 20)
+        {
+            return \Spatie\Analytics\Analytics::fetchMostVisitedPages($period, $maxResults);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function fetchTopReferrers($period, $maxResults = 20)
+        {
+            return \Spatie\Analytics\Analytics::fetchTopReferrers($period, $maxResults);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function fetchTopBrowsers($period, $maxResults = 10)
+        {
+            return \Spatie\Analytics\Analytics::fetchTopBrowsers($period, $maxResults);
+        }
+        
+        /**
+         * Call the query method on the authenticated client.
+         *
+         * @param \Spatie\Analytics\Period $period
+         * @param string $metrics
+         * @param array $others
+         * @return array|null 
+         * @static 
+         */
+        public static function performQuery($period, $metrics, $others = array())
+        {
+            return \Spatie\Analytics\Analytics::performQuery($period, $metrics, $others);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */
+        public static function getAnalyticsService()
+        {
+            return \Spatie\Analytics\Analytics::getAnalyticsService();
+        }
+        
+        /**
+         * Register a custom macro.
+         *
+         * @param string $name
+         * @param callable $macro
+         * @return void 
+         * @static 
+         */
+        public static function macro($name, $macro)
+        {
+            \Spatie\Analytics\Analytics::macro($name, $macro);
+        }
+        
+        /**
+         * Checks if macro is registered.
+         *
+         * @param string $name
+         * @return bool 
+         * @static 
+         */
+        public static function hasMacro($name)
+        {
+            return \Spatie\Analytics\Analytics::hasMacro($name);
         }
         
     }         
@@ -13771,7 +13934,7 @@ namespace {
         /**
          * Add a basic where clause to the query.
          *
-         * @param string|\Closure $column
+         * @param string|array|\Closure $column
          * @param string $operator
          * @param mixed $value
          * @param string $boolean
@@ -15691,6 +15854,8 @@ namespace {
     class JsValidator extends \Proengsoft\JsValidation\Facades\JsValidatorFacade {}
     
     class FFMpeg extends \Pbmedia\LaravelFFMpeg\FFMpegFacade {}
+    
+    class Analytics extends \Spatie\Analytics\AnalyticsFacade {}
     
     class Uploader extends \App\Facades\UploaderFacade {}
     
