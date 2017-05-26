@@ -19,6 +19,23 @@ class PermissionsSeeder extends Seeder
      * @var array
      */
     private $adminMap = [
+        'Activity Logs' => [
+            'List' => [
+                'group' => 'Activity Logs',
+                'label' => 'List',
+                'name' => 'activity-logs-list',
+            ],
+            'Clean' => [
+                'group' => 'Activity Logs',
+                'label' => 'Clean',
+                'name' => 'activity-logs-clean',
+            ],
+            'Delete' => [
+                'group' => 'Activity Logs',
+                'label' => 'Delete',
+                'name' => 'activity-logs-delete',
+            ],
+        ],
         'Drafts' => [
             'List' => [
                 'group' => 'Drafts',

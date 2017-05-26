@@ -116,6 +116,18 @@ Route::group([
                 Route::put('update/{user}', ['as' => 'admin.admin_users.update', 'uses' => 'AdminUsersController@update', 'permissions' => 'admin-users-edit']);
                 Route::delete('destroy/{user}', ['as' => 'admin.admin_users.destroy', 'uses' => 'AdminUsersController@destroy', 'permissions' => 'admin-users-delete']);
             });
+
+            /**
+             * CRUD Activity Log.
+             */
+            Route::group([
+                'prefix' => 'activity-logs',
+            ], function () {
+                Route::get('/', ['as' => 'admin.activity_logs.index', 'uses' => 'ActivityLogsController@index', 'permissions' => 'activity-logs-list']);
+                Route::delete('destroy/{activity}', ['as' => 'admin.activity_logs.destroy', 'uses' => 'ActivityLogsController@destroy', 'permissions' => 'activity-logs-delete']);
+                Route::delete('clean', ['as' => 'admin.activity_logs.clean', 'uses' => 'ActivityLogsController@clean', 'permissions' => 'activity-logs-clean']);
+                Route::delete('delete', ['as' => 'admin.activity_logs.delete', 'uses' => 'ActivityLogsController@delete', 'permissions' => 'activity-logs-delete']);
+            });
         });
 
         /**

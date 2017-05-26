@@ -4,15 +4,18 @@ namespace App\Models\Cms;
 
 use Exception;
 use App\Models\Model;
+use App\Traits\HasActivity;
 use App\Traits\HasMetadata;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
+use App\Options\ActivityOptions;
 use App\Exceptions\CrudException;
 use Illuminate\Database\Eloquent\Builder;
 use Kalnoy\Nestedset\NodeTrait;
 
 class Menu extends Model
 {
+    use HasActivity;
     use HasMetadata;
     use IsFilterable;
     use IsSortable;
@@ -275,5 +278,15 @@ class Menu extends Model
     public function scopeWhereLocation($query, $location)
     {
         $query->where('location', $location);
+    }
+
+    /**
+     * Set the options for the HasActivityLog trait.
+     *
+     * @return ActivityOptions
+     */
+    public static function getActivityOptions()
+    {
+        return ActivityOptions::instance();
     }
 }

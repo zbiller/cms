@@ -3,19 +3,22 @@
 namespace App\Models\Auth;
 
 use App\Traits\HasRoles;
+use App\Traits\HasActivity;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
 use App\Scopes\SelectUserScope;
 use App\Scopes\JoinPersonScope;
-use App\Notifications\ResetPasswordNotification;
+use App\Options\ActivityOptions;
 use App\Options\CacheOptions;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
     use HasRoles;
+    use HasActivity;
     use IsFilterable;
     use IsSortable;
     use Notifiable;
@@ -87,6 +90,26 @@ class User extends Authenticatable
     public function activity()
     {
         return $this->hasMany(Activity::class, 'user_id');
+    }
+
+    /**
+     * Sort the query with newest records first.
+     *
+     * @param Builder $query
+     */
+    public function scopeNewest($query)
+    {
+        $query->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Sort the query alphabetically by name.
+     *
+     * @param Builder $query
+     */
+    public function scopeAlphabetically($query)
+    {
+        $query->orderBy('first_name', 'asc');
     }
 
     /**
@@ -184,6 +207,44 @@ class User extends Authenticatable
         $this->notify(new ResetPasswordNotification(
             $token, (str_contains(request()->url(), 'admin') ? 'admin.' : '') . 'password.change'
         ));
+    }
+
+    /**
+     * Compose the log name.
+     *
+     * @param string|null $event
+     * @return string
+     */
+    public function getLogName($event = null)
+    {
+        $user = auth()->check() ? auth()->user() : null;
+        $name = $user && $user->exists ? $user->full_name : 'A user';
+
+        if ($event && in_array(strtolower($event), array_map('strtolower', static::getEventsToBeLogged()->toArray()))) {
+            $name .= ' ' . $event . ' a';
+        } else {
+            $name .= ' performed an action on a';
+        }
+
+        $name .= ' ' . strtolower(last(explode('\\', get_class($this))));
+
+        if (!empty($this->getAttributes())) {
+            if ($this->getAttribute('username')) {
+                $name .= ' (' . $this->getAttribute('username') . ')';
+            }
+        }
+
+        return $name;
+    }
+
+    /**
+     * Set the options for the HasActivityLog trait.
+     *
+     * @return ActivityOptions
+     */
+    public static function getActivityOptions()
+    {
+        return ActivityOptions::instance();
     }
 
     /**

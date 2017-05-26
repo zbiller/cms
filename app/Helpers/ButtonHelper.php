@@ -46,7 +46,7 @@ class ButtonHelper
             'icon' => $icon,
             'class' => $class,
             'confirm' => $confirm,
-            'attributes' => self::buildAttributes($attributes)
+            'attributes' => $attributes
         ]);
     }
 
@@ -91,7 +91,7 @@ class ButtonHelper
     {
         return view('helpers::button.delete_record')->with([
             'url' => $url,
-            'attributes' => self::buildAttributes($attributes)
+            'attributes' => $attributes
         ]);
     }
 
@@ -220,7 +220,7 @@ class ButtonHelper
         return view('helpers::button.publish_limbo_draft')->with([
             'url' => $url,
             'model' => $model,
-            'attributes' => self::buildAttributes($attributes)
+            'attributes' => $attributes
         ]);
     }
 
@@ -252,7 +252,7 @@ class ButtonHelper
     {
         return view('helpers::button.rollback_revision')->with([
             'url' => $url,
-            'attributes' => self::buildAttributes($attributes)
+            'attributes' => $attributes
         ]);
     }
 
@@ -267,7 +267,7 @@ class ButtonHelper
     {
         return view('helpers::button.duplicate_record')->with([
             'url' => $url,
-            'attributes' => self::buildAttributes($attributes)
+            'attributes' => $attributes
         ]);
     }
 
@@ -297,7 +297,7 @@ class ButtonHelper
     {
         return view('helpers::button.restore_record')->with([
             'url' => $url,
-            'attributes' => self::buildAttributes($attributes)
+            'attributes' => $attributes
         ]);
     }
 

@@ -53,13 +53,13 @@ class ActivityConfig
      */
     protected static function checkIfLoggingConfiguredProperly()
     {
-        if (!isset(self::$config['enabled'])) {
+        if (!array_key_exists('enabled', self::$config)) {
             throw new ConfigException(
                 "The key 'enabled' does not exist in " .self::$path . "."
             );
         }
 
-        if (!isset(self::$config['delete_records_older_than'])) {
+        if (!array_key_exists('delete_records_older_than', self::$config)) {
             throw new ConfigException(
                 "The key 'delete_records_older_than' does not exist in " . self::$path. "."
             );

@@ -2,7 +2,9 @@
 
 namespace App\Models\Auth;
 
+use App\Traits\HasActivity;
 use App\Traits\IsCacheable;
+use App\Options\ActivityOptions;
 use App\Options\CacheOptions;
 use App\Contracts\PermissionContract;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +13,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Permission extends Model implements PermissionContract
 {
+    use HasActivity;
     use IsCacheable;
 
     /**
@@ -75,11 +78,21 @@ class Permission extends Model implements PermissionContract
     }
 
     /**
+     * Set the options for the HasActivityLog trait.
+     *
+     * @return ActivityOptions
+     */
+    public static function getActivityOptions()
+    {
+        return ActivityOptions::instance();
+    }
+
+    /**
      * Set the options necessary for the IsCacheable trait.
      *
      * @return CacheOptions
      */
-    public static function getCacheOptions(): CacheOptions
+    public static function getCacheOptions()
     {
         return CacheOptions::instance()
             ->setKey('acl');

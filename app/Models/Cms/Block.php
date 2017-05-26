@@ -8,12 +8,14 @@ use App\Traits\HasUploads;
 use App\Traits\HasDrafts;
 use App\Traits\HasRevisions;
 use App\Traits\HasDuplicates;
+use App\Traits\HasActivity;
 use App\Traits\HasMetadata;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
 use App\Options\DraftOptions;
 use App\Options\RevisionOptions;
 use App\Options\DuplicateOptions;
+use App\Options\ActivityOptions;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -23,6 +25,7 @@ class Block extends Model
     use HasDrafts;
     use HasRevisions;
     use HasDuplicates;
+    use HasActivity;
     use HasMetadata;
     use IsFilterable;
     use IsSortable;
@@ -267,6 +270,16 @@ class Block extends Model
     {
         return DuplicateOptions::instance()
             ->uniqueColumns('name');
+    }
+
+    /**
+     * Set the options for the HasActivityLog trait.
+     *
+     * @return ActivityOptions
+     */
+    public static function getActivityOptions()
+    {
+        return ActivityOptions::instance();
     }
 
     /**

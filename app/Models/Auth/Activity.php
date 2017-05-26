@@ -2,11 +2,19 @@
 
 namespace App\Models\Auth;
 
+use Exception;
+use Carbon\Carbon;
 use App\Models\Model;
+use App\Traits\IsFilterable;
+use App\Traits\IsSortable;
+use App\Exceptions\ActivityException;
 use Illuminate\Database\Eloquent\Builder;
 
 class Activity extends Model
 {
+    use IsFilterable;
+    use IsSortable;
+
     /**
      * The database table.
      *
@@ -41,6 +49,26 @@ class Activity extends Model
     public function subject()
     {
         return $this->morphTo()->withTrashed()->withDrafts();
+    }
+
+    /**
+     * Sort the query with newest records first.
+     *
+     * @param Builder $query
+     */
+    public function scopeNewest($query)
+    {
+        $query->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Sort the query alphabetically by name.
+     *
+     * @param Builder $query
+     */
+    public function scopeAlphabetically($query)
+    {
+        $query->orderBy('name', 'asc');
     }
 
     /**
@@ -99,5 +127,36 @@ class Activity extends Model
     public function scopeLikeLog($query, $search)
     {
         return $query->where('name', 'like', '%' . $search . '%');
+    }
+
+    /**
+     * Attempt to clean old activity.
+     *
+     * Activity qualifies as being old if:
+     * "created_at" field is smaller than the current date minus the number of days set in the
+     * "delete_records_older_than" key of config/activity-log.php file.
+     *
+     * @return bool|void
+     * @throws ActivityException
+     */
+    public static function clean()
+    {
+        $days = (int)config('activity-log.delete_records_older_than');
+
+        if (!($days > 0)) {
+            return;
+        }
+
+        try {
+            $date = Carbon::now()->subDays($days)->format('Y-m-d H:i:s');
+
+            static::where('created_at', '<', $date)->delete();
+
+            return true;
+        } catch (Exception $e) {
+            throw new ActivityException(
+                'Could not clean up the activity! Please try again.', $e->getCode(), $e
+            );
+        }
     }
 }

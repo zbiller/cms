@@ -274,3 +274,12 @@ td .upload-aligned-image {
         width: 117px;
     }
 }
+
+/* Activity Logs Styles */
+.actions-activity-logs {
+    width: 85px !important;
+
+    @include media-query('tablet') {
+        width: 60px !important;
+    }
+}

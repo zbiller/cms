@@ -57,7 +57,7 @@ class MenuComposer
             });
 
             $menu->add(function ($item) use ($menu) {
-                $access = $item->name('Access Control')->data('icon', 'fa-sign-in')->active('admin/admin-roles/*', 'admin/admin-users/*');
+                $access = $item->name('Access Control')->data('icon', 'fa-sign-in')->active('admin/admin-roles/*', 'admin/admin-users/*', 'admin/activity-logs');
 
                 $menu->child($access, function (MenuItem $item) {
                     $item->name('Admin Roles')->url(route('admin.admin_roles.index'))->permissions('admin-roles-list')->active('admin/admin-roles/*');
@@ -66,8 +66,11 @@ class MenuComposer
                 $menu->child($access, function (MenuItem $item) {
                     $item->name('Admin Users')->url(route('admin.admin_users.index'))->permissions('admin-users-list')->active('admin/admin-users/*');
                 });
-            });
 
+                $menu->child($access, function (MenuItem $item) {
+                    $item->name('Activity Logs')->url(route('admin.activity_logs.index'))->permissions('activity-log-list')->active('admin/activity-logs/*');
+                });
+            });
 
             $menu->add(function (MenuItem $item) use ($menu) {
                 $test = $item->name('Test')->data('icon', 'fa-text-width')->active('admin/cars/*');

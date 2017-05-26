@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Configs\UploadConfig;
-use App\Configs\ActivityLogConfig;
+use App\Configs\ActivityConfig;
 use Illuminate\Support\ServiceProvider;
 
 class ConfigServiceProvider extends ServiceProvider
@@ -36,6 +36,6 @@ class ConfigServiceProvider extends ServiceProvider
     protected function checkUploadConfig()
     {
         UploadConfig::check();
-        ActivityLogConfig::check();
+        ActivityConfig::check();
     }
 }

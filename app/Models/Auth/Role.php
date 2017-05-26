@@ -4,10 +4,12 @@ namespace App\Models\Auth;
 
 use App\Models\Model;
 use App\Traits\HasPermissions;
+use App\Traits\HasActivity;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
 use App\Traits\IsCacheable;
 use App\Contracts\RoleContract;
+use App\Options\ActivityOptions;
 use App\Options\CacheOptions;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -15,6 +17,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class Role extends Model implements RoleContract
 {
     use HasPermissions;
+    use HasActivity;
     use IsFilterable;
     use IsSortable;
     use IsCacheable;
@@ -114,6 +117,16 @@ class Role extends Model implements RoleContract
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Role "' . $name . '" does not exist!');
         }
+    }
+
+    /**
+     * Set the options for the HasActivityLog trait.
+     *
+     * @return ActivityOptions
+     */
+    public static function getActivityOptions()
+    {
+        return ActivityOptions::instance();
     }
 
     /**

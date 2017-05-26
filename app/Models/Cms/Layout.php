@@ -4,14 +4,17 @@ namespace App\Models\Cms;
 
 use App\Models\Model;
 use App\Traits\HasBlocks;
+use App\Traits\HasActivity;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
 use App\Options\BlockOptions;
+use App\Options\ActivityOptions;
 use Illuminate\Database\Eloquent\Builder;
 
 class Layout extends Model
 {
     use HasBlocks;
+    use HasActivity;
     use IsFilterable;
     use IsSortable;
 
@@ -180,5 +183,15 @@ class Layout extends Model
     public static function getBlockOptions()
     {
         return BlockOptions::instance();
+    }
+
+    /**
+     * Set the options for the HasActivityLog trait.
+     *
+     * @return ActivityOptions
+     */
+    public static function getActivityOptions()
+    {
+        return ActivityOptions::instance();
     }
 }
