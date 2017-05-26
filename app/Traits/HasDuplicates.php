@@ -66,11 +66,11 @@ trait HasDuplicates
     public function saveAsDuplicate()
     {
         try {
-            return DB::transaction(function () {
-                if ($this->fireModelEvent('duplicating') === false) {
-                    return false;
-                }
+            if ($this->fireModelEvent('duplicating') === false) {
+                return false;
+            }
 
+            $model = DB::transaction(function () {
                 $model = $this->duplicateModel();
 
                 if (self::$duplicateOptions->shouldDuplicateDeeply !== true) {
@@ -87,10 +87,12 @@ trait HasDuplicates
                     }
                 }
 
-                $this->fireModelEvent('duplicated', false);
-
                 return $model;
             });
+
+            $this->fireModelEvent('duplicated', false);
+
+            return $model;
         } catch (Exception $e) {
             throw new DuplicateException(
                 'Could not duplicate the record!', $e->getCode(), $e

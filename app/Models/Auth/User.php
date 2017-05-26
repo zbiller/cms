@@ -80,6 +80,16 @@ class User extends Authenticatable
     }
 
     /**
+     * User has many activity logs.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function activity()
+    {
+        return $this->hasMany(Activity::class, 'user_id');
+    }
+
+    /**
      * Filter query results to show users only with the given roles.
      * Param $roles: single role type as model|string or multiple role types as a collection|array.
      *

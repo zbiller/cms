@@ -98,6 +98,18 @@ class CreateAclTables extends Migration
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
+
+        Schema::create('activity', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('user_id')->unsigned()->index()->nullable();
+
+            $table->nullableMorphs('subject');
+
+            $table->string('name');
+            $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
+        });
     }
 
     /**
@@ -107,6 +119,7 @@ class CreateAclTables extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('activity');
         Schema::dropIfExists('password_resets');
         Schema::dropIfExists('role_permission');
         Schema::dropIfExists('user_permission');

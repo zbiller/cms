@@ -107,10 +107,11 @@ trait HasRevisions
                 ]);
 
                 $this->clearOldRevisions();
-                $this->fireModelEvent('revisioned', false);
 
                 return $revision;
             });
+
+            $this->fireModelEvent('revisioned', false);
 
             return $revision;
         } catch (Exception $e) {

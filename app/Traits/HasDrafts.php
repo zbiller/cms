@@ -97,16 +97,20 @@ trait HasDrafts
             }
 
             $model = DB::transaction(function () use ($data, $draft) {
-                if ($this->wasRecentlyCreated || !$this->exists || !is_null($this->{$this->getDraftedAtColumn()})) {
+                if ($this->isLimboDraft()) {
                     $model = $this->saveLimboDraft($data);
                 } else {
                     $model = $this->saveRegularDraft($data, $draft);
                 }
 
-                $this->fireModelEvent('drafted', false);
-
                 return $model;
             });
+
+            if ($this->isLimboDraft()) {
+                $model->fireModelEvent('drafted', true);
+            } else {
+                $this->fireModelEvent('drafted', true);
+            }
 
             return $model;
         } catch (Exception $e) {
@@ -214,6 +218,16 @@ trait HasDrafts
     public function getQualifiedDraftedAtColumn()
     {
         return $this->getTable() . '.' . $this->getDraftedAtColumn();
+    }
+
+    /**
+     * Establish if the current draft action is to be applied on a limbo or regular draft.
+     *
+     * @return bool
+     */
+    protected function isLimboDraft()
+    {
+        return $this->wasRecentlyCreated || !$this->exists || !is_null($this->{$this->getDraftedAtColumn()});
     }
 
     /**

@@ -144,6 +144,16 @@ if (!function_exists('preview')) {
     }
 }
 
+if (!function_exists('activity_log')) {
+    /**
+     * @return \App\Helpers\ActivityHelper
+     */
+    function activity_log()
+    {
+        return new App\Helpers\ActivityHelper();
+    }
+}
+
 if (!function_exists('relation')) {
     /**
      * @return \App\Helpers\RelationHelper
