@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\ActivityClean;
 use App\Console\Commands\UploadsLinkCommand;
 use App\Console\Commands\BlockMakeCommand;
 use Illuminate\Console\Scheduling\Schedule;
@@ -17,6 +18,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         UploadsLinkCommand::class,
         BlockMakeCommand::class,
+        ActivityClean::class,
     ];
 
     /**

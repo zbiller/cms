@@ -16,6 +16,6 @@ return [
      *
      * If set to "null" or "0", no past activities will be deleted whatsoever.
      */
-    'delete_records_older_than' => 365,
+    'delete_records_older_than' => 100,
 
 ];
