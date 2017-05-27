@@ -30,6 +30,13 @@ main {
         background: $colorWhite;
         border-top: 1px solid $colorGallery;
         border-bottom: 1px solid $colorGallery;
+
+        span {
+            @include font-size(13px);
+
+            font-family: 'Open Sans', sans-serif;
+            color: $colorOsloGray;
+        }
     }
 }
 
@@ -44,7 +51,7 @@ main {
     background: $colorAlabaster;
     border: 1px solid $colorGallery;
     text-align: center;
-    
+
     a {
         font-family: 'Open Sans Semibold', sans-serif;
         color: $colorPictonBlue;

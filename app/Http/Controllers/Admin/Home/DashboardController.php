@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Home;
 use Analytics;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
+use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Spatie\Analytics\Period;
@@ -33,10 +34,12 @@ class DashboardController extends Controller
             return back();
         }
 
-        $analytics = $this->formatAnalyticsData($this->fetchAnalyticsData($startDate, $endDate));
+        if ($this->shouldUseAnalytics()) {
+            $analytics = $this->formatAnalyticsData($this->fetchAnalyticsData($startDate, $endDate));
+        }
 
         return view('admin.home.dashboard')->with([
-            'analytics' => $analytics
+            'analytics' => $this->shouldUseAnalytics() ? $analytics : null
         ]);
     }
 
@@ -92,5 +95,21 @@ class DashboardController extends Controller
         }
 
         return json_encode($format);
+    }
+
+    /**
+     * @return bool
+     */
+    protected function shouldUseAnalytics()
+    {
+        if (!config('analytics.view_id')) {
+            return false;
+        }
+
+        if (!File::exists(storage_path('app/analytics/service-account-credentials.json'))) {
+            return false;
+        }
+
+        return true;
     }
 }
