@@ -27,7 +27,7 @@ class ActivityConfig
      */
     public function __construct()
     {
-        $this->checkIfLoggingConfiguredProperly();
+        $this->check();
     }
 
     /**
@@ -39,7 +39,7 @@ class ActivityConfig
     {
         self::$config = config('activity-log');
 
-        self::checkIfLoggingConfiguredProperly();
+        self::checkIfLoggingIsConfiguredProperly();
     }
 
     /**
@@ -51,7 +51,7 @@ class ActivityConfig
      * @return $this
      * @throws ConfigException
      */
-    protected static function checkIfLoggingConfiguredProperly()
+    protected static function checkIfLoggingIsConfiguredProperly()
     {
         if (!array_key_exists('enabled', self::$config)) {
             throw new ConfigException(

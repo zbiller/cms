@@ -15,7 +15,10 @@ class ConfigServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->checkUploadConfig();
+        if (!app()->runningInConsole()) {
+            $this->checkUploadConfig();
+            $this->checkActivityLogConfig();
+        }
     }
 
     /**
@@ -36,6 +39,15 @@ class ConfigServiceProvider extends ServiceProvider
     protected function checkUploadConfig()
     {
         UploadConfig::check();
+    }
+
+    /**
+     * Check if the config/activity-log.php is properly and fully configured.
+     *
+     * @return void
+     */
+    protected function checkActivityLogConfig()
+    {
         ActivityConfig::check();
     }
 }
