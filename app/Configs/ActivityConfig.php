@@ -27,7 +27,9 @@ class ActivityConfig
      */
     public function __construct()
     {
-        $this->check();
+        self::$config = config('activity-log');
+
+        self::checkIfLoggingIsConfiguredProperly();
     }
 
     /**
@@ -48,7 +50,7 @@ class ActivityConfig
      *
      * If something is wrong, throw a config exception.
      *
-     * @return $this
+     * @return bool
      * @throws ConfigException
      */
     protected static function checkIfLoggingIsConfiguredProperly()
