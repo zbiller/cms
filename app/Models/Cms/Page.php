@@ -380,7 +380,7 @@ class Page extends Model
     }
 
     /**
-     * Set the options for the HasActivityLog trait.
+     * Set the options for the HasActivity trait.
      *
      * @return ActivityOptions
      */

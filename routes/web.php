@@ -147,7 +147,7 @@ Route::group([
                 Route::get('edit/{page}', ['as' => 'admin.pages.edit', 'uses' => 'PagesController@edit', 'permissions' => 'pages-edit']);
                 Route::post('store/{parent?}', ['as' => 'admin.pages.store', 'uses' => 'PagesController@store', 'permissions' => 'pages-add']);
                 Route::put('update/{page}', ['as' => 'admin.pages.update', 'uses' => 'PagesController@update', 'permissions' => 'pages-edit']);
-                Route::delete('destroy/{page}', ['as' => 'admin.pages.destroy', 'uses' => 'PagesController@destroy', 'permissions' => 'pages-delete']);
+                Route::delete('destroy/{page}', ['as' => 'admin.pages.destroy', 'uses' => 'PagesController@destroy', 'permissions' => 'pages-soft-delete']);
 
                 /**
                  * Soft Delete Actions.
@@ -238,7 +238,7 @@ Route::group([
                 Route::post('row', ['as' => 'admin.blocks.row', 'uses' => 'BlocksController@row', 'permissions' => 'blocks-list']);
                 Route::post('store', ['as' => 'admin.blocks.store', 'uses' => 'BlocksController@store', 'permissions' => 'blocks-add']);
                 Route::put('update/{block}', ['as' => 'admin.blocks.update', 'uses' => 'BlocksController@update', 'permissions' => 'blocks-edit']);
-                Route::delete('destroy/{block}', ['as' => 'admin.blocks.destroy', 'uses' => 'BlocksController@destroy', 'permissions' => 'blocks-delete']);
+                Route::delete('destroy/{block}', ['as' => 'admin.blocks.destroy', 'uses' => 'BlocksController@destroy', 'permissions' => 'blocks-soft-delete']);
 
                 /**
                  * Soft Delete Actions.
@@ -296,6 +296,49 @@ Route::group([
                 Route::post('cut', ['as' => 'admin.uploads.cut', 'uses' => 'UploadsController@cut', 'permissions' => 'uploads-crop']);
                 Route::delete('destroy/{upload}', ['as' => 'admin.uploads.destroy', 'uses' => 'UploadsController@destroy', 'permissions' => 'uploads-delete']);
             });
+
+            /**
+             * CRUD Emails.
+             */
+            Route::group([
+                'prefix' => 'emails',
+            ], function () {
+                Route::get('/', ['as' => 'admin.emails.index', 'uses' => 'EmailsController@index', 'permissions' => 'emails-list']);
+                Route::get('create/{type?}', ['as' => 'admin.emails.create', 'uses' => 'EmailsController@create', 'permissions' => 'emails-add']);
+                Route::get('edit/{email}', ['as' => 'admin.emails.edit', 'uses' => 'EmailsController@edit', 'permissions' => 'emails-edit']);
+                Route::post('store', ['as' => 'admin.emails.store', 'uses' => 'EmailsController@store', 'permissions' => 'emails-add']);
+                Route::put('update/{email}', ['as' => 'admin.emails.update', 'uses' => 'EmailsController@update', 'permissions' => 'emails-edit']);
+                Route::delete('destroy/{email}', ['as' => 'admin.emails.destroy', 'uses' => 'EmailsController@destroy', 'permissions' => 'emails-soft-delete']);
+
+                /**
+                 * Soft Delete Actions.
+                 */
+                Route::get('deleted', ['as' => 'admin.emails.deleted', 'uses' => 'EmailsController@deleted', 'permissions' => 'emails-deleted']);
+                Route::put('restore/{id}', ['as' => 'admin.emails.restore', 'uses' => 'EmailsController@restore', 'permissions' => 'emails-restore']);
+                Route::delete('delete/{id}', ['as' => 'admin.emails.delete', 'uses' => 'EmailsController@delete', 'permissions' => 'emails-force-delete']);
+
+                /**
+                 * Duplicate Actions.
+                 */
+                Route::post('duplicate/{email}', ['as' => 'admin.emails.duplicate', 'uses' => 'EmailsController@duplicate', 'permissions' => 'emails-duplicate']);
+
+                /**
+                 * Preview Actions.
+                 */
+                Route::match(['post', 'put'], 'preview/{email?}', ['as' => 'admin.emails.preview', 'uses' => 'EmailsController@preview', 'permissions' => 'emails-preview']);
+
+                /**
+                 * Draft Actions.
+                 */
+                Route::get('drafts', ['as' => 'admin.emails.drafts', 'uses' => 'EmailsController@drafts', 'permissions' => 'drafts-list']);
+                Route::get('draft/{draft}', ['as' => 'admin.emails.draft', 'uses' => 'EmailsController@draft', 'permissions' => 'drafts-publish']);
+                Route::match(['get', 'put'], 'limbo/{id}', ['as' => 'admin.emails.limbo', 'uses' => 'EmailsController@limbo', 'permissions' => 'drafts-save']);
+
+                /**
+                 * Revision Actions.
+                 */
+                Route::get('revision/{revision}', ['as' => 'admin.emails.revision', 'uses' => 'EmailsController@revision', 'permissions' => 'revisions-rollback']);
+            });
         });
 
         /**
@@ -315,6 +358,10 @@ Route::group([
             Route::get('revision/{revision}', ['as' => 'admin.cars.revision', 'uses' => 'CarsController@revision']);
         });
     });
+});
+
+Route::get('email-preview', function () {
+    return (new \Illuminate\Mail\Markdown(view(), config('mail.markdown')))->render('emails.password_recovery', ['url' => 'http://google.com']);
 });
 
 /**

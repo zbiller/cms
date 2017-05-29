@@ -13,7 +13,7 @@ trait HasActivity
 {
     /**
      * The container for all the options necessary for this trait.
-     * Options can be viewed in the App\Options\UrlOptions file.
+     * Options can be viewed in the App\Options\ActivityOptions file.
      *
      * @var ActivityOptions
      */
@@ -40,10 +40,12 @@ trait HasActivity
 
         static::getEventsToBeLogged()->each(function ($event) {
             return static::$event(function (Model $model) use ($event) {
-                activity_log()
-                    ->causedBy(auth()->user())
-                    ->performedOn($model)
-                    ->log($model->getLogName($event));
+                if (auth()->check()) {
+                    activity_log()
+                        ->causedBy(auth()->user())
+                        ->performedOn($model)
+                        ->log($model->getLogName($event));
+                }
             });
         });
     }

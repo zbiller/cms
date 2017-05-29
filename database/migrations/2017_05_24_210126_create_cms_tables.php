@@ -90,6 +90,19 @@ class CreateCmsTables extends Migration
             $table->timestamps();
         });
 
+        Schema::create('emails', function (Blueprint $table) {
+            $table->increments('id');
+
+            $table->string('name')->unique();
+            $table->string('identifier')->unique()->nullable();
+            $table->tinyInteger('type')->default(1);
+            $table->longText('metadata');
+
+            $table->timestamps();
+            $table->softDeletes();
+            Draft::column($table);
+        });
+
         Schema::create('urls', function (Blueprint $table) {
             $table->increments('id');
             $table->string('url')->unique();
@@ -120,6 +133,7 @@ class CreateCmsTables extends Migration
     {
         Schema::dropIfExists('blockables');
         Schema::dropIfExists('urls');
+        Schema::dropIfExists('emails');
         Schema::dropIfExists('menus');
         Schema::dropIfExists('blocks');
         Schema::dropIfExists('pages');

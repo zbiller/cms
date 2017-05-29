@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Admin\Home;
 
 use Analytics;
+use App\Mail\PasswordRecovery;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Mail;
 use Spatie\Analytics\Period;
 
 class DashboardController extends Controller

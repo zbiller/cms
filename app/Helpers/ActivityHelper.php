@@ -3,8 +3,6 @@
 namespace App\Helpers;
 
 use App\Models\Auth\Activity;
-use App\Models\Auth\User;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
 
@@ -75,10 +73,10 @@ class ActivityHelper
     /**
      * Set the user that will trigger the activity logging.
      *
-     * @param Authenticatable $user
+     * @param Model $user
      * @return $this
      */
-    public function causedBy(Authenticatable $user)
+    public function causedBy(Model $user)
     {
         $this->causer = $user;
 

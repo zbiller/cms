@@ -123,11 +123,6 @@ class PermissionsSeeder extends Seeder
                 'label' => 'Edit',
                 'name' => 'pages-edit',
             ],
-            'Delete' => [
-                'group' => 'Pages',
-                'label' => 'Delete',
-                'name' => 'pages-delete',
-            ],
             'Duplicate' => [
                 'group' => 'Pages',
                 'label' => 'Duplicate',
@@ -147,6 +142,11 @@ class PermissionsSeeder extends Seeder
                 'group' => 'Pages',
                 'label' => 'Restore',
                 'name' => 'pages-restore',
+            ],
+            'Soft Delete' => [
+                'group' => 'Pages',
+                'label' => 'Soft Delete',
+                'name' => 'pages-soft-delete',
             ],
             'Force Delete' => [
                 'group' => 'Pages',
@@ -169,11 +169,6 @@ class PermissionsSeeder extends Seeder
                 'group' => 'Blocks',
                 'label' => 'Edit',
                 'name' => 'blocks-edit',
-            ],
-            'Delete' => [
-                'group' => 'Blocks',
-                'label' => 'Delete',
-                'name' => 'blocks-delete',
             ],
             'Assign' => [
                 'group' => 'Blocks',
@@ -199,6 +194,11 @@ class PermissionsSeeder extends Seeder
                 'group' => 'Blocks',
                 'label' => 'Restore',
                 'name' => 'blocks-restore',
+            ],
+            'Soft Delete' => [
+                'group' => 'Blocks',
+                'label' => 'Soft Delete',
+                'name' => 'blocks-soft-delete',
             ],
             'Force Delete' => [
                 'group' => 'Blocks',

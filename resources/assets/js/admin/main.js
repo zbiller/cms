@@ -22,6 +22,7 @@ $(window).load(function(){
     tree();
     menus();
     blocks();
+    emails();
 });
 
 /**
@@ -780,4 +781,36 @@ function blocks()
         width: '100%',
         inherit_select_classes: true
     });
+}
+
+function emails()
+{
+    //select email type on add
+    if ($('#email-type').length) {
+        var type = $('#email-type'),
+            button = $('#email-continue-button'),
+            image = $('#email-image'),
+            src;
+
+        var selectType = function () {
+            if (type.val()) {
+                src = type.data('images')[type.val()];
+
+                button.attr('href', type.data('url') + '/' + type.val());
+
+                if (src) {
+                    image.attr('src', type.data('image') + '/' + src).show();
+                }
+            } else {
+                button.attr('href', '#');
+                image.attr('src', '').hide();
+            }
+        };
+
+        selectType();
+
+        type.change(function () {
+            selectType();
+        });
+    }
 }

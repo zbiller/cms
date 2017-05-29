@@ -2,8 +2,13 @@
 
 namespace App\Notifications;
 
+use App\Exceptions\EmailException;
+use App\Mail\PasswordRecovery;
+use App\Models\Cms\Email;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\MailMessage;
+use Mail;
 
 class ResetPasswordNotification extends Notification
 {
@@ -52,9 +57,10 @@ class ResetPasswordNotification extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-            ->line('You are receiving this email because we received a password reset request for your account.')
-            ->action('Reset Password', route($this->route, $this->token))
-            ->line('If you did not request a password reset, no further action is required.');
+        $email = Email::findByIdentifier('password-recovery');
+
+        return (new MailMessage)->markdown($email->getView(), $email->getData([
+            'url' => route($this->route, $this->token)
+        ]));
     }
 }

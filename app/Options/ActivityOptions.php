@@ -24,7 +24,7 @@ class ActivityOptions
     }
 
     /**
-     * Set the $logEvents to work with in the App\Traits\HasActivityLog trait.
+     * Set the $logEvents to work with in the App\Traits\HasActivity trait.
      *
      * @param ...$events
      * @return ActivityOptions
