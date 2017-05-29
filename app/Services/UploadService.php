@@ -1196,7 +1196,7 @@ class UploadService
 
         if ($size * pow(1024, 2) < $this->getSize()) {
             throw new UploadException(
-                'The uploaded "' . $type . '" size exceeds the maximum allowed for audio files. (' . $size . 'MB)'
+                'The uploaded file size exceeds the maximum allowed for "' . $type . '" files. (' . $size . 'MB)'
             );
         }
     }
