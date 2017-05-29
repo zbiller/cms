@@ -27,7 +27,7 @@
             </section>
             <div id="analytics-chart"></div>
         @else
-            <span>No data to show because the Google Analytics is not configured withing the App.</span>
+            <span>No data to show because the Google Analytics is not configured within the App.</span>
         @endif
     </section>
 @endsection

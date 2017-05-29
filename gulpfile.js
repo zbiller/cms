@@ -99,8 +99,8 @@ elixir(function (mix) {
             'assets/js/front/app.js'
         ])
 
-        .html(
-            'storage/framework/views/*',
+        /*.html(
+            'storage/framework/views/!*',
             'storage/framework/views/',
             {
                 collapseWhitespace: true,
@@ -108,5 +108,5 @@ elixir(function (mix) {
                 removeComments: true,
                 minifyJS: true
             }
-        );
+        )*/;
 });

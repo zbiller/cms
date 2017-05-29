@@ -82,12 +82,6 @@ class Block extends Model
             'views_path' => 'app/Blocks/Features/Views',
             'preview_image' => 'features.jpg',
         ],
-        'Clients' => [
-            'label' => 'Clients',
-            'composer_class' => 'App\Blocks\Clients\Composer',
-            'views_path' => 'app/Blocks/Clients/Views',
-            'preview_image' => 'clients.jpg',
-        ],
         'Team' => [
             'label' => 'Team',
             'composer_class' => 'App\Blocks\Team\Composer',
