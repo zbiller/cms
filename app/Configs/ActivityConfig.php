@@ -27,7 +27,9 @@ class ActivityConfig
      */
     public function __construct()
     {
-        $this->check();
+        self::$config = config('upload');
+
+        self::checkIfLoggingIsConfiguredProperly();
     }
 
     /**
