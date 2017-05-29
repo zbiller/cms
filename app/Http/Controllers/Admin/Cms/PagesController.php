@@ -254,7 +254,6 @@ class PagesController extends Controller
      * @param PageRequest $request
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
-     * @throws Exception
      */
     public function limbo(PageRequest $request, $id)
     {

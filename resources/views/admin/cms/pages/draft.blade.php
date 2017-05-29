@@ -34,7 +34,7 @@
             {!! form_admin()->textarea('metadata[meta_description]', 'Meta Description') !!}
             {!! form_admin()->textarea('metadata[meta_keywords]', 'Meta Keywords') !!}
         </div>
-            {!! block()->container($item, $draft) !!}
+        {!! block()->container($item, $draft) !!}
         {!! form()->close() !!}
 </section>
 @endsection

@@ -7,8 +7,8 @@
             class="blocks-container"
             data-blockable-id="{{ $model->id }}"
             data-blockable-type="{{ get_class($model) }}"
-            data-draft="{{ $draft && $draft->exists ? $draft->id : null }}"
-            data-revision="{{ $revision && $revision->exists ? $revision->id : null }}"
+            data-draft="{{ $draft ? $draft->id : null }}"
+            data-revision="{{ $revision ? $revision->id : null }}"
             data-disabled="{{ $disabled }}"
         ></div>
     </div>

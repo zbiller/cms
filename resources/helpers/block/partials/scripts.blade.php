@@ -4,6 +4,8 @@
         var blocksTab = $('div#tab-blocks');
         var blocksContainer = $('div.blocks-container');
 
+        console.log(blocksContainer.data('draft'));
+
         var listBlocks = function () {
             $.ajax({
                 type : 'GET',

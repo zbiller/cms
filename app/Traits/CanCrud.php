@@ -544,7 +544,7 @@ trait CanCrud
      * @param Closure $putFunction
      * @param int $id
      * @param Request $request
-     * @return $this|RedirectResponse|\Illuminate\Routing\Redirector
+     * @return RedirectResponse
      * @throws Exception
      */
     public function _limbo(Closure $getFunction, Closure $putFunction, $id, Request $request)
