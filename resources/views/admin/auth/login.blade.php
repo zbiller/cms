@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="header">
-        Zbiller
+        Neurony
     </div>
     <div class="content">
         {!! validation('admin')->errors() !!}

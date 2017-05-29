@@ -76,13 +76,13 @@ class MenuComposer
                 });
             });
 
-            $menu->add(function (MenuItem $item) use ($menu) {
+            /*$menu->add(function (MenuItem $item) use ($menu) {
                 $test = $item->name('Test')->data('icon', 'fa-text-width')->active('admin/cars/*');
 
                 $menu->child($test, function (MenuItem $item) {
                     $item->name('Cars')->url(route('admin.cars.index'))->active('admin/cars/*');
                 });
-            });
+            });*/
         })->filter(function (MenuItem $item) use ($user) {
             return $user->isSuperUser() || $user->hasAnyPermission($item->permissions());
         });
