@@ -15,15 +15,16 @@ class MenuHelper
      */
     protected $items;
 
-
-
+    /**
+     * Fetch the root menu items for a location.
+     *
+     * @param string $location
+     * @return mixed
+     */
     public function get($location)
     {
-        return Menu::active()->whereIsRoot()->whereLocation($location)->get();
+        return Menu::active()->whereIsRoot()->whereLocation($location)->defaultOrder()->get();
     }
-
-
-
 
     /**
      * Generate a new menu.
