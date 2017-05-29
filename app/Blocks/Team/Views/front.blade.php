@@ -2,7 +2,7 @@
 	<a id="{{ $block->anchor }}"></a>
 @endif
 
-<div class="bg-color-sky-light">
+<div class="bg-color-sky-light section-seperator">
 	<div class="content-md container">
 		<div class="row margin-b-40">
 			<div class="col-sm-6">

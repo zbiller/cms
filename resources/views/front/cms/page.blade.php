@@ -8,7 +8,7 @@
 <!-- End Header Location Blocks -->
 
 <!-- Page Details -->
-<div class="bg-color-sky-light">
+<div class="section-seperator">
     <div class="content-md container" style="text-align: center;">
         @if(isset($page->metadata->title))
             <h1 style="text-align: center;">{{ $page->metadata->title }}</h1>
