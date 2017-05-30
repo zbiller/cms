@@ -23,7 +23,7 @@ class MenuHelper
      */
     public function get($location)
     {
-        return Menu::active()->whereIsRoot()->whereLocation($location)->defaultOrder()->get();
+        return Menu::with('menuable')->active()->whereIsRoot()->whereLocation($location)->defaultOrder()->get();
     }
 
     /**

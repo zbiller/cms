@@ -184,9 +184,9 @@ class Menu extends Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function layout()
+    public function menuable()
     {
-        return $this->belongsTo(Layout::class, 'layout_id');
+        return $this->morphTo();
     }
 
     /**
@@ -203,16 +203,8 @@ class Menu extends Model
             return $this->attributes['url'];
         }
 
-        @$class = $this->attributes['menuable_type'];
-
-        if ($class && class_exists($class)) {
-            try {
-                $item = app($class)->findOrFail($this->attributes['menuable_id']);
-
-                return $item->url ? $item->url->url : null;
-            } catch (Exception $e) {
-                return null;
-            }
+        if ($this->menuable && $this->menuable->url) {
+            return $this->menuable->url->url;
         }
 
         return null;
