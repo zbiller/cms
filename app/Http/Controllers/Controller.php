@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Meta;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -21,6 +22,23 @@ class Controller extends BaseController
     {
         $this->bootController();
         $this->bootTraits();
+    }
+
+    /**
+     * Set the meta tags.
+     *
+     * @param array|string $name
+     * @param string|null $value
+     */
+    protected function setMeta($name, $value = null)
+    {
+        if (is_array($name)) {
+            foreach ($name as $key => $value) {
+                Meta::set($key, $value);
+            }
+        } else {
+            Meta::set($name, $value);
+        }
     }
 
     /**

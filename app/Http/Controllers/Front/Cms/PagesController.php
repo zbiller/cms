@@ -27,14 +27,13 @@ class PagesController extends Controller
 
         $action = $request->route()->action;
 
-        if (isset($action['model']) && $action['model'] instanceof Page) {
-            $this->page = $action['model'];
-
+        if (isset($action['model']) && $action['model'] instanceof Page && ($this->page = $action['model'])) {
             if ($this->page->active != Page::ACTIVE_YES) {
                 abort(404);
             }
 
             $this->page->load('layout');
+            $this->setPageMeta();
 
             view()->share([
                 'page' => $this->page,
@@ -60,7 +59,7 @@ class PagesController extends Controller
      */
     public function normal()
     {
-        return view($this->page->routeView);
+        return view($this->page->route_view);
     }
 
     /**
@@ -68,8 +67,26 @@ class PagesController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function special()
+    public function custom()
     {
-        return view($this->page->routeView);
+        return view($this->page->route_view);
+    }
+
+    /**
+     * Build the meta tags for the page.
+     *
+     * @return void
+     */
+    private function setPageMeta()
+    {
+        $this->setMeta('title', isset($this->page->metadata->meta->title) ? $this->page->metadata->meta->title : $this->page->name);
+
+        if (isset($this->page->metadata->meta) && $meta = $this->page->metadata->meta) {
+            $this->setMeta([
+                'image' => isset($meta->image) ? uploaded($meta->image)->url() : null,
+                'description' => isset($meta->description) ? $meta->description : null,
+                'keywords' => isset($meta->keywords) ? $meta->keywords : null,
+            ]);
+        }
     }
 }

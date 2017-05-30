@@ -85,8 +85,8 @@ class Page extends Model
      *
      * @const
      */
-    const TYPE_NORMAL = 1;
-    const TYPE_SPECIAL = 2;
+    const TYPE_DEFAULT = 1;
+    const TYPE_CUSTOM = 2;
 
     /**
      * The property defining the page visibilities.
@@ -104,8 +104,8 @@ class Page extends Model
      * @var array
      */
     public static $types = [
-        self::TYPE_NORMAL => 'Normal',
-        self::TYPE_SPECIAL => 'Special',
+        self::TYPE_DEFAULT => 'Default',
+        self::TYPE_CUSTOM => 'Custom',
     ];
 
     /**
@@ -124,7 +124,7 @@ class Page extends Model
      * @var array
      */
     public static $map = [
-        self::TYPE_NORMAL => [
+        self::TYPE_DEFAULT => [
             'action' => 'normal',
             'view' => 'front.cms.page',
             'layouts' => [
@@ -132,8 +132,8 @@ class Page extends Model
                 Layout::TYPE_HOME,
             ],
         ],
-        self::TYPE_SPECIAL => [
-            'action' => 'special',
+        self::TYPE_CUSTOM => [
+            'action' => 'custom',
             'view' => 'front.cms.page',
             'layouts' => [
                 Layout::TYPE_DEFAULT,
