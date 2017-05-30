@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.4.23 on 2017-05-28.
+ * Generated for Laravel 5.4.23 on 2017-05-30.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -13740,6 +13740,66 @@ namespace App\Facades {
         
     }         
 
+    class MetaFacade {
+        
+        /**
+         * Set a meta property using the key and value provided.
+         *
+         * @param string $key
+         * @param string $value
+         * @return string 
+         * @static 
+         */
+        public static function set($key, $value)
+        {
+            return \App\Helpers\MetaHelper::set($key, $value);
+        }
+        
+        /**
+         * Get a meta property by it's key.
+         * 
+         * If the meta property does not have any value, the default one will be returned.
+         *
+         * @param string $key
+         * @param array|string|null $default
+         * @return string 
+         * @static 
+         */
+        public static function get($key, $default = null)
+        {
+            return \App\Helpers\MetaHelper::get($key, $default);
+        }
+        
+        /**
+         * Get the HTML format for a meta property by it's key.
+         * 
+         * All property types will be built for that key: tag, name, og property, twitter card.
+         * If the meta property does not have any value, it will use the default value to build the HTML.
+         *
+         * @param string $key
+         * @param array|string|null $default
+         * @return string 
+         * @static 
+         */
+        public static function tag($key, $default = null)
+        {
+            return \App\Helpers\MetaHelper::tag($key, $default);
+        }
+        
+        /**
+         * Get the HTML format for multiple meta properties by their keys.
+         *
+         * @param \App\Helpers\...$keys
+         * @return string 
+         * @static 
+         */
+        public static function tags($keys = null)
+        {
+            return \App\Helpers\MetaHelper::tags($keys);
+        }
+        
+    }         
+
     class RelationFacade {
         
         /**
@@ -15860,6 +15920,8 @@ namespace {
     class Uploader extends \App\Facades\UploaderFacade {}
     
     class FormAdmin extends \App\Facades\FormAdminFacade {}
+    
+    class Meta extends \App\Facades\MetaFacade {}
     
     class Relation extends \App\Facades\RelationFacade {}
     
