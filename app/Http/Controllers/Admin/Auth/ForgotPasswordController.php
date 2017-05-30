@@ -15,6 +15,8 @@ class ForgotPasswordController extends Controller
      */
     public function show()
     {
+        $this->setMeta('title', 'Admin - Forgot Password');
+
         return view('admin.auth.password.forgot');
     }
 

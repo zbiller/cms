@@ -16,6 +16,7 @@ class LoginController extends Controller
     public function show()
     {
         $this->setIntendedRedirectUrl();
+        $this->setMeta('title', 'Admin');
 
         return view('admin.auth.login');
     }

@@ -45,6 +45,7 @@ class PagesController extends Controller
             }
 
             $this->items = $query->get();
+            $this->title = 'Pages';
             $this->view = view('admin.cms.pages.index');
             $this->vars = [
                 'layouts' => Layout::all(),
@@ -61,6 +62,7 @@ class PagesController extends Controller
     public function create(Page $parent = null)
     {
         return $this->_create(function () use ($parent) {
+            $this->title = 'Add Page';
             $this->view = view('admin.cms.pages.add');
             $this->vars = [
                 'parent' => $parent->exists ? $parent : null,
@@ -92,6 +94,7 @@ class PagesController extends Controller
     {
         return $this->_edit(function () use ($page) {
             $this->item = $page;
+            $this->title = 'Edit Page';
             $this->view = view('admin.cms.pages.edit');
             $this->vars = [
                 'layouts' => Layout::whereTypeIn(Page::$map[$page->type]['layouts'])->get(),
@@ -142,6 +145,7 @@ class PagesController extends Controller
     {
         return $this->_deleted(function () use ($request, $filter, $sort) {
             $this->items = Page::onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->title = 'Deleted Pages';
             $this->view = view('admin.cms.pages.deleted');
             $this->vars = [
                 'layouts' => Layout::all(),
@@ -222,6 +226,7 @@ class PagesController extends Controller
     {
         return $this->_drafts(function () use ($request, $filter, $sort) {
             $this->items = Page::onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->title = 'Drafted Pages';
             $this->view = view('admin.cms.pages.drafts');
             $this->vars = [
                 'layouts' => Layout::all(),
@@ -241,6 +246,7 @@ class PagesController extends Controller
             $this->item = $draft->draftable;
             $this->item->publishDraft($draft);
 
+            $this->title = 'Page Draft';
             $this->view = view('admin.cms.pages.draft');
             $this->vars = [
                 'layouts' => Layout::all(),
@@ -258,6 +264,7 @@ class PagesController extends Controller
     public function limbo(PageRequest $request, $id)
     {
         return $this->_limbo(function () {
+            $this->title = 'Page Draft';
             $this->view = view('admin.cms.pages.limbo');
             $this->vars = [
                 'layouts' => Layout::all(),
@@ -280,6 +287,7 @@ class PagesController extends Controller
             $this->item = $revision->revisionable;
             $this->item->rollbackToRevision($revision);
 
+            $this->title = 'Page Revision';
             $this->view = view('admin.cms.pages.revision');
             $this->vars = [
                 'layouts' => Layout::all(),

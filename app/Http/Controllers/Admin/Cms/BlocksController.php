@@ -33,6 +33,7 @@ class BlocksController extends Controller
     {
         return $this->_index(function () use ($request, $filter, $sort) {
             $this->items = Block::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->title = 'Blocks';
             $this->view = view('admin.cms.blocks.index');
             $this->vars = [
                 'types' => Block::getTypes(),
@@ -47,6 +48,7 @@ class BlocksController extends Controller
     public function create($type = null)
     {
         if (!$type || !array_key_exists($type, Block::getTypes())) {
+            $this->setMeta('title', 'Admin - Add Block');
             return view('admin.cms.blocks.init')->with([
                 'types' => Block::getTypes(),
                 'images' => Block::getImages(),
@@ -54,6 +56,7 @@ class BlocksController extends Controller
         }
 
         return $this->_create(function () use ($type) {
+            $this->title = 'Add Block';
             $this->view = view('admin.cms.blocks.add');
             $this->vars['type'] = $type;
         });
@@ -80,6 +83,7 @@ class BlocksController extends Controller
     {
         return $this->_edit(function () use ($block) {
             $this->item = $block;
+            $this->title = 'Edit Block';
             $this->view = view('admin.cms.blocks.edit');
         });
     }
@@ -125,6 +129,7 @@ class BlocksController extends Controller
     {
         return $this->_deleted(function () use ($request, $filter, $sort) {
             $this->items = Block::onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->title = 'Deleted Blocks';
             $this->view = view('admin.cms.blocks.deleted');
             $this->vars = [
                 'types' => Block::getTypes(),
@@ -185,6 +190,7 @@ class BlocksController extends Controller
     {
         return $this->_drafts(function () use ($request, $filter, $sort) {
             $this->items = Block::onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->title = 'Drafted Blocks';
             $this->view = view('admin.cms.blocks.drafts');
             $this->vars = [
                 'types' => Block::getTypes(),
@@ -202,6 +208,7 @@ class BlocksController extends Controller
             $this->item = $draft->draftable;
             $this->item->publishDraft($draft);
 
+            $this->title = 'Block Draft';
             $this->view = view('admin.cms.blocks.draft');
         }, $draft);
     }
@@ -215,6 +222,7 @@ class BlocksController extends Controller
     public function limbo(BlockRequest $request, $id)
     {
         return $this->_limbo(function () {
+            $this->title = 'Block Draft';
             $this->view = view('admin.cms.blocks.limbo');
         }, function () use ($request) {
             $this->item->saveAsDraft($request->all());
@@ -232,6 +240,7 @@ class BlocksController extends Controller
             $this->item = $revision->revisionable;
             $this->item->rollbackToRevision($revision);
 
+            $this->title = 'Block Revision';
             $this->view = view('admin.cms.blocks.revision');
         }, $revision);
     }

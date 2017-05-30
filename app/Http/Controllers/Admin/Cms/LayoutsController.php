@@ -30,6 +30,7 @@ class LayoutsController extends Controller
     {
         return $this->_index(function () use ($request, $filter, $sort) {
             $this->items = Layout::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->title = 'Layouts';
             $this->view = view('admin.cms.layouts.index');
             $this->vars['types'] = Layout::$types;
         });
@@ -41,6 +42,7 @@ class LayoutsController extends Controller
     public function create()
     {
         return $this->_create(function () {
+            $this->title = 'Add Layout';
             $this->view = view('admin.cms.layouts.add');
             $this->vars = [
                 'types' => Layout::$types,
@@ -70,6 +72,7 @@ class LayoutsController extends Controller
     {
         return $this->_edit(function () use ($layout) {
             $this->item = $layout;
+            $this->title = 'Edit Layout';
             $this->view = view('admin.cms.layouts.edit');
             $this->vars = [
                 'types' => Layout::$types,

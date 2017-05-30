@@ -30,6 +30,7 @@ class AdminUsersController extends Controller
     {
         return $this->_index(function () use ($request, $filter, $sort) {
             $this->items = User::notDeveloper()->only('admin')->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->title = 'Admin Users';
             $this->view = view('admin.acl.admin_users.index');
             $this->vars = [
                 'roles' => Role::only(Role::TYPE_ADMIN)->exclude('admin')->get(),
@@ -43,6 +44,7 @@ class AdminUsersController extends Controller
     public function create()
     {
         return $this->_create(function () {
+            $this->title = 'Add Admin User';
             $this->view = view('admin.acl.admin_users.add');
             $this->vars = [
                 'roles' => Role::only(Role::TYPE_ADMIN)->exclude('admin')->get(),
@@ -75,6 +77,7 @@ class AdminUsersController extends Controller
     {
         return $this->_edit(function () use ($user) {
             $this->item = $user;
+            $this->title = 'Edit Admin User';
             $this->view = view('admin.acl.admin_users.edit');
             $this->vars = [
                 'roles' => Role::only(Role::TYPE_ADMIN)->exclude('admin')->get(),

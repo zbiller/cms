@@ -39,6 +39,7 @@ class AdminRolesController extends Controller
             }
 
             $this->items = Role::only(Role::TYPE_ADMIN)->exclude('admin')->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->title = 'Admin Roles';
             $this->view = view('admin.acl.admin_roles.index');
             $this->vars = [
                 'permissions' => $permissions,
@@ -52,6 +53,7 @@ class AdminRolesController extends Controller
     public function create()
     {
         return $this->_create(function () {
+            $this->title = 'Add Admin Role';
             $this->view = view('admin.acl.admin_roles.add');
             $this->vars['permissions'] = Permission::getGrouped();
         });
@@ -82,6 +84,7 @@ class AdminRolesController extends Controller
     {
         return $this->_edit(function () use ($role) {
             $this->item = $role;
+            $this->title = 'Edit Admin Role';
             $this->view = view('admin.acl.admin_roles.edit');
             $this->vars['permissions'] = Permission::getGrouped();
         });

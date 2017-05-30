@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use DB;
+use Meta;
 use Route;
 use Closure;
 use Exception;
@@ -41,6 +42,14 @@ trait CanCrud
      * @var Model
      */
     protected $item;
+
+    /**
+     * The title of the page.
+     * This is used to build the meta title tag.
+     *
+     * @var string
+     */
+    protected $title;
 
     /**
      * The view to be returned for a given request.
@@ -560,6 +569,8 @@ trait CanCrud
 
                     $this->vars['item'] = $this->item;
 
+                    $this->setMeta('title', $this->title ? 'Admin - ' . $this->title : 'Admin');
+
                     return $this->view->with($this->vars);
                     break;
                 case 'PUT':
@@ -614,6 +625,8 @@ trait CanCrud
 
             $this->checkCrudView();
             $this->initCrudView();
+
+            $this->setMeta('title', $this->title ? 'Admin - ' . $this->title : 'Admin');
 
             return $this->view->with($this->vars);
         } catch (ModelNotFoundException $e) {

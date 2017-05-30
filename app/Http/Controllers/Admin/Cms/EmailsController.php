@@ -36,6 +36,7 @@ class EmailsController extends Controller
 
         return $this->_index(function () use ($request, $filter, $sort) {
             $this->items = Email::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->title = 'Emails';
             $this->view = view('admin.cms.emails.index');
             $this->vars = [
                 'types' => Email::$types,
@@ -50,6 +51,8 @@ class EmailsController extends Controller
     public function create($type = null)
     {
         if (!$type || !array_key_exists($type, Email::$types)) {
+            $this->setMeta('title', 'Admin - Add Email');
+
             return view('admin.cms.emails.init')->with([
                 'types' => Email::$types,
                 'images' => Email::getImages(),
@@ -57,6 +60,7 @@ class EmailsController extends Controller
         }
 
         return $this->_create(function () use ($type) {
+            $this->title = 'Add Email';
             $this->view = view('admin.cms.emails.add');
             $this->vars = [
                 'type' => $type,
@@ -86,6 +90,7 @@ class EmailsController extends Controller
     {
         return $this->_edit(function () use ($email) {
             $this->item = $email;
+            $this->title = 'Edit Email';
             $this->view = view('admin.cms.emails.edit');
             $this->vars = [
                 'partial' => $this->item->getPartial(),
@@ -134,6 +139,7 @@ class EmailsController extends Controller
     {
         return $this->_deleted(function () use ($request, $filter, $sort) {
             $this->items = Email::onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->title = 'Deleted Emails';
             $this->view = view('admin.cms.emails.deleted');
             $this->vars = [
                 'types' => Email::$types,
@@ -222,6 +228,7 @@ class EmailsController extends Controller
     {
         return $this->_drafts(function () use ($request, $filter, $sort) {
             $this->items = Email::onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->title = 'Drafted Emails';
             $this->view = view('admin.cms.emails.drafts');
             $this->vars = [
                 'types' => Email::$types,
@@ -239,6 +246,7 @@ class EmailsController extends Controller
             $this->item = $draft->draftable;
             $this->item->publishDraft($draft);
 
+            $this->title = 'Email Draft';
             $this->view = view('admin.cms.emails.draft');
             $this->vars = [
                 'partial' => $this->item->getPartial(),
@@ -255,6 +263,7 @@ class EmailsController extends Controller
     public function limbo(EmailRequest $request, $id)
     {
         return $this->_limbo(function () {
+            $this->title = 'Email Draft';
             $this->view = view('admin.cms.emails.limbo');
             $this->vars = [
                 'partial' => $this->item->getPartial(),
@@ -275,6 +284,7 @@ class EmailsController extends Controller
             $this->item = $revision->revisionable;
             $this->item->rollbackToRevision($revision);
 
+            $this->title = 'Email Revision';
             $this->view = view('admin.cms.emails.revision');
             $this->vars = [
                 'partial' => $this->item->getPartial(),

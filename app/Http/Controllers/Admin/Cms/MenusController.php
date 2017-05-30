@@ -25,6 +25,8 @@ class MenusController extends Controller
      */
     public function locations()
     {
+        $this->setMeta('title', 'Admin - Menu Locations');
+
         return view('admin.cms.menus.locations')->with([
             'locations' => Menu::$locations
         ]);
@@ -52,6 +54,7 @@ class MenusController extends Controller
             }
 
             $this->items = $query->get();
+            $this->title = 'Menus';
             $this->view = view('admin.cms.menus.index');
             $this->vars = [
                 'location' => $location,
@@ -69,6 +72,7 @@ class MenusController extends Controller
     public function create($location, Menu $parent = null)
     {
         return $this->_create(function () use ($location, $parent) {
+            $this->title = 'Add Menu';
             $this->view = view('admin.cms.menus.add');
             $this->vars = [
                 'location' => $location,
@@ -109,6 +113,7 @@ class MenusController extends Controller
     {
         return $this->_edit(function () use ($location, $menu) {
             $this->item = $menu;
+            $this->title = 'Edit Menu';
             $this->view = view('admin.cms.menus.edit');
             $this->vars = [
                 'location' => $location,

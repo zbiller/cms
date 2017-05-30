@@ -18,6 +18,8 @@ class ResetPasswordController extends Controller
      */
     public function show(Request $request, $token = null)
     {
+        $this->setMeta('title', 'Admin - Reset Password');
+
         return view('admin.auth.password.reset')->with([
             'username' => $request->username,
             'token' => $token,

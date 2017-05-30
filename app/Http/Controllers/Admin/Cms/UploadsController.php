@@ -29,6 +29,8 @@ class UploadsController extends Controller
     {
         $items = Upload::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
 
+        $this->setMeta('title', 'Admin - Uploads');
+
         return view('admin.cms.uploads.index')->with([
             'items' => $items,
             'types' => Upload::$types
