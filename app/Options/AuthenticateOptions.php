@@ -50,7 +50,7 @@ class AuthenticateOptions
     }
 
     /**
-     * Set the $usernameField to work with in the App\Traits\AuthenticatesUsers trait.
+     * Set the $usernameField to work with in the App\Traits\CanAuthenticate trait.
      *
      * @param string $name
      * @return AuthenticateOptions
@@ -63,7 +63,7 @@ class AuthenticateOptions
     }
 
     /**
-     * Set the $logoutRedirectPath to work with in the App\Traits\AuthenticatesUsers trait.
+     * Set the $logoutRedirectPath to work with in the App\Traits\CanAuthenticate trait.
      *
      * @param string $path
      * @return AuthenticateOptions
@@ -76,7 +76,7 @@ class AuthenticateOptions
     }
 
     /**
-     * Set the $loginRedirectPath to work with in the App\Traits\AuthenticatesUsers trait.
+     * Set the $loginRedirectPath to work with in the App\Traits\CanAuthenticate trait.
      *
      * @param string $path
      * @return AuthenticateOptions
@@ -89,7 +89,7 @@ class AuthenticateOptions
     }
 
     /**
-     * Set the throttleMaxLoginAttempts to work with in the App\Traits\AuthenticatesUsers trait.
+     * Set the throttleMaxLoginAttempts to work with in the App\Traits\CanAuthenticate trait.
      *
      * @param int $tries
      * @return AuthenticateOptions
@@ -102,7 +102,7 @@ class AuthenticateOptions
     }
 
     /**
-     * Set the $throttleLockoutTime to work with in the App\Traits\AuthenticatesUsers trait.
+     * Set the $throttleLockoutTime to work with in the App\Traits\CanAuthenticate trait.
      *
      * @param int $minutes
      * @return AuthenticateOptions

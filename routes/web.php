@@ -360,8 +360,22 @@ Route::group([
     });
 });
 
-Route::get('email-preview', function () {
-    return (new \Illuminate\Mail\Markdown(view(), config('mail.markdown')))->render('emails.password_recovery', ['url' => 'http://google.com']);
+/**
+ * Front Routes.
+ */
+Route::group([
+    'namespace' => 'Front',
+], function () {
+    Route::group([
+        'namespace' => 'Auth',
+    ], function () {
+        Route::get('login', ['as' => 'login', 'uses' => 'LoginController@show']);
+        Route::post('login', ['uses' => 'LoginController@login']);
+        Route::post('logout', ['as' => 'logout', 'uses' => 'LoginController@logout']);
+
+        Route::get('register', ['as' => 'register', 'uses' => 'RegisterController@show']);
+        Route::post('register', ['uses' => 'RegisterController@register']);
+    });
 });
 
 /**
