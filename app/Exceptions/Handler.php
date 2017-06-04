@@ -43,6 +43,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
+        if ($exception instanceof AuthenticationException) {
+            return $this->unauthenticated($request, $exception);
+        }
+
         return parent::render($request, $exception);
     }
 
@@ -59,6 +63,8 @@ class Handler extends ExceptionHandler
             return response()->json(['error' => 'Unauthenticated.'], 401);
         }
 
-        return redirect()->guest('login');
+        return redirect()->guest(
+            in_array('admin', $exception->guards()) ? route('admin.login') : route('login')
+        );
     }
 }
