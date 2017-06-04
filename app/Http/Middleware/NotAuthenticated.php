@@ -21,17 +21,17 @@ class NotAuthenticated
      *
      * @param Request $request
      * @param Closure $next
-     * @param string $route
+     * @param string|null $guard
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function handle($request, Closure $next, $route = 'home')
+    public function handle($request, Closure $next, $guard = null)
     {
         if ($this->isException($request)) {
             return $next($request);
         }
 
-        if (auth()->check()) {
-            return redirect()->route($route);
+        if (auth()->guard($guard)->check()) {
+            return $guard == 'admin' ? redirect()->route('admin') : redirect('/');
         }
 
         return $next($request);

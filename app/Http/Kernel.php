@@ -47,12 +47,13 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $routeMiddleware = [
+        'auth' => \Illuminate\Auth\Middleware\Authenticate::class,
+        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
 
-        'authenticated' => \App\Http\Middleware\Authenticated::class,
-        'not.authenticated' => \App\Http\Middleware\NotAuthenticated::class,
+        'not.auth' => \App\Http\Middleware\NotAuthenticated::class,
         'check.roles' => \App\Http\Middleware\CheckRoles::class,
         'check.permissions' => \App\Http\Middleware\CheckPermissions::class,
     ];
