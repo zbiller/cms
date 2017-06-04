@@ -18,9 +18,14 @@ class CreateAclTables extends Migration
 
             $table->string('username')->unique();
             $table->string('password');
+
+            $table->tinyInteger('type')->default(1);
+            $table->tinyInteger('verified')->default(1);
             $table->tinyInteger('super')->default(0);
 
             $table->rememberToken();
+            $table->string('verification_token')->nullable();
+
             $table->timestamps();
         });
 
@@ -93,12 +98,6 @@ class CreateAclTables extends Migration
             $table->primary(['role_id', 'permission_id']);
         });
 
-        Schema::create('password_resets', function (Blueprint $table) {
-            $table->string('email')->index();
-            $table->string('token');
-            $table->timestamp('created_at')->nullable();
-        });
-
         Schema::create('activity', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->index()->nullable();
@@ -110,6 +109,12 @@ class CreateAclTables extends Migration
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('set null')->onUpdate('cascade');
         });
+
+        Schema::create('password_resets', function (Blueprint $table) {
+            $table->string('email')->index();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
     }
 
     /**
@@ -119,8 +124,8 @@ class CreateAclTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('activity');
         Schema::dropIfExists('password_resets');
+        Schema::dropIfExists('activity');
         Schema::dropIfExists('role_permission');
         Schema::dropIfExists('user_permission');
         Schema::dropIfExists('user_role');

@@ -51,6 +51,33 @@ trait CanAuthenticate
     }
 
     /**
+     * Log the user out of the application.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function logout(Request $request)
+    {
+        $this->baseLogout($request);
+
+        return redirect(self::$authenticationOptions->logoutRedirectPath);
+    }
+
+    /**
+     * Get the needed authorization credentials from the request.
+     *
+     * @param Request $request
+     * @return array
+     */
+    protected function credentials(Request $request)
+    {
+        return array_merge(
+            $request->only($this->username(), 'password'),
+            (array)self::$authenticationOptions->additionalConditions
+        );
+    }
+
+    /**
      * Know where to redirect the user after login.
      *
      * @return string
@@ -62,19 +89,6 @@ trait CanAuthenticate
         }
 
         return self::$authenticationOptions->loginRedirectPath;
-    }
-
-    /**
-     * Log the user out of the application.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function logout(Request $request)
-    {
-        $this->baseLogout($request);
-
-        return redirect(self::$authenticationOptions->logoutRedirectPath);
     }
 
     /**

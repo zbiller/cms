@@ -11,6 +11,8 @@ class ForgotPasswordController extends Controller
     use CanResetPassword;
 
     /**
+     * Show the application's forgot password form.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function show()
@@ -18,6 +20,16 @@ class ForgotPasswordController extends Controller
         $this->setMeta('title', 'Admin - Forgot Password');
 
         return view('admin.auth.password.forgot');
+    }
+
+    /**
+     * Get the guard to be used during password reset.
+     *
+     * @return mixed
+     */
+    protected function guard()
+    {
+        return auth()->guard('admin');
     }
 
     /**

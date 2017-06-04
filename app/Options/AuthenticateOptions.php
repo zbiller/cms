@@ -40,6 +40,13 @@ class AuthenticateOptions
     public $lockoutTime = 1;
 
     /**
+     * An array containing additional condition constraints for the login to be a valid one.
+     *
+     * @var array
+     */
+    public $additionalConditions = [];
+
+    /**
      * Get a fresh instance of this class.
      *
      * @return AuthenticateOptions
@@ -110,6 +117,19 @@ class AuthenticateOptions
     public function setLockoutTime($minutes): AuthenticateOptions
     {
         $this->lockoutTime = $minutes;
+
+        return $this;
+    }
+
+    /**
+     * Set the $additionalConditions to work with in the App\Traits\CanAuthenticate trait.
+     *
+     * @param array $conditions
+     * @return AuthenticateOptions
+     */
+    public function setAdditionalLoginConditions(array $conditions = []): AuthenticateOptions
+    {
+        $this->additionalConditions = $conditions;
 
         return $this;
     }

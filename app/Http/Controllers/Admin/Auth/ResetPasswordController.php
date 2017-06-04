@@ -12,6 +12,8 @@ class ResetPasswordController extends Controller
     use CanResetPassword;
 
     /**
+     * Show the application's reset password form.
+     *
      * @param Request $request
      * @param null $token
      * @return $this
@@ -24,6 +26,16 @@ class ResetPasswordController extends Controller
             'username' => $request->username,
             'token' => $token,
         ]);
+    }
+
+    /**
+     * Get the guard to be used during password reset.
+     *
+     * @return mixed
+     */
+    protected function guard()
+    {
+        return auth()->guard('admin');
     }
 
     /**

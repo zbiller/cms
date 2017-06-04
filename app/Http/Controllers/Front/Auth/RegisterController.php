@@ -15,6 +15,8 @@ class RegisterController extends Controller
     use CanRegister;
 
     /**
+     * Show the application's register form.
+     *
      * @return \Illuminate\View\View
      */
     public function show()
@@ -56,14 +58,23 @@ class RegisterController extends Controller
 
         $person = Person::create([
             'user_id' => $user->id,
-            'first_name' => $data['person']['first_name'],
-            'last_name' => $data['person']['last_name'],
-            'email' => $data['person']['email'],
+            'first_name' => isset($data['person']['first_name']) ? $data['person']['first_name'] : null,
+            'last_name' => isset($data['person']['last_name']) ? $data['person']['last_name'] : null,
+            'email' => isset($data['person']['email']) ? $data['person']['email'] : null,
+            'phone' => isset($data['person']['phone']) ? $data['person']['phone'] : null,
         ]);
 
-        $user->load('person');
-
         return $user;
+    }
+
+    /**
+     * Get the guard to be used during registration.
+     *
+     * @return mixed
+     */
+    protected function guard()
+    {
+        return auth()->guard('user');
     }
 
     /**
@@ -74,7 +85,18 @@ class RegisterController extends Controller
      */
     public function registered(Request $request, User $user)
     {
-        dd($request->all(), $user);
+
+    }
+
+    /**
+     * The user has been verified.
+     *
+     * @param Request $request
+     * @param User $user
+     */
+    public function verified(Request $request, User $user)
+    {
+
     }
 
     /**
@@ -83,6 +105,7 @@ class RegisterController extends Controller
     public static function getRegisterOptions()
     {
         return RegisterOptions::instance()
-            ->setRedirectPath('/');
+            ->setRegisterRedirectPath('/')
+            ->setVerificationRedirectPath('/');
     }
 }

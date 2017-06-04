@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front\Cms;
 
 use App\Http\Controllers\Controller;
+use App\Models\Auth\User;
 use App\Models\Cms\Page;
 use Illuminate\Http\Request;
 

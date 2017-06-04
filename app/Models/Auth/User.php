@@ -4,11 +4,13 @@ namespace App\Models\Auth;
 
 use App\Traits\HasRoles;
 use App\Traits\HasActivity;
+use App\Traits\IsVerifiable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
 use App\Scopes\SelectUserScope;
 use App\Scopes\JoinPersonScope;
 use App\Options\ActivityOptions;
+use App\Options\VerifyOptions;
 use App\Options\CacheOptions;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Notifications\Notifiable;
@@ -19,6 +21,7 @@ class User extends Authenticatable
 {
     use HasRoles;
     use HasActivity;
+    use IsVerifiable;
     use IsFilterable;
     use IsSortable;
     use Notifiable;
@@ -52,7 +55,23 @@ class User extends Authenticatable
     ];
 
     /**
-     * Super user.
+     * The constants defining the user types.
+     *
+     * @const
+     */
+    const TYPE_DEFAULT = 1;
+    const TYPE_ADMIN = 2;
+
+    /**
+     * The constants defining the user "verified" states.
+     *
+     * @const
+     */
+    const VERIFIED_NO = 0;
+    const VERIFIED_YES = 1;
+
+    /**
+     * The constants defining the user "super" ability.
      *
      * @const
      */
@@ -113,13 +132,43 @@ class User extends Authenticatable
     }
 
     /**
+     * Filter query results to show only users of type "default".
+     *
+     * @param Builder $query
+     */
+    public function scopeOnlyDefault($query)
+    {
+        $query->where('type', static::TYPE_DEFAULT);
+    }
+
+    /**
+     * Filter query results to show only users of type "admin".
+     *
+     * @param Builder $query
+     */
+    public function scopeOnlyAdmin($query)
+    {
+        $query->where('type', static::TYPE_ADMIN);
+    }
+
+    /**
+     * Filter query results to show only super users.
+     *
+     * @param Builder $query
+     */
+    public function scopeOnlySuper($query)
+    {
+        $query->where('super', static::SUPER_YES);
+    }
+
+    /**
      * Filter query results to show users only with the given roles.
      * Param $roles: single role type as model|string or multiple role types as a collection|array.
      *
      * @param Builder $query
      * @param array|string $roles
      */
-    public function scopeOnly($query, $roles)
+    public function scopeOnlyWithRoles($query, $roles)
     {
         $query->role($roles);
     }
@@ -135,6 +184,38 @@ class User extends Authenticatable
     }
 
     /**
+     * Get the user's first name.
+     *
+     * @return string|null
+     */
+    public function getFirstNameAttribute()
+    {
+        if (isset($this->attributes['first_name'])) {
+            return $this->attributes['first_name'];
+        } elseif ($this->person && $this->person->first_name) {
+            return $this->person->first_name;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the user's last name.
+     *
+     * @return string|null
+     */
+    public function getLastNameAttribute()
+    {
+        if (isset($this->attributes['last_name'])) {
+            return $this->attributes['last_name'];
+        } elseif ($this->person && $this->person->last_name) {
+            return $this->person->last_name;
+        }
+
+        return null;
+    }
+
+    /**
      * Get the user's full name.
      *
      * @return mixed
@@ -142,6 +223,38 @@ class User extends Authenticatable
     public function getFullNameAttribute()
     {
         return implode(' ', [$this->first_name, $this->last_name]);
+    }
+
+    /**
+     * Get the user's email.
+     *
+     * @return string|null
+     */
+    public function getEmailAttribute()
+    {
+        if (isset($this->attributes['email'])) {
+            return $this->attributes['email'];
+        } elseif ($this->person && $this->person->email) {
+            return $this->person->email;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the user's phone.
+     *
+     * @return string|null
+     */
+    public function getPhoneAttribute()
+    {
+        if (isset($this->attributes['phone'])) {
+            return $this->attributes['phone'];
+        } elseif ($this->person && $this->person->phone) {
+            return $this->person->phone;
+        }
+
+        return null;
     }
 
     /**
@@ -177,11 +290,21 @@ class User extends Authenticatable
     }
 
     /**
+     * Determine if the current user is an admin.
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->type == self::TYPE_ADMIN;
+    }
+
+    /**
      * Determine if the current user is a super user.
      *
      * @return bool
      */
-    public function isSuperUser()
+    public function isSuper()
     {
         return $this->super == self::SUPER_YES;
     }
@@ -245,6 +368,17 @@ class User extends Authenticatable
     public static function getActivityOptions()
     {
         return ActivityOptions::instance();
+    }
+
+    /**
+     * Set the options for the IsVerifiable trait.
+     *
+     * @return VerifyOptions
+     */
+    public static function getVerifyOptions()
+    {
+        return VerifyOptions::instance()
+            ->shouldQueueEmailSending();
     }
 
     /**

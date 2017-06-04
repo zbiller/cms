@@ -29,7 +29,7 @@ class AdminUsersController extends Controller
     public function index(Request $request, AdminUserFilter $filter, AdminUserSort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
-            $this->items = User::notDeveloper()->only('admin')->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = User::onlyAdmin()->notDeveloper()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
             $this->title = 'Admin Users';
             $this->view = view('admin.acl.admin_users.index');
             $this->vars = [

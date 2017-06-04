@@ -9,13 +9,18 @@
 namespace App\Traits;
 
 use DB;
+use Crypt;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use ReflectionMethod;
+use App\Models\Auth\User;
 use App\Options\RegisterOptions;
+use App\Exceptions\VerificationException;
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 trait CanRegister
 {
@@ -61,20 +66,57 @@ trait CanRegister
                 $user = $this->create($request->all())
             ));
 
-            $this->guard()->login($user);
+            if ($this->shouldVerifyEmail($user)) {
+                $user->load('person');
+                $user->generateVerificationToken();
+                $user->sendVerificationEmail();
+            } else {
+                $this->guard()->login($user);
+            }
 
-            return $this->registered($request, $user) ?: redirect($this->redirectPath());
+            return $this->registered($request, $user) ?: redirect(self::$registerOptions->registerRedirectPath);
         });
     }
 
     /**
-     * Know where to redirect the user after login.
+     * Handle an email verification request for the application.
      *
-     * @return string
+     * @param Request $request
+     * @param string $token
+     * @param string $email
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function redirectTo()
+    public function verify(Request $request, $token, $email)
     {
-        return self::$registerOptions->redirectPath;
+        $token = Crypt::decrypt($token);
+        $email = Crypt::decrypt($email);
+
+        try {
+            $user = User::where('email', $email)->firstOrFail();
+            $user->processVerificationToken($token);
+
+            $this->guard()->login($user);
+
+            session()->flash('flash_success', 'Your email address has been successfully verified and you have been logged into your account!');
+            return $this->verified($request, $user) ?: redirect(self::$registerOptions->verificationRedirectPath);
+        } catch (ModelNotFoundException $e) {
+            session()->flash('flash_error', 'There is no user with the provided email and token in the system!');
+        } catch (VerificationException $e) {
+            session()->flash('flash_error', $e->getMessage());
+        }
+
+        return redirect('/');
+    }
+
+    /**
+     * Check whether or not email verification should happen after the user registration was successful.
+     *
+     * @param Model $model
+     * @return bool
+     */
+    public function shouldVerifyEmail(Model $model)
+    {
+        return in_array(IsVerifiable::class, class_uses($model)) && self::$registerOptions->verifyEmail === true;
     }
 
     /**

@@ -84,7 +84,7 @@ class MenuComposer
                 });
             });*/
         })->filter(function (MenuItem $item) use ($user) {
-            return $user->isSuperUser() || $user->hasAnyPermission($item->permissions());
+            return $user->isSuper() || $user->hasAnyPermission($item->permissions());
         });
 
         $view->with('menu', $menu);
