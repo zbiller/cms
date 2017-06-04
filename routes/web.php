@@ -23,13 +23,15 @@ Route::group([
      */
     Route::group([
         'namespace' => 'Auth',
-        'middleware' => 'not.authenticated:admin'
+        'middleware' => 'not.auth:admin'
     ], function () {
         Route::get('login', ['as' => 'admin.login', 'uses' => 'LoginController@show']);
         Route::post('login', ['uses' => 'LoginController@login']);
         Route::post('logout', ['as' => 'admin.logout', 'uses' => 'LoginController@logout']);
+
         Route::get('forgot-password', ['as' => 'admin.password.forgot', 'uses' => 'ForgotPasswordController@show']);
         Route::post('forgot-password', ['uses' => 'ForgotPasswordController@sendResetLinkEmail']);
+
         Route::get('reset-password/{token}', ['as' => 'admin.password.change', 'uses' => 'ResetPasswordController@show']);
         Route::post('reset-password', ['as' => 'admin.password.reset', 'uses' => 'ResetPasswordController@reset']);
     });
@@ -38,7 +40,7 @@ Route::group([
      * Admin routes that require authentication.
      */
     Route::group([
-        'middleware' => ['authenticated:admin.login', 'check.roles:admin', 'check.permissions']
+        'middleware' => ['auth:admin', 'check.roles:admin', 'check.permissions']
     ], function () {
         /**
          * Dashboard.
@@ -375,6 +377,8 @@ Route::group([
 
         Route::get('register', ['as' => 'register', 'uses' => 'RegisterController@show']);
         Route::post('register', ['uses' => 'RegisterController@register']);
+
+        Route::get('register/verify/{token}/{email}', ['as' => 'register.verify', 'uses' => 'RegisterController@verify']);
     });
 });
 

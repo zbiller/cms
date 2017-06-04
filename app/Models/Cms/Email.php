@@ -64,6 +64,7 @@ class Email extends Model
      * @const
      */
     const TYPE_PASSWORD_RECOVERY = 1;
+    const TYPE_EMAIL_VERIFICATION = 2;
 
     /**
      * The property defining the email types.
@@ -72,6 +73,7 @@ class Email extends Model
      */
     public static $types = [
         self::TYPE_PASSWORD_RECOVERY => 'Password Recovery',
+        self::TYPE_EMAIL_VERIFICATION => 'Email Verification',
     ];
 
     /**
@@ -101,6 +103,12 @@ class Email extends Model
             'view' => 'emails.password_recovery',
             'partial' => 'password_recovery',
             'preview_image' => 'password_recovery.jpg',
+        ],
+        self::TYPE_EMAIL_VERIFICATION => [
+            'class' => 'App\Mail\EmailVerifications',
+            'view' => 'emails.email_verification',
+            'partial' => 'email_verification',
+            'preview_image' => 'email_verification.jpg',
         ],
     ];
 
