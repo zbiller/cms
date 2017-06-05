@@ -19,6 +19,7 @@ use Illuminate\Foundation\Auth\ResetsPasswords;
 trait CanResetPassword
 {
     use ResetsPasswords {
+        resetPassword as baseResetPassword;
         sendResetResponse as baseSendResetResponse;
     }
 
@@ -48,11 +49,26 @@ trait CanResetPassword
     }
 
     /**
+     * Reset the given user's password.
+     *
+     * @param \Illuminate\Contracts\Auth\CanResetPassword $user
+     * @param string $password
+     */
+    protected function resetPassword($user, $password)
+    {
+        $this->baseResetPassword($user, $password);
+
+        session()->put([
+            'password_hash_' . $this->guard => $user->getAuthPassword(),
+        ]);
+    }
+
+    /**
      * Know where to redirect the user after password reset.
      *
      * @return string
      */
-    public function redirectTo()
+    protected function redirectTo()
     {
         return self::$resetPasswordOptions->redirectPath;
     }

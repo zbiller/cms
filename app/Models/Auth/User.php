@@ -2,6 +2,7 @@
 
 namespace App\Models\Auth;
 
+use App\Http\Middleware\AuthenticateSession;
 use App\Traits\HasRoles;
 use App\Traits\HasActivity;
 use App\Traits\IsVerifiable;

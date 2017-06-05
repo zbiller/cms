@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Auth;
+namespace App\Http\Controllers\Front\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Traits\CanResetPassword;
@@ -17,9 +17,9 @@ class ForgotPasswordController extends Controller
      */
     public function show()
     {
-        $this->setMeta('title', 'Admin - Forgot Password');
-
-        return view('admin.auth.password.forgot');
+        return view('front.auth.password.forgot')->with([
+            'page' => page()->find('home')
+        ]);
     }
 
     /**
@@ -29,7 +29,7 @@ class ForgotPasswordController extends Controller
      */
     protected function guard()
     {
-        return auth()->guard('admin');
+        return auth()->guard('user');
     }
 
     /**
@@ -38,6 +38,6 @@ class ForgotPasswordController extends Controller
     public static function getResetPasswordOptions()
     {
         return ResetPasswordOptions::instance()
-            ->setRedirectPath('/admin/login');
+            ->setRedirectPath('/login');
     }
 }

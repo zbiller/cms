@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Auth\User;
 use App\Traits\CanAuthenticate;
 use App\Options\AuthenticateOptions;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -20,7 +21,9 @@ class LoginController extends Controller
     {
         $this->setIntendedRedirectUrl();
 
-        return view('front.auth.login');
+        return view('front.auth.login')->with([
+            'page' => page()->find('home')
+        ]);
     }
 
     /**
@@ -31,6 +34,18 @@ class LoginController extends Controller
     protected function guard()
     {
         return auth()->guard('user');
+    }
+
+    /**
+     * The user has been authenticated.
+     *
+     * @param Request $request
+     * @param User $user
+     * @return mixed
+     */
+    protected function authenticated(Request $request, $user)
+    {
+
     }
 
     /**
