@@ -3,16 +3,16 @@
 @section('header')
     @parent
 
-    <h1>Activity Logs</h1>
+    <h1>Activity</h1>
 @endsection
 
 @section('content')
     <section class="filters">
-        @include('admin.acl.activity_logs._filter')
+        @include('admin.acl.activity._filter')
     </section>
 
     <section class="list">
-        @include('admin.acl.activity_logs._table', ['items' => $items])
+        @include('admin.acl.activity._table', ['items' => $items])
     </section>
 @endsection
 
@@ -22,12 +22,12 @@
     <section class="actions">
         {!! button()->updatePage() !!}
 
-        {!! form()->open(['url' => route('admin.activity_logs.delete'), 'method' => 'DELETE', 'class' => 'left']) !!}
+        {!! form()->open(['url' => route('admin.activity.delete'), 'method' => 'DELETE', 'class' => 'left']) !!}
         {!! form()->button('<i class="fa fa-trash"></i>&nbsp; Delete All Activity', ['type' => 'submit', 'class' => 'btn red', 'onclick' => 'return confirm("Are you sure you want to delete all of the activity logs?")']) !!}
         {!! form()->close() !!}
 
         @if((int)config('activity-log.delete_records_older_than') > 0)
-            {!! form()->open(['url' => route('admin.activity_logs.clean'), 'method' => 'DELETE', 'class' => 'left']) !!}
+            {!! form()->open(['url' => route('admin.activity.clean'), 'method' => 'DELETE', 'class' => 'left']) !!}
             {!! form()->button('<i class="fa fa-ban"></i>&nbsp; Cleanup Activity Older Than ' . (int)config('activity-log.delete_records_older_than') . ' Days', ['type' => 'submit', 'class' => 'btn blue no-margin-right', 'onclick' => 'return confirm("Are you sure you want to clean the activity log?")']) !!}
             {!! form()->close() !!}
         @endif

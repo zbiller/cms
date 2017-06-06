@@ -44,8 +44,8 @@ class Role extends Model implements RoleContract
      *
      * @const
      */
-    const TYPE_NORMAL = 1;
-    const TYPE_ADMIN = 2;
+    const TYPE_ADMIN = 1;
+    const TYPE_FRONT = 2;
 
     /**
      * Get role types.
@@ -53,8 +53,8 @@ class Role extends Model implements RoleContract
      * @var array
      */
     public static $types = [
-        self::TYPE_NORMAL => 'Normal',
         self::TYPE_ADMIN => 'Admin',
+        self::TYPE_FRONT => 'Front',
     ];
 
     /**
@@ -79,27 +79,26 @@ class Role extends Model implements RoleContract
 
     /**
      * Filter query results to show roles only of type.
-     * Param $types: single role type as string|int or multiple role types as an array.
+     * Param $type: single role type as constant (int).
      *
      * @param Builder $query
-     * @param array|int|string $types
+     * @param int $type
      */
-    public function scopeOnly($query, $types)
+    public function scopeType($query, $type)
     {
-        $query->whereIn('type', is_array($types) ? $types : explode(',', $types));
+        $query->where('type', $type);
 
     }
 
     /**
      * Filter query results to exclude the given roles.
-     * Param $roles: single role as string or multiple roles as an array.
      *
      * @param Builder $query
-     * @param array|string $roles
+     * @param ...$roles
      */
-    public function scopeExclude($query, $roles)
+    public function scopeNot($query, ...$roles)
     {
-        $query->whereNotIn('name', is_array($roles) ? $roles : explode(',', $roles));
+        $query->whereNotIn('name', array_flatten($roles));
 
     }
 

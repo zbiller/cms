@@ -58,6 +58,7 @@ class CreateAclTables extends Migration
             $table->string('name')->unique();
             $table->string('group');
             $table->string('label');
+            $table->tinyInteger('type')->default(1);
 
             $table->timestamps();
         });

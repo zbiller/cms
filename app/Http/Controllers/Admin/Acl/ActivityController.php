@@ -11,7 +11,7 @@ use App\Http\Filters\ActivityFilter;
 use App\Http\Sorts\ActivitySort;
 use Illuminate\Http\Request;
 
-class ActivityLogsController extends Controller
+class ActivityController extends Controller
 {
     use CanCrud;
 
@@ -39,7 +39,7 @@ class ActivityLogsController extends Controller
 
             $this->items = $query->paginate(10);
             $this->title = 'Activity Logs';
-            $this->view = view('admin.acl.activity_logs.index');
+            $this->view = view('admin.acl.activity.index');
             $this->vars = [
                 'users' => User::alphabetically()->get(),
             ];
@@ -55,7 +55,7 @@ class ActivityLogsController extends Controller
     {
         return $this->_destroy(function () use ($activity) {
             $this->item = $activity;
-            $this->redirect = redirect()->route('admin.activity_logs.index');
+            $this->redirect = redirect()->route('admin.activity.index');
 
             $this->item->delete();
         });

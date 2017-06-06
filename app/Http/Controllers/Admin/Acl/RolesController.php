@@ -7,12 +7,12 @@ use App\Models\Auth\Role;
 use App\Models\Auth\Permission;
 use App\Traits\CanCrud;
 use App\Options\CrudOptions;
-use App\Http\Requests\AdminRoleRequest;
-use App\Http\Filters\AdminRoleFilter;
-use App\Http\Sorts\AdminRoleSort;
+use App\Http\Requests\RoleRequest;
+use App\Http\Filters\RoleFilter;
+use App\Http\Sorts\RoleSort;
 use Illuminate\Http\Request;
 
-class AdminRolesController extends Controller
+class RolesController extends Controller
 {
     use CanCrud;
 
@@ -23,26 +23,27 @@ class AdminRolesController extends Controller
 
     /**
      * @param Request $request
-     * @param AdminRoleFilter $filter
-     * @param AdminRoleSort $sort
+     * @param RoleFilter $filter
+     * @param RoleSort $sort
      * @return \Illuminate\View\View
      */
-    public function index(Request $request, AdminRoleFilter $filter, AdminRoleSort $sort)
+    public function index(Request $request, RoleFilter $filter, RoleSort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
             $permissions = [];
 
-            foreach (Permission::getGrouped() as $group => $perms) {
+            foreach (Permission::getGrouped(Permission::TYPE_ADMIN) as $group => $perms) {
                 foreach ($perms as $permission) {
                     $permissions[$group][$permission->id] = $permission->label;
                 }
             }
 
-            $this->items = Role::only(Role::TYPE_ADMIN)->exclude('admin')->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
-            $this->title = 'Admin Roles';
-            $this->view = view('admin.acl.admin_roles.index');
+            $this->items = Role::type(Role::TYPE_ADMIN)->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->title = 'Roles';
+            $this->view = view('admin.acl.roles.index');
             $this->vars = [
                 'permissions' => $permissions,
+                'types' => Role::$types,
             ];
         });
     }
@@ -53,24 +54,24 @@ class AdminRolesController extends Controller
     public function create()
     {
         return $this->_create(function () {
-            $this->title = 'Add Admin Role';
-            $this->view = view('admin.acl.admin_roles.add');
-            $this->vars['permissions'] = Permission::getGrouped();
+            $this->title = 'Add Role';
+            $this->view = view('admin.acl.roles.add');
+            $this->vars['permissions'] = Permission::getGrouped(Permission::TYPE_ADMIN);
         });
     }
 
     /**
-     * @param AdminRoleRequest $request
+     * @param RoleRequest $request
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function store(AdminRoleRequest $request)
+    public function store(RoleRequest $request)
     {
         $request = $this->mergeRequest($request);
 
         return $this->_store(function () use ($request) {
             $this->item = Role::create($request->all());
-            $this->redirect = redirect()->route('admin.admin_roles.index');
+            $this->redirect = redirect()->route('admin.roles.index');
 
             $this->item->permissions()->attach((array)$request->get('permissions'));
         }, $request);
@@ -84,25 +85,25 @@ class AdminRolesController extends Controller
     {
         return $this->_edit(function () use ($role) {
             $this->item = $role;
-            $this->title = 'Edit Admin Role';
-            $this->view = view('admin.acl.admin_roles.edit');
-            $this->vars['permissions'] = Permission::getGrouped();
+            $this->title = 'Edit Role';
+            $this->view = view('admin.acl.roles.edit');
+            $this->vars['permissions'] = Permission::getGrouped(Permission::TYPE_ADMIN);
         });
     }
 
     /**
-     * @param AdminRoleRequest $request
+     * @param RoleRequest $request
      * @param Role $role
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function update(AdminRoleRequest $request, Role $role)
+    public function update(RoleRequest $request, Role $role)
     {
         $request = $this->mergeRequest($request);
 
         return $this->_update(function () use ($request, $role) {
             $this->item = $role;
-            $this->redirect = redirect()->route('admin.admin_roles.index');
+            $this->redirect = redirect()->route('admin.roles.index');
 
             $this->item->update($request->all());
             $this->item->permissions()->sync((array)$request->get('permissions'));
@@ -118,7 +119,7 @@ class AdminRolesController extends Controller
     {
         return $this->_destroy(function () use ($role) {
             $this->item = $role;
-            $this->redirect = redirect()->route('admin.admin_roles.index');
+            $this->redirect = redirect()->route('admin.roles.index');
 
             $this->item->delete();
         });

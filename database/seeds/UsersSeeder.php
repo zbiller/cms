@@ -21,6 +21,7 @@ class UsersSeeder extends Seeder
         $developer = User::create([
             'username' => 'developer',
             'password' => bcrypt('iwtfki01'),
+            'type' => User::TYPE_ADMIN,
             'super' => User::SUPER_YES,
         ]);
 
@@ -37,6 +38,7 @@ class UsersSeeder extends Seeder
         $owner = User::create([
             'username' => 'owner',
             'password' => bcrypt('pa55word'),
+            'type' => User::TYPE_ADMIN,
         ]);
 
         $owner->person()->create([
@@ -48,6 +50,6 @@ class UsersSeeder extends Seeder
         /**
          * Assign "owner" role to the "owner" user
          */
-        $owner->assignRoles(['admin', 'owner']);
+        $owner->assignRoles('owner');
     }
 }

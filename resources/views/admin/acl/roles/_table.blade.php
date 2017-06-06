@@ -13,8 +13,8 @@
             <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
                 <td>{{ $item->name ?: 'N/A' }}</td>
                 <td>
-                    {!! button()->editRecord(route('admin.admin_roles.edit', $item->id)) !!}
-                    {!! button()->deleteRecord(route('admin.admin_roles.destroy', $item->id)) !!}
+                    {!! button()->editRecord(route('admin.roles.edit', $item->id)) !!}
+                    {!! button()->deleteRecord(route('admin.roles.destroy', $item->id)) !!}
                 </td>
             </tr>
         @endforeach

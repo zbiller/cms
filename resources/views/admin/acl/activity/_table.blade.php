@@ -17,7 +17,7 @@
                     <td>{{ $item->name ?: 'N/A' }}</td>
                     <td>{{ $item->created_at ?: 'N/A' }}</td>
                     <td class="actions-activity-logs">
-                        {!! button()->deleteRecord(route('admin.activity_logs.destroy', $item->id), ['style' => 'float: right; margin-left: 0; margin-right: 5px;']) !!}
+                        {!! button()->deleteRecord(route('admin.activity.destroy', $item->id), ['style' => 'float: right; margin-left: 0; margin-right: 5px;']) !!}
                     </td>
                 </tr>
             @endforeach

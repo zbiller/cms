@@ -3,7 +3,7 @@
         {!! form()->text('search', request()->get('search') ?: null, ['placeholder' => 'Search']) !!}
     </fieldset>
     <fieldset>
-        {!! form()->select('user', $users->pluck('full_name', 'id'), request('user') ?: null, ['placeholder' => 'All Users']) !!}
+        {!! form()->select('user', ['' => 'All Users'] + $users->pluck('full_name', 'id')->toArray(), request('user') ?: null) !!}
     </fieldset>
     <fieldset>
         {!! form_admin()->calendar('start_date', false, request('start_date') !== null ? request('start_date') : null, ['placeholder' => 'Date From', 'style' => 'width: 48%;']) !!}

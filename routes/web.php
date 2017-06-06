@@ -41,7 +41,7 @@ Route::group([
      * Admin routes that require authentication.
      */
     Route::group([
-        'middleware' => ['authenticated:admin', 'check.roles:admin', 'check.permissions']
+        'middleware' => ['authenticated:admin', 'check.roles', 'check.permissions']
     ], function () {
         /**
          * Dashboard.
@@ -96,40 +96,40 @@ Route::group([
              * CRUD Admin Groups.
              */
             Route::group([
-                'prefix' => 'admin-roles',
+                'prefix' => 'roles',
             ], function () {
-                Route::get('/', ['as' => 'admin.admin_roles.index', 'uses' => 'AdminRolesController@index', 'permissions' => 'admin-roles-list']);
-                Route::get('create', ['as' => 'admin.admin_roles.create', 'uses' => 'AdminRolesController@create', 'permissions' => 'admin-roles-add']);
-                Route::get('edit/{role}', ['as' => 'admin.admin_roles.edit', 'uses' => 'AdminRolesController@edit', 'permissions' => 'admin-roles-edit']);
-                Route::post('store', ['as' => 'admin.admin_roles.store', 'uses' => 'AdminRolesController@store', 'permissions' => 'admin-roles-add']);
-                Route::put('update/{role}', ['as' => 'admin.admin_roles.update', 'uses' => 'AdminRolesController@update', 'permissions' => 'admin-roles-edit']);
-                Route::delete('destroy/{role}', ['as' => 'admin.admin_roles.destroy', 'uses' => 'AdminRolesController@destroy', 'permissions' => 'admin-roles-delete']);
+                Route::get('/', ['as' => 'admin.roles.index', 'uses' => 'RolesController@index', 'permissions' => 'roles-list']);
+                Route::get('create', ['as' => 'admin.roles.create', 'uses' => 'RolesController@create', 'permissions' => 'roles-add']);
+                Route::get('edit/{role}', ['as' => 'admin.roles.edit', 'uses' => 'RolesController@edit', 'permissions' => 'roles-edit']);
+                Route::post('store', ['as' => 'admin.roles.store', 'uses' => 'RolesController@store', 'permissions' => 'roles-add']);
+                Route::put('update/{role}', ['as' => 'admin.roles.update', 'uses' => 'RolesController@update', 'permissions' => 'roles-edit']);
+                Route::delete('destroy/{role}', ['as' => 'admin.roles.destroy', 'uses' => 'RolesController@destroy', 'permissions' => 'roles-delete']);
             });
 
             /**
              * CRUD Admin Users.
              */
             Route::group([
-                'prefix' => 'admin-users',
+                'prefix' => 'admins',
             ], function () {
-                Route::get('/', ['as' => 'admin.admin_users.index', 'uses' => 'AdminUsersController@index', 'permissions' => 'admin-users-list']);
-                Route::get('create', ['as' => 'admin.admin_users.create', 'uses' => 'AdminUsersController@create', 'permissions' => 'admin-users-add']);
-                Route::get('edit/{user}', ['as' => 'admin.admin_users.edit', 'uses' => 'AdminUsersController@edit', 'permissions' => 'admin-users-edit']);
-                Route::post('store', ['as' => 'admin.admin_users.store', 'uses' => 'AdminUsersController@store', 'permissions' => 'admin-users-add']);
-                Route::put('update/{user}', ['as' => 'admin.admin_users.update', 'uses' => 'AdminUsersController@update', 'permissions' => 'admin-users-edit']);
-                Route::delete('destroy/{user}', ['as' => 'admin.admin_users.destroy', 'uses' => 'AdminUsersController@destroy', 'permissions' => 'admin-users-delete']);
+                Route::get('/', ['as' => 'admin.admins.index', 'uses' => 'AdminsController@index', 'permissions' => 'admins-list']);
+                Route::get('create', ['as' => 'admin.admins.create', 'uses' => 'AdminsController@create', 'permissions' => 'admins-add']);
+                Route::get('edit/{user}', ['as' => 'admin.admins.edit', 'uses' => 'AdminsController@edit', 'permissions' => 'admins-edit']);
+                Route::post('store', ['as' => 'admin.admins.store', 'uses' => 'AdminsController@store', 'permissions' => 'admins-add']);
+                Route::put('update/{user}', ['as' => 'admin.admins.update', 'uses' => 'AdminsController@update', 'permissions' => 'admins-edit']);
+                Route::delete('destroy/{user}', ['as' => 'admin.admins.destroy', 'uses' => 'AdminsController@destroy', 'permissions' => 'admins-delete']);
             });
 
             /**
              * CRUD Activity Log.
              */
             Route::group([
-                'prefix' => 'activity-logs',
+                'prefix' => 'activity',
             ], function () {
-                Route::get('/', ['as' => 'admin.activity_logs.index', 'uses' => 'ActivityLogsController@index', 'permissions' => 'activity-logs-list']);
-                Route::delete('destroy/{activity}', ['as' => 'admin.activity_logs.destroy', 'uses' => 'ActivityLogsController@destroy', 'permissions' => 'activity-logs-delete']);
-                Route::delete('clean', ['as' => 'admin.activity_logs.clean', 'uses' => 'ActivityLogsController@clean', 'permissions' => 'activity-logs-clean']);
-                Route::delete('delete', ['as' => 'admin.activity_logs.delete', 'uses' => 'ActivityLogsController@delete', 'permissions' => 'activity-logs-delete']);
+                Route::get('/', ['as' => 'admin.activity.index', 'uses' => 'ActivityController@index', 'permissions' => 'activity-list']);
+                Route::delete('destroy/{activity}', ['as' => 'admin.activity.destroy', 'uses' => 'ActivityController@destroy', 'permissions' => 'activity-delete']);
+                Route::delete('clean', ['as' => 'admin.activity.clean', 'uses' => 'ActivityController@clean', 'permissions' => 'activity-clean']);
+                Route::delete('delete', ['as' => 'admin.activity.delete', 'uses' => 'ActivityController@delete', 'permissions' => 'activity-delete']);
             });
         });
 

@@ -15,20 +15,30 @@ class RolesSeeder extends Seeder
     private $adminRoles;
 
     /**
+     * Collection of front-end roles.
+     *
+     * @var Collection
+     */
+    private $frontRoles;
+
+    /**
      * Mapping structure of admin roles.
      *
      * @var array
      */
     private $adminMap = [
-        'Admin' => [
-            'name' => 'admin',
-            'type' => Role::TYPE_ADMIN,
-        ],
         'Owner' => [
             'name' => 'owner',
             'type' => Role::TYPE_ADMIN,
         ],
     ];
+
+    /**
+     * Mapping structure of front-end roles.
+     *
+     * @var array
+     */
+    private $frontMap = [];
 
     /**
      * Run the database seeds.
@@ -40,15 +50,20 @@ class RolesSeeder extends Seeder
         DB::table('roles')->delete();
 
         $this->adminRoles = new Collection();
+        $this->frontRoles = new Collection();
 
         foreach ($this->adminMap as $role => $data) {
             $this->adminRoles->push(Role::create($data));
+        }
+
+        foreach ($this->frontMap as $role => $data) {
+            $this->frontRoles->push(Role::create($data));
         }
 
         /**
          * Assign all permissions to the "owner" role.
          */
         $role = Role::findByName('owner');
-        $role->grantPermission(Permission::all());
+        $role->grantPermission(Permission::type(Permission::TYPE_ADMIN)->get());
     }
 }

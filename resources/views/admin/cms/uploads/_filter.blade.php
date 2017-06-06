@@ -3,7 +3,7 @@
         {!! form()->text('search', request('search') ?: null, ['placeholder' => 'Search']) !!}
     </fieldset>
     <fieldset>
-        {!! form()->select('type', $types, request('type') ?: null, ['placeholder' => 'All Types']) !!}
+        {!! form()->select('type', ['' => 'All Types'] + $types, request('type') ?: null) !!}
     </fieldset>
     <fieldset>
         {!! form()->text('size[0]', request('size')[0] ?: null, ['placeholder' => 'Size From', 'style' => 'width: 48%;']) !!}

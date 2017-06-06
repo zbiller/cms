@@ -52,7 +52,7 @@ class LoginController extends Controller
             ->setLoginRedirect($home->url->url)
             ->setLogoutRedirect($home->url->url)
             ->setAdditionalLoginConditions([
-                'type' => User::TYPE_DEFAULT,
+                'type' => User::TYPE_FRONT,
                 'verified' => User::VERIFIED_YES,
             ]);
     }

@@ -64,15 +64,15 @@ class MenuComposer
                 $access = $item->name('Access Control')->data('icon', 'fa-sign-in')->active('admin/admin-roles/*', 'admin/admin-users/*', 'admin/approvals/*', 'admin/activity-logs/*');
 
                 $menu->child($access, function (MenuItem $item) {
-                    $item->name('Admins')->url(route('admin.admin_users.index'))->permissions('admin-users-list')->active('admin/admin-users/*');
+                    $item->name('Admins')->url(route('admin.admins.index'))->permissions('admins-list')->active('admin/admins/*');
                 });
 
                 $menu->child($access, function (MenuItem $item) {
-                    $item->name('Roles')->url(route('admin.admin_roles.index'))->permissions('admin-roles-list')->active('admin/admin-roles/*');
+                    $item->name('Roles')->url(route('admin.roles.index'))->permissions('roles-list')->active('admin/roles/*');
                 });
 
                 $menu->child($access, function (MenuItem $item) {
-                    $item->name('Activity')->url(route('admin.activity_logs.index'))->permissions('activity-log-list')->active('admin/activity-logs/*');
+                    $item->name('Activity')->url(route('admin.activity.index'))->permissions('activity-list')->active('admin/activity/*');
                 });
             });
 

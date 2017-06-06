@@ -7,8 +7,9 @@ use App\Traits\IsCacheable;
 use App\Options\ActivityOptions;
 use App\Options\CacheOptions;
 use App\Contracts\PermissionContract;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Permission extends Model implements PermissionContract
@@ -33,6 +34,24 @@ class Permission extends Model implements PermissionContract
     ];
 
     /**
+     * Permission types.
+     *
+     * @const
+     */
+    const TYPE_ADMIN = 1;
+    const TYPE_FRONT = 2;
+
+    /**
+     * Get permission types.
+     *
+     * @var array
+     */
+    public static $types = [
+        self::TYPE_ADMIN => 'Admin',
+        self::TYPE_FRONT => 'Front',
+    ];
+
+    /**
      * Permission has and belongs to many users.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -53,13 +72,37 @@ class Permission extends Model implements PermissionContract
     }
 
     /**
+     * Filter query results to show permissions only of type.
+     * Param $type: single role type as constant (int).
+     *
+     * @param Builder $query
+     * @param int $type
+     */
+    public function scopeType($query, $type)
+    {
+        $query->where('type', $type);
+    }
+
+    /**
+     * Filter query results to exclude the given roles.
+     *
+     * @param Builder $query
+     * @param ...$permissions
+     */
+    public function scopeNot($query, ...$permissions)
+    {
+        $query->whereNotIn('name', array_flatten($permissions));
+    }
+
+    /**
      * Get permissions as array grouped by the "group" column.
      *
+     * @param int $type
      * @return Collection
      */
-    public static function getGrouped()
+    public static function getGrouped($type)
     {
-        return self::all()->groupBy('group');
+        return self::type($type)->get()->groupBy('group');
     }
 
     /**

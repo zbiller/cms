@@ -43,6 +43,7 @@ class User extends Authenticatable
         'username',
         'password',
         'email',
+        'type',
     ];
 
     /**
@@ -60,8 +61,8 @@ class User extends Authenticatable
      *
      * @const
      */
-    const TYPE_DEFAULT = 1;
-    const TYPE_ADMIN = 2;
+    const TYPE_ADMIN = 1;
+    const TYPE_FRONT = 2;
 
     /**
      * The constants defining the user "verified" states.
@@ -133,23 +134,14 @@ class User extends Authenticatable
     }
 
     /**
-     * Filter query results to show only users of type "default".
+     * Filter query results to show only users of the provided type.
      *
      * @param Builder $query
+     * @param int $type
      */
-    public function scopeOnlyDefault($query)
+    public function scopeType($query, $type)
     {
-        $query->where('type', static::TYPE_DEFAULT);
-    }
-
-    /**
-     * Filter query results to show only users of type "admin".
-     *
-     * @param Builder $query
-     */
-    public function scopeOnlyAdmin($query)
-    {
-        $query->where('type', static::TYPE_ADMIN);
+        $query->where('type', $type);
     }
 
     /**
@@ -157,7 +149,7 @@ class User extends Authenticatable
      *
      * @param Builder $query
      */
-    public function scopeOnlySuper($query)
+    public function scopeSuper($query)
     {
         $query->where('super', static::SUPER_YES);
     }
@@ -169,9 +161,20 @@ class User extends Authenticatable
      * @param Builder $query
      * @param array|string $roles
      */
-    public function scopeOnlyWithRoles($query, $roles)
+    public function scopeWithRoles($query, $roles)
     {
         $query->role($roles);
+    }
+
+    /**
+     * Filter query results to exclude users having one of the the provided username.
+     *
+     * @param Builder $query
+     * @param ...$usernames
+     */
+    public function scopeNot($query, ...$usernames)
+    {
+        $query->whereNotIn('username', array_flatten($usernames));
     }
 
     /**

@@ -24,7 +24,7 @@
 </div>
 
 @section('bottom_scripts')
-    {!! JsValidator::formRequest(App\Http\Requests\AdminRoleRequest::class, '.form') !!}
+    {!! JsValidator::formRequest(App\Http\Requests\RoleRequest::class, '.form') !!}
 
     <script type="text/javascript">
         $('input[type="checkbox"][name="dummy"]').click(function () {

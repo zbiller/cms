@@ -2,7 +2,7 @@
 
 namespace App\Http\Sorts;
 
-class AdminRoleSort extends Sort
+class RoleSort extends Sort
 {
     /**
      * Get the request field name to sort by.

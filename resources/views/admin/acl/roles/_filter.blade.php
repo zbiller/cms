@@ -2,8 +2,11 @@
     <fieldset>
         {!! form()->text('search', request()->get('search') ?: null, ['placeholder' => 'Search']) !!}
     </fieldset>
+    {{--<fieldset>
+        {!! form()->select('type', ['' => 'All Types'] + $types, request('type') ?: null) !!}
+    </fieldset>--}}
     <fieldset>
-        {!! form()->select('permissions[]', $permissions, request('permissions') ?: null, ['placeholder' => 'All Permissions']) !!}
+        {!! form()->select('permission', ['' => 'All Permissions'] + $permissions, request('permission') ?: null) !!}
     </fieldset>
     <fieldset>
         {!! form_admin()->calendar('start_date', false, request('start_date') !== null ? request('start_date') : null, ['placeholder' => 'Date From', 'style' => 'width: 48%;']) !!}

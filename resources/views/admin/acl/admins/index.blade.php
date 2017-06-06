@@ -3,16 +3,16 @@
 @section('header')
     @parent
 
-    <h1>Admin Users</h1>
+    <h1>Admins</h1>
 @endsection
 
 @section('content')
     <section class="filters">
-        @include('admin.acl.admin_users._filter')
+        @include('admin.acl.admins._filter')
     </section>
 
     <section class="list">
-        @include('admin.acl.admin_users._table', ['items' => $items])
+        @include('admin.acl.admins._table', ['items' => $items])
     </section>
 @endsection
 
@@ -21,6 +21,6 @@
 
     <section class="actions">
         {!! button()->updatePage() !!}
-        {!! button()->addRecord(route('admin.admin_users.create')) !!}
+        {!! button()->addRecord(route('admin.admins.create')) !!}
     </section>
 @endsection

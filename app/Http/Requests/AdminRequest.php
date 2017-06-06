@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Validation\Rule;
 
-class AdminUserRequest extends Request
+class AdminRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
