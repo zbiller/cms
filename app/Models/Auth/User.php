@@ -2,7 +2,6 @@
 
 namespace App\Models\Auth;
 
-use App\Http\Middleware\AuthenticateSession;
 use App\Traits\HasRoles;
 use App\Traits\HasActivity;
 use App\Traits\IsVerifiable;
@@ -12,7 +11,6 @@ use App\Scopes\SelectUserScope;
 use App\Scopes\JoinPersonScope;
 use App\Options\ActivityOptions;
 use App\Options\VerifyOptions;
-use App\Options\CacheOptions;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Notifications\Notifiable;
 use App\Notifications\ResetPasswordNotification;
@@ -383,16 +381,5 @@ class User extends Authenticatable
     {
         return VerifyOptions::instance()
             ->shouldQueueEmailSending();
-    }
-
-    /**
-     * Set the options necessary for the IsCacheable trait.
-     *
-     * @return CacheOptions
-     */
-    public static function getCacheOptions(): CacheOptions
-    {
-        return CacheOptions::instance()
-            ->setKey('acl');
     }
 }

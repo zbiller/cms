@@ -126,8 +126,22 @@ class AdminsController extends Controller
      */
     protected function mergeRequest(Request $request)
     {
+        if ($request->has('password')) {
+            $request->merge([
+                'password' => bcrypt($request->get('password')),
+            ]);
+        } else {
+            $request = AdminRequest::create(
+                $request->url(),
+                $request->method(),
+                $request->except([
+                    'password',
+                    'password_confirmation'
+                ])
+            );
+        }
+
         $request->merge([
-            'password' => bcrypt($request->get('password')),
             'type' => User::TYPE_ADMIN,
         ]);
 

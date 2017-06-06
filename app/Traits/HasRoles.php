@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
 trait HasRoles
 {
     use HasPermissions;
-    use IsCacheable;
+    use HasAclCache;
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany

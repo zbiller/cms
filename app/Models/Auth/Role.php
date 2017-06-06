@@ -5,12 +5,11 @@ namespace App\Models\Auth;
 use App\Models\Model;
 use App\Traits\HasPermissions;
 use App\Traits\HasActivity;
+use App\Traits\HasAclCache;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
-use App\Traits\IsCacheable;
 use App\Contracts\RoleContract;
 use App\Options\ActivityOptions;
-use App\Options\CacheOptions;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -18,9 +17,9 @@ class Role extends Model implements RoleContract
 {
     use HasPermissions;
     use HasActivity;
+    use HasAclCache;
     use IsFilterable;
     use IsSortable;
-    use IsCacheable;
 
     /**
      * The database table
@@ -126,16 +125,5 @@ class Role extends Model implements RoleContract
     public static function getActivityOptions()
     {
         return ActivityOptions::instance();
-    }
-
-    /**
-     * Set the options necessary for the IsCacheable trait.
-     *
-     * @return CacheOptions
-     */
-    public static function getCacheOptions(): CacheOptions
-    {
-        return CacheOptions::instance()
-            ->setKey('acl');
     }
 }
