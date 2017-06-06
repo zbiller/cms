@@ -2,28 +2,44 @@
 
 namespace App\Options;
 
+use Illuminate\Foundation\Http\FormRequest;
+
 class RegisterOptions
 {
     /**
-     * The path to redirect the user after register.
+     * The guard the registration should be made on.
      *
      * @var string
      */
-    public $registerRedirectPath = '/';
+    public $guard;
 
     /**
-     * The path to redirect the user after email verification.
+     * The form request validator to validate against.
      *
-     * @var string
+     * @var FormRequest
      */
-    public $verificationRedirectPath = '/';
+    public $validator;
 
     /**
      * Flag whether or not to verify the email of a newly registered user.
      *
      * @var bool
      */
-    public $verifyEmail = true;
+    public $verify = true;
+
+    /**
+     * The path to redirect the user after register.
+     *
+     * @var string
+     */
+    public $registerRedirect = '/';
+
+    /**
+     * The path to redirect the user after email verification.
+     *
+     * @var string
+     */
+    public $verificationRedirect = '/';
 
     /**
      * Get a fresh instance of this class.
@@ -36,39 +52,65 @@ class RegisterOptions
     }
 
     /**
-     * Set the $registerRedirectPath to work with in the App\Traits\CanRegister trait.
+     * Set the $guard to work with in the App\Traits\CanRegister trait.
      *
-     * @param string $path
+     * @param string $guard
      * @return RegisterOptions
      */
-    public function setRegisterRedirectPath($path): RegisterOptions
+    public function setAuthGuard($guard): RegisterOptions
     {
-        $this->registerRedirectPath = $path;
+        $this->guard = $guard;
 
         return $this;
     }
 
     /**
-     * Set the $verificationRedirectPath to work with in the App\Traits\CanRegister trait.
+     * Set the $validator to work with in the App\Traits\CanRegister trait.
      *
-     * @param string $path
+     * @param FormRequest $validator
      * @return RegisterOptions
      */
-    public function setVerificationRedirectPath($path): RegisterOptions
+    public function setValidator(FormRequest $validator): RegisterOptions
     {
-        $this->verificationRedirectPath = $path;
+        $this->validator = $validator;
 
         return $this;
     }
 
     /**
-     * Set the $verifyEmail to work with in the App\Traits\CanRegister trait.
+     * Set the $verify to work with in the App\Traits\CanRegister trait.
      *
      * @return RegisterOptions
      */
     public function disableEmailVerification(): RegisterOptions
     {
-        $this->verifyEmail = false;
+        $this->verify = false;
+
+        return $this;
+    }
+
+    /**
+     * Set the $registerRedirect to work with in the App\Traits\CanRegister trait.
+     *
+     * @param string $path
+     * @return RegisterOptions
+     */
+    public function setRegisterRedirect($path): RegisterOptions
+    {
+        $this->registerRedirect = $path;
+
+        return $this;
+    }
+
+    /**
+     * Set the $verificationRedirect to work with in the App\Traits\CanRegister trait.
+     *
+     * @param string $path
+     * @return RegisterOptions
+     */
+    public function setVerificationRedirect($path): RegisterOptions
+    {
+        $this->verificationRedirect = $path;
 
         return $this;
     }

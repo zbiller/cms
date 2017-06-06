@@ -2,8 +2,24 @@
 
 namespace App\Options;
 
+use Illuminate\Foundation\Http\FormRequest;
+
 class AuthenticateOptions
 {
+    /**
+     * The guard the authentication should be made on.
+     *
+     * @var string
+     */
+    public $guard;
+
+    /**
+     * The form request validator to validate against.
+     *
+     * @var FormRequest
+     */
+    public $validator;
+
     /**
      * The field name to be used in combination with the password to sign in the user.
      *
@@ -16,14 +32,14 @@ class AuthenticateOptions
      *
      * @var string
      */
-    public $loginRedirectPath = '/';
+    public $loginRedirect = '/';
 
     /**
      * The path to redirect the user after logout.
      *
      * @var string
      */
-    public $logoutRedirectPath = '/';
+    public $logoutRedirect = '/';
 
     /**
      * The number of tries a user is allowed to attempt login.
@@ -57,6 +73,32 @@ class AuthenticateOptions
     }
 
     /**
+     * Set the $guard to work with in the App\Traits\CanAuthenticate trait.
+     *
+     * @param string $guard
+     * @return AuthenticateOptions
+     */
+    public function setAuthGuard($guard): AuthenticateOptions
+    {
+        $this->guard = $guard;
+
+        return $this;
+    }
+
+    /**
+     * Set the $validator to work with in the App\Traits\CanAuthenticate trait.
+     *
+     * @param FormRequest $validator
+     * @return AuthenticateOptions
+     */
+    public function setValidator(FormRequest $validator): AuthenticateOptions
+    {
+        $this->validator = $validator;
+
+        return $this;
+    }
+
+    /**
      * Set the $usernameField to work with in the App\Traits\CanAuthenticate trait.
      *
      * @param string $name
@@ -70,27 +112,27 @@ class AuthenticateOptions
     }
 
     /**
-     * Set the $logoutRedirectPath to work with in the App\Traits\CanAuthenticate trait.
+     * Set the $logoutRedirect to work with in the App\Traits\CanAuthenticate trait.
      *
      * @param string $path
      * @return AuthenticateOptions
      */
-    public function setLogoutRedirectPath($path): AuthenticateOptions
+    public function setLogoutRedirect($path): AuthenticateOptions
     {
-        $this->logoutRedirectPath = $path;
+        $this->logoutRedirect = $path;
 
         return $this;
     }
 
     /**
-     * Set the $loginRedirectPath to work with in the App\Traits\CanAuthenticate trait.
+     * Set the $loginRedirect to work with in the App\Traits\CanAuthenticate trait.
      *
      * @param string $path
      * @return AuthenticateOptions
      */
-    public function setLoginRedirectPath($path): AuthenticateOptions
+    public function setLoginRedirect($path): AuthenticateOptions
     {
-        $this->loginRedirectPath = $path;
+        $this->loginRedirect = $path;
 
         return $this;
     }

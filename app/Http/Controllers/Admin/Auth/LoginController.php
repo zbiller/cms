@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Auth\User;
+use App\Http\Requests\LoginRequest;
 use App\Traits\CanAuthenticate;
 use App\Options\AuthenticateOptions;
 use Illuminate\Http\Request;
@@ -19,20 +20,10 @@ class LoginController extends Controller
      */
     public function show()
     {
-        $this->setIntendedRedirectUrl();
+        $this->intendRedirectTo();
         $this->setMeta('title', 'Admin');
 
         return view('admin.auth.login');
-    }
-
-    /**
-     * Get the guard to be used during authentication.
-     *
-     * @return mixed
-     */
-    protected function guard()
-    {
-        return auth()->guard('admin');
     }
 
     /**
@@ -53,8 +44,10 @@ class LoginController extends Controller
     public static function getAuthenticateOptions()
     {
         return AuthenticateOptions::instance()
-            ->setLoginRedirectPath('/admin')
-            ->setLogoutRedirectPath('/admin/login')
+            ->setAuthGuard('admin')
+            ->setValidator(new LoginRequest)
+            ->setLoginRedirect(route('admin'))
+            ->setLogoutRedirect(route('admin.login'))
             ->setAdditionalLoginConditions([
                 'type' => User::TYPE_ADMIN,
                 'verified' => User::VERIFIED_YES,

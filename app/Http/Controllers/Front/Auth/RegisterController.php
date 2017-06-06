@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Front\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\Auth\User;
 use App\Models\Auth\Person;
+use App\Http\Requests\RegisterRequest;
 use App\Traits\CanRegister;
 use App\Options\RegisterOptions;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class RegisterController extends Controller
 {
@@ -23,23 +23,6 @@ class RegisterController extends Controller
     {
         return view('front.auth.register')->with([
             'page' => page()->find('home')
-        ]);
-    }
-
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param array $data
-     * @return \Illuminate\Validation\Validator
-     */
-    protected function validator(array $data = [])
-    {
-        return Validator::make($data, [
-            'username' => 'required|unique:users,username',
-            'password' => 'required|confirmed',
-            'person.first_name' => 'required|min:3',
-            'person.last_name' => 'required|min:3',
-            'person.email' => 'required|email|unique:persons,email',
         ]);
     }
 
@@ -65,16 +48,6 @@ class RegisterController extends Controller
         ]);
 
         return $user;
-    }
-
-    /**
-     * Get the guard to be used during registration.
-     *
-     * @return mixed
-     */
-    protected function guard()
-    {
-        return auth()->guard('user');
     }
 
     /**
@@ -104,8 +77,12 @@ class RegisterController extends Controller
      */
     public static function getRegisterOptions()
     {
+        $home = page()->find('home');
+
         return RegisterOptions::instance()
-            ->setRegisterRedirectPath('/')
-            ->setVerificationRedirectPath('/');
+            ->setAuthGuard('user')
+            ->setValidator(new RegisterRequest)
+            ->setRegisterRedirect($home->url->url)
+            ->setVerificationRedirect($home->url->url);
     }
 }

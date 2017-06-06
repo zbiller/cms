@@ -49,7 +49,6 @@ class AuthenticateSession
         }
 
         if ($request->session()->get('password_hash_' . $guard) !== $request->user($guard)->getAuthPassword()) {
-            //dd($request->session()->all(), $guard, $request->user($guard), $this->auth->guard($guard)->viaRemember());
             $this->logout($request, $guard);
         }
 

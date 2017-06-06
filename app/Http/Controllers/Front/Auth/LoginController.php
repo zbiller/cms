@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Front\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Auth\User;
+use App\Http\Requests\LoginRequest;
 use App\Traits\CanAuthenticate;
 use App\Options\AuthenticateOptions;
 use Illuminate\Http\Request;
@@ -19,21 +20,11 @@ class LoginController extends Controller
      */
     public function show()
     {
-        $this->setIntendedRedirectUrl();
+        $this->intendRedirectTo();
 
         return view('front.auth.login')->with([
             'page' => page()->find('home')
         ]);
-    }
-
-    /**
-     * Get the guard to be used during authentication.
-     *
-     * @return mixed
-     */
-    protected function guard()
-    {
-        return auth()->guard('user');
     }
 
     /**
@@ -53,9 +44,13 @@ class LoginController extends Controller
      */
     public static function getAuthenticateOptions()
     {
+        $home = page()->find('home');
+
         return AuthenticateOptions::instance()
-            ->setLoginRedirectPath('/')
-            ->setLogoutRedirectPath('/')
+            ->setAuthGuard('user')
+            ->setValidator(new LoginRequest)
+            ->setLoginRedirect($home->url->url)
+            ->setLogoutRedirect($home->url->url)
             ->setAdditionalLoginConditions([
                 'type' => User::TYPE_DEFAULT,
                 'verified' => User::VERIFIED_YES,

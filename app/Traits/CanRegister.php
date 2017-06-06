@@ -11,12 +11,13 @@ namespace App\Traits;
 use DB;
 use Crypt;
 use Exception;
-use Illuminate\Database\Eloquent\Model;
 use ReflectionMethod;
 use App\Models\Auth\User;
 use App\Options\RegisterOptions;
 use App\Exceptions\VerificationException;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Validator;
@@ -44,6 +45,19 @@ trait CanRegister
         self::checkRegisterOptions();
 
         self::$registerOptions = self::getRegisterOptions();
+
+        self::validateRegisterOptions();
+    }
+
+    /**
+     * Get the guard to be used during authentication.
+     * If null, the default guard specified in config/auth.php will be used.
+     *
+     * @return mixed
+     */
+    public function guard()
+    {
+        return auth()->guard(self::$registerOptions->guard);
     }
 
     /**
@@ -54,7 +68,8 @@ trait CanRegister
      */
     public function register(Request $request)
     {
-        $validator = $this->validator($request->all());
+        $validator = self::$registerOptions->validator;
+        $validator = Validator::make($request->all(), $validator->rules(), $validator->messages(), $validator->attributes());
 
         if ($validator->fails()) {
             session()->flash('flash_error', $validator->errors()->first());
@@ -74,7 +89,8 @@ trait CanRegister
                 $this->guard()->login($user);
             }
 
-            return $this->registered($request, $user) ?: redirect(self::$registerOptions->registerRedirectPath);
+            return $this->registered($request, $user) ?:
+                redirect(self::$registerOptions->registerRedirect);
         });
     }
 
@@ -98,7 +114,7 @@ trait CanRegister
             $this->guard()->login($user);
 
             session()->flash('flash_success', 'Your email address has been successfully verified and you have been logged into your account!');
-            return $this->verified($request, $user) ?: redirect(self::$registerOptions->verificationRedirectPath);
+            return $this->verified($request, $user) ?: redirect(self::$registerOptions->verificationRedirect);
         } catch (ModelNotFoundException $e) {
             session()->flash('flash_error', 'There is no user with the provided email and token in the system!');
         } catch (VerificationException $e) {
@@ -116,7 +132,26 @@ trait CanRegister
      */
     public function shouldVerifyEmail(Model $model)
     {
-        return in_array(IsVerifiable::class, class_uses($model)) && self::$registerOptions->verifyEmail === true;
+        return in_array(IsVerifiable::class, class_uses($model)) && self::$registerOptions->verify === true;
+    }
+
+    /**
+     * Check if mandatory register options have been properly set from the controller.
+     * Check if $validator has been set.
+     *
+     * @return void
+     * @throws Exception
+     */
+    protected static function validateRegisterOptions()
+    {
+        if (!self::$registerOptions->validator || !(self::$registerOptions->validator instanceof FormRequest)) {
+            throw new Exception(
+                'The controller ' . self::class . ' uses the CanRegister trait.' . PHP_EOL .
+                'You are required to set the "validator" form request that will validate a user registration.' . PHP_EOL .
+                'You can do this from inside the getRegisterOptions() method defined on the controller.' . PHP_EOL .
+                'Please note that the validator must be an instance of Illuminate\Foundation\Http\FormRequest.'
+            );
+        }
     }
 
     /**

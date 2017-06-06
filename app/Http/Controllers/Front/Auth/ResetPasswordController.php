@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Front\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Traits\CanResetPassword;
 use App\Options\ResetPasswordOptions;
 use Illuminate\Http\Request;
@@ -10,13 +11,6 @@ use Illuminate\Http\Request;
 class ResetPasswordController extends Controller
 {
     use CanResetPassword;
-
-    /**
-     * The name of the auth guard used.
-     *
-     * @var string
-     */
-    protected $guard = 'user';
 
     /**
      * Show the application's reset password form.
@@ -35,22 +29,16 @@ class ResetPasswordController extends Controller
     }
 
     /**
-     * Get the guard to be used during password reset.
-     *
-     * @return mixed
-     */
-    protected function guard()
-    {
-        return auth()->guard($this->guard);
-    }
-
-    /**
      * @return ResetPasswordOptions
      */
     public static function getResetPasswordOptions()
     {
+        $home = page()->find('home');
+
         return ResetPasswordOptions::instance()
-            ->setIdentifierField('username')
-            ->setRedirectPath('/');
+            ->setAuthGuard('user')
+            ->setValidator(new ResetPasswordRequest)
+            ->setIdentifier('username')
+            ->setRedirect($home->url->url);
     }
 }

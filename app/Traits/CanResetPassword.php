@@ -10,11 +10,12 @@ namespace App\Traits;
 
 use Exception;
 use ReflectionMethod;
-use App\Http\Requests\ResetPasswordRequest;
 use App\Options\ResetPasswordOptions;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Illuminate\Support\Facades\Password;
 
 trait CanResetPassword
 {
@@ -46,6 +47,55 @@ trait CanResetPassword
         self::checkResetPasswordOptions();
 
         self::$resetPasswordOptions = self::getResetPasswordOptions();
+
+        self::validateResetPasswordOptions();
+    }
+
+    /**
+     * Get the guard to be used during password reset.
+     *
+     * @return mixed
+     */
+    public function guard()
+    {
+        return auth()->guard(self::$resetPasswordOptions->guard);
+    }
+
+    /**
+     * Get the password reset credentials from the request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function credentials(Request $request)
+    {
+        return $request->only(
+            self::$resetPasswordOptions->identifier,
+            'password', 'password_confirmation', 'token'
+        );
+    }
+
+    /**
+     * Reset the given user's password.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function reset(Request $request)
+    {
+        $validator = self::$resetPasswordOptions->validator;
+
+        $this->validate($request, $validator->rules(), $validator->messages(), $validator->attributes());
+
+        $response = $this->broker()->reset(
+            $this->credentials($request), function ($user, $password) {
+                $this->resetPassword($user, $password);
+            }
+        );
+
+        return $response == Password::PASSWORD_RESET
+            ? $this->sendResetResponse($response)
+            : $this->sendResetFailedResponse($request, $response);
     }
 
     /**
@@ -58,9 +108,7 @@ trait CanResetPassword
     {
         $this->baseResetPassword($user, $password);
 
-        session()->put([
-            'password_hash_' . $this->guard => $user->getAuthPassword(),
-        ]);
+        session()->put('password_hash_' . self::$resetPasswordOptions->guard, $user->getAuthPassword());
     }
 
     /**
@@ -70,31 +118,7 @@ trait CanResetPassword
      */
     protected function redirectTo()
     {
-        return self::$resetPasswordOptions->redirectPath;
-    }
-
-    /**
-     * Get the password reset validation rules.
-     *
-     * @return array
-     */
-    protected function rules()
-    {
-        return (new ResetPasswordRequest())->rules();
-    }
-
-    /**
-     * Get the password reset credentials from the request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
-    protected function credentials(Request $request)
-    {
-        return $request->only(
-            self::$resetPasswordOptions->identifierField,
-            'password', 'password_confirmation', 'token'
-        );
+        return self::$resetPasswordOptions->redirect;
     }
 
     /**
@@ -130,13 +154,13 @@ trait CanResetPassword
      */
     protected function sendResetLinkResponse($response)
     {
-        if (self::$resetPasswordOptions->redirectPath) {
+        if (self::$resetPasswordOptions->redirect) {
             session()->flash('flash_success', __($response));
-            return redirect(self::$resetPasswordOptions->redirectPath);
-        } else {
-            session()->flash('flash_error', __($response));
-            return $this->baseSendResetLinkResponse($response);
+            return redirect(self::$resetPasswordOptions->redirect);
         }
+
+        session()->flash('flash_error', __($response));
+        return $this->baseSendResetLinkResponse($response);
     }
 
     /**
@@ -150,6 +174,25 @@ trait CanResetPassword
     {
         session()->flash('flash_error', __($response));
         return back();
+    }
+
+    /**
+     * Check if mandatory password reset options have been properly set from the controller.
+     * Check if $validator have been set.
+     *
+     * @return void
+     * @throws Exception
+     */
+    protected static function validateResetPasswordOptions()
+    {
+        if (!self::$resetPasswordOptions->validator || !(self::$resetPasswordOptions->validator instanceof FormRequest)) {
+            throw new Exception(
+                'The controller ' . self::class . ' uses the CanResetPassword trait.' . PHP_EOL .
+                'You are required to set the "validator" form request that will validate a user registration.' . PHP_EOL .
+                'You can do this from inside the getResetPasswordOptions() method defined on the controller.' . PHP_EOL .
+                'Please note that the validator must be an instance of Illuminate\Foundation\Http\FormRequest.'
+            );
+        }
     }
 
     /**

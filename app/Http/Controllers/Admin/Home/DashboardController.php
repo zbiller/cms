@@ -40,7 +40,7 @@ class DashboardController extends Controller
             $analytics = $this->formatAnalyticsData($this->fetchAnalyticsData($startDate, $endDate));
         }
 
-        $this->setMeta('title', 'Dashboard');
+        $this->setMeta('title', 'Admin - Dashboard');
 
         return view('admin.home.dashboard')->with([
             'analytics' => $this->shouldUseAnalytics() ? $analytics : null

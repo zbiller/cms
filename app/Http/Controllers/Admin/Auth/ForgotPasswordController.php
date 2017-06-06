@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ResetPasswordRequest;
 use App\Traits\CanResetPassword;
 use App\Options\ResetPasswordOptions;
 
@@ -23,21 +24,14 @@ class ForgotPasswordController extends Controller
     }
 
     /**
-     * Get the guard to be used during password reset.
-     *
-     * @return mixed
-     */
-    protected function guard()
-    {
-        return auth()->guard('admin');
-    }
-
-    /**
      * @return ResetPasswordOptions
      */
     public static function getResetPasswordOptions()
     {
         return ResetPasswordOptions::instance()
-            ->setRedirectPath('/admin/login');
+            ->setAuthGuard('admin')
+            ->setValidator(new ResetPasswordRequest)
+            ->setIdentifier('email')
+            ->setRedirect(route('admin.login'));
     }
 }

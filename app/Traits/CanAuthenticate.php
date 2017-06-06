@@ -9,6 +9,7 @@
 namespace App\Traits;
 
 use Exception;
+use Illuminate\Foundation\Http\FormRequest;
 use ReflectionMethod;
 use App\Options\AuthenticateOptions;
 use Illuminate\Http\Request;
@@ -16,9 +17,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 trait CanAuthenticate
 {
-    use AuthenticatesUsers {
-        logout as baseLogout;
-    }
+    use AuthenticatesUsers;
 
     /**
      * The container for all the options necessary for this trait.
@@ -38,6 +37,8 @@ trait CanAuthenticate
         self::checkAuthenticateOptions();
 
         self::$authenticationOptions = self::getAuthenticateOptions();
+
+        self::validateAuthenticateOptions();
     }
 
     /**
@@ -51,16 +52,14 @@ trait CanAuthenticate
     }
 
     /**
-     * Log the user out of the application.
+     * Get the guard to be used during authentication.
+     * If null, the default guard specified in config/auth.php will be used.
      *
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return mixed
      */
-    public function logout(Request $request)
+    public function guard()
     {
-        $this->baseLogout($request);
-
-        return redirect(self::$authenticationOptions->logoutRedirectPath);
+        return auth()->guard(self::$authenticationOptions->guard);
     }
 
     /**
@@ -69,7 +68,7 @@ trait CanAuthenticate
      * @param Request $request
      * @return array
      */
-    protected function credentials(Request $request)
+    public function credentials(Request $request)
     {
         return array_merge(
             $request->only($this->username(), 'password'),
@@ -78,17 +77,59 @@ trait CanAuthenticate
     }
 
     /**
+     * Log the user out of the application.
+     * Forget only session data specific to the used auth guard.
+     * This way, multiple auth is possible.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function logout(Request $request)
+    {
+        $this->guard()->logout();
+
+        $request->session()->forget('password_hash_' . self::$authenticationOptions->guard);
+
+        return redirect(self::$authenticationOptions->logoutRedirect);
+    }
+
+    /**
+     * Validate the user login request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    protected function validateLogin(Request $request)
+    {
+        $validator = self::$authenticationOptions->validator;
+
+        $this->validate($request, $validator->rules(), $validator->messages(), $validator->attributes());
+    }
+
+    /**
      * Know where to redirect the user after login.
      *
      * @return string
      */
-    public function redirectTo()
+    protected function redirectTo()
     {
-        if ($this->hasIntendedRedirectUrl()) {
-            return $this->getIntendedRedirectUrl();
+        if (session()->has('intended_redirect')) {
+            return session('intended_redirect');
         }
 
-        return self::$authenticationOptions->loginRedirectPath;
+        return self::$authenticationOptions->loginRedirect;
+    }
+
+    /**
+     * Set the intended url to redirect after successful login.
+     *
+     * @return void
+     */
+    protected function intendRedirectTo()
+    {
+        if (str_contains(url()->previous(), self::$authenticationOptions->loginRedirect)) {
+            session()->flash('intended_redirect', url()->previous());
+        }
     }
 
     /**
@@ -107,35 +148,22 @@ trait CanAuthenticate
     }
 
     /**
-     * Set the intended url to redirect after successful login.
+     * Check if mandatory login options have been properly set from the controller.
+     * Check if $validator has been set.
      *
      * @return void
+     * @throws Exception
      */
-    protected function setIntendedRedirectUrl()
+    protected static function validateAuthenticateOptions()
     {
-        if (str_contains(url()->previous(), self::$authenticationOptions->loginRedirectPath)) {
-            session()->flash('intended_redirect', url()->previous());
+        if (!self::$authenticationOptions->validator || !(self::$authenticationOptions->validator instanceof FormRequest)) {
+            throw new Exception(
+                'The controller ' . self::class . ' uses the CanRegister trait.' . PHP_EOL .
+                'You are required to set the "validator" form request that will validate a user registration.' . PHP_EOL .
+                'You can do this from inside the getAuthenticateOptions() method defined on the controller.' . PHP_EOL .
+                'Please note that the validator must be an instance of Illuminate\Foundation\Http\FormRequest.'
+            );
         }
-    }
-
-    /**
-     * Get the intended url to redirect after successful login.
-     *
-     * @return string
-     */
-    protected function getIntendedRedirectUrl()
-    {
-        return session('intended_redirect');
-    }
-
-    /**
-     * Verify if an intended redirect url exists.
-     *
-     * @return string
-     */
-    protected function hasIntendedRedirectUrl()
-    {
-        return session()->has('intended_redirect');
     }
 
     /**
