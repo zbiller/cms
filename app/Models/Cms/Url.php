@@ -3,10 +3,13 @@
 namespace App\Models\Cms;
 
 use App\Models\Model;
+use App\Traits\IsCacheable;
 use Illuminate\Database\Eloquent\Builder;
 
 class Url extends Model
 {
+    use IsCacheable;
+
     /**
      * The database table.
      *

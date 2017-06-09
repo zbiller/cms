@@ -3,9 +3,12 @@
 namespace App\Models\Auth;
 
 use App\Models\Model;
+use App\Traits\IsCacheable;
 
 class Person extends Model
 {
+    use IsCacheable;
+
     /**
      * The database table.
      *

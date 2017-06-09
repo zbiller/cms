@@ -2,12 +2,13 @@
 
 namespace App\Models\Auth;
 
+use App\Models\Model;
 use App\Traits\HasActivity;
 use App\Traits\HasAclCache;
+use App\Traits\IsCacheable;
 use App\Options\ActivityOptions;
 use App\Contracts\PermissionContract;
 use Illuminate\Support\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -15,6 +16,7 @@ class Permission extends Model implements PermissionContract
 {
     use HasActivity;
     use HasAclCache;
+    use IsCacheable;
 
     /**
      * The database table.

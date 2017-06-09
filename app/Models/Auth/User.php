@@ -4,6 +4,7 @@ namespace App\Models\Auth;
 
 use App\Traits\HasRoles;
 use App\Traits\HasActivity;
+use App\Traits\IsCacheable;
 use App\Traits\IsVerifiable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
@@ -20,6 +21,7 @@ class User extends Authenticatable
 {
     use HasRoles;
     use HasActivity;
+    use IsCacheable;
     use IsVerifiable;
     use IsFilterable;
     use IsSortable;

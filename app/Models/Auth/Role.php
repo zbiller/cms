@@ -6,6 +6,7 @@ use App\Models\Model;
 use App\Traits\HasPermissions;
 use App\Traits\HasActivity;
 use App\Traits\HasAclCache;
+use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
 use App\Contracts\RoleContract;
@@ -18,6 +19,7 @@ class Role extends Model implements RoleContract
     use HasPermissions;
     use HasActivity;
     use HasAclCache;
+    use IsCacheable;
     use IsFilterable;
     use IsSortable;
 

@@ -6,6 +6,7 @@ use Exception;
 use App\Models\Model;
 use App\Traits\HasActivity;
 use App\Traits\HasMetadata;
+use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
 use App\Options\ActivityOptions;
@@ -17,6 +18,7 @@ class Menu extends Model
 {
     use HasActivity;
     use HasMetadata;
+    use IsCacheable;
     use IsFilterable;
     use IsSortable;
     use NodeTrait;

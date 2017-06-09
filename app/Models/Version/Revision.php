@@ -5,11 +5,13 @@ namespace App\Models\Version;
 use App\Models\Model;
 use App\Models\Auth\User;
 use App\Traits\HasMetadata;
+use App\Traits\IsCacheable;
 use Illuminate\Database\Eloquent\Builder;
 
 class Revision extends Model
 {
     use HasMetadata;
+    use IsCacheable;
 
     /**
      * The database table.

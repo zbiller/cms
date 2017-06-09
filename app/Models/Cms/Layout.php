@@ -5,6 +5,7 @@ namespace App\Models\Cms;
 use App\Models\Model;
 use App\Traits\HasBlocks;
 use App\Traits\HasActivity;
+use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
 use App\Options\BlockOptions;
@@ -15,6 +16,7 @@ class Layout extends Model
 {
     use HasBlocks;
     use HasActivity;
+    use IsCacheable;
     use IsFilterable;
     use IsSortable;
 

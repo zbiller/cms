@@ -5,6 +5,7 @@ namespace App\Models\Auth;
 use Exception;
 use Carbon\Carbon;
 use App\Models\Model;
+use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
 use App\Exceptions\ActivityException;
@@ -12,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 
 class Activity extends Model
 {
+    use IsCacheable;
     use IsFilterable;
     use IsSortable;
 
@@ -141,7 +143,7 @@ class Activity extends Model
      */
     public static function clean()
     {
-        $days = (int)config('activity-log.delete_records_older_than');
+        $days = (int)config('activity.delete_records_older_than');
 
         if (!($days > 0)) {
             return;

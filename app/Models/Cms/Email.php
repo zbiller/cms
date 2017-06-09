@@ -8,6 +8,7 @@ use App\Traits\HasRevisions;
 use App\Traits\HasDuplicates;
 use App\Traits\HasActivity;
 use App\Traits\HasMetadata;
+use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
 use App\Options\DraftOptions;
@@ -26,6 +27,7 @@ class Email extends Model
     use HasDuplicates;
     use HasActivity;
     use HasMetadata;
+    use IsCacheable;
     use IsFilterable;
     use IsSortable;
     use SoftDeletes;
