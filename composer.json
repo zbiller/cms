@@ -15,6 +15,7 @@
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.3.0",
         "pbmedia/laravel-ffmpeg": "^1.1",
+        "predis/predis": "^1.1",
         "proengsoft/laravel-jsvalidation": "dev-master#84fe201dd1be838f6ca8c90e7be461443472f1ee",
         "spatie/laravel-analytics": "^3.0"
     },
