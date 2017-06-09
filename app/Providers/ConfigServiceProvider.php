@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Configs\UploadConfig;
+use App\Configs\CacheConfig;
 use App\Configs\ActivityConfig;
 use Illuminate\Support\ServiceProvider;
 
@@ -17,7 +18,8 @@ class ConfigServiceProvider extends ServiceProvider
     {
         if (!app()->runningInConsole()) {
             $this->checkUploadConfig();
-            $this->checkActivityLogConfig();
+            $this->checkCacheConfig();
+            $this->checkActivityConfig();
         }
     }
 
@@ -42,11 +44,21 @@ class ConfigServiceProvider extends ServiceProvider
     }
 
     /**
-     * Check if the config/activity-log.php is properly and fully configured.
+     * Check if the config/cache.php is properly and fully configured.
      *
      * @return void
      */
-    protected function checkActivityLogConfig()
+    protected function checkCacheConfig()
+    {
+        CacheConfig::check();
+    }
+
+    /**
+     * Check if the config/activity.php is properly and fully configured.
+     *
+     * @return void
+     */
+    protected function checkActivityConfig()
     {
         ActivityConfig::check();
     }

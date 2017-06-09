@@ -88,4 +88,41 @@ return [
 
     'prefix' => 'laravel',
 
+    /*
+    |---------------------------------------------------------------------------------------------------
+    | Query Caching Flag
+    |---------------------------------------------------------------------------------------------------
+    |
+    | Every model by default implements a trait called IsCacheable.
+    | That trait has the job of caching the database queries with Redis.
+    | This way, on subsequent requests, the query results will be fetched from Redis, not the database.
+    |
+    */
+
+    'query' => [
+
+        /**
+         * Flag indicating whether or not query caching should run.
+         * By default, it's set to "false". If you want to enable it, set the "ENABLE_QUERY_CACHE=true" in .env
+         *
+         * IMPORTANT:
+         * Please note that event if query caching is enabled inside the .env file some other constraints still apply:
+         * 1. APP_ENV must not be "development" (in development no caching will happen, so debug is possible)
+         */
+        'enabled' => env('ENABLE_QUERY_CACHE', false),
+
+        /**
+         * The cache store used for query caching.
+         * Please note that because cache tagging is used, "file" or "database" cache drivers are not available here.
+         */
+        'store' => 'redis',
+
+        /**
+         * The value to prefix all query cache tags.
+         * This is not the general cache prefix (that is still the value of the key 'prefix' from this file).
+         */
+        'prefix' => 'cache.query',
+
+    ],
+
 ];

@@ -3,11 +3,11 @@
 return [
     'default_disk' => 'local',
 
-    'ffmpeg.binaries' => env('VIDEO_FFMPEG', 'ffmpeg'),
+    'ffmpeg.binaries' => env('FFMPEG_DRIVER', 'ffmpeg'),
 
     'ffmpeg.threads'  => 12,
 
-    'ffprobe.binaries' => env('VIDEO_FFPROBE', 'ffprobe'),
+    'ffprobe.binaries' => env('FFPROBE_DRIVER', 'ffprobe'),
 
     'timeout' => 3600,
 ];

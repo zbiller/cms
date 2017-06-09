@@ -6,7 +6,7 @@ return [
      * Flag indicating whether or not activities should be logged throughout the app.
      * If set to false, no activities will be saved to the database.
      */
-    'enabled' => env('ACTIVITY_LOG_ENABLED', true),
+    'enabled' => env('ENABLE_ACTIVITY_LOG', true),
 
     /**
      * This option accepts an integer, representing the number of days.
