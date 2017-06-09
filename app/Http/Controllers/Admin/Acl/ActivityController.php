@@ -85,7 +85,7 @@ class ActivityController extends Controller
     public function delete()
     {
         try {
-            Activity::truncate();
+            Activity::getQuery()->delete();
 
             session()->flash('flash_success', 'All records were successfully deleted!');
         } catch (Exception $e) {

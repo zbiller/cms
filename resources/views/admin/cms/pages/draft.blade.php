@@ -30,13 +30,14 @@
             {!! form_admin()->editor('metadata[content]', 'Content') !!}
         </div>
         <div id="tab-3" class="tab">
-            {!! form_admin()->text('metadata[meta_title]', 'Meta Title') !!}
-            {!! form_admin()->textarea('metadata[meta_description]', 'Meta Description') !!}
-            {!! form_admin()->textarea('metadata[meta_keywords]', 'Meta Keywords') !!}
+            {!! form_admin()->text('metadata[meta][title]', 'Meta Title') !!}
+            {!! uploader()->field('metadata[meta][image]')->label('Image')->model($item)->types('image')->manager() !!}
+            {!! form_admin()->textarea('metadata[meta][description]', 'Meta Description') !!}
+            {!! form_admin()->textarea('metadata[meta][keywords]', 'Meta Keywords') !!}
         </div>
         {!! block()->container($item, $draft) !!}
         {!! form()->close() !!}
 </section>
 @endsection
 
-{!! draft()->view($draft) !!}
+{!! draft()->view($draft, $item) !!}

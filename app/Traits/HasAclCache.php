@@ -10,7 +10,7 @@ trait HasAclCache
      *
      * @return void
      */
-    public static function bootIsCacheable()
+    public static function HasAclCache()
     {
         static::created(function ($model) {
             $model->forgetAclCache();

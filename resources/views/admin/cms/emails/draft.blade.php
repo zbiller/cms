@@ -26,4 +26,4 @@
     </section>
 @endsection
 
-{!! draft()->view($draft) !!}
+{!! draft()->view($draft, $item) !!}

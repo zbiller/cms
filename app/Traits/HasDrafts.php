@@ -149,6 +149,7 @@ trait HasDrafts
                 return $model;
             });
 
+
             return $model;
         } catch (Exception $e) {
             throw new DraftException(
@@ -633,7 +634,13 @@ trait HasDrafts
     protected function publishDirectParentRelationFromDraft($relation, $attributes)
     {
         foreach ($attributes->records->items as $item) {
-            $rel = $this->{$relation}()->findOrNew(
+            $related = $this->{$relation}();
+
+            if (array_key_exists(SoftDeletes::class, class_uses($this->{$relation}))) {
+                $related = $related->withTrashed();
+            }
+
+            $rel = $related->findOrNew(
                 isset($item->{$attributes->records->primary_key}) ?
                     $item->{$attributes->records->primary_key} : null
             );
@@ -642,6 +649,10 @@ trait HasDrafts
                 if ($field != $attributes->records->primary_key) {
                     $rel->attributes[$field] = $value;
                 }
+            }
+
+            if (array_key_exists(SoftDeletes::class, class_uses($rel))) {
+                $rel->{$rel->getDeletedAtColumn()} = null;
             }
 
             $rel->save();
@@ -657,7 +668,11 @@ trait HasDrafts
      */
     protected function publishDirectChildRelationFromDraft($relation, $attributes)
     {
-        $this->{$relation}()->delete();
+        if (array_key_exists(SoftDeletes::class, class_uses($this->{$relation}))) {
+            $this->{$relation}()->forceDelete();
+        } else {
+            $this->{$relation}()->delete();
+        }
 
         foreach ($attributes->records->items as $item) {
             $rel = $this->{$relation}()->getRelated()->newInstance();
@@ -691,7 +706,13 @@ trait HasDrafts
     protected function publishPivotedRelationFromDraft($relation, $attributes)
     {
         foreach ($attributes->records->items as $item) {
-            $rel = $this->{$relation}()->getRelated()->findOrNew(
+            $related = $this->{$relation}()->getRelated();
+
+            if (array_key_exists(SoftDeletes::class, class_uses($related))) {
+                $related = $related->withTrashed();
+            }
+
+            $rel = $related->findOrNew(
                 isset($item->{$attributes->records->primary_key}) ?
                     $item->{$attributes->records->primary_key} : null
             );
@@ -701,6 +722,9 @@ trait HasDrafts
                     $rel->attributes[$field] = $value;
                 }
 
+                $rel->save();
+            } elseif (array_key_exists(SoftDeletes::class, class_uses($rel))) {
+                $rel->{$rel->getDeletedAtColumn()} = null;
                 $rel->save();
             }
         }

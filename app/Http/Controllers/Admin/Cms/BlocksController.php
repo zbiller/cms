@@ -281,6 +281,8 @@ class BlocksController extends Controller
                     'model' => $model,
                     'blocks' => $model->blocks,
                     'locations' => $model->getBlockLocations(),
+                    'draft' => isset($draft) ? $draft : null,
+                    'revision' => isset($revision) ? $revision : null,
                     'disabled' => $request->get('disabled') ? true : false,
                 ])->render(),
             ];

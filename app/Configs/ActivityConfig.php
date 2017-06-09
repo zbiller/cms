@@ -27,19 +27,19 @@ class ActivityConfig
      */
     public function __construct()
     {
-        self::$config = config('activity-log');
+        self::$config = config('activity');
 
         self::checkIfLoggingIsConfiguredProperly();
     }
 
     /**
-     * Check if all the config options from config/upload.php are properly set.
+     * Check if all the config options from config/cache.php are properly set.
      *
      * @return void
      */
     public static function check()
     {
-        self::$config = config('activity-log');
+        self::$config = config('activity');
 
         self::checkIfLoggingIsConfiguredProperly();
     }

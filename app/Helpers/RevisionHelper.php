@@ -39,12 +39,14 @@ class RevisionHelper
      * Build the additional revision view html.
      *
      * @param Revision $revision
+     * @param Model $model
      * @return \Illuminate\View\View
      */
-    public function view(Revision $revision)
+    public function view(Revision $revision, Model $model)
     {
         return view('helpers::revision.view')->with([
             'revision' => $revision,
+            'model' => $model,
         ]);
     }
 }

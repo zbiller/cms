@@ -15,4 +15,14 @@
     </script>
 @append
 
-@php DB::rollBack(); @endphp
+@php
+    DB::rollBack();
+
+    if (@array_key_exists(\App\Traits\IsCacheable::class, class_uses($revision))) {
+        $revision->clearQueryCache();
+    }
+
+    if (@array_key_exists(\App\Traits\IsCacheable::class, class_uses($model))) {
+        $model->clearQueryCache();
+    }
+@endphp

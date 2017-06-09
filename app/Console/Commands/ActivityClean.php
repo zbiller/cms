@@ -13,7 +13,7 @@ class ActivityClean extends Command
      *
      * @var string
      */
-    protected $signature = 'activity-log:clean';
+    protected $signature = 'activity:clean';
 
     /**
      * The console command description.
@@ -29,7 +29,7 @@ class ActivityClean extends Command
      */
     public function handle()
     {
-        $days = (int)config('activity-log.delete_records_older_than');
+        $days = (int)config('activity.delete_records_older_than');
 
         if (!($days > 0)) {
             $this->info("Could not clean up the activity because the key 'delete_records_older_than' is not set in the config/activity-log.php file.");

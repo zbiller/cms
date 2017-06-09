@@ -61,7 +61,7 @@ class MenuComposer
             });
 
             $menu->add(function ($item) use ($menu) {
-                $access = $item->name('Access Control')->data('icon', 'fa-sign-in')->active('admin/admin-roles/*', 'admin/admin-users/*', 'admin/approvals/*', 'admin/activity-logs/*');
+                $access = $item->name('Access Control')->data('icon', 'fa-sign-in')->active('admin/admins/*', 'admin/roles/*', 'admin/activity/*');
 
                 $menu->child($access, function (MenuItem $item) {
                     $item->name('Admins')->url(route('admin.admins.index'))->permissions('admins-list')->active('admin/admins/*');

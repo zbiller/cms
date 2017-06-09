@@ -30,7 +30,7 @@ trait HasActivity
             return;
         }
 
-        if (config('activity-log.enabled') !== true) {
+        if (config('activity.enabled') !== true) {
             return;
         }
 

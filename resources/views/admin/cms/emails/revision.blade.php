@@ -26,4 +26,4 @@
     </section>
 @endsection
 
-{!! revision()->view($revision) !!}
+{!! revision()->view($revision, $item) !!}

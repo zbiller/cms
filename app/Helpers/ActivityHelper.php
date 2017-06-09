@@ -52,8 +52,8 @@ class ActivityHelper
 
     public function __construct()
     {
-        $this->logEnabled = config('activity-log.enabled');
-        $this->clearOldRecords = config('activity-log.delete_records_older_than');
+        $this->logEnabled = config('activity.enabled');
+        $this->clearOldRecords = config('activity.delete_records_older_than');
         $this->activity = app(Activity::class);
     }
 

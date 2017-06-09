@@ -186,6 +186,7 @@ trait HasRevisions
 
             return true;
         } catch (Exception $e) {
+            dd($e);
             throw new RevisionException(
                 'Could not rollback the record to the specified revision!', $e->getCode(), $e
             );
@@ -440,13 +441,23 @@ trait HasRevisions
     protected function rollbackDirectRelationToRevision($relation, $attributes)
     {
         foreach ($attributes->records->items as $item) {
-            $rel = $this->{$relation}()->findOrNew(
+            $related = $this->{$relation}();
+
+            if (array_key_exists(SoftDeletes::class, class_uses($this->{$relation}))) {
+                $related = $related->withTrashed();
+            }
+
+            $rel = $related->findOrNew(
                 isset($item->{$attributes->records->primary_key}) ?
                     $item->{$attributes->records->primary_key} : null
             );
 
             foreach ($item as $field => $value) {
                 $rel->attributes[$field] = $value;
+            }
+
+            if (array_key_exists(SoftDeletes::class, class_uses($rel))) {
+                $rel->{$rel->getDeletedAtColumn()} = null;
             }
 
             $rel->save();
@@ -473,7 +484,13 @@ trait HasRevisions
     protected function rollbackPivotedRelationToRevision($relation, $attributes)
     {
         foreach ($attributes->records->items as $item) {
-            $rel = $this->{$relation}()->getRelated()->findOrNew(
+            $related = $this->{$relation}()->getRelated();
+
+            if (array_key_exists(SoftDeletes::class, class_uses($related))) {
+                $related = $related->withTrashed();
+            }
+
+            $rel = $related->findOrNew(
                 isset($item->{$attributes->records->primary_key}) ?
                     $item->{$attributes->records->primary_key} : null
             );
@@ -483,6 +500,9 @@ trait HasRevisions
                     $rel->attributes[$field] = $value;
                 }
 
+                $rel->save();
+            } if (array_key_exists(SoftDeletes::class, class_uses($rel))) {
+                $rel->{$rel->getDeletedAtColumn()} = null;
                 $rel->save();
             }
         }

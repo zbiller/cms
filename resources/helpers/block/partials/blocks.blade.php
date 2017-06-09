@@ -40,3 +40,9 @@
         @endforeach
     @endif
 </div>
+
+@php
+    if (isset($model) && @array_key_exists(\App\Traits\IsCacheable::class, class_uses($model))) {
+        $model->clearQueryCache();
+    }
+@endphp

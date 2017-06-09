@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Services\CacheService;
 use DB;
 use Meta;
 use Route;
@@ -421,7 +422,10 @@ trait CanCrud
                 call_user_func($function);
             }
 
+            CacheService::disableQueryCache();
+
             session()->flash('is_preview', true);
+
             return (new ControllerDispatcher(app()))->dispatch(app(Router::class)->setAction([
                 'model' => $this->item
             ]), app($this->item->getUrlOptions()->routeController), $this->item->getUrlOptions()->routeAction);
@@ -482,6 +486,7 @@ trait CanCrud
     {
         return $this->performGetCrudRequest(function () use ($function, $draft) {
             DB::beginTransaction();
+            CacheService::disableQueryCache();
 
             if (!session('draft_back_url_' . $draft->id)) {
                 session()->put('draft_back_url_' . $draft->id, url()->previous());
