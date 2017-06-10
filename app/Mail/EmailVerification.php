@@ -2,8 +2,9 @@
 
 namespace App\Mail;
 
-use App\Models\Cms\Email;
+use App\Exceptions\EmailException;
 use Crypt;
+use App\Models\Cms\Email;
 use Illuminate\Mail\Mailable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -42,6 +43,7 @@ class EmailVerification extends Mailable
      * Build the message.
      *
      * @return $this
+     * @throws EmailException
      */
     public function build()
     {

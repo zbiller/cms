@@ -49,7 +49,7 @@ trait IsCacheable
      */
     protected function newBaseQueryBuilder()
     {
-        if (CacheService::canCacheQueries()) {
+        if (CacheService::shouldCacheQueries() && CacheService::canCacheQueries()) {
             $conn = $this->getConnection();
             $grammar = $conn->getQueryGrammar();
 

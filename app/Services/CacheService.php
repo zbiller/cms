@@ -72,7 +72,7 @@ class CacheService
      */
     public static function flushAllCache()
     {
-        if (self::shouldCacheQueries()) {
+        if (self::shouldCacheQueries() && self::canCacheQueries()) {
             cache()->store(self::$store)->flush();
         }
     }

@@ -14,7 +14,7 @@ use App\Options\ActivityOptions;
 use App\Options\VerifyOptions;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Notifications\Notifiable;
-use App\Notifications\ResetPasswordNotification;
+use App\Notifications\ResetPassword;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -331,9 +331,7 @@ class User extends Authenticatable
      */
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new ResetPasswordNotification(
-            $token, (str_contains(request()->url(), 'admin') ? 'admin.' : '') . 'password.change'
-        ));
+        $this->notify(new ResetPassword($this, $token));
     }
 
     /**
