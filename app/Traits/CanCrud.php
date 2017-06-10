@@ -4,7 +4,6 @@ namespace App\Traits;
 
 use App\Services\CacheService;
 use DB;
-use Meta;
 use Route;
 use Closure;
 use Exception;

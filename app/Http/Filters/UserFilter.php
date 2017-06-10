@@ -2,7 +2,7 @@
 
 namespace App\Http\Filters;
 
-class AdminFilter extends Filter
+class UserFilter extends Filter
 {
     /**
      * Get the main where condition between entire request fields.
@@ -23,7 +23,7 @@ class AdminFilter extends Filter
     {
         return [
             'search' => 'operator:like|condition:or|columns:username,person.first_name,person.last_name,person.email,person.phone',
-            'role' => 'operator:=|condition:or|columns:roles.role_id',
+            'verified' => 'operator:=|condition:or|columns:verified',
             'start_date' => 'operator:date >=|condition:or|columns:users.created_at',
             'end_date' => 'operator:date <=|condition:or|columns:users.created_at',
         ];

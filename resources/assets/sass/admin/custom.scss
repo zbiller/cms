@@ -290,3 +290,12 @@ td .upload-aligned-image {
     float: right;
     max-width: 100%;
 }
+
+/* User Styles */
+.actions-users {
+    width: 283px !important;
+
+    @include media-query('tablet') {
+        width: 116px !important;
+    }
+}

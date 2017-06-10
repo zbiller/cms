@@ -93,21 +93,22 @@ Route::group([
             'namespace' => 'Acl',
         ], function () {
             /**
-             * CRUD Admin Groups.
+             * CRUD Users.
              */
             Route::group([
-                'prefix' => 'roles',
+                'prefix' => 'users',
             ], function () {
-                Route::get('/', ['as' => 'admin.roles.index', 'uses' => 'RolesController@index', 'permissions' => 'roles-list']);
-                Route::get('create', ['as' => 'admin.roles.create', 'uses' => 'RolesController@create', 'permissions' => 'roles-add']);
-                Route::get('edit/{role}', ['as' => 'admin.roles.edit', 'uses' => 'RolesController@edit', 'permissions' => 'roles-edit']);
-                Route::post('store', ['as' => 'admin.roles.store', 'uses' => 'RolesController@store', 'permissions' => 'roles-add']);
-                Route::put('update/{role}', ['as' => 'admin.roles.update', 'uses' => 'RolesController@update', 'permissions' => 'roles-edit']);
-                Route::delete('destroy/{role}', ['as' => 'admin.roles.destroy', 'uses' => 'RolesController@destroy', 'permissions' => 'roles-delete']);
+                Route::get('/', ['as' => 'admin.users.index', 'uses' => 'UsersController@index', 'permissions' => 'users-list']);
+                Route::get('create', ['as' => 'admin.users.create', 'uses' => 'UsersController@create', 'permissions' => 'users-add']);
+                Route::get('edit/{user}', ['as' => 'admin.users.edit', 'uses' => 'UsersController@edit', 'permissions' => 'users-edit']);
+                Route::post('store', ['as' => 'admin.users.store', 'uses' => 'UsersController@store', 'permissions' => 'users-add']);
+                Route::put('update/{user}', ['as' => 'admin.users.update', 'uses' => 'UsersController@update', 'permissions' => 'users-edit']);
+                Route::delete('destroy/{user}', ['as' => 'admin.users.destroy', 'uses' => 'UsersController@destroy', 'permissions' => 'users-delete']);
+                Route::post('impersonate/{user}', ['as' => 'admin.users.impersonate', 'uses' => 'UsersController@impersonate', 'permissions' => 'users-impersonate']);
             });
 
             /**
-             * CRUD Admin Users.
+             * CRUD Admins.
              */
             Route::group([
                 'prefix' => 'admins',
@@ -118,6 +119,20 @@ Route::group([
                 Route::post('store', ['as' => 'admin.admins.store', 'uses' => 'AdminsController@store', 'permissions' => 'admins-add']);
                 Route::put('update/{user}', ['as' => 'admin.admins.update', 'uses' => 'AdminsController@update', 'permissions' => 'admins-edit']);
                 Route::delete('destroy/{user}', ['as' => 'admin.admins.destroy', 'uses' => 'AdminsController@destroy', 'permissions' => 'admins-delete']);
+            });
+
+            /**
+             * CRUD Roles.
+             */
+            Route::group([
+                'prefix' => 'roles',
+            ], function () {
+                Route::get('/', ['as' => 'admin.roles.index', 'uses' => 'RolesController@index', 'permissions' => 'roles-list']);
+                Route::get('create', ['as' => 'admin.roles.create', 'uses' => 'RolesController@create', 'permissions' => 'roles-add']);
+                Route::get('edit/{role}', ['as' => 'admin.roles.edit', 'uses' => 'RolesController@edit', 'permissions' => 'roles-edit']);
+                Route::post('store', ['as' => 'admin.roles.store', 'uses' => 'RolesController@store', 'permissions' => 'roles-add']);
+                Route::put('update/{role}', ['as' => 'admin.roles.update', 'uses' => 'RolesController@update', 'permissions' => 'roles-edit']);
+                Route::delete('destroy/{role}', ['as' => 'admin.roles.destroy', 'uses' => 'RolesController@destroy', 'permissions' => 'roles-delete']);
             });
 
             /**

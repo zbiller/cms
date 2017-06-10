@@ -44,6 +44,7 @@ class User extends Authenticatable
         'password',
         'email',
         'type',
+        'verified',
     ];
 
     /**
@@ -79,6 +80,16 @@ class User extends Authenticatable
      */
     const SUPER_NO = 0;
     const SUPER_YES = 1;
+
+    /**
+     * The property defining the user "verified" states.
+     *
+     * @var array
+     */
+    public static $verified = [
+        self::VERIFIED_NO => 'No',
+        self::VERIFIED_YES => 'Yes',
+    ];
 
     /**
      * The "booting" method of the model.
@@ -178,16 +189,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Exclude the "developer" user from the query results.
-     *
-     * @param Builder $query
-     */
-    public function scopeNotDeveloper($query)
-    {
-        $query->where('username', '!=', 'developer');
-    }
-
-    /**
      * Get the user's first name.
      *
      * @return string|null
@@ -262,38 +263,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Override route model binding default column value.
-     * This is done because the user is joined with person by the global scope.
-     * Otherwise, the model binding will throw an "ambiguous column" error.
-     *
-     * @return string
-     */
-    public function getRouteKeyName()
-    {
-        return $this->getTable() . '.' . $this->getKeyName();
-    }
-
-    /**
-     * Get the name of the unique identifier for the user.
-     *
-     * @return string
-     */
-    public function getAuthIdentifierName()
-    {
-        return $this->getTable() . '.' . $this->getKeyName();
-    }
-
-    /**
-     * Get the unique identifier for the user.
-     *
-     * @return mixed
-     */
-    public function getAuthIdentifier()
-    {
-        return $this->{$this->getKeyName()};
-    }
-
-    /**
      * Determine if the current user is an admin.
      *
      * @return bool
@@ -321,6 +290,38 @@ class User extends Authenticatable
     public function isDeveloper()
     {
         return $this->username === 'developer';
+    }
+
+    /**
+     * Get the unique identifier for the user.
+     *
+     * @return mixed
+     */
+    public function getAuthIdentifier()
+    {
+        return $this->{$this->getKeyName()};
+    }
+
+    /**
+     * Get the name of the unique identifier for the user.
+     *
+     * @return string
+     */
+    public function getAuthIdentifierName()
+    {
+        return $this->getTable() . '.' . $this->getKeyName();
+    }
+
+    /**
+     * Override route model binding default column value.
+     * This is done because the user is joined with person by the global scope.
+     * Otherwise, the model binding will throw an "ambiguous column" error.
+     *
+     * @return string
+     */
+    public function getRouteKeyName()
+    {
+        return $this->getTable() . '.' . $this->getKeyName();
     }
 
     /**

@@ -352,6 +352,38 @@ class PermissionsSeeder extends Seeder
                 'name' => 'admins-delete',
             ],
         ],
+        'Users' => [
+            'List' => [
+                'group' => 'Users',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'users-list',
+            ],
+            'Add' => [
+                'group' => 'Users',
+                'label' => 'Add',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'users-add',
+            ],
+            'Edit' => [
+                'group' => 'Users',
+                'label' => 'Edit',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'users-edit',
+            ],
+            'Delete' => [
+                'group' => 'Users',
+                'label' => 'Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'users-delete',
+            ],
+            'Impersonate' => [
+                'group' => 'Users',
+                'label' => 'Impersonate',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'users-impersonate',
+            ],
+        ],
     ];
 
     /**
