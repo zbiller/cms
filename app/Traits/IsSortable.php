@@ -11,41 +11,43 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 trait IsSortable
 {
-    /**
-     * The query builder instance from the Sorted scope.
-     *
-     * @var Builder
-     */
-    protected $sortQuery;
+    protected $sort = [
+        /**
+         * The query builder instance from the Sorted scope.
+         *
+         * @var Builder
+         */
+        'query' => null,
 
-    /**
-     * The App\Http\Sorts\Sort instance.
-     * This is used to get the sorting rules, just like a request.
-     *
-     * @var Sort
-     */
-    protected $sortInstance;
+        /**
+         * The request object passed from the controller applying the "filtered" scope on a model.
+         *
+         * @var Request
+         */
+        'request' => null,
 
-    /**
-     * The request object passed from the controller applying the "filtered" scope on a model.
-     *
-     * @var Request
-     */
-    protected $sortRequest;
+        /**
+         * The App\Http\Sorts\Sort instance.
+         * This is used to get the sorting rules, just like a request.
+         *
+         * @var Sort
+         */
+        'instance' => null,
 
-    /**
-     * The field to sort by.
-     *
-     * @var string
-     */
-    protected $sortField = Sort::DEFAULT_SORT_FIELD;
+        /**
+         * The field to sort by.
+         *
+         * @var string
+         */
+        'field' => Sort::DEFAULT_SORT_FIELD,
 
-    /**
-     * The direction to sort in.
-     *
-     * @var string
-     */
-    protected $sortDirection = Sort::DEFAULT_DIRECTION_FIELD;
+        /**
+         * The direction to sort in.
+         *
+         * @var string
+         */
+        'direction' => Sort::DEFAULT_DIRECTION_FIELD,
+    ];
 
     /**
      * The filter scope.
@@ -58,9 +60,9 @@ trait IsSortable
      */
     public function scopeSorted($query, Request $request, Sort $sort = null)
     {
-        $this->sortQuery = $query;
-        $this->sortRequest = $request;
-        $this->sortInstance = $sort;
+        $this->sort['query'] = $query;
+        $this->sort['request'] = $request;
+        $this->sort['instance'] = $sort;
 
         $this->setFieldToSortBy();
         $this->setDirectionToSortIn();
@@ -68,8 +70,8 @@ trait IsSortable
         if ($this->isValidSort()) {
             $this->checkSortingDirection();
 
-            if ($this->sortRequest->get($this->sortDirection) == Sort::DIRECTION_RANDOM) {
-                $this->sortQuery->inRandomOrder();
+            if ($this->sort['request']->get($this->sort['direction']) == Sort::DIRECTION_RANDOM) {
+                $this->sort['query']->inRandomOrder();
             } else {
                 if ($this->shouldSortByRelation()) {
                     $this->sortByRelation();
@@ -87,7 +89,7 @@ trait IsSortable
      */
     private function sortByRelation()
     {
-        list($relation, $field) = explode('.', $this->sortRequest->get($this->sortField));
+        list($relation, $field) = explode('.', $this->sort['request']->get($this->sort['field']));
 
         $this->checkRelationToSortBy($relation);
 
@@ -98,10 +100,10 @@ trait IsSortable
             $this->{$relation}()->getForeignKey();
 
         if (!$this->joinAlreadyExists($relationTable)) {
-            $this->sortQuery->join($relationTable, $modelTable . '.id', '=', $relationTable . '.' . $foreignKey);
+            $this->sort['query']->join($relationTable, $modelTable . '.id', '=', $relationTable . '.' . $foreignKey);
         }
 
-        $this->sortQuery->orderBy($relationTable . '.' . $field, $this->sortRequest->get($this->sortDirection));
+        $this->sort['query']->orderBy($relationTable . '.' . $field, $this->sort['request']->get($this->sort['direction']));
     }
 
     /**
@@ -111,7 +113,7 @@ trait IsSortable
      */
     private function sortNormally()
     {
-        $this->sortQuery->orderBy($this->sortRequest->get($this->sortField), $this->sortRequest->get($this->sortDirection));
+        $this->sort['query']->orderBy($this->sort['request']->get($this->sort['field']), $this->sort['request']->get($this->sort['direction']));
     }
 
     /**
@@ -121,7 +123,7 @@ trait IsSortable
      */
     private function isValidSort()
     {
-        return $this->sortRequest->isMethod('get') && $this->sortRequest->has($this->sortField) && $this->sortRequest->has($this->sortDirection);
+        return $this->sort['request']->isMethod('get') && $this->sort['request']->has($this->sort['field']) && $this->sort['request']->has($this->sort['direction']);
     }
 
     /**
@@ -131,8 +133,8 @@ trait IsSortable
      */
     private function setFieldToSortBy()
     {
-        if ($this->sortInstance instanceof Sort) {
-            $this->sortField = $this->sortInstance->field();
+        if ($this->sort['instance'] instanceof Sort) {
+            $this->sort['field'] = $this->sort['instance']->field();
         }
     }
 
@@ -143,8 +145,8 @@ trait IsSortable
      */
     private function setDirectionToSortIn()
     {
-        if ($this->sortInstance instanceof Sort) {
-            $this->sortDirection = $this->sortInstance->direction();
+        if ($this->sort['instance'] instanceof Sort) {
+            $this->sort['direction'] = $this->sort['instance']->direction();
         }
     }
 
@@ -153,7 +155,7 @@ trait IsSortable
      */
     private function shouldSortByRelation()
     {
-        return str_contains($this->sortRequest->get($this->sortField), '.');
+        return str_contains($this->sort['request']->get($this->sort['field']), '.');
     }
 
     /**
@@ -164,7 +166,7 @@ trait IsSortable
      */
     private function joinAlreadyExists($table)
     {
-        return str_contains($this->sortQuery->toSql(), '`' . $table . '`');
+        return str_contains($this->sort['query']->toSql(), '`' . $table . '`');
     }
 
     /**
@@ -175,10 +177,10 @@ trait IsSortable
      */
     private function checkSortingDirection()
     {
-        if (!in_array(strtolower($this->sortRequest->get($this->sortDirection)), array_map('strtolower', Sort::$directions))) {
+        if (!in_array(strtolower($this->sort['request']->get($this->sort['direction'])), array_map('strtolower', Sort::$directions))) {
             throw new SortException(
                 'Invalid sorting direction.' . PHP_EOL .
-                'You provided the direction: "' . $this->sortRequest->get($this->sortDirection) . '".' . PHP_EOL .
+                'You provided the direction: "' . $this->sort['request']->get($this->sort['direction']) . '".' . PHP_EOL .
                 'Please provide one of these directions: ' . implode('|', Sort::$directions) . '.'
             );
         }

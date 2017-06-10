@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use Closure;
+use BadMethodCallException;
 use App\Http\Filters\Filter;
 use App\Exceptions\FilterException;
 use Illuminate\Http\Request;
@@ -10,86 +11,88 @@ use Illuminate\Database\Eloquent\Builder;
 
 trait IsFilterable
 {
-    /**
-     * The query builder instance from the Filtered scope.
-     *
-     * @var Builder
-     */
-    protected $filterQuery;
+    protected $filter = [
+        /**
+         * The query builder instance from the Filtered scope.
+         *
+         * @var Builder
+         */
+        'query' => null,
 
-    /**
-     * The App\Http\Filters\Filter instance.
-     * This is used to get the filtering rules, just like a request.
-     *
-     * @var Filter
-     */
-    protected $filterInstance;
+        /**
+         * The App\Http\Filters\Filter instance.
+         * This is used to get the filtering rules, just like a request.
+         *
+         * @var Filter
+         */
+        'instance' => null,
 
-    /**
-     * The request object passed from the controller applying the "filtered" scope on a model.
-     *
-     * @var Request
-     */
-    protected $filterRequest;
+        /**
+         * The request object passed from the controller applying the "filtered" scope on a model.
+         *
+         * @var Request
+         */
+        'request' => null,
 
-    /**
-     * The main where condition between entire request fields.
-     * This can be either and | or.
-     *
-     * @var
-     */
-    protected $filterMorph;
+        /**
+         * The main where condition between entire request fields.
+         * This can be either and | or.
+         *
+         * @var
+         */
+        'morph' => null,
 
-    /**
-     * The actual where method used to filter: {or}Where{Not}{Null}{In}{Between}{Date}.
-     *
-     * @var
-     */
-    protected $filterMethod;
+        /**
+         * The actual where method used to filter: {or}Where{Not}{Null}{In}{Between}{Date}.
+         *
+         * @var
+         */
+        'method' => null,
 
-    /**
-     * The actual whereHas method used to filter by relations: {or}WhereHas.
-     *
-     * @var
-     */
-    protected $filterHaving;
+        /**
+         * The actual whereHas method used to filter by relations: {or}WhereHas.
+         *
+         * @var
+         */
+        'having' => null,
 
-    /**
-     * The request field name from a GET request.
-     *
-     * @var
-     */
-    protected $filterField;
+        /**
+         * The request field name from a GET request.
+         *
+         * @var
+         */
+        'field' => null,
 
-    /**
-     * The actual value of the GET request field.
-     *
-     * @var
-     */
-    protected $filterValue;
+        /**
+         * The actual value of the GET request field.
+         *
+         * @var
+         */
+        'value' => null,
 
-    /**
-     * Used for correctly filtering the records.
-     * One of the values from App\Http\Filters\Filter::$operators.
-     *
-     * @var
-     */
-    protected $filterOperator;
+        /**
+         * Used for correctly filtering the records.
+         * One of the values from App\Http\Filters\Filter::$operators.
+         *
+         * @var
+         */
+        'operator' => null,
 
-    /**
-     * Used for conditioning the filter on multiple columns.
-     * One of the values from App\Http\Filters\Filter::$conditions.
-     *
-     * @var
-     */
-    protected $filterCondition;
+        /**
+         * Used for conditioning the filter on multiple columns.
+         * One of the values from App\Http\Filters\Filter::$conditions.
+         *
+         * @var
+         */
+        'condition' => null,
 
-    /**
-     * One or more column names from the model's table.
-     *
-     * @var
-     */
-    protected $filterColumns;
+        /**
+         * One or more column names from the model's table.
+         *
+         * @var
+         */
+        'columns' => null,
+    ];
 
     /**
      * The filter scope.
@@ -102,12 +105,12 @@ trait IsFilterable
      */
     public function scopeFiltered($query, Request $request, Filter $filter)
     {
-        $this->filterQuery = $query;
-        $this->filterRequest = $request;
-        $this->filterInstance = $filter;
+        $this->filter['query'] = $query;
+        $this->filter['request'] = $request;
+        $this->filter['instance'] = $filter;
 
-        foreach ($this->filterInstance->filters() as $field => $options) {
-            $this->filterField = $field;
+        foreach ($this->filter['instance']->filters() as $field => $options) {
+            $this->filter['field'] = $field;
 
             if ($this->isValidFilter()) {
                 $this->setOperatorForFiltering($options);
@@ -134,10 +137,10 @@ trait IsFilterable
      */
     protected function morph()
     {
-        $this->filterMorph = 'where';
+        $this->filter['morph'] = 'where';
 
-        if (strtolower($this->filterInstance->morph()) == 'or') {
-            $this->filterMorph = 'or' . ucwords($this->filterMorph);
+        if (strtolower($this->filter['instance']->morph()) == 'or') {
+            $this->filter['morph'] = 'or' . ucwords($this->filter['morph']);
         }
 
         return $this;
@@ -152,8 +155,8 @@ trait IsFilterable
      */
     protected function filter()
     {
-        $this->filterQuery->{$this->filterMorph}(function ($query) {
-            foreach (explode(',', trim($this->filterColumns, ',')) as $column) {
+        $this->filter['query']->{$this->filter['morph']}(function ($query) {
+            foreach (explode(',', trim($this->filter['columns'], ',')) as $column) {
                 if ($this->shouldFilterByRelation($column)) {
                     $this->filterByRelation($query, $column);
                 } else {
@@ -178,13 +181,17 @@ trait IsFilterable
         $options[$relation][] = explode('.', $column)[1];
 
         foreach ($options as $relation => $columns) {
-            $query->{$this->filterHaving}($relation, function ($q) use ($columns) {
-                foreach ($columns as $index => $column) {
-                    $method = $index == 0 ? lcfirst(str_replace('or', '', $this->filterMethod)) : $this->filterMethod;
+            try {
+                $query->{$this->filter['having']}($relation, function ($q) use ($columns) {
+                    foreach ($columns as $index => $column) {
+                        $method = $index == 0 ? lcfirst(str_replace('or', '', $this->filter['method'])) : $this->filter['method'];
 
-                    $this->filterIndividually($q, $method, $column);
-                }
-            });
+                        $this->filterIndividually($q, $method, $column);
+                    }
+                });
+            } catch (BadMethodCallException $e) {
+                $this->filterIndividually($query, $this->filter['method'], $column);
+            }
         }
     }
 
@@ -197,7 +204,7 @@ trait IsFilterable
      */
     private function filterNormally(Builder $query, $column)
     {
-        $this->filterIndividually($query, $this->filterMethod, $column);
+        $this->filterIndividually($query, $this->filter['method'], $column);
     }
 
     /**
@@ -215,17 +222,17 @@ trait IsFilterable
                 $query->{$method}($column);
                 break;
             case str_contains($_method, Filter::OPERATOR_IN):
-                $query->{$method}($column, $this->filterValue);
+                $query->{$method}($column, $this->filter['value']);
                 break;
             case str_contains($_method, Filter::OPERATOR_BETWEEN):
-                $query->{$method}($column, $this->filterValue);
+                $query->{$method}($column, $this->filter['value']);
                 break;
             case str_contains($_method, Filter::OPERATOR_DATE):
-                $operator = explode(' ', $this->filterOperator);
-                $query->{$method}($column, (isset($operator[1]) ? $operator[1] : '='), $this->filterValue);
+                $operator = explode(' ', $this->filter['operator']);
+                $query->{$method}($column, (isset($operator[1]) ? $operator[1] : '='), $this->filter['value']);
                 break;
             default:
-                $query->{$method}($column, $this->filterOperator, $this->filterValue);
+                $query->{$method}($column, $this->filter['operator'], $this->filter['value']);
                 break;
         }
     }
@@ -237,7 +244,7 @@ trait IsFilterable
      */
     private function isValidFilter()
     {
-        return $this->filterRequest->isMethod('get') && $this->isValidFilterField() && !$this->isNullFilterField();
+        return $this->filter['request']->isMethod('get') && $this->isValidFilterField() && !$this->isNullFilterField();
     }
 
     /**
@@ -247,7 +254,7 @@ trait IsFilterable
      */
     private function isValidFilterField()
     {
-        return $this->filterRequest->has($this->filterField) || in_array($this->filterField, Filter::$fields);
+        return $this->filter['request']->has($this->filter['field']) || in_array($this->filter['field'], Filter::$fields);
     }
 
     /**
@@ -257,18 +264,18 @@ trait IsFilterable
      */
     private function isNullFilterField()
     {
-        if (is_array($this->filterRequest->get($this->filterField))) {
+        if (is_array($this->filter['request']->get($this->filter['field']))) {
             $count = 0;
 
-            foreach ($this->filterRequest->get($this->filterField) as $value) {
+            foreach ($this->filter['request']->get($this->filter['field']) as $value) {
                 if ($value === null) {
                     $count++;
                 }
             }
 
-            return $count == count($this->filterRequest->get($this->filterField));
+            return $count == count($this->filter['request']->get($this->filter['field']));
         } else {
-            return is_null($this->filterRequest->get($this->filterField));
+            return is_null($this->filter['request']->get($this->filter['field']));
         }
     }
 
@@ -292,30 +299,30 @@ trait IsFilterable
      */
     private function setMethodsOfFiltering()
     {
-        $this->filterMethod = 'where';
-        $this->filterHaving = 'whereHas';
+        $this->filter['method'] = 'where';
+        $this->filter['having'] = 'whereHas';
 
-        if ($this->filterCondition == Filter::CONDITION_OR) {
-            $this->filterMethod = 'or' . ucwords($this->filterMethod);
-            $this->filterHaving = 'or' . ucwords($this->filterHaving);
+        if ($this->filter['condition'] == Filter::CONDITION_OR) {
+            $this->filter['method'] = 'or' . ucwords($this->filter['method']);
+            $this->filter['having'] = 'or' . ucwords($this->filter['having']);
         }
 
-        if (str_contains(strtolower($this->filterOperator), 'not')) {
-            $this->filterMethod = $this->filterMethod . 'Not';
+        if (str_contains(strtolower($this->filter['operator']), 'not')) {
+            $this->filter['method'] = $this->filter['method'] . 'Not';
         }
 
-        switch ($operator = strtolower($this->filterOperator)) {
+        switch ($operator = strtolower($this->filter['operator'])) {
             case str_contains($operator, 'null'):
-                $this->filterMethod = $this->filterMethod . 'Null';
+                $this->filter['method'] = $this->filter['method'] . 'Null';
                 break;
             case str_contains($operator, 'in'):
-                $this->filterMethod = $this->filterMethod . 'In';
+                $this->filter['method'] = $this->filter['method'] . 'In';
                 break;
             case str_contains($operator, 'between'):
-                $this->filterMethod = $this->filterMethod . 'Between';
+                $this->filter['method'] = $this->filter['method'] . 'Between';
                 break;
             case str_contains($operator, 'date'):
-                $this->filterMethod = $this->filterMethod . 'Date';
+                $this->filter['method'] = $this->filter['method'] . 'Date';
                 break;
         }
     }
@@ -330,28 +337,28 @@ trait IsFilterable
     private function setValueToFilterBy()
     {
         if (
-            method_exists($this->filterInstance, 'modifiers') &&
-            array_key_exists($this->filterField, $this->filterInstance->modifiers())
+            method_exists($this->filter['instance'], 'modifiers') &&
+            array_key_exists($this->filter['field'], $this->filter['instance']->modifiers())
         ) {
-            foreach ($this->filterInstance->modifiers() as $field => $value) {
-                if ($field == $this->filterField) {
-                    $this->filterValue = $value instanceof Closure ? $value(null) : $value;
+            foreach ($this->filter['instance']->modifiers() as $field => $value) {
+                if ($field == $this->filter['field']) {
+                    $this->filter['value'] = $value instanceof Closure ? $value(null) : $value;
                     break;
                 }
             }
         } else {
-            $this->filterValue = $this->filterRequest->get($this->filterField);
+            $this->filter['value'] = $this->filter['request']->get($this->filter['field']);
         }
 
-        switch ($operator = strtolower($this->filterOperator)) {
+        switch ($operator = strtolower($this->filter['operator'])) {
             case str_contains($operator, Filter::OPERATOR_LIKE):
-                $this->filterValue = "%" . $this->filterValue . "%";
+                $this->filter['value'] = "%" . $this->filter['value'] . "%";
                 break;
             case str_contains($operator, Filter::OPERATOR_IN):
-                $this->filterValue = (array)$this->filterValue;
+                $this->filter['value'] = (array)$this->filter['value'];
                 break;
             case str_contains($operator, Filter::OPERATOR_BETWEEN):
-                $this->filterValue = (array)$this->filterValue;
+                $this->filter['value'] = (array)$this->filter['value'];
                 break;
         }
     }
@@ -368,7 +375,7 @@ trait IsFilterable
             $arguments = explode(':', $option);
 
             if (strtolower($arguments[0]) == 'operator') {
-                $this->filterOperator = $arguments[1];
+                $this->filter['operator'] = $arguments[1];
             }
         }
     }
@@ -385,7 +392,7 @@ trait IsFilterable
             $arguments = explode(':', $option);
 
             if (strtolower($arguments[0]) == 'condition') {
-                $this->filterCondition = $arguments[1];
+                $this->filter['condition'] = $arguments[1];
             }
         }
     }
@@ -402,7 +409,7 @@ trait IsFilterable
             $arguments = explode(':', $option);
 
             if (strtolower($arguments[0]) == 'columns') {
-                $this->filterColumns = $arguments[1];
+                $this->filter['columns'] = $arguments[1];
             }
         }
     }
@@ -416,10 +423,10 @@ trait IsFilterable
      */
     private function checkOperatorForFiltering()
     {
-        if (!isset($this->filterOperator) || !in_array(strtolower($this->filterOperator), array_map('strtolower', Filter::$operators))) {
+        if (!isset($this->filter['operator']) || !in_array(strtolower($this->filter['operator']), array_map('strtolower', Filter::$operators))) {
             throw new FilterException(
                 'For each request field declared as filterable, you must specify an operator type.' . PHP_EOL .
-                'Please specify an operator for "' . $this->filterField . '" in "' . get_class($this->filterInstance) . '".' . PHP_EOL .
+                'Please specify an operator for "' . $this->filter['field'] . '" in "' . get_class($this->filter['instance']) . '".' . PHP_EOL .
                 'Example: ---> "field" => "...operator:like..."'
             );
         }
@@ -434,10 +441,10 @@ trait IsFilterable
      */
     private function checkConditionToFilterBy()
     {
-        if (!isset($this->filterCondition) || !in_array(strtolower($this->filterCondition), array_map('strtolower', Filter::$conditions))) {
+        if (!isset($this->filter['condition']) || !in_array(strtolower($this->filter['condition']), array_map('strtolower', Filter::$conditions))) {
             throw new FilterException(
                 'For each request field declared as filterable, you must specify a condition type.' . PHP_EOL .
-                'Please specify a condition for "' . $this->filterField . '" in "' . get_class($this->filterInstance) . '".' . PHP_EOL .
+                'Please specify a condition for "' . $this->filter['field'] . '" in "' . get_class($this->filter['instance']) . '".' . PHP_EOL .
                 'Example: ---> "field" => "...condition:or..."'
             );
         }
@@ -452,10 +459,10 @@ trait IsFilterable
      */
     private function checkColumnsToFilterIn()
     {
-        if (!isset($this->filterColumns) || empty($this->filterColumns)) {
+        if (!isset($this->filter['columns']) || empty($this->filter['columns'])) {
             throw new FilterException(
                 'For each request field declared as filterable, you must specify the used columns.' . PHP_EOL .
-                'Please specify the columns for "' . $this->filterField . '" in "' . get_class($this->filterInstance) . '"' . PHP_EOL .
+                'Please specify the columns for "' . $this->filter['field'] . '" in "' . get_class($this->filter['instance']) . '"' . PHP_EOL .
                 'Example: ---> "field" => "...columns:name,content..."'
             );
         }
