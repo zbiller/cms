@@ -1,0 +1,72 @@
+<?php
+
+namespace App\Models\Config;
+
+use App\Models\Model;
+use App\Traits\IsCacheable;
+use Illuminate\Database\Eloquent\Builder;
+
+class Setting extends Model
+{
+    use IsCacheable;
+
+    /**
+     * The database table.
+     *
+     * @var string
+     */
+    protected $table = 'settings';
+
+    /**
+     * The attributes that mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'key',
+        'value',
+    ];
+
+    /**
+     * Sort the query with newest records first.
+     *
+     * @param Builder $query
+     */
+    public function scopeNewest($query)
+    {
+        $query->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Sort the query alphabetically by name.
+     *
+     * @param Builder $query
+     */
+    public function scopeAlphabetically($query)
+    {
+        $query->orderBy('key', 'asc');
+    }
+
+    /**
+     * Filter the query to return only logs containing the specified subject type.
+     *
+     * @param Builder $query
+     * @param string $key
+     * @return mixed
+     */
+    public function scopeKey($query, $key)
+    {
+        return $query->where('key', $key);
+    }
+
+    /**
+     * Get the setting related to the specified key.
+     *
+     * @param string $key
+     * @return mixed
+     */
+    public static function findByKey($key)
+    {
+        return static::key($key)->first();
+    }
+}

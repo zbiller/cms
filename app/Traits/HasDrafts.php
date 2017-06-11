@@ -2,9 +2,7 @@
 
 namespace App\Traits;
 
-use App\Models\Cms\Block;
 use DB;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Relation;
 use Closure;
 use Exception;
@@ -16,6 +14,7 @@ use App\Scopes\DraftingScope;
 use App\Options\DraftOptions;
 use App\Sniffers\ModelSniffer;
 use App\Exceptions\DraftException;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 trait HasDrafts
 {

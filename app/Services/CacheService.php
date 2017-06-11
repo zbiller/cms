@@ -18,19 +18,21 @@ class CacheService
     protected static $model;
 
     /**
-     * The cache storage.
-     * For the moment, because cache tags are used, only Redis is supported.
-     *
-     * @var string
-     */
-    protected static $store = 'redis';
-
-    /**
      * Flag whether or not to cache queries for the current request.
      *
      * @var bool
      */
     protected static $cacheQueries = true;
+
+    /**
+     * Get the cache store to be used when caching queries.
+     *
+     * @return string
+     */
+    public static function getQueryCacheStore()
+    {
+        return config('cache.query.store') ?: 'redis';
+    }
 
     /**
      * Get the cache prefix to be appended to the specific cache tag for the model instance.
@@ -73,7 +75,7 @@ class CacheService
     public static function flushAllCache()
     {
         if (self::shouldCacheQueries() && self::canCacheQueries()) {
-            cache()->store(self::$store)->flush();
+            cache()->store(self::getQueryCacheStore())->flush();
         }
     }
 
@@ -94,14 +96,14 @@ class CacheService
         try {
             self::$model = $model;
 
-            cache()->store(self::$store)->tags(self::$model->getQueryCacheTag())->flush();
+            cache()->store(self::getQueryCacheStore())->tags(self::$model->getQueryCacheTag())->flush();
 
             foreach ((new ModelSniffer())->getAllRelations(self::$model) as $relation => $attributes) {
                 if (
                     isset($attributes['model']) && ($related = $attributes['model']) &&
                     $related instanceof Model && array_key_exists(IsCacheable::class, class_uses($related))
                 ) {
-                    cache()->store(self::$store)->tags($related->getQueryCacheTag())->flush();
+                    cache()->store(self::getQueryCacheStore())->tags($related->getQueryCacheTag())->flush();
                 }
             }
         } catch (Exception $e) {

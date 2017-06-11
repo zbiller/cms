@@ -47,7 +47,15 @@ class EmailVerification extends Mailable
      */
     public function build()
     {
-        $this->subject($this->email && $this->email->subject ? $this->email->subject : 'Account Verification');
+        $this->from(
+            setting()->value('company-email') ?: config('mail.from.address'),
+            setting()->value('company-name') ?: config('mail.from.name')
+        );
+
+        $this->subject(
+            $this->email && $this->email->subject ? $this->email->subject : 'Account Verification'
+        );
+
         $this->markdown($this->email->getView(), $this->email->getData([
             'url' => route('register.verify', [
                 'token' => Crypt::encrypt($this->user->verification_token),

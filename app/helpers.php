@@ -134,6 +134,16 @@ if (!function_exists('revision')) {
     }
 }
 
+if (!function_exists('setting')) {
+    /**
+     * @return \App\Helpers\SettingHelper
+     */
+    function setting()
+    {
+        return new App\Helpers\SettingHelper();
+    }
+}
+
 if (!function_exists('preview')) {
     /**
      * @return \App\Helpers\PreviewHelper

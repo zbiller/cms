@@ -90,7 +90,7 @@ return [
 
     /*
     |---------------------------------------------------------------------------------------------------
-    | Query Caching Flag
+    | Query Caching
     |---------------------------------------------------------------------------------------------------
     |
     | Every model by default implements a trait called IsCacheable.
@@ -103,11 +103,11 @@ return [
 
         /**
          * Flag indicating whether or not query caching should run.
-         * By default, it's set to "false". If you want to enable it, set the "ENABLE_QUERY_CACHE=true" in .env
+         * By default, it's set to "false". If you want to enable it, set the "ENABLE_QUERY_CACHE=true" in .env file.
          *
          * IMPORTANT:
-         * Please note that event if query caching is enabled inside the .env file some other constraints still apply:
-         * 1. APP_ENV must not be "development" (in development no caching will happen, so debug is possible)
+         * Please note that even if query caching is enabled inside the .env file some other constraints still apply:
+         * 1. APP_ENV must not be "development" (in development mode no caching will happen, so debug is possible).
          */
         'enabled' => env('ENABLE_QUERY_CACHE', false),
 
@@ -120,6 +120,7 @@ return [
         /**
          * The value to prefix all query cache tags.
          * This is not the general cache prefix (that is still the value of the key 'prefix' from this file).
+         * This value only acts as prefix for query cache tags.
          */
         'prefix' => 'cache.query',
 

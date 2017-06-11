@@ -57,7 +57,15 @@ class PasswordRecovery extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        $this->subject($this->email && $this->email->subject ? $this->email->subject : 'Password Reset');
+        $this->from(
+            setting()->value('company-email') ?: config('mail.from.address'),
+            setting()->value('company-name') ?: config('mail.from.name')
+        );
+
+        $this->subject(
+            $this->email && $this->email->subject ? $this->email->subject : 'Password Reset'
+        );
+
         $this->markdown($this->email->getView(), $this->email->getData([
             'url' => route($this->user->isAdmin() ? 'admin.password.change' : 'password.change', $this->token)
         ]));

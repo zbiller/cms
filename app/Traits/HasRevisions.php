@@ -3,7 +3,6 @@
 namespace App\Traits;
 
 use DB;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Relation;
 use Closure;
 use Exception;
@@ -13,6 +12,7 @@ use App\Models\Version\Revision;
 use App\Sniffers\ModelSniffer;
 use App\Options\RevisionOptions;
 use App\Exceptions\RevisionException;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 trait HasRevisions
 {

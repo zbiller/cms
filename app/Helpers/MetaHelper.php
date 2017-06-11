@@ -146,7 +146,7 @@ class MetaTag
     public static function tag($key, $value)
     {
         if (in_array($key, self::$available, true)) {
-            return '<'.$key.'>' . (strtolower($key) == 'title' ? $value . ' - ' . config('app.name') : $value) . '</'.$key.'>';
+            return '<'.$key.'>' . (strtolower($key) == 'title' ? $value . ' - ' . (setting()->value('company-name') ?: config('app.name')) : $value) . '</'.$key.'>';
         }
 
         if (in_array($key, self::$custom, true)) {

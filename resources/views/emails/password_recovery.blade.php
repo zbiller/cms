@@ -16,6 +16,6 @@
 
 @component('mail::subcopy')
 Thank you!<br>
-{{ config('app.name') }}
+{{ setting()->value('company-name') ?: config('app.name') }}
 @endcomponent
 @endcomponent

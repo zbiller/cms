@@ -80,6 +80,18 @@ class MenuComposer
                 });
             });
 
+            $menu->add(function ($item) use ($menu) {
+                $access = $item->name('System Settings')->data('icon', 'fa-cog')->active('admin/settings/*');
+
+                $menu->child($access, function (MenuItem $item) {
+                    $item->name('Company')->url(route('admin.settings.company'))->permissions('settings-company')->active('admin/settings/company/*');
+                });
+
+                $menu->child($access, function (MenuItem $item) {
+                    $item->name('Analytics')->url(route('admin.settings.analytics'))->permissions('settings-analytics')->active('admin/settings/analytics/*');
+                });
+            });
+
             /*$menu->add(function (MenuItem $item) use ($menu) {
                 $test = $item->name('Test')->data('icon', 'fa-text-width')->active('admin/cars/*');
 
