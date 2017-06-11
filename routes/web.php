@@ -363,11 +363,11 @@ Route::group([
          * CRUD Test (Cars)
          */
         Route::group([
-            'namespace' => 'Settings',
+            'namespace' => 'Config',
             'prefix' => 'settings',
         ], function () {
-            Route::match(['get', 'post'], 'company', ['as' => 'admin.settings.company', 'uses' => 'CompanyController@index']);
-            Route::match(['get', 'post'], 'analytics', ['as' => 'admin.settings.analytics', 'uses' => 'AnalyticsController@index']);
+            Route::match(['get', 'post'], 'company', ['as' => 'admin.settings.company', 'uses' => 'SettingsController@company']);
+            Route::match(['get', 'post'], 'analytics', ['as' => 'admin.settings.analytics', 'uses' => 'SettingsController@analytics']);
         });
 
         /**
