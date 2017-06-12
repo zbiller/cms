@@ -84,7 +84,7 @@ class MenuComposer
                 $access = $item->name('System Settings')->data('icon', 'fa-cog')->active('admin/settings/*');
 
                 $menu->child($access, function (MenuItem $item) {
-                    $item->name('Company')->url(route('admin.settings.company'))->permissions('settings-company')->active('admin/settings/company/*');
+                    $item->name('General')->url(route('admin.settings.general'))->permissions('settings-general')->active('admin/settings/general/*');
                 });
 
                 $menu->child($access, function (MenuItem $item) {

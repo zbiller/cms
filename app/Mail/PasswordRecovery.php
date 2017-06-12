@@ -4,10 +4,11 @@ namespace App\Mail;
 
 use App\Models\Cms\Email;
 use App\Exceptions\EmailException;
+use File;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class PasswordRecovery extends Mailable implements ShouldQueue
@@ -57,19 +58,45 @@ class PasswordRecovery extends Mailable implements ShouldQueue
      */
     public function build()
     {
-        $this->from(
-            setting()->value('company-email') ?: config('mail.from.address'),
-            setting()->value('company-name') ?: config('mail.from.name')
-        );
+        $this->replyTo($this->email->reply_to);
+        $this->from($this->email->from_address, $this->email->from_name);
+        $this->subject($this->email->subject ?: 'Password Reset');
 
-        $this->subject(
-            $this->email && $this->email->subject ? $this->email->subject : 'Password Reset'
-        );
+        $this->markdown($this->email->getView(), [
+            'message' => $this->parseMessage(),
+        ]);
 
-        $this->markdown($this->email->getView(), $this->email->getData([
-            'url' => route($this->user->isAdmin() ? 'admin.password.change' : 'password.change', $this->token)
-        ]));
+        if ($this->email->attachment && uploaded($this->email->attachment)->exists()) {
+            $this->attach(uploaded($this->email->attachment)->path(null, true), [
+                'as' => uploaded($this->email->attachment)->load()->original_name,
+            ]);
+        }
 
         return $this;
+    }
+
+    /**
+     * Parse the message for used variables.
+     * Replace the variable names with the relevant content.
+     *
+     * @return mixed
+     */
+    private function parseMessage()
+    {
+        $message = $this->email->message;
+
+        $message = str_replace(
+            '[full_name]',
+            $this->user->full_name,
+            $message
+        );
+
+        $message = str_replace(
+            '[reset_password_url]',
+            route($this->user->isAdmin() ? 'admin.password.change' : 'password.change', $this->token),
+            $message
+        );
+
+        return $message;
     }
 }

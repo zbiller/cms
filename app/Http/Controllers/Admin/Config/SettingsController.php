@@ -15,16 +15,16 @@ class SettingsController extends Controller
      * @param Request $request
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function company(Request $request)
+    public function general(Request $request)
     {
-        $this->setMeta('title', 'Admin - Settings - Company');
+        $this->setMeta('title', 'Admin - Settings - General');
 
         switch (strtolower($request->method())) {
             case 'get':
-                return $this->getCompany();
+                return $this->getGeneral();
                 break;
             case 'post':
-                return $this->postCompany($request);
+                return $this->postGeneral($request);
                 break;
         }
     }
@@ -50,16 +50,16 @@ class SettingsController extends Controller
     /**
      * @return \Illuminate\View\View
      */
-    public function getCompany()
+    public function getGeneral()
     {
-        return view('admin.config.settings.company');
+        return view('admin.config.settings.general');
     }
 
     /**
      * @param Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postCompany(Request $request)
+    public function postGeneral(Request $request)
     {
         try {
             return DB::transaction(function () use ($request) {
@@ -75,7 +75,7 @@ class SettingsController extends Controller
                     );
 
                     if ($validator->fails()) {
-                        return redirect()->route('admin.settings.company')->withErrors($validator->errors());
+                        return redirect()->route('admin.settings.general')->withErrors($validator->errors());
                     }
 
                     if ($model = setting()->find($key)) {
@@ -86,11 +86,11 @@ class SettingsController extends Controller
                 }
 
                 session()->flash('flash_success', __('crud.update_success'));
-                return redirect()->route('admin.settings.company');
+                return redirect()->route('admin.settings.general');
             });
         } catch (Exception $e) {
             session()->flash('flash_success', 'Something went wrong! Please try again.');
-            return redirect()->route('admin.settings.company');
+            return redirect()->route('admin.settings.general');
         }
     }
 

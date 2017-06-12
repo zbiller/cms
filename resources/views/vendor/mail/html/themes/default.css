@@ -21,6 +21,15 @@ body {
     word-break: break-word;
 }
 
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #eaeaea;
+    margin: 1em 0;
+    padding: 0;
+}
+
 p,
 ul,
 ol,

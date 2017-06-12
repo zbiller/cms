@@ -3,7 +3,7 @@
 @section('header')
     @parent
 
-    <h1>Company Settings</h1>
+    <h1>General Settings</h1>
 @endsection
 
 @section('content')

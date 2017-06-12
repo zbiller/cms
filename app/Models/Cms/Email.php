@@ -97,6 +97,10 @@ class Email extends Model
      * All of the preview images should be placed inside /resources/assets/img/admin/emails directory.
      * Running "gulp" is required for migrating new images to the /public directory.
      *
+     * --- variables
+     * Array of variables that the respective mail type is allowed to use.
+     * Each array item defined here, should represent a key from the public static $variables array defined below.
+     *
      * @var array
      */
     public static $map = [
@@ -105,14 +109,137 @@ class Email extends Model
             'view' => 'emails.password_recovery',
             'partial' => 'password_recovery',
             'preview_image' => 'password_recovery.jpg',
+            'variables' => [
+                'full_name', 'reset_password_url'
+            ],
         ],
         self::TYPE_EMAIL_VERIFICATION => [
             'class' => 'App\Mail\EmailVerifications',
             'view' => 'emails.email_verification',
             'partial' => 'email_verification',
             'preview_image' => 'email_verification.jpg',
+            'variables' => [
+                'full_name', 'email_verification_url'
+            ],
         ],
     ];
+
+    /**
+     * All the available variables to be used inside mailables as dynamic content.
+     * Each of these variables may belong to more that only one mail, but the implementation may differ inside each mailable class.
+     *
+     * --- name
+     * The visual name of the variable.
+     *
+     * --- label
+     * Short description of what the variable represents.
+     *
+     * --- description
+     * Longer description of what the variable represents and how it works.
+     *
+     * @var array
+     */
+    public static $variables = [
+        'full_name' => [
+            'name' => 'Full Name',
+            'label' => 'The full name of the logged in user.',
+            'description' => 'If used in an email, but no logged in user exists, this variable will not render anything.',
+        ],
+        'reset_password_url' => [
+            'name' => 'Reset Password URL',
+            'label' => 'The URL for resetting a user\'s password.',
+            'description' => 'This URL will be generated dynamically based on users and their sessions.',
+        ],
+        'email_verification_url' => [
+            'name' => 'Email Verification URL',
+            'label' => 'The URL for verifying a user\'s email.',
+            'description' => 'This URL will be generated dynamically based on the user\'s provided data upon registration.',
+        ],
+    ];
+
+    /**
+     * Get the from address of an email instance.
+     *
+     * @return mixed
+     */
+    public function getFromAddressAttribute()
+    {
+        if (isset($this->metadata->from_email)) {
+            return $this->metadata->from_email;
+        }
+
+        return setting()->value('company-email') ?: config('mail.from.address');
+    }
+
+    /**
+     * Get the from name of an email instance.
+     *
+     * @return mixed
+     */
+    public function getFromNameAttribute()
+    {
+        if (isset($this->metadata->from_name)) {
+            return $this->metadata->from_name;
+        }
+
+        return setting()->value('company-name') ?: config('mail.from.name');
+    }
+
+    /**
+     * Get the reply to address of an email instance.
+     *
+     * @return mixed
+     */
+    public function getReplyToAttribute()
+    {
+        if (isset($this->metadata->reply_to)) {
+            return $this->metadata->reply_to;
+        }
+
+        return setting()->value('company-email') ?: config('mail.from.address');
+    }
+
+    /**
+     * Get the subject of an email instance.
+     *
+     * @return mixed
+     */
+    public function getAttachmentAttribute()
+    {
+        if (isset($this->metadata->attachment)) {
+            return $this->metadata->attachment;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the subject of an email instance.
+     *
+     * @return mixed
+     */
+    public function getSubjectAttribute()
+    {
+        if (isset($this->metadata->subject)) {
+            return $this->metadata->subject;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the message of an email instance.
+     *
+     * @return mixed
+     */
+    public function getMessageAttribute()
+    {
+        if (isset($this->metadata->message)) {
+            return $this->metadata->message;
+        }
+
+        return null;
+    }
 
     /**
      * Sort the query with newest records first.
@@ -198,6 +325,49 @@ class Email extends Model
         $original = isset($this->metadata) ? (array)$this->metadata : [];
 
         return array_merge($original, $data);
+    }
+
+    /**
+     * Get the corresponding body variables for a email type.
+     *
+     * @param int $type
+     * @return array
+     */
+    public static function getVariables($type)
+    {
+        $variables = [];
+
+        if (!isset(self::$map[$type]['variables']) || empty(self::$map[$type]['variables'])) {
+            return [];
+        }
+
+        foreach (self::$map[$type]['variables'] as $variable) {
+            if (isset(self::$variables[$variable])) {
+                $variables[$variable] = self::$variables[$variable];
+            }
+        }
+
+        return $variables;
+    }
+
+    /**
+     * Get the from email setting option.
+     *
+     * @return mixed
+     */
+    public static function getFromAddress()
+    {
+        return setting()->value('company-email') ?: config('mail.from.address');
+    }
+
+    /**
+     * Get the from name setting option.
+     *
+     * @return mixed
+     */
+    public static function getFromName()
+    {
+        return setting()->value('company-name') ?: config('app.name');
     }
 
     /**

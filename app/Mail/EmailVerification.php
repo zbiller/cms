@@ -2,15 +2,16 @@
 
 namespace App\Mail;
 
-use App\Exceptions\EmailException;
 use Crypt;
 use App\Models\Cms\Email;
+use App\Exceptions\EmailException;
 use Illuminate\Mail\Mailable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class EmailVerification extends Mailable
+class EmailVerification extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -47,22 +48,42 @@ class EmailVerification extends Mailable
      */
     public function build()
     {
-        $this->from(
-            setting()->value('company-email') ?: config('mail.from.address'),
-            setting()->value('company-name') ?: config('mail.from.name')
+        $this->replyTo($this->email->reply_to);
+        $this->from($this->email->from_address, $this->email->from_name);
+        $this->subject($this->email->subject ?: 'Email Verification');
+
+        $this->markdown($this->email->getView(), [
+            'message' => $this->parseMessage(),
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * Parse the message for used variables.
+     * Replace the variable names with the relevant content.
+     *
+     * @return mixed
+     */
+    private function parseMessage()
+    {
+        $message = $this->email->message;
+
+        $message = str_replace(
+            '[full_name]',
+            $this->user->full_name,
+            $message
         );
 
-        $this->subject(
-            $this->email && $this->email->subject ? $this->email->subject : 'Account Verification'
-        );
-
-        $this->markdown($this->email->getView(), $this->email->getData([
-            'url' => route('register.verify', [
+        $message = str_replace(
+            '[email_verification_url]',
+            route('register.verify', [
                 'token' => Crypt::encrypt($this->user->verification_token),
                 'email' => Crypt::encrypt($this->user->email),
             ]),
-        ]));
+            $message
+        );
 
-        return $this;
+        return $message;
     }
 }

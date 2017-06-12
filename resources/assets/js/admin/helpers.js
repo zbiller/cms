@@ -45,7 +45,7 @@ var init = {
         tinymce.init({
             selector: "textarea.editor-input",
             plugins: [
-                "advlist autolink lists link image charmap print preview anchor",
+                "advlist autolink lists link image charmap print preview anchor hr",
                 "searchreplace visualblocks code fullscreen",
                 "insertdatetime media table contextmenu paste"
             ],

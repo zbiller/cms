@@ -366,8 +366,8 @@ Route::group([
             'namespace' => 'Config',
             'prefix' => 'settings',
         ], function () {
-            Route::match(['get', 'post'], 'company', ['as' => 'admin.settings.company', 'uses' => 'SettingsController@company']);
-            Route::match(['get', 'post'], 'analytics', ['as' => 'admin.settings.analytics', 'uses' => 'SettingsController@analytics']);
+            Route::match(['get', 'post'], 'general', ['as' => 'admin.settings.general', 'uses' => 'SettingsController@general', 'permissions' => 'settings-general']);
+            Route::match(['get', 'post'], 'analytics', ['as' => 'admin.settings.analytics', 'uses' => 'SettingsController@analytics', 'permissions' => 'settings-analytics']);
         });
 
         /**

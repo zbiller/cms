@@ -32,8 +32,6 @@ class EmailsController extends Controller
      */
     public function index(Request $request, EmailFilter $filter, EmailSort $sort)
     {
-        cache()->forget('first_tree_load');
-
         return $this->_index(function () use ($request, $filter, $sort) {
             $this->items = Email::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
             $this->title = 'Emails';
@@ -65,6 +63,9 @@ class EmailsController extends Controller
             $this->vars = [
                 'type' => $type,
                 'partial' => Email::$map[$type]['partial'],
+                'variables' => Email::getVariables($type),
+                'fromEmail' => Email::getFromAddress(),
+                'fromName' => Email::getFromName(),
             ];
         });
     }
@@ -90,10 +91,14 @@ class EmailsController extends Controller
     {
         return $this->_edit(function () use ($email) {
             $this->item = $email;
+
             $this->title = 'Edit Email';
             $this->view = view('admin.cms.emails.edit');
             $this->vars = [
                 'partial' => $this->item->getPartial(),
+                'variables' => Email::getVariables($this->item->type),
+                'fromEmail' => Email::getFromAddress(),
+                'fromName' => Email::getFromName(),
             ];
         });
     }
@@ -250,6 +255,9 @@ class EmailsController extends Controller
             $this->view = view('admin.cms.emails.draft');
             $this->vars = [
                 'partial' => $this->item->getPartial(),
+                'variables' => Email::getVariables($this->item->type),
+                'fromEmail' => Email::getFromAddress(),
+                'fromName' => Email::getFromName(),
             ];
         }, $draft);
     }
@@ -267,6 +275,9 @@ class EmailsController extends Controller
             $this->view = view('admin.cms.emails.limbo');
             $this->vars = [
                 'partial' => $this->item->getPartial(),
+                'variables' => Email::getVariables($this->item->type),
+                'fromEmail' => Email::getFromAddress(),
+                'fromName' => Email::getFromName(),
             ];
         }, function () use ($request) {
             $this->item->saveAsDraft($request->all());
@@ -288,6 +299,9 @@ class EmailsController extends Controller
             $this->view = view('admin.cms.emails.revision');
             $this->vars = [
                 'partial' => $this->item->getPartial(),
+                'variables' => Email::getVariables($this->item->type),
+                'fromEmail' => Email::getFromAddress(),
+                'fromName' => Email::getFromName(),
             ];
         }, $revision);
     }

@@ -10,7 +10,28 @@
     {!! auth()->user()->isDeveloper() ? form_admin()->text('identifier') : '' !!}
 </div>
 <div id="tab-2" class="tab">
-    @include('admin.cms.emails.types.' . $partial)
+    <div class="box notification" style="margin-bottom: 20px;">
+        <span>
+            Please note that in order for the email to work properly, you need to include the defined variables into the "Message" section.<br />
+            The variables can be found on the "Variables" tab and should be typed into the message editor with the following syntax --- [variable_name]<br />
+            Although recommended, including all variables is not required.<br />
+        </span>
+    </div>
+
+    {!! form_admin()->text('metadata[from_name]', 'From Name', $item && $item->exists ? $item->metadata('from_name') : null, ['placeholder' => 'Default is ' . $fromName]) !!}
+    {!! form_admin()->text('metadata[from_email]', 'From Email', $item && $item->exists ? $item->metadata('from_email') : null, ['placeholder' => 'Default is ' . $fromEmail]) !!}
+    {!! form_admin()->text('metadata[reply_to]', 'Reply To', $item && $item->exists ? $item->metadata('reply_to') : null, ['placeholder' => 'Default is ' . $fromEmail]) !!}
+    {!! uploader()->field('metadata[attachment]')->label('Attachment')->model($item)->manager() !!}
+    {!! form_admin()->text('metadata[subject]', 'Subject') !!}
+    {!! form_admin()->editor('metadata[message]', 'Message') !!}
+</div>
+<div id="tab-3" class="tab">
+    @foreach($variables as $variable => $attributes)
+        <span class="title">{{ $attributes['name'] }}</span>
+        <p><span style="font-family: 'Open Sans Bold', sans-serif;">Name</span>: {{ $variable }}</p>
+        <p>{{ $attributes['label'] }}<br />{{ $attributes['description'] }}</p>
+        <p>Use this variable inside the editor for the "Message" input on the "Manage Details" tab. Syntax --- [{{ $variable }}]</p>
+    @endforeach
 </div>
 
 @if($item->exists)

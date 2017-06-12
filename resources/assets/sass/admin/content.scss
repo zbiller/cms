@@ -40,6 +40,31 @@ main {
     }
 }
 
+span.title {
+    @include font-size(12px);
+
+    display: block;
+    float: left;
+    width: 100%;
+    padding: 0 0 2px;
+    margin: 50px 0 15px 0;
+    border-bottom: 1px solid $colorPictonBlue;
+    font-family: 'Open Sans Bold', sans-serif;
+    color: $colorPictonBlue;
+    text-transform: uppercase;
+
+    &:first-of-type {
+        margin: 0 0 15px 0;
+    }
+}
+
+p {
+    @include font-size(13px);
+
+    color: $colorOsloGray;
+    font-family: 'Open Sans', sans-serif;
+}
+
 .box {
     @include clear-padding();
 
@@ -52,10 +77,34 @@ main {
     border: 1px solid $colorGallery;
     text-align: center;
 
+    &.notification {
+        @include calc(width, '100% - 2px');
+
+        margin: 5px 0;
+        padding: 15px;
+        border: 1px solid $colorGoldenTainoi;
+        background: lighten($colorGoldenTainoi, 30%);
+        text-align: left;
+    }
+
     a {
         font-family: 'Open Sans Semibold', sans-serif;
         color: $colorPictonBlue;
         text-decoration: none;
+    }
+
+    span {
+        @include font-size(13px);
+
+        font-family: 'Open Sans', sans-serif;
+        color: $colorOsloGray;
+    }
+
+    em {
+        @include font-size(13px);
+
+        font-family: 'Open Sans Bold', sans-serif;
+        color: $colorOsloGray;
     }
 }
 

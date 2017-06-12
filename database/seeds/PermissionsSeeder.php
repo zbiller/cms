@@ -26,26 +26,6 @@ class PermissionsSeeder extends Seeder
      * @var array
      */
     private $adminMap = [
-        'Activity' => [
-            'List' => [
-                'group' => 'Activity',
-                'label' => 'List',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'activity-list',
-            ],
-            'Clean' => [
-                'group' => 'Activity',
-                'label' => 'Clean',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'activity-clean',
-            ],
-            'Delete' => [
-                'group' => 'Activity',
-                'label' => 'Delete',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'activity-delete',
-            ],
-        ],
         'Drafts' => [
             'List' => [
                 'group' => 'Drafts',
@@ -186,6 +166,32 @@ class PermissionsSeeder extends Seeder
                 'name' => 'pages-force-delete',
             ],
         ],
+        'Menus' => [
+            'List' => [
+                'group' => 'Menus',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'menus-list',
+            ],
+            'Add' => [
+                'group' => 'Menus',
+                'label' => 'Add',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'menus-add',
+            ],
+            'Edit' => [
+                'group' => 'Menus',
+                'label' => 'Edit',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'menus-edit',
+            ],
+            'Delete' => [
+                'group' => 'Menus',
+                'label' => 'Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'menus-delete',
+            ],
+        ],
         'Blocks' => [
             'List' => [
                 'group' => 'Blocks',
@@ -248,30 +254,60 @@ class PermissionsSeeder extends Seeder
                 'name' => 'blocks-force-delete',
             ],
         ],
-        'Menus' => [
+        'Emails' => [
             'List' => [
-                'group' => 'Menus',
+                'group' => 'Emails',
                 'label' => 'List',
                 'type' => Permission::TYPE_ADMIN,
-                'name' => 'menus-list',
+                'name' => 'emails-list',
             ],
             'Add' => [
-                'group' => 'Menus',
+                'group' => 'Emails',
                 'label' => 'Add',
                 'type' => Permission::TYPE_ADMIN,
-                'name' => 'menus-add',
+                'name' => 'emails-add',
             ],
             'Edit' => [
-                'group' => 'Menus',
+                'group' => 'Emails',
                 'label' => 'Edit',
                 'type' => Permission::TYPE_ADMIN,
-                'name' => 'menus-edit',
+                'name' => 'emails-edit',
             ],
-            'Delete' => [
-                'group' => 'Menus',
-                'label' => 'Delete',
+            'Duplicate' => [
+                'group' => 'Emails',
+                'label' => 'Duplicate',
                 'type' => Permission::TYPE_ADMIN,
-                'name' => 'menus-delete',
+                'name' => 'emails-duplicate',
+            ],
+            'Preview' => [
+                'group' => 'Emails',
+                'label' => 'Preview',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'emails-preview',
+            ],
+            'Deleted' => [
+                'group' => 'Emails',
+                'label' => 'Deleted',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'emails-deleted',
+            ],
+            'Restore' => [
+                'group' => 'Emails',
+                'label' => 'Restore',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'emails-restore',
+            ],
+            'Soft Delete' => [
+                'group' => 'Emails',
+                'label' => 'Soft Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'emails-soft-delete',
+            ],
+            'Force Delete' => [
+                'group' => 'Emails',
+                'label' => 'Force Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'emails-force-delete',
             ],
         ],
         'Layouts' => [
@@ -298,58 +334,6 @@ class PermissionsSeeder extends Seeder
                 'label' => 'Delete',
                 'type' => Permission::TYPE_ADMIN,
                 'name' => 'layouts-delete',
-            ],
-        ],
-        'Roles' => [
-            'List' => [
-                'group' => 'Roles',
-                'label' => 'List',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'roles-list',
-            ],
-            'Add' => [
-                'group' => 'Roles',
-                'label' => 'Add',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'roles-add',
-            ],
-            'Edit' => [
-                'group' => 'Roles',
-                'label' => 'Edit',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'roles-edit',
-            ],
-            'Delete' => [
-                'group' => 'Roles',
-                'label' => 'Delete',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'roles-delete',
-            ],
-        ],
-        'Admins' => [
-            'List' => [
-                'group' => 'Admins',
-                'label' => 'List',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'admins-list',
-            ],
-            'Add' => [
-                'group' => 'Admins',
-                'label' => 'Add',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'admins-add',
-            ],
-            'Edit' => [
-                'group' => 'Admins',
-                'label' => 'Edit',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'admins-edit',
-            ],
-            'Delete' => [
-                'group' => 'Admins',
-                'label' => 'Delete',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'admins-delete',
             ],
         ],
         'Users' => [
@@ -382,6 +366,92 @@ class PermissionsSeeder extends Seeder
                 'label' => 'Impersonate',
                 'type' => Permission::TYPE_ADMIN,
                 'name' => 'users-impersonate',
+            ],
+        ],
+        'Admins' => [
+            'List' => [
+                'group' => 'Admins',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'admins-list',
+            ],
+            'Add' => [
+                'group' => 'Admins',
+                'label' => 'Add',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'admins-add',
+            ],
+            'Edit' => [
+                'group' => 'Admins',
+                'label' => 'Edit',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'admins-edit',
+            ],
+            'Delete' => [
+                'group' => 'Admins',
+                'label' => 'Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'admins-delete',
+            ],
+        ],
+        'Roles' => [
+            'List' => [
+                'group' => 'Roles',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'roles-list',
+            ],
+            'Add' => [
+                'group' => 'Roles',
+                'label' => 'Add',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'roles-add',
+            ],
+            'Edit' => [
+                'group' => 'Roles',
+                'label' => 'Edit',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'roles-edit',
+            ],
+            'Delete' => [
+                'group' => 'Roles',
+                'label' => 'Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'roles-delete',
+            ],
+        ],
+        'Activity' => [
+            'List' => [
+                'group' => 'Activity',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'activity-list',
+            ],
+            'Clean' => [
+                'group' => 'Activity',
+                'label' => 'Clean',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'activity-clean',
+            ],
+            'Delete' => [
+                'group' => 'Activity',
+                'label' => 'Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'activity-delete',
+            ],
+        ],
+        'Settings' => [
+            'General' => [
+                'group' => 'Settings',
+                'label' => 'General',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'settings-general',
+            ],
+            'Analytics' => [
+                'group' => 'Settings',
+                'label' => 'Analytics',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'settings-analytics',
             ],
         ],
     ];
