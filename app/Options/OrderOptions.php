@@ -9,7 +9,7 @@ class OrderOptions
      *
      * @var string
      */
-    public $orderColumn;
+    public $orderColumn = 'ord';
 
     /**
      * Flag indicating whether or not automatic ordering on creating should be done.

@@ -28,6 +28,28 @@ class PageHelper
     }
 
     /**
+     * Get all root pages.
+     * Pages that do not have a parent.
+     *
+     * @return mixed
+     */
+    public function roots()
+    {
+        return Page::withTrashed()->whereIsRoot()->get();
+    }
+
+    /**
+     * Get all children pages for a specified parent
+     *
+     * @param int $parent
+     * @return mixed
+     */
+    public function children($parent)
+    {
+        return Page::withTrashed()->whereDescendantOf($parent)->get();
+    }
+
+    /**
      * Get a new builder instance with global scopes applied.
      *
      * @return mixed

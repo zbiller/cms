@@ -119,6 +119,7 @@ class Page extends Model
      *
      * --- view
      * The view to be used for pages on the front-end.
+     * The view path is relative to the /resources/views/ directory.
      *
      * --- layouts
      * The list of layout types that can be assigned to a page of that type.

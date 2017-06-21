@@ -25,7 +25,7 @@ trait HasPermissions
                 );
             }
 
-            $this->forgetCache();
+            $this->forgetAclCache();
         } catch (QueryException $e) {
             $this->revokePermission($permissions);
             $this->grantPermission($permissions);
@@ -50,7 +50,7 @@ trait HasPermissions
             );
         }
 
-        $this->forgetCache();
+        $this->forgetAclCache();
 
         return $this;
     }

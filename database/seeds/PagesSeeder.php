@@ -36,7 +36,7 @@ class PagesSeeder extends Seeder
             'slug' => '/',
             'identifier' => 'home',
             'active' => Page::ACTIVE_YES,
-            'type' => Page::TYPE_NORMAL,
+            'type' => Page::TYPE_DEFAULT,
         ]);
     }
 }

@@ -73,7 +73,7 @@ trait HasRoles
                     })->all()
                 );
 
-                $this->forgetCache();
+                $this->forgetAclCache();
             }
         } catch (QueryException $e) {
             $this->removeRoles($roles);

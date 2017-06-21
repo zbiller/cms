@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use DB;
 use Schema;
 use App\Helpers\UploaderHelper;
 use App\Helpers\FormAdminHelper;
@@ -19,6 +20,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Schema::defaultStringLength(191);
+
+        if (env('APP_ENV', 'development') != 'development') {
+            DB::connection()->disableQueryLog();
+        }
     }
 
     /**
