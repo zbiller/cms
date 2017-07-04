@@ -58,6 +58,6 @@
         </div>
     </section>
     @permission('uploads-crop')
-        <div id="upload-crop-container-{{ $index }}"></div>
+        <div id="upload-crop-container-{{ $index }}" class="upload-crop-container"></div>
     @endpermission
 @endif

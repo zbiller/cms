@@ -123,7 +123,7 @@ class UploaderHelper
      */
     public function manager()
     {
-        $this->index++;
+        //$this->index++;
 
         $this->checkModel()->checkField();
         $this->parseLabel()->parseTypes()->parseAccept();
@@ -240,7 +240,7 @@ class UploaderHelper
     private function buildManagerView()
     {
         $this->view = view('helpers::uploader.manager')->with([
-            'index' => $this->index,
+            'index' => rand(1, 999999),
             'field' => $this->field,
             'label' => $this->label,
             'model' => $this->model,

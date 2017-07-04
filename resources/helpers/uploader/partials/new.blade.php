@@ -38,7 +38,7 @@
                 @endpermission
                 <span class="upload-message"></span>
                 @permission('uploads-select')
-                    <a id="upload-save-{!! $index !!}" class="btn blue right no-margin">
+                    <a id="upload-save-{!! $index !!}" class="upload-save btn blue right no-margin">
                         <i class="fa fa-check"></i>&nbsp; Save
                     </a>
                 @endpermission

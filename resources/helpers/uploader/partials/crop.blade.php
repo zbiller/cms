@@ -1,4 +1,4 @@
-<section id="upload-crop-{!! $index !!}" class="popup popup-full">
+<section id="upload-crop-{!! $index !!}" class="upload-crop popup popup-full">
     <div class="modal">
         <div class="header">
             <h1>Crop Image</h1>
