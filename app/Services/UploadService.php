@@ -775,6 +775,7 @@ class UploadService
     {
         $this->guardAgainstMaxSize('images');
         $this->guardAgainstAllowedExtensions('images');
+        $this->guardAgainstMinImageRatio();
 
         return $this->attemptStoringToDisk(function () {
             $image = $this->storeToDisk();
@@ -1185,6 +1186,7 @@ class UploadService
      *
      * @param string $type
      * @throws UploadException
+     * @return void
      */
     protected function guardAgainstMaxSize($type)
     {
@@ -1207,6 +1209,7 @@ class UploadService
      *
      * @param string $type
      * @throws UploadException
+     * @return void
      */
     protected function guardAgainstAllowedExtensions($type)
     {
@@ -1223,6 +1226,43 @@ class UploadService
                 'The "' . $type . '" extension is not allowed! The extensions allowed are: ' . implode(', ', $extensions)
             );
         }
+    }
+
+    /**
+     * Verify if the uploaded image meets the minimum size requirements for the model field type.
+     * The minimum size (width and height) is given by the biggest width and height values specified in "styles" config for image uploads.
+     * These 2 values come by default from the config/upload.php, but they are overwritten inside the "getUploadConfig" method on the model class.
+     *
+     * @throws UploadException
+     * @return void
+     */
+    protected function guardAgainstMinImageRatio()
+    {
+        $styles = $this->getConfig('images.styles.' . $this->getField());
+        $minWidth = $minHeight = 0;
+
+        if (!$styles || !is_array($styles) || empty($styles)) {
+            return;
+        }
+
+        foreach ($styles as $name => $options) {
+            if (isset($options['width']) && (float)$options['width'] > $minWidth) {
+                $minWidth = (float)$options['width'];
+            }
+
+            if (isset($options['height']) && (float)$options['height'] > $minHeight) {
+                $minHeight = (float)$options['height'];
+            }
+        }
+
+        list($width, $height) = getimagesize($this->getFile());
+
+        if ($width < $minWidth || $height < $minHeight) {
+            throw new UploadException(
+                'Please choose an image with the minimum size of: ' . $minWidth . 'x' . $minHeight . 'px.'
+            );
+        }
+
     }
 
     /**
