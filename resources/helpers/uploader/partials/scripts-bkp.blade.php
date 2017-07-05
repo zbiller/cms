@@ -1,21 +1,22 @@
 @section('bottom_scripts')
     <script type="text/javascript">
-        window.__UploaderIndex = '{{ $index }}';
-
         function initTooltip() {
             $('.tooltip').tooltipster({
                 theme: 'tooltipster-punk'
             });
         }
 
+        window.__UploaderIndex = '{{ $index }}';
+
         $(function () {
             var popup, container, url, model, field, path, type, accept, keyword, timer, cropper, style;
 
             var page = 2,
+                index = '{{ $index }}',
                 token = '{{ csrf_token() }}';
 
-            var uploadLoad = function (_this) {
-                popup = _this.next('.upload-new');
+            var uploadLoad = function () {
+                popup = $('#upload-new-' + window.__UploaderIndex);
                 container = popup.find('.modal-tab.active div.uploads');
                 url = '{{ route('admin.uploads.get') }}';
                 type = popup.find('ul.modal-tabs li.active').data('type');
@@ -43,8 +44,8 @@
                         initTooltip();
                     }
                 });
-            }, uploadScroll = function (_this) {
-                popup = _this.closest('.upload-new');
+            }, uploadScroll = function () {
+                popup = $('#upload-new-' + window.__UploaderIndex);
                 container = popup.find('.modal-tab.active div.uploads');
                 url = '{{ route('admin.uploads.get') }}';
                 type = popup.find('ul.modal-tabs li.active').data('type');
@@ -67,8 +68,8 @@
                         }
                     });
                 }
-            }, uploadSearch = function (_this) {
-                popup = _this.closest('.upload-new');
+            }, uploadSearch = function () {
+                popup = $('#upload-new-' + window.__UploaderIndex);
                 container = popup.find('.modal-tab.active div.uploads');
                 url = '{{ route('admin.uploads.get') }}';
                 type = popup.find('ul.modal-tabs li.active').data('type');
@@ -95,7 +96,7 @@
                     });
                 }, 300);
             }, uploadUpload = function (_this) {
-                popup = _this.closest('.upload-new');
+                popup = $('#upload-new-' + window.__UploaderIndex);
                 accept = popup.find('ul.modal-tabs li.active').data('accept');
 
                 _this.fileupload({
@@ -143,8 +144,8 @@
                         popup.find('.progress .bar').css('width', progress + '%');
                     }
                 });
-            }, uploadSave = function (_this) {
-                popup = _this.closest('.upload-new');
+            }, uploadSave = function () {
+                popup = $('#upload-new-' + window.__UploaderIndex);
                 container = popup.find('.modal-tab.active div.uploads');
                 url = "{{ URL::route('admin.uploads.set') }}";
                 model = popup.data('model');
@@ -168,8 +169,8 @@
                         popup.find('.loading').fadeOut(300);
                     },
                     success: function(data) {
-                        var input = popup.closest('.field-wrapper').next('.upload-input'),
-                            button = popup.prev('a.open-upload-new'),
+                        var input = $('#upload-input-' + window.__UploaderIndex),
+                            button = $('a[data-popup-id="upload-new-' + window.__UploaderIndex + '"]'),
                             message = popup.find('span.upload-message');
 
                         if (data.status === true) {
@@ -186,7 +187,7 @@
                     }
                 });
             }, uploadCrop = function (_this) {
-                popup = _this.closest('.upload-current');
+                popup = $('#upload-current-' + window.__UploaderIndex);
                 model = popup.data('model');
                 field = popup.data('field');
                 url = _this.data('url');
@@ -208,65 +209,71 @@
                     },
                     success: function(data) {
                         if (data.status === true) {
-                            popup.next('.upload-crop-container').html(data.html);
-                            popup.next('.upload-crop-container').find('.upload-crop').show();
-
-                            /*$('#upload-crop-container-' + window.__UploaderIndex).html(data.html);
-                            $('#upload-crop-' + window.__UploaderIndex).show();*/
+                            $('#upload-crop-container-' + window.__UploaderIndex).html(data.html);
+                            $('#upload-crop-' + window.__UploaderIndex).show();
                         }
                     }
                 });
             };
 
             //initial load
-            $(document).on('click', '.open-upload-new:not(.disabled)', function (e) {
+            $(document).on('click', '#open-upload-new-' + window.__UploaderIndex + ':not(.disabled)', function (e) {
                 e.preventDefault();
 
-                uploadLoad($(this));
+                uploadLoad();
             });
 
             //click load
-            $(document).on('click', '.upload-new:not(.disabled) ul.modal-tabs > li', function(e) {
+            $(document).on('click', '#upload-new-' + window.__UploaderIndex + ':not(.disabled) ul.modal-tabs > li', function(e) {
                 e.preventDefault();
 
-                uploadLoad($(this));
+                uploadLoad();
             });
 
             //scroll load
             document.addEventListener('scroll', function (event) {
+                console.log('aa');
                 if (event.target.classList.contains('uploads')) {
+                    console.log(event.target);
                     uploadScroll($(event.target));
                 }
             }, true);
 
-            //search load
-            $(document).on('keyup', '.upload-new:not(.disabled) .modal-tab.active input.search', function(e) {
+
+            $('#upload-new-' + window.__UploaderIndex + ':not(.disabled) .modal-tab .uploads').on('scroll', function(e) {
                 e.preventDefault();
 
-                uploadSearch($(this));
+                uploadScroll();
+            });
+
+            //search load
+            $(document).on('keyup', '#upload-new-' + window.__UploaderIndex + ':not(.disabled) .modal-tab.active input.search', function(e) {
+                e.preventDefault();
+
+                uploadSearch();
             });
 
             //upload new
-            $(document).on('click', '.upload-new:not(.disabled) label.upload-btn > input[type="file"]', function (e) {
+            $(document).on('click', '#upload-new-' + window.__UploaderIndex + ':not(.disabled) label.upload-btn > input[type="file"]', function (e) {
                 uploadUpload($(this));
             });
 
             //save new
-            $(document).on('click', '.upload-new:not(.disabled) .upload-save', function(e) {
+            $(document).on('click', '#upload-save-' + window.__UploaderIndex, function(e) {
                 e.preventDefault();
 
-                uploadSave($(this));
+                uploadSave();
             });
 
             //cropper load
-            $(document).on('click', '.open-upload-cropper:not(.disabled)', function (e) {
+            $(document).on('click', '.open-upload-cropper-' + window.__UploaderIndex + ':not(.disabled)', function (e) {
                 e.preventDefault();
 
                 uploadCrop($(this));
             });
 
             //delete current
-            $(document).on('click', '.upload-current:not(.disabled) .upload-delete', function(){
+            $(document).on('click', '#upload-current-' + window.__UploaderIndex + ':not(.disabled) .upload-delete', function(){
                 $('#upload-input-' + window.__UploaderIndex).val('');
                 $('#open-upload-current-' + window.__UploaderIndex).remove();
                 $('#open-upload-new-' + window.__UploaderIndex).removeClass('half').addClass('full');

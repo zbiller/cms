@@ -111,11 +111,11 @@ class UploaderHelper
     ];
 
     /**
-     * The index used to identify an uploader helper instance in a page with multiple uploads.
+     * The index used to identify an existing uploader number.
      *
      * @var int
      */
-    private $index = 0;
+    private $i = 0;
 
     /**
      * @return View
@@ -123,12 +123,12 @@ class UploaderHelper
      */
     public function manager()
     {
-        //$this->index++;
-
         $this->checkModel()->checkField();
         $this->parseLabel()->parseTypes()->parseAccept();
         $this->generateCurrent()->generateStyles();
         $this->buildManagerView()->resetToDefaults();
+
+        $this->i++;
 
         return $this->view;
     }
@@ -240,6 +240,7 @@ class UploaderHelper
     private function buildManagerView()
     {
         $this->view = view('helpers::uploader.manager')->with([
+            'i' => $this->i,
             'index' => rand(1, 999999),
             'field' => $this->field,
             'label' => $this->label,

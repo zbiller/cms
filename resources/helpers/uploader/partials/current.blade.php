@@ -1,8 +1,8 @@
 @if($current)
-    <a id="open-upload-current-{!! $index !!}" data-popup="open" data-popup-id="upload-current-{!! $index !!}" class="open-upload-current btn blue centered left half no-margin no-responsiveness">
+    <a id="open-upload-current-{!! $index !!}" data-popup="open" data-popup-id="upload-current-{!! $index !!}" data-index="{!! $index !!}" class="open-upload-current btn blue centered left half no-margin no-responsiveness">
         View Current File
     </a>
-    <section id="upload-current-{!! $index !!}" class="upload-current popup {!! $disabled ? 'disabled' : '' !!}" data-model="{{ get_class($model) }}" data-field="{{ $field }}">
+    <section id="upload-current-{!! $index !!}" class="upload-current popup {!! $disabled ? 'disabled' : '' !!}" data-model="{{ get_class($model) }}" data-field="{{ $field }}" data-index="{{ $index }}">
         <div class="modal">
             <div class="header">
                 <ul class="modal-tabs">

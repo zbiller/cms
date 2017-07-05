@@ -1174,7 +1174,7 @@ class UploadService
             }
         } catch (Exception $e) {
             throw new UploadException(
-                'Styles generation for the uploaded image failed! Please try again.'
+                'Styles generation for the uploaded video failed! Please try again.'
             );
         }
     }

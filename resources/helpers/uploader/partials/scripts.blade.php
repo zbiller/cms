@@ -9,19 +9,18 @@
         window.__UploaderIndex = '{{ $index }}';
 
         $(function () {
-            var popup, container, url, model, field, path, type, accept, keyword, timer, cropper, style;
-
             var page = 2,
-                index = '{{ $index }}',
                 token = '{{ csrf_token() }}';
 
-            var uploadLoad = function () {
-                popup = $('#upload-new-' + window.__UploaderIndex);
-                container = popup.find('.modal-tab.active div.uploads');
-                url = '{{ route('admin.uploads.get') }}';
-                type = popup.find('ul.modal-tabs li.active').data('type');
-                accept = popup.find('ul.modal-tabs li.active').data('accept');
-                keyword = popup.find('.modal-tab.active input.search').val();
+            var uploadLoad = function (_this) {
+                var popup = _this.next('.upload-new'),
+                    tab = popup.find('.modal-tab.active'),
+                    list = popup.find('ul.modal-tabs').find('li.active'),
+                    container = tab.find('div.uploads'),
+                    keyword = tab.find('input.search').val(),
+                    type = list.data('type'),
+                    accept = list.data('accept'),
+                    url = '{{ route('admin.uploads.get') }}';
 
                 $.ajax({
                     type: 'GET',
@@ -44,13 +43,14 @@
                         initTooltip();
                     }
                 });
-            }, uploadScroll = function () {
-                popup = $('#upload-new-' + window.__UploaderIndex);
-                container = popup.find('.modal-tab.active div.uploads');
-                url = '{{ route('admin.uploads.get') }}';
-                type = popup.find('ul.modal-tabs li.active').data('type');
-                accept = popup.find('ul.modal-tabs li.active').data('accept');
-                keyword = popup.find('.modal-tab.active input.search').val();
+            }, uploadScroll = function (_this) {
+                var tab = _this.find('.modal-tab.active'),
+                    list = _this.find('ul.modal-tabs').find('li.active'),
+                    container = tab.find('div.uploads'),
+                    keyword = tab.find('input.search').val(),
+                    type = list.data('type'),
+                    accept = list.data('accept'),
+                    url = '{{ route('admin.uploads.get') }}';
 
                 if(container.scrollTop() + container.innerHeight() >= container[0].scrollHeight) {
                     $.ajax({
@@ -68,13 +68,15 @@
                         }
                     });
                 }
-            }, uploadSearch = function () {
-                popup = $('#upload-new-' + window.__UploaderIndex);
-                container = popup.find('.modal-tab.active div.uploads');
-                url = '{{ route('admin.uploads.get') }}';
-                type = popup.find('ul.modal-tabs li.active').data('type');
-                accept = popup.find('ul.modal-tabs li.active').data('accept');
-                keyword = popup.find('.modal-tab.active input.search').val();
+            }, uploadSearch = function (_this) {
+                var tab = _this.find('.modal-tab.active'),
+                    list = _this.find('ul.modal-tabs').find('li.active'),
+                    container = tab.find('div.uploads'),
+                    keyword = tab.find('input.search').val(),
+                    type = list.data('type'),
+                    accept = list.data('accept'),
+                    url = '{{ route('admin.uploads.get') }}',
+                    timer;
 
                 clearInterval(timer);
 
@@ -96,30 +98,30 @@
                     });
                 }, 300);
             }, uploadUpload = function (_this) {
-                popup = $('#upload-new-' + window.__UploaderIndex);
-                accept = popup.find('ul.modal-tabs li.active').data('accept');
+                var list = _this.find('ul.modal-tabs').find('li.active'),
+                    accept = list.data('accept');
 
                 _this.fileupload({
                     url: '{{ route('admin.uploads.upload') }}',
                     dataType: 'json',
                     formData: {
                         _token : token,
-                        model: popup.data('model'),
-                        field: popup.data('field'),
+                        model: _this.data('model'),
+                        field: _this.data('field'),
                         accept: accept
                     },
                     done: function (e, data) {
-                        var message = popup.find('span.upload-message'),
-                            progress = popup.find('.progress');
+                        var message = _this.find('span.upload-message'),
+                            progress = _this.find('.progress');
 
-                        popup.find('.loading').fadeOut(300);
+                        _this.find('.loading').fadeOut(300);
 
                         if (data.result.status === true) {
-                            popup.find('#' + data.result.type + ' .uploads').prepend(data.result.html);
-                            popup.find('#' + data.result.type + ' .uploads > p').remove();
+                            _this.find('#' + data.result.type).find('.uploads').prepend(data.result.html);
+                            _this.find('#' + data.result.type).find('.uploads > p').remove();
 
-                            popup.find('.modal-tab div.uploads > a').removeClass('active');
-                            popup.find('#' + data.result.type + ' .uploads > a:first-of-type').addClass('active');
+                            _this.find('.modal-tab').find('.uploads > a').removeClass('active');
+                            _this.find('#' + data.result.type).find('.uploads > a:first-of-type').addClass('active');
 
                             message.text(data.result.message).removeClass('error').addClass('success');
                             progress.find('.bar').removeClass('error').addClass('success');
@@ -139,18 +141,20 @@
                     progressall: function (e, data) {
                         var progress = parseInt(data.loaded / data.total * 100, 10);
 
-                        popup.find('.loading').fadeIn(300);
-                        popup.find('.loading').show();
-                        popup.find('.progress .bar').css('width', progress + '%');
+                        _this.find('.loading').fadeIn(300);
+                        _this.find('.loading').show();
+                        _this.find('.progress .bar').css('width', progress + '%');
                     }
                 });
-            }, uploadSave = function () {
-                popup = $('#upload-new-' + window.__UploaderIndex);
-                container = popup.find('.modal-tab.active div.uploads');
-                url = "{{ URL::route('admin.uploads.set') }}";
-                model = popup.data('model');
-                field = popup.data('field');
-                path = container.find('a.active').data('path');
+            }, uploadSave = function (_this) {
+                console.log(_this.attr('id'));
+
+                var tab = _this.find('.modal-tab.active'),
+                    container = tab.find('div.uploads'),
+                    model = _this.data('model'),
+                    field = _this.data('field'),
+                    path = container.find('a.active').data('path'),
+                    url = "{{ URL::route('admin.uploads.set') }}";
 
                 $.ajax({
                     type: 'POST',
@@ -163,15 +167,15 @@
                         field: field
                     },
                     beforeSend: function () {
-                        popup.find('.loading').fadeIn(300);
+                        _this.find('.loading').fadeIn(300);
                     },
                     complete: function () {
-                        popup.find('.loading').fadeOut(300);
+                        _this.find('.loading').fadeOut(300);
                     },
                     success: function(data) {
-                        var input = $('#upload-input-' + window.__UploaderIndex),
-                            button = $('a[data-popup-id="upload-new-' + window.__UploaderIndex + '"]'),
-                            message = popup.find('span.upload-message');
+                        var input = _this.closest('.field-wrapper').next('.upload-input'),
+                            button = _this.prev('.open-upload-new'),
+                            message = _this.find('span.upload-message');
 
                         if (data.status === true) {
                             input.val(data.path);
@@ -186,13 +190,21 @@
                         }
                     }
                 });
+            }, uploadRemove = function (_this) {
+                var index = _this.closest('.upload-current').data('index');
+
+                $('#upload-input-' + index).val('');
+                $('#open-upload-current-' + index).remove();
+                $('#open-upload-new-' + index).removeClass('half').addClass('full');
+                $('.popup:visible').hide();
             }, uploadCrop = function (_this) {
-                popup = $('#upload-current-' + window.__UploaderIndex);
-                model = popup.data('model');
-                field = popup.data('field');
-                url = _this.data('url');
-                path = _this.data('path');
-                style = _this.data('style');
+                var popup = _this.closest('.upload-current'),
+                    url = _this.data('url'),
+                    path = _this.data('path'),
+                    style = _this.data('style'),
+                    model = popup.data('model'),
+                    field = popup.data('field'),
+                    index = popup.data('index');
 
                 $.ajax({
                     type: 'GET',
@@ -200,7 +212,7 @@
                     dataType: 'json',
                     data: {
                         _token : token,
-                        index: window.__UploaderIndex,
+                        index: index,
                         model: model,
                         field: field,
                         url: url,
@@ -209,66 +221,65 @@
                     },
                     success: function(data) {
                         if (data.status === true) {
-                            $('#upload-crop-container-' + window.__UploaderIndex).html(data.html);
-                            $('#upload-crop-' + window.__UploaderIndex).show();
+                            $('#upload-crop-container-' + index).html(data.html);
+                            $('#upload-crop-' + index).show();
                         }
                     }
                 });
             };
 
             //initial load
-            $(document).on('click', '#open-upload-new-' + window.__UploaderIndex + ':not(.disabled)', function (e) {
+            $(document).on('click', '.open-upload-new:not(.disabled)', function (e) {
                 e.preventDefault();
 
-                uploadLoad();
+                uploadLoad($(this));
             });
 
             //click load
-            $(document).on('click', '#upload-new-' + window.__UploaderIndex + ':not(.disabled) ul.modal-tabs > li', function(e) {
+            $(document).on('click', '.upload-new:not(.disabled) ul.modal-tabs > li', function(e) {
                 e.preventDefault();
 
-                uploadLoad();
+                uploadLoad($(this).closest('.upload-new:not(.disabled)').prev('.open-upload-new'));
             });
 
             //scroll load
-            $('#upload-new-' + window.__UploaderIndex + ':not(.disabled) .modal-tab .uploads').on('scroll', function(e) {
-                e.preventDefault();
-
-                uploadScroll();
-            });
+            document.addEventListener('scroll', function (event) {
+                if (event.target.classList.contains('uploads')) {
+                    uploadScroll($(event.target).closest('.upload-new'));
+                }
+            }, true);
 
             //search load
-            $(document).on('keyup', '#upload-new-' + window.__UploaderIndex + ':not(.disabled) .modal-tab.active input.search', function(e) {
+            $(document).on('keyup', '.upload-new:not(.disabled) .modal-tab.active input.search', function(e) {
                 e.preventDefault();
 
-                uploadSearch();
+                uploadSearch($(this).closest('.upload-new'));
             });
 
             //upload new
-            $(document).on('click', '#upload-new-' + window.__UploaderIndex + ':not(.disabled) label.upload-btn > input[type="file"]', function (e) {
-                uploadUpload($(this));
+            $(document).on('click', '.upload-new:not(.disabled) label.upload-btn > input[type="file"]', function (e) {
+                uploadUpload($(this).closest('.upload-new'));
             });
 
             //save new
-            $(document).on('click', '#upload-save-' + window.__UploaderIndex, function(e) {
+            $(document).on('click', '.upload-new .upload-save', function(e) {
                 e.preventDefault();
 
-                uploadSave();
+                console.log('aa');
+
+                uploadSave($(this).closest('.upload-new'));
             });
 
             //cropper load
-            $(document).on('click', '.open-upload-cropper-' + window.__UploaderIndex + ':not(.disabled)', function (e) {
+            $(document).on('click', '.open-upload-cropper:not(.disabled)', function (e) {
                 e.preventDefault();
 
                 uploadCrop($(this));
             });
 
             //delete current
-            $(document).on('click', '#upload-current-' + window.__UploaderIndex + ':not(.disabled) .upload-delete', function(){
-                $('#upload-input-' + window.__UploaderIndex).val('');
-                $('#open-upload-current-' + window.__UploaderIndex).remove();
-                $('#open-upload-new-' + window.__UploaderIndex).removeClass('half').addClass('full');
-                $('.popup:visible').hide();
+            $(document).on('click', '.upload-current:not(.disabled) .upload-delete', function(){
+                uploadRemove($(this));
             });
         });
     </script>
