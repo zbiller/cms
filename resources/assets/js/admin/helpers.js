@@ -48,65 +48,6 @@ var init = {
                 $(_container).attr('name', $(_container).attr('name').replace(/[0-9]+/g, newIndex)).val('');
             });
         }
-
-
-
-
-
-        //initial load
-        $(document).on('click', '#open-upload-new-' + window.__UploaderIndex + ':not(.disabled)', function (e) {
-            e.preventDefault();
-
-            uploadLoad();
-        });
-
-        //click load
-        $(document).on('click', '#upload-new-' + window.__UploaderIndex + ':not(.disabled) ul.modal-tabs > li', function(e) {
-            e.preventDefault();
-
-            uploadLoad();
-        });
-
-        //scroll load
-        $('#upload-new-' + window.__UploaderIndex + ':not(.disabled) .modal-tab .uploads').on('scroll', function(e) {
-            e.preventDefault();
-
-            uploadScroll();
-        });
-
-        //search load
-        $(document).on('keyup', '#upload-new-' + window.__UploaderIndex + ':not(.disabled) .modal-tab.active input.search', function(e) {
-            e.preventDefault();
-
-            uploadSearch();
-        });
-
-        //upload new
-        $(document).on('click', '#upload-new-' + window.__UploaderIndex + ':not(.disabled) label.upload-btn > input[type="file"]', function (e) {
-            uploadUpload($(this));
-        });
-
-        //save new
-        $(document).on('click', '#upload-save-' + window.__UploaderIndex, function(e) {
-            e.preventDefault();
-
-            uploadSave();
-        });
-
-        //cropper load
-        $(document).on('click', '.open-upload-cropper-' + window.__UploaderIndex + ':not(.disabled)', function (e) {
-            e.preventDefault();
-
-            uploadCrop($(this));
-        });
-
-        //delete current
-        $(document).on('click', '#upload-current-' + window.__UploaderIndex + ':not(.disabled) .upload-delete', function(){
-            $('#upload-input-' + window.__UploaderIndex).val('');
-            $('#open-upload-current-' + window.__UploaderIndex).remove();
-            $('#open-upload-new-' + window.__UploaderIndex).removeClass('half').addClass('full');
-            $('.popup:visible').hide();
-        });
     },
     FlashMessage: function (type, message) {
         var flash = $('div.flash');

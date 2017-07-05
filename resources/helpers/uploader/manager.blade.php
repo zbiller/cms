@@ -7,4 +7,6 @@
     {!! form()->hidden($field, $current ? $current->path('original') : null, ['id' => 'upload-input-' . $index, 'class' => 'upload-input']) !!}
 </fieldset>
 
-@include('helpers::uploader.partials.scripts')
+@if($i == 0)
+    @include('helpers::uploader.partials.scripts')
+@endif
