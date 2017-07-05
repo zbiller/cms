@@ -147,8 +147,6 @@
                     }
                 });
             }, uploadSave = function (_this) {
-                console.log(_this.attr('id'));
-
                 var tab = _this.find('.modal-tab.active'),
                     container = tab.find('div.uploads'),
                     model = _this.data('model'),
@@ -264,8 +262,6 @@
             //save new
             $(document).on('click', '.upload-new .upload-save', function(e) {
                 e.preventDefault();
-
-                console.log('aa');
 
                 uploadSave($(this).closest('.upload-new'));
             });
