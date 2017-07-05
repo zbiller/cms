@@ -81,6 +81,22 @@ class MenuComposer
             });
 
             $menu->add(function ($item) use ($menu) {
+                $access = $item->name('Geo Location')->data('icon', 'fa-globe')->active('admin/countries/*', 'admin/states/*', 'admin/cities/*');
+
+                $menu->child($access, function (MenuItem $item) {
+                    $item->name('Countries')->url(route('admin.countries.index'))->permissions('countries-list')->active('admin/countries/*');
+                });
+
+                $menu->child($access, function (MenuItem $item) {
+                    $item->name('States')->url(route('admin.states.index'))->permissions('states-list')->active('admin/states/*');
+                });
+
+                $menu->child($access, function (MenuItem $item) {
+                    $item->name('Cities')->url(route('admin.cities.index'))->permissions('cities-list')->active('admin/cities/*');
+                });
+            });
+
+            $menu->add(function ($item) use ($menu) {
                 $access = $item->name('System Settings')->data('icon', 'fa-cog')->active('admin/settings/*');
 
                 $menu->child($access, function (MenuItem $item) {

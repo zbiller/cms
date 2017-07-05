@@ -440,6 +440,84 @@ class PermissionsSeeder extends Seeder
                 'name' => 'activity-delete',
             ],
         ],
+        'Countries' => [
+            'List' => [
+                'group' => 'Countries',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'countries-list',
+            ],
+            'Add' => [
+                'group' => 'Countries',
+                'label' => 'Add',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'countries-add',
+            ],
+            'Edit' => [
+                'group' => 'Countries',
+                'label' => 'Edit',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'countries-edit',
+            ],
+            'Delete' => [
+                'group' => 'Countries',
+                'label' => 'Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'countries-delete',
+            ],
+        ],
+        'States' => [
+            'List' => [
+                'group' => 'States',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'states-list',
+            ],
+            'Add' => [
+                'group' => 'States',
+                'label' => 'Add',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'states-add',
+            ],
+            'Edit' => [
+                'group' => 'States',
+                'label' => 'Edit',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'states-edit',
+            ],
+            'Delete' => [
+                'group' => 'States',
+                'label' => 'Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'states-delete',
+            ],
+        ],
+        'Cities' => [
+            'List' => [
+                'group' => 'Cities',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'cities-list',
+            ],
+            'Add' => [
+                'group' => 'Cities',
+                'label' => 'Add',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'cities-add',
+            ],
+            'Edit' => [
+                'group' => 'Cities',
+                'label' => 'Edit',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'cities-edit',
+            ],
+            'Delete' => [
+                'group' => 'Cities',
+                'label' => 'Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'cities-delete',
+            ],
+        ],
         'Settings' => [
             'General' => [
                 'group' => 'Settings',
