@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call(LayoutsSeeder::class);
         $this->call(PagesSeeder::class);
         $this->call(SettingsSeeder::class);
+        $this->call(CountriesSeeder::class);
         $this->call(TestSeeder::class);
     }
 }
