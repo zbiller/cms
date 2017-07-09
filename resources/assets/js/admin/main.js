@@ -350,6 +350,13 @@ function popups()
         $(this).addClass('active');
     });
 
+    //close popup on click outside
+    $('body').click(function (e) {
+        if ($(e.target).hasClass('popup') && $(e.target).is(':visible')) {
+            $(e.target).hide();
+        }
+    });
+
     /**
      * Helper functions.
      */
