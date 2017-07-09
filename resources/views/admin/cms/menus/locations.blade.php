@@ -1,11 +1,5 @@
 @extends('layouts::admin.default')
 
-@section('header')
-    @parent
-
-    <h1>{{ $title }}</h1>
-@endsection
-
 @section('content')
     <section class="list">
         <table cellspacing="0" cellpadding="0" border="0">

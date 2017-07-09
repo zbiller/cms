@@ -1,11 +1,5 @@
 @extends('layouts::admin.default')
 
-@section('header')
-    @parent
-
-    <h1>{{ $title }}</h1>
-@endsection
-
 @section('content')
     <section class="tabs">
         <a href="#tab-1">Primary Information</a>

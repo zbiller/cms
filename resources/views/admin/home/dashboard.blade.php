@@ -1,11 +1,5 @@
 @extends('layouts::admin.default')
 
-@section('header')
-    @parent
-
-    <h1>Dashboard</h1>
-@endsection
-
 @section('content')
     <section id="analytics" class="view">
         <span class="section-title">Analytics Metrics</span>
