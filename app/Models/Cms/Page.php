@@ -6,6 +6,7 @@ use Exception;
 use App\Models\Model;
 use App\Traits\HasBlocks;
 use App\Traits\HasUrl;
+use App\Traits\HasNodes;
 use App\Traits\HasDrafts;
 use App\Traits\HasRevisions;
 use App\Traits\HasDuplicates;
@@ -23,7 +24,6 @@ use App\Options\ActivityOptions;
 use App\Exceptions\CrudException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Kalnoy\Nestedset\NodeTrait;
 
 class Page extends Model
 {
@@ -31,6 +31,7 @@ class Page extends Model
         getInheritedBlocks as baseGetInheritedBlocks;
     }
     use HasUrl;
+    use HasNodes;
     use HasDrafts;
     use HasRevisions;
     use HasDuplicates;
@@ -40,7 +41,6 @@ class Page extends Model
     use IsFilterable;
     use IsSortable;
     use SoftDeletes;
-    use NodeTrait;
 
     /**
      * The database table.

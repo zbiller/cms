@@ -4,6 +4,7 @@ namespace App\Models\Cms;
 
 use Exception;
 use App\Models\Model;
+use App\Traits\HasNodes;
 use App\Traits\HasActivity;
 use App\Traits\HasMetadata;
 use App\Traits\IsCacheable;
@@ -12,16 +13,15 @@ use App\Traits\IsSortable;
 use App\Options\ActivityOptions;
 use App\Exceptions\CrudException;
 use Illuminate\Database\Eloquent\Builder;
-use Kalnoy\Nestedset\NodeTrait;
 
 class Menu extends Model
 {
+    use HasNodes;
     use HasActivity;
     use HasMetadata;
     use IsCacheable;
     use IsFilterable;
     use IsSortable;
-    use NodeTrait;
 
     /**
      * The database table.
