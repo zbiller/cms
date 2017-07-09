@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Admin\Version;
 
 use DB;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Validation\ValidationException;
+use InvalidArgumentException;
 use Validator;
 use Exception;
 use Throwable;
@@ -94,13 +97,20 @@ class DraftsController extends Controller
      */
     public function saveDraft(Request $request)
     {
-        $this->validateDraftCreationData($request->all());
+        try {
+            $this->validateDraftCreationData($request->all());
 
-        $this->class = $request->get('_class');
-        $this->request = $request->get('_request');
-        $this->id = $request->get('_id');
+            $this->class = $request->get('_class');
+            $this->request = $request->get('_request');
+            $this->id = $request->get('_id');
 
-        $this->validateOriginalEntityData($request->all());
+            $this->validateOriginalEntityData($request->all());
+        } catch (ValidationException $e) {
+            session()->flash('flash_error', $e->getMessage());
+            return back()->withInput($request->all())->withErrors($e->validator->errors());
+        } catch (InvalidArgumentException $e) {
+            throw new Exception($e->getMessage(), $e->getCode());
+        }
 
         try {
             $this->model = (new $this->class())->findOrFail($this->id);
@@ -132,6 +142,14 @@ class DraftsController extends Controller
     public function createDraft(Draft $draft, Request $request)
     {
         try {
+            $this->validateDraftCreationData($request->all());
+
+            $this->class = $request->get('_class');
+            $this->request = $request->get('_request');
+            $this->id = $request->get('_id');
+
+            $this->validateOriginalEntityData($request->all());
+
             $model = $draft->draftable;
             $data = $request->except(['_token', '_method']);
 
@@ -142,6 +160,9 @@ class DraftsController extends Controller
         } catch (DraftException $e) {
             session()->flash('flash_error', $e->getMessage());
             return back()->withInput($request->all());
+        } catch (ValidationException $e) {
+            session()->flash('flash_error', $e->getMessage());
+            return back()->withInput($request->all())->withErrors($e->validator->errors());
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());
         }
@@ -158,6 +179,14 @@ class DraftsController extends Controller
     public function updateDraft(Draft $draft, Request $request)
     {
         try {
+            $this->validateDraftCreationData($request->all());
+
+            $this->class = $request->get('_class');
+            $this->request = $request->get('_request');
+            $this->id = $request->get('_id');
+
+            $this->validateOriginalEntityData($request->all());
+
             $model = $draft->draftable;
             $data = $request->except(['_token', '_method']);
 
@@ -170,6 +199,9 @@ class DraftsController extends Controller
         } catch (DraftException $e) {
             session()->flash('flash_error', $e->getMessage());
             return back()->withInput($request->all());
+        } catch (ValidationException $e) {
+            session()->flash('flash_error', $e->getMessage());
+            return back()->withInput($request->all())->withErrors($e->validator->errors());
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());
         }
@@ -186,6 +218,20 @@ class DraftsController extends Controller
     public function publishDraft(Draft $draft, Request $request)
     {
         try {
+            if ($request->has('_class')) {
+                $this->class = $request->get('_class');
+            }
+
+            if ($request->has('_request')) {
+                $this->request = $request->get('_request');
+            }
+
+            if ($request->has('_id')) {
+                $this->id = $request->get('_id');
+            }
+
+            $this->validateOriginalEntityData($request->all());
+
             $model = $draft->draftable;
             $data = $request->except(['_token', '_method']);
             $redirect = session()->pull('draft_back_url_' . $draft->id);
@@ -213,6 +259,9 @@ class DraftsController extends Controller
             }
 
             return back()->withInput($request->all());
+        } catch (ValidationException $e) {
+            session()->flash('flash_error', $e->getMessage());
+            return back()->withInput($request->all())->withErrors($e->validator->errors());
         } catch (Exception $e) {
             if (request()->ajax()) {
                 return ['status' => true];
@@ -242,9 +291,15 @@ class DraftsController extends Controller
         }
 
         try {
+            if ($request->has('_request')) {
+                $this->request = $request->get('_request');
+            }
+
+            $this->validateOriginalEntityData($request->all());
+
             $class = $request->get('_class');
             $id = $request->get('_id');
-            $data = $request->except(['_token', '_method', '_back', '_class', '_id']);
+            $data = $request->except(['_token', '_method', '_back', '_class', '_request', '_id']);
             $model = $class::onlyDrafts()->findOrFail($id);
 
             DB::transaction(function () use ($model, $data) {
@@ -260,6 +315,9 @@ class DraftsController extends Controller
         } catch (ModelNotFoundException $e) {
             session()->flash('flash_error', 'You are trying to publish a draft that does not exist!');
             return $request->get('_back') ? redirect($request->get('_back')) : back();
+        } catch (ValidationException $e) {
+            session()->flash('flash_error', $e->getMessage());
+            return back()->withInput($request->all())->withErrors($e->validator->errors());
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
@@ -385,7 +443,7 @@ class DraftsController extends Controller
      *
      * @param array $data
      * @return void
-     * @throws DraftException
+     * @throws Exception
      */
     protected function validateDraftCreationData(array $data = [])
     {
@@ -395,7 +453,7 @@ class DraftsController extends Controller
         ]);
 
         if ($validator->fails()) {
-            throw new DraftException(
+            throw new InvalidArgumentException(
                 'To be able to save a draft, please add the following hidden fields to the entity form' . PHP_EOL .
                 '"_class" => The fully qualified class name of the entity model' . PHP_EOL .
                 '"_request" => The fully qualified class name of the request validating the entity model' . PHP_EOL .
@@ -408,10 +466,14 @@ class DraftsController extends Controller
      * Validate the entity's request data based on the request rules provided.
      *
      * @param array $data
-     * @return \Illuminate\Http\RedirectResponse
+     * @throws ValidationException
      */
     protected function validateOriginalEntityData(array $data = [])
     {
+        if (!$this->request) {
+            return;
+        }
+
         $validation = (new $this->request)->rules();
 
         foreach ($validation as $field => $rules) {
@@ -431,8 +493,32 @@ class DraftsController extends Controller
         $validator = Validator::make($data, $validation);
 
         if ($validator->fails()) {
-            session()->flash('flash_error', 'Could not save the draft because the original record validation failed!');
-            return back()->withErrors($validator)->withInput($data);
+            throw new ValidationException($validator);
         }
+    }
+
+    /**
+     * Initialize draft data.
+     * Validate draft data based on original entity form request.
+     *
+     * @param Request $request
+     * @return $this
+     * @throws Exception
+     */
+    protected function doInitAndValidate(Request $request)
+    {
+        if ($request->has('_class')) {
+            $this->class = $request->get('_class');
+        }
+
+        if ($request->has('_request')) {
+            $this->request = $request->get('_request');
+        }
+
+        if ($request->has('_id')) {
+            $this->id = $request->get('_id');
+        }
+
+        $this->validateOriginalEntityData($request->all());
     }
 }

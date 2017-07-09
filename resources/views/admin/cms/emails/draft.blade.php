@@ -9,6 +9,13 @@
 
     <section class="view">
         {!! form_admin()->model($item, ['class' => 'form']) !!}
+
+        {!! validation('admin')->errors() !!}
+
+        {!! form()->hidden('_class', \App\Models\Cms\Email::class) !!}
+        {!! form()->hidden('_request', \App\Http\Requests\EmailRequest::class) !!}
+        {!! form()->hidden('_id', $item->exists ? $item->id : null) !!}
+
         <div id="tab-1" class="tab">
             {!! form_admin()->hidden('type', $item->exists ? $item->type : $type) !!}
             {!! form_admin()->text('name') !!}

@@ -10,6 +10,13 @@
 
     <section class="view">
         {!! form_admin()->model($item, ['class' => 'form']) !!}
+
+        {!! validation('admin')->errors() !!}
+
+        {!! form()->hidden('_class', \App\Models\Cms\Page::class) !!}
+        {!! form()->hidden('_request', \App\Http\Requests\PageRequest::class) !!}
+        {!! form()->hidden('_id', $item->exists ? $item->id : null) !!}
+
         <div id="tab-1" class="tab">
             {!! form_admin()->select('layout_id', 'Layout', $layouts->pluck('name', 'id')) !!}
             {!! form_admin()->select('type', 'Type', $types) !!}

@@ -11,8 +11,11 @@
     <section class="view">
         {!! form_admin()->model($item, ['method' => 'PUT', 'class' => 'form']) !!}
 
+        {!! validation('admin')->errors() !!}
+
         {!! form()->hidden('_back', route('admin.pages.drafts')) !!}
         {!! form()->hidden('_class', \App\Models\Cms\Page::class) !!}
+        {!! form()->hidden('_request', \App\Http\Requests\PageRequest::class) !!}
         {!! form()->hidden('_id', $item->exists ? $item->id : null) !!}
 
         <div id="tab-1" class="tab">

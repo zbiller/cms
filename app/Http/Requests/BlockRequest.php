@@ -24,10 +24,6 @@ class BlockRequest extends Request
      */
     public function rules()
     {
-        if ($this->isMethod('get')) {
-            return [];
-        }
-
         $model = null;
 
         if ($this->route('block')) {

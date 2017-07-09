@@ -24,10 +24,6 @@ class PageRequest extends Request
      */
     public function rules()
     {
-        if ($this->isMethod('get')) {
-            return [];
-        }
-
         $model = null;
 
         if ($this->route('page')) {
@@ -47,7 +43,7 @@ class PageRequest extends Request
             ],
             'name' => [
                 'required',
-                'min:3'
+                'min:3',
             ],
             'slug' => [
                 'required',
