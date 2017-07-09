@@ -3,7 +3,7 @@
 @section('header')
     @parent
 
-    <h1>Edit City</h1>
+    <h1>{{ $title }}</h1>
 @endsection
 
 @section('content')

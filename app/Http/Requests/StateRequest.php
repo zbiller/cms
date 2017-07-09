@@ -29,13 +29,13 @@ class StateRequest extends Request
             ],
             'name' => [
                 'required',
-                Rule::unique('countries', 'name')
-                    ->ignore($this->route('country') ? $this->route('country')->id : null)
+                Rule::unique('states', 'name')
+                    ->ignore($this->route('state') ? $this->route('state')->id : null)
             ],
             'code' => [
                 'required',
-                Rule::unique('countries', 'code')
-                    ->ignore($this->route('country') ? $this->route('country')->id : null)
+                Rule::unique('states', 'code')
+                    ->ignore($this->route('state') ? $this->route('state')->id : null)
             ],
         ];
     }

@@ -52,6 +52,7 @@ class EmailsController extends Controller
             $this->setMeta('title', 'Admin - Add Email');
 
             return view('admin.cms.emails.init')->with([
+                'title' => 'Add Email',
                 'types' => Email::$types,
                 'images' => Email::getImages(),
             ]);

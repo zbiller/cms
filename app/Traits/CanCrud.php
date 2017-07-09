@@ -573,7 +573,10 @@ trait CanCrud
 
                     $this->vars['item'] = $this->item;
 
-                    $this->setMeta('title', $this->title ? 'Admin - ' . $this->title : 'Admin');
+                    if ($this->title) {
+                        $this->setMeta('title', $this->title ? 'Admin - ' . $this->title : 'Admin');
+                        $this->vars['title'] = $this->title;
+                    }
 
                     return $this->view->with($this->vars);
                     break;
@@ -630,7 +633,10 @@ trait CanCrud
             $this->checkCrudView();
             $this->initCrudView();
 
-            $this->setMeta('title', $this->title ? 'Admin - ' . $this->title : 'Admin');
+            if ($this->title) {
+                $this->setMeta('title', $this->title ? 'Admin - ' . $this->title : 'Admin');
+                $this->vars['title'] = $this->title;
+            }
 
             return $this->view->with($this->vars);
         } catch (ModelNotFoundException $e) {

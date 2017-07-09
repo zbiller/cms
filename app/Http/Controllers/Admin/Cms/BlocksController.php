@@ -50,6 +50,7 @@ class BlocksController extends Controller
         if (!$type || !array_key_exists($type, Block::getTypes())) {
             $this->setMeta('title', 'Admin - Add Block');
             return view('admin.cms.blocks.init')->with([
+                'title' => 'Add Block',
                 'types' => Block::getTypes(),
                 'images' => Block::getImages(),
             ]);
