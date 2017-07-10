@@ -294,6 +294,8 @@ function tabs() {
 
     //display the correct tab on click
     button.click(function (e) {
+        e.preventDefault();
+
         button.removeClass('active');
         container.removeClass('active');
 

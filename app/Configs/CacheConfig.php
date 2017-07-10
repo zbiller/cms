@@ -55,9 +55,27 @@ class CacheConfig
      */
     protected static function checkIfQueryCachingIsConfiguredProperly()
     {
-        if (!isset(self::$config['query']['prefix']) || !self::$config['query']['prefix']) {
+        if (!isset(self::$config['query']['query_store']) || !self::$config['query']['query_store']) {
             throw new ConfigException(
-                "The key 'query.prefix' does not exist or is empty in " .self::$path . "."
+                "The key 'query.query_store' does not exist or is empty in " .self::$path . "."
+            );
+        }
+
+        if (!isset(self::$config['query']['duplicate_query_store']) || !self::$config['query']['duplicate_query_store']) {
+            throw new ConfigException(
+                "The key 'query.duplicate_query_store' does not exist or is empty in " .self::$path . "."
+            );
+        }
+
+        if (!isset(self::$config['query']['query_prefix']) || !self::$config['query']['query_prefix']) {
+            throw new ConfigException(
+                "The key 'query.query_prefix' does not exist or is empty in " .self::$path . "."
+            );
+        }
+
+        if (!isset(self::$config['query']['duplicate_query_prefix']) || !self::$config['query']['duplicate_query_prefix']) {
+            throw new ConfigException(
+                "The key 'query.duplicate_query_prefix' does not exist or is empty in " .self::$path . "."
             );
         }
 

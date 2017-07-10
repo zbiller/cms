@@ -4,6 +4,7 @@ namespace App\Traits;
 
 use App\Database\Builder;
 use App\Services\CacheService;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 
 trait IsCacheable
@@ -33,6 +34,14 @@ trait IsCacheable
     }
 
     /**
+     * @return string
+     */
+    public function getDuplicateQueryCacheTag()
+    {
+        return CacheService::getDuplicateQueryCachePrefix() . '.' . (string)$this->getTable();
+    }
+
+    /**
      * Flush the query cache from Redis only for the tag corresponding to the model instance.
      *
      * @return void
@@ -49,12 +58,29 @@ trait IsCacheable
      */
     protected function newBaseQueryBuilder()
     {
-        if (CacheService::shouldCacheQueries() && CacheService::canCacheQueries()) {
-            $conn = $this->getConnection();
-            $grammar = $conn->getQueryGrammar();
+        $cacheQueriesForever = false;
+        $cacheOnlyDuplicateQueriesOnce = false;
 
+        $connection = $this->getConnection();
+        $grammar = $connection->getQueryGrammar();
+
+        if (CacheService::canCacheQueries()) {
+            if (CacheService::shouldCacheQueries()) {
+                $cacheQueriesForever = true;
+            }
+
+            if (CacheService::shouldCacheDuplicateQueries()) {
+                $cacheOnlyDuplicateQueriesOnce = true;
+            }
+        }
+
+        if ($cacheQueriesForever === true) {
             return new Builder(
-                $conn, $grammar, $conn->getPostProcessor(), $this->getQueryCacheTag()
+                $connection, $grammar, $connection->getPostProcessor(), $this->getQueryCacheTag(), CacheService::TYPE_CACHE_QUERIES
+            );
+        } elseif ($cacheOnlyDuplicateQueriesOnce === true) {
+            return new Builder(
+                $connection, $grammar, $connection->getPostProcessor(), $this->getDuplicateQueryCacheTag(), CacheService::TYPE_CACHE_DUPLICATE_QUERIES
             );
         }
 
