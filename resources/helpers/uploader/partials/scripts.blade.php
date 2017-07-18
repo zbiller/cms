@@ -9,8 +9,6 @@
         window.__UploaderIndex = '{{ $index }}';
 
         $(function () {
-            console.log('a');
-
             var page = 2,
                 token = '{{ csrf_token() }}';
 

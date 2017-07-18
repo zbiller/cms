@@ -1,11 +1,5 @@
 @extends('layouts::admin.default')
 
-@section('header')
-    @parent
-
-    <h1>Edit Email Draft</h1>
-@endsection
-
 @section('content')
     <section class="tabs">
         <a href="#tab-1">Primary Information</a>
@@ -16,8 +10,11 @@
     <section class="view">
         {!! form_admin()->model($item, ['method' => 'PUT', 'class' => 'form']) !!}
 
+        {!! validation('admin')->errors() !!}
+
         {!! form()->hidden('_back', route('admin.emails.drafts')) !!}
         {!! form()->hidden('_class', \App\Models\Cms\Email::class) !!}
+        {!! form()->hidden('_request', \App\Http\Requests\EmailRequest::class) !!}
         {!! form()->hidden('_id', $item->exists ? $item->id : null) !!}
 
         <div id="tab-1" class="tab">

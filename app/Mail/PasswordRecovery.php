@@ -86,6 +86,18 @@ class PasswordRecovery extends Mailable implements ShouldQueue
         $message = $this->email->message;
 
         $message = str_replace(
+            '[first_name]',
+            $this->user->first_name,
+            $message
+        );
+
+        $message = str_replace(
+            '[last_name]',
+            $this->user->last_name,
+            $message
+        );
+
+        $message = str_replace(
             '[full_name]',
             $this->user->full_name,
             $message

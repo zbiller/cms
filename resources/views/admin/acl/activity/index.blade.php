@@ -1,11 +1,5 @@
 @extends('layouts::admin.default')
 
-@section('header')
-    @parent
-
-    <h1>Activity</h1>
-@endsection
-
 @section('content')
     <section class="filters">
         @include('admin.acl.activity._filter')

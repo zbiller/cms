@@ -38,7 +38,7 @@ class ActivityController extends Controller
             }
 
             $this->items = $query->paginate(10);
-            $this->title = 'Activity Logs';
+            $this->title = 'Activity';
             $this->view = view('admin.acl.activity.index');
             $this->vars = [
                 'users' => User::alphabetically()->get(),

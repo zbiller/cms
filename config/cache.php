@@ -94,35 +94,71 @@ return [
     |---------------------------------------------------------------------------------------------------
     |
     | Every model by default implements a trait called IsCacheable.
-    | That trait has the job of caching the database queries with Redis.
+    | That trait has the job of caching the database queries with Redis forever.
     | This way, on subsequent requests, the query results will be fetched from Redis, not the database.
+    | Besides caching queries with Redis, you can also choose to only cache duplicate queries for the current request.
     |
     */
 
     'query' => [
 
-        /**
-         * Flag indicating whether or not query caching should run.
-         * By default, it's set to "false". If you want to enable it, set the "ENABLE_QUERY_CACHE=true" in .env file.
-         *
-         * IMPORTANT:
-         * Please note that even if query caching is enabled inside the .env file some other constraints still apply:
-         * 1. APP_ENV must not be "development" (in development mode no caching will happen, so debug is possible).
-         */
-        'enabled' => env('ENABLE_QUERY_CACHE', false),
+        /*
+        |
+        | Flag indicating whether or not query caching should using run (forever cache).
+        | By default, it's set to "false". If you want to enable it, set the "CACHE_QUERIES=true" in .env file.
+        |
+        | IMPORTANT:
+        | Please note that even if query caching is enabled inside the .env file some other constraints still apply:
+        | 1. APP_ENV must not be "development" (in development mode no caching will happen, so debug is possible).
+        |
+        */
+        'cache_queries' => env('CACHE_QUERIES', false),
 
-        /**
-         * The cache store used for query caching.
-         * Please note that because cache tagging is used, "file" or "database" cache drivers are not available here.
-         */
-        'store' => 'redis',
+        /*
+        |
+        | Flag indicating whether or not query caching only on duplicate queries should run (only for the current request).
+        | By default, it's set to "false". If you want to enable it, set the "CACHE_DUPLICATE_QUERIES=true" in .env file.
+        |
+        | IMPORTANT:
+        | Please note that even if query caching is enabled inside the .env file some other constraints still apply:
+        | 1. APP_ENV must not be "development" (in development mode no caching will happen, so debug is possible).
+        |
+        */
+        'cache_duplicate_queries' => env('CACHE_DUPLICATE_QUERIES', false),
 
-        /**
-         * The value to prefix all query cache tags.
-         * This is not the general cache prefix (that is still the value of the key 'prefix' from this file).
-         * This value only acts as prefix for query cache tags.
-         */
-        'prefix' => 'cache.query',
+        /*
+        |
+        | The cache store used for query caching ("cache_queries" option).
+        | Please note that because cache tagging is used, "file" or "database" cache drivers are not available here.
+        |
+        */
+        'query_store' => 'redis',
+
+        /*
+        |
+        | The cache store used for query caching ("cache_duplicate_queries" option).
+        | Please note that because cache tagging is used, "file" or "database" cache drivers are not available here.
+        |
+        */
+        'duplicate_query_store' => 'array',
+
+        /*
+        |
+        | The value to prefix all query cache tags ("cache_queries" option).
+        | This is not the general cache prefix (that is still the value of the key 'prefix' from this file).
+        | This value only acts as prefix for query cache tags.
+        |
+        */
+        'query_prefix' => 'cache.query',
+
+        /*
+        |
+        | The value to prefix all query cache tags ("cache_duplicate_queries" option).
+        | This is not the general cache prefix (that is still the value of the key 'prefix' from this file).
+        | This value only acts as prefix for query cache tags.
+        |
+        */
+        'duplicate_query_prefix' => 'cache.duplicate_query',
 
     ],
 

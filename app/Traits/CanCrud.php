@@ -4,6 +4,9 @@ namespace App\Traits;
 
 use App\Services\CacheService;
 use DB;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Unique;
+use Illuminate\Validation\ValidationException;
 use Route;
 use Closure;
 use Exception;
@@ -557,10 +560,11 @@ trait CanCrud
      * @param Closure $putFunction
      * @param int $id
      * @param Request $request
+     * @param FormRequest $req
      * @return RedirectResponse
      * @throws Exception
      */
-    public function _limbo(Closure $getFunction, Closure $putFunction, $id, Request $request)
+    public function _limbo(Closure $getFunction, Closure $putFunction, $id, Request $request, FormRequest $req)
     {
         try {
             $this->item = app($this->model)->onlyDrafts()->findOrFail($id);
@@ -573,11 +577,36 @@ trait CanCrud
 
                     $this->vars['item'] = $this->item;
 
-                    $this->setMeta('title', $this->title ? 'Admin - ' . $this->title : 'Admin');
+                    if ($this->title) {
+                        $this->setMeta('title', $this->title ? 'Admin - ' . $this->title : 'Admin');
+                        $this->vars['title'] = $this->title;
+                    }
 
                     return $this->view->with($this->vars);
                     break;
                 case 'PUT':
+                    try {
+                        $validation = $req->rules();
+
+                        foreach ($validation as $field => $rules) {
+                            if (is_array($rules)) {
+                                foreach ($rules as $index => $rule) {
+                                    if (@get_class($rule) == 'Illuminate\Validation\Rules\Unique' || str_is('unique*', $rule)) {
+                                        unset($validation[$field][$index]);
+                                    }
+                                }
+                            } else {
+                                if (@get_class($rules) == 'Illuminate\Validation\Rules\Unique' || str_is('unique*', $rules)) {
+                                    unset($validation[$field]);
+                                }
+                            }
+                        }
+
+                        $this->validate($request, $validation, $req->messages(), $req->attributes());
+                    } catch (ValidationException $e) {
+                        return back()->withErrors($e->validator->errors());
+                    }
+
                     try {
                         if ($putFunction) {
                             call_user_func($putFunction);
@@ -630,7 +659,10 @@ trait CanCrud
             $this->checkCrudView();
             $this->initCrudView();
 
-            $this->setMeta('title', $this->title ? 'Admin - ' . $this->title : 'Admin');
+            if ($this->title) {
+                $this->setMeta('title', $this->title ? 'Admin - ' . $this->title : 'Admin');
+                $this->vars['title'] = $this->title;
+            }
 
             return $this->view->with($this->vars);
         } catch (ModelNotFoundException $e) {

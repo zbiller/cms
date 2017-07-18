@@ -1,11 +1,5 @@
 @extends('layouts::admin.default')
 
-@section('header')
-    @parent
-
-    <h1>Layouts</h1>
-@endsection
-
 @section('content')
     <section class="filters">
         @include('admin.cms.layouts._filter')

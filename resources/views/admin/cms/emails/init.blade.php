@@ -1,11 +1,5 @@
 @extends('layouts::admin.default')
 
-@section('header')
-    @parent
-
-    <h1>Add Email</h1>
-@endsection
-
 @section('content')
     <section class="view">
         {!! form_admin()->open(['class' => 'form']) !!}

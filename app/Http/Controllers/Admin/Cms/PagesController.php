@@ -257,11 +257,11 @@ class PagesController extends Controller
     }
 
     /**
-     * @param PageRequest $request
+     * @param Request $request
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function limbo(PageRequest $request, $id)
+    public function limbo(Request $request, $id)
     {
         return $this->_limbo(function () {
             $this->title = 'Page Draft';
@@ -274,7 +274,7 @@ class PagesController extends Controller
         }, function () use ($request) {
             $this->item->saveAsDraft($request->all());
             $this->redirect = redirect()->route('admin.pages.drafts');
-        }, $id, $request);
+        }, $id, $request, new PageRequest());
     }
 
     /**

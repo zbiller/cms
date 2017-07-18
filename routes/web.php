@@ -87,73 +87,29 @@ Route::group([
         });
 
         /**
-         * Access Control Level.
-         */
-        Route::group([
-            'namespace' => 'Acl',
-        ], function () {
-            /**
-             * CRUD Users.
-             */
-            Route::group([
-                'prefix' => 'users',
-            ], function () {
-                Route::get('/', ['as' => 'admin.users.index', 'uses' => 'UsersController@index', 'permissions' => 'users-list']);
-                Route::get('create', ['as' => 'admin.users.create', 'uses' => 'UsersController@create', 'permissions' => 'users-add']);
-                Route::get('edit/{user}', ['as' => 'admin.users.edit', 'uses' => 'UsersController@edit', 'permissions' => 'users-edit']);
-                Route::post('store', ['as' => 'admin.users.store', 'uses' => 'UsersController@store', 'permissions' => 'users-add']);
-                Route::put('update/{user}', ['as' => 'admin.users.update', 'uses' => 'UsersController@update', 'permissions' => 'users-edit']);
-                Route::delete('destroy/{user}', ['as' => 'admin.users.destroy', 'uses' => 'UsersController@destroy', 'permissions' => 'users-delete']);
-                Route::post('impersonate/{user}', ['as' => 'admin.users.impersonate', 'uses' => 'UsersController@impersonate', 'permissions' => 'users-impersonate']);
-            });
-
-            /**
-             * CRUD Admins.
-             */
-            Route::group([
-                'prefix' => 'admins',
-            ], function () {
-                Route::get('/', ['as' => 'admin.admins.index', 'uses' => 'AdminsController@index', 'permissions' => 'admins-list']);
-                Route::get('create', ['as' => 'admin.admins.create', 'uses' => 'AdminsController@create', 'permissions' => 'admins-add']);
-                Route::get('edit/{user}', ['as' => 'admin.admins.edit', 'uses' => 'AdminsController@edit', 'permissions' => 'admins-edit']);
-                Route::post('store', ['as' => 'admin.admins.store', 'uses' => 'AdminsController@store', 'permissions' => 'admins-add']);
-                Route::put('update/{user}', ['as' => 'admin.admins.update', 'uses' => 'AdminsController@update', 'permissions' => 'admins-edit']);
-                Route::delete('destroy/{user}', ['as' => 'admin.admins.destroy', 'uses' => 'AdminsController@destroy', 'permissions' => 'admins-delete']);
-            });
-
-            /**
-             * CRUD Roles.
-             */
-            Route::group([
-                'prefix' => 'roles',
-            ], function () {
-                Route::get('/', ['as' => 'admin.roles.index', 'uses' => 'RolesController@index', 'permissions' => 'roles-list']);
-                Route::get('create', ['as' => 'admin.roles.create', 'uses' => 'RolesController@create', 'permissions' => 'roles-add']);
-                Route::get('edit/{role}', ['as' => 'admin.roles.edit', 'uses' => 'RolesController@edit', 'permissions' => 'roles-edit']);
-                Route::post('store', ['as' => 'admin.roles.store', 'uses' => 'RolesController@store', 'permissions' => 'roles-add']);
-                Route::put('update/{role}', ['as' => 'admin.roles.update', 'uses' => 'RolesController@update', 'permissions' => 'roles-edit']);
-                Route::delete('destroy/{role}', ['as' => 'admin.roles.destroy', 'uses' => 'RolesController@destroy', 'permissions' => 'roles-delete']);
-            });
-
-            /**
-             * CRUD Activity Log.
-             */
-            Route::group([
-                'prefix' => 'activity',
-            ], function () {
-                Route::get('/', ['as' => 'admin.activity.index', 'uses' => 'ActivityController@index', 'permissions' => 'activity-list']);
-                Route::delete('destroy/{activity}', ['as' => 'admin.activity.destroy', 'uses' => 'ActivityController@destroy', 'permissions' => 'activity-delete']);
-                Route::delete('clean', ['as' => 'admin.activity.clean', 'uses' => 'ActivityController@clean', 'permissions' => 'activity-clean']);
-                Route::delete('delete', ['as' => 'admin.activity.delete', 'uses' => 'ActivityController@delete', 'permissions' => 'activity-delete']);
-            });
-        });
-
-        /**
          * Manage Content.
          */
         Route::group([
             'namespace' => 'Cms',
         ], function () {
+            /**
+             * CRUD Uploads.
+             */
+            Route::group([
+                'prefix' => 'uploads',
+            ], function () {
+                Route::get('/', ['as' => 'admin.uploads.index', 'uses' => 'UploadsController@index', 'permissions' => 'uploads-list']);
+                Route::get('show/{upload}', ['as' => 'admin.uploads.show', 'uses' => 'UploadsController@show', 'permissions' => 'uploads-list']);
+                Route::get('download/{upload}', ['as' => 'admin.uploads.download', 'uses' => 'UploadsController@download', 'permissions' => 'uploads-download']);
+                Route::get('get/{type?}', ['as' => 'admin.uploads.get', 'uses' => 'UploadsController@get', 'permissions' => 'uploads-list']);
+                Route::get('crop', ['as' => 'admin.uploads.crop', 'uses' => 'UploadsController@crop', 'permissions' => 'uploads-crop']);
+                Route::post('store', ['as' => 'admin.uploads.store', 'uses' => 'UploadsController@store', 'permissions' => 'uploads-upload']);
+                Route::post('upload', ['as' => 'admin.uploads.upload', 'uses' => 'UploadsController@upload', 'permissions' => 'uploads-upload']);
+                Route::post('set', ['as' => 'admin.uploads.set', 'uses' => 'UploadsController@set', 'permissions' => 'uploads-select']);
+                Route::post('cut', ['as' => 'admin.uploads.cut', 'uses' => 'UploadsController@cut', 'permissions' => 'uploads-crop']);
+                Route::delete('destroy/{upload}', ['as' => 'admin.uploads.destroy', 'uses' => 'UploadsController@destroy', 'permissions' => 'uploads-delete']);
+            });
+
             /**
              * CRUD Pages.
              */
@@ -298,24 +254,6 @@ Route::group([
             });
 
             /**
-             * CRUD Uploads.
-             */
-            Route::group([
-                'prefix' => 'uploads',
-            ], function () {
-                Route::get('/', ['as' => 'admin.uploads.index', 'uses' => 'UploadsController@index', 'permissions' => 'uploads-list']);
-                Route::get('show/{upload}', ['as' => 'admin.uploads.show', 'uses' => 'UploadsController@show', 'permissions' => 'uploads-list']);
-                Route::get('download/{upload}', ['as' => 'admin.uploads.download', 'uses' => 'UploadsController@download', 'permissions' => 'uploads-download']);
-                Route::get('get/{type?}', ['as' => 'admin.uploads.get', 'uses' => 'UploadsController@get', 'permissions' => 'uploads-list']);
-                Route::get('crop', ['as' => 'admin.uploads.crop', 'uses' => 'UploadsController@crop', 'permissions' => 'uploads-crop']);
-                Route::post('store', ['as' => 'admin.uploads.store', 'uses' => 'UploadsController@store', 'permissions' => 'uploads-upload']);
-                Route::post('upload', ['as' => 'admin.uploads.upload', 'uses' => 'UploadsController@upload', 'permissions' => 'uploads-upload']);
-                Route::post('set', ['as' => 'admin.uploads.set', 'uses' => 'UploadsController@set', 'permissions' => 'uploads-select']);
-                Route::post('cut', ['as' => 'admin.uploads.cut', 'uses' => 'UploadsController@cut', 'permissions' => 'uploads-crop']);
-                Route::delete('destroy/{upload}', ['as' => 'admin.uploads.destroy', 'uses' => 'UploadsController@destroy', 'permissions' => 'uploads-delete']);
-            });
-
-            /**
              * CRUD Emails.
              */
             Route::group([
@@ -356,6 +294,118 @@ Route::group([
                  * Revision Actions.
                  */
                 Route::get('revision/{revision}', ['as' => 'admin.emails.revision', 'uses' => 'EmailsController@revision', 'permissions' => 'revisions-rollback']);
+            });
+        });
+
+        /**
+         * Access Control Level.
+         */
+        Route::group([
+            'namespace' => 'Acl',
+        ], function () {
+            /**
+             * CRUD Users.
+             */
+            Route::group([
+                'prefix' => 'users',
+            ], function () {
+                Route::get('/', ['as' => 'admin.users.index', 'uses' => 'UsersController@index', 'permissions' => 'users-list']);
+                Route::get('create', ['as' => 'admin.users.create', 'uses' => 'UsersController@create', 'permissions' => 'users-add']);
+                Route::get('edit/{user}', ['as' => 'admin.users.edit', 'uses' => 'UsersController@edit', 'permissions' => 'users-edit']);
+                Route::post('store', ['as' => 'admin.users.store', 'uses' => 'UsersController@store', 'permissions' => 'users-add']);
+                Route::put('update/{user}', ['as' => 'admin.users.update', 'uses' => 'UsersController@update', 'permissions' => 'users-edit']);
+                Route::delete('destroy/{user}', ['as' => 'admin.users.destroy', 'uses' => 'UsersController@destroy', 'permissions' => 'users-delete']);
+                Route::post('impersonate/{user}', ['as' => 'admin.users.impersonate', 'uses' => 'UsersController@impersonate', 'permissions' => 'users-impersonate']);
+            });
+
+            /**
+             * CRUD Admins.
+             */
+            Route::group([
+                'prefix' => 'admins',
+            ], function () {
+                Route::get('/', ['as' => 'admin.admins.index', 'uses' => 'AdminsController@index', 'permissions' => 'admins-list']);
+                Route::get('create', ['as' => 'admin.admins.create', 'uses' => 'AdminsController@create', 'permissions' => 'admins-add']);
+                Route::get('edit/{user}', ['as' => 'admin.admins.edit', 'uses' => 'AdminsController@edit', 'permissions' => 'admins-edit']);
+                Route::post('store', ['as' => 'admin.admins.store', 'uses' => 'AdminsController@store', 'permissions' => 'admins-add']);
+                Route::put('update/{user}', ['as' => 'admin.admins.update', 'uses' => 'AdminsController@update', 'permissions' => 'admins-edit']);
+                Route::delete('destroy/{user}', ['as' => 'admin.admins.destroy', 'uses' => 'AdminsController@destroy', 'permissions' => 'admins-delete']);
+            });
+
+            /**
+             * CRUD Roles.
+             */
+            Route::group([
+                'prefix' => 'roles',
+            ], function () {
+                Route::get('/', ['as' => 'admin.roles.index', 'uses' => 'RolesController@index', 'permissions' => 'roles-list']);
+                Route::get('create', ['as' => 'admin.roles.create', 'uses' => 'RolesController@create', 'permissions' => 'roles-add']);
+                Route::get('edit/{role}', ['as' => 'admin.roles.edit', 'uses' => 'RolesController@edit', 'permissions' => 'roles-edit']);
+                Route::post('store', ['as' => 'admin.roles.store', 'uses' => 'RolesController@store', 'permissions' => 'roles-add']);
+                Route::put('update/{role}', ['as' => 'admin.roles.update', 'uses' => 'RolesController@update', 'permissions' => 'roles-edit']);
+                Route::delete('destroy/{role}', ['as' => 'admin.roles.destroy', 'uses' => 'RolesController@destroy', 'permissions' => 'roles-delete']);
+            });
+
+            /**
+             * CRUD Activity.
+             */
+            Route::group([
+                'prefix' => 'activity',
+            ], function () {
+                Route::get('/', ['as' => 'admin.activity.index', 'uses' => 'ActivityController@index', 'permissions' => 'activity-list']);
+                Route::delete('destroy/{activity}', ['as' => 'admin.activity.destroy', 'uses' => 'ActivityController@destroy', 'permissions' => 'activity-delete']);
+                Route::delete('clean', ['as' => 'admin.activity.clean', 'uses' => 'ActivityController@clean', 'permissions' => 'activity-clean']);
+                Route::delete('delete', ['as' => 'admin.activity.delete', 'uses' => 'ActivityController@delete', 'permissions' => 'activity-delete']);
+            });
+        });
+
+        /**
+         * Geo Location.
+         */
+        Route::group([
+            'namespace' => 'Location',
+        ], function () {
+            /**
+             * CRUD Countries.
+             */
+            Route::group([
+                'prefix' => 'countries',
+            ], function () {
+                Route::get('/', ['as' => 'admin.countries.index', 'uses' => 'CountriesController@index', 'permissions' => 'countries-list']);
+                Route::get('create', ['as' => 'admin.countries.create', 'uses' => 'CountriesController@create', 'permissions' => 'countries-add']);
+                Route::get('edit/{country}', ['as' => 'admin.countries.edit', 'uses' => 'CountriesController@edit', 'permissions' => 'countries-edit']);
+                Route::post('store', ['as' => 'admin.countries.store', 'uses' => 'CountriesController@store', 'permissions' => 'countries-add']);
+                Route::put('update/{country}', ['as' => 'admin.countries.update', 'uses' => 'CountriesController@update', 'permissions' => 'countries-edit']);
+                Route::delete('destroy/{country}', ['as' => 'admin.countries.destroy', 'uses' => 'CountriesController@destroy', 'permissions' => 'countries-delete']);
+            });
+
+            /**
+             * CRUD States.
+             */
+            Route::group([
+                'prefix' => 'states',
+            ], function () {
+                Route::get('/', ['as' => 'admin.states.index', 'uses' => 'StatesController@index', 'permissions' => 'states-list']);
+                Route::get('create', ['as' => 'admin.states.create', 'uses' => 'StatesController@create', 'permissions' => 'states-add']);
+                Route::get('edit/{state}', ['as' => 'admin.states.edit', 'uses' => 'StatesController@edit', 'permissions' => 'states-edit']);
+                Route::post('store', ['as' => 'admin.states.store', 'uses' => 'StatesController@store', 'permissions' => 'states-add']);
+                Route::put('update/{state}', ['as' => 'admin.states.update', 'uses' => 'StatesController@update', 'permissions' => 'states-edit']);
+                Route::delete('destroy/{state}', ['as' => 'admin.states.destroy', 'uses' => 'StatesController@destroy', 'permissions' => 'states-delete']);
+            });
+
+            /**
+             * CRUD Cities.
+             */
+            Route::group([
+                'prefix' => 'cities',
+            ], function () {
+                Route::get('/', ['as' => 'admin.cities.index', 'uses' => 'CitiesController@index', 'permissions' => 'cities-list']);
+                Route::get('create', ['as' => 'admin.cities.create', 'uses' => 'CitiesController@create', 'permissions' => 'cities-add']);
+                Route::get('edit/{city}', ['as' => 'admin.cities.edit', 'uses' => 'CitiesController@edit', 'permissions' => 'cities-edit']);
+                Route::post('store', ['as' => 'admin.cities.store', 'uses' => 'CitiesController@store', 'permissions' => 'cities-add']);
+                Route::put('update/{city}', ['as' => 'admin.cities.update', 'uses' => 'CitiesController@update', 'permissions' => 'cities-edit']);
+                Route::delete('destroy/{city}', ['as' => 'admin.cities.destroy', 'uses' => 'CitiesController@destroy', 'permissions' => 'cities-delete']);
+                Route::get('get-states/{country?}', ['as' => 'admin.cities.get_states', 'uses' => 'CitiesController@getStates']);
             });
         });
 

@@ -49,9 +49,42 @@ header {
 
         display: inline-block;
         margin: 0;
-        padding: 23px 0 0 15px;
+        padding: 23px 0 0 7px;
         color: $colorOsloGray;
         font-family: 'Open Sans Bold', sans-serif;
         text-transform: uppercase;
+    }
+
+    a.breadcrumb {
+        @include font-size(12px);
+        @include transition(all 0.3s ease);
+
+        display: inline-block;
+        margin: 0 0 0 7px;
+        padding: 23px 0 0 0;
+        color: $colorGullGray;
+        font-family: 'Open Sans Bold', sans-serif;
+        text-transform: uppercase;
+
+        &:hover {
+            color: $colorPictonBlue;
+        }
+
+        &:first-of-type {
+            margin-left: 15px;
+        }
+
+        &.last {
+            cursor: default;
+            color: $colorOsloGray;
+        }
+
+        > i {
+            margin-left: 7px;
+        }
+
+        @include media-query('tablet') {
+            display: none;
+        }
     }
 }

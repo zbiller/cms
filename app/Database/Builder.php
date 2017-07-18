@@ -2,6 +2,7 @@
 
 namespace App\Database;
 
+use App\Services\CacheService;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Database\Query\Grammars\Grammar;
@@ -10,35 +11,37 @@ use Illuminate\Database\Query\Processors\Processor;
 class Builder extends QueryBuilder
 {
     /**
+     * The cache tag value.
+     * The value comes from the App/Traits/IsCacheable.php file.
+     *
      * @var string
      */
     protected $cacheTag;
 
     /**
+     * The cache type value.
+     * Can have one of the values presented below by the TYPE_CACHE constants.
+     * The value comes from the App/Traits/IsCacheable.php file.
+     *
+     * @var string
+     */
+    protected $cacheType;
+
+    /**
      * Create a new query builder instance.
-     * Instantiate the cache tag value to be later used by Redis when storing the query in cache.
      *
      * @param ConnectionInterface $connection
      * @param Grammar|null $grammar
      * @param Processor|null $processor
      * @param string|null $cacheTag
+     * @param int $cacheType
      */
-    public function __construct(ConnectionInterface $connection, Grammar $grammar = null, Processor $processor = null, $cacheTag = null)
+    public function __construct(ConnectionInterface $connection, Grammar $grammar = null, Processor $processor = null, $cacheTag = null, $cacheType = null)
     {
         parent::__construct($connection, $grammar, $processor);
 
+        $this->cacheType = $cacheType;
         $this->cacheTag = $cacheTag;
-    }
-
-    /**
-     * Returns a cache tag for Redis to use.
-     * This tag is used so we know for which model/database_table the cache was set in Redis.
-     *
-     * @return string
-     */
-    protected function getCacheTag()
-    {
-        return $this->cacheTag;
     }
 
     /**
@@ -60,9 +63,23 @@ class Builder extends QueryBuilder
      */
     protected function runSelect()
     {
-        return cache()->store('redis')->tags($this->getCacheTag())->rememberForever($this->getCacheKey(), function() {
-            return parent::runSelect();
-        });
+        switch ($this->cacheType) {
+            case CacheService::TYPE_CACHE_QUERIES:
+                return cache()->store(CacheService::getQueryCacheStore())->tags($this->cacheTag)->rememberForever($this->getCacheKey(), function() {
+                    return parent::runSelect();
+                });
+
+                break;
+            case CacheService::TYPE_CACHE_DUPLICATE_QUERIES:
+                return cache()->store(CacheService::getDuplicateQueryCacheStore())->tags($this->cacheTag)->remember($this->getCacheKey(), 1, function() {
+                    return parent::runSelect();
+                });
+
+                break;
+            default:
+                return parent::runSelect();
+                break;
+        }
     }
 
     /**
@@ -73,7 +90,7 @@ class Builder extends QueryBuilder
      */
     public function delete($id = null)
     {
-        cache()->store('redis')->tags($this->getCacheTag())->flush();
+        cache()->store(CacheService::getQueryCacheStore())->tags($this->cacheTag)->flush();
 
         parent::delete($id);
     }
@@ -85,7 +102,7 @@ class Builder extends QueryBuilder
      */
     public function truncate()
     {
-        cache()->store('redis')->tags($this->getCacheTag())->flush();
+        cache()->store(CacheService::getQueryCacheStore())->tags($this->cacheTag)->flush();
 
         parent::truncate();
     }

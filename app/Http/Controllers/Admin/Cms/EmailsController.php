@@ -52,6 +52,7 @@ class EmailsController extends Controller
             $this->setMeta('title', 'Admin - Add Email');
 
             return view('admin.cms.emails.init')->with([
+                'title' => 'Add Email',
                 'types' => Email::$types,
                 'images' => Email::getImages(),
             ]);
@@ -263,12 +264,12 @@ class EmailsController extends Controller
     }
 
     /**
-     * @param EmailRequest $request
+     * @param Request $request
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws Exception
      */
-    public function limbo(EmailRequest $request, $id)
+    public function limbo(Request $request, $id)
     {
         return $this->_limbo(function () {
             $this->title = 'Email Draft';
@@ -282,7 +283,7 @@ class EmailsController extends Controller
         }, function () use ($request) {
             $this->item->saveAsDraft($request->all());
             $this->redirect = redirect()->route('admin.emails.drafts');
-        }, $id, $request);
+        }, $id, $request, new EmailRequest());
     }
 
     /**

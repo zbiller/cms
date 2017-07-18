@@ -18,30 +18,65 @@ class CacheService
     protected static $model;
 
     /**
-     * Flag whether or not to cache queries for the current request.
+     * Flag whether or not to cache queries forever.
      *
      * @var bool
      */
     protected static $cacheQueries = true;
 
     /**
-     * Get the cache store to be used when caching queries.
+     * Flag whether or not to cache only duplicate queries for the current request.
+     *
+     * @var bool
+     */
+    protected static $cacheDuplicateQueries = true;
+
+    /**
+     * The query cache types available inside App/Services/CacheService.php
+     */
+    const TYPE_CACHE_QUERIES = 1;
+    const TYPE_CACHE_DUPLICATE_QUERIES = 2;
+
+    /**
+     * Get the cache store to be used when caching queries forever.
      *
      * @return string
      */
     public static function getQueryCacheStore()
     {
-        return config('cache.query.store') ?: 'redis';
+        return config('cache.query.query_store') ?: 'redis';
+    }
+
+    /**
+     * Get the cache store to be used when caching only duplicate queries.
+     *
+     * @return string
+     */
+    public static function getDuplicateQueryCacheStore()
+    {
+        return config('cache.query.duplicate_query_store') ?: 'array';
     }
 
     /**
      * Get the cache prefix to be appended to the specific cache tag for the model instance.
+     * Used when caching queries forever.
      *
      * @return string
      */
     public static function getQueryCachePrefix()
     {
-        return config('cache.query.prefix');
+        return config('cache.query.query_prefix');
+    }
+
+    /**
+     * Get the cache prefix to be appended to the specific cache tag for the model instance.
+     * Used when caching only duplicate queries.
+     *
+     * @return string
+     */
+    public static function getDuplicateQueryCachePrefix()
+    {
+        return config('cache.query.duplicate_query_prefix');
     }
 
     /**
@@ -57,13 +92,23 @@ class CacheService
     }
 
     /**
-     * Verify if query caching should run.
+     * Verify if forever query caching should run.
      *
      * @return bool
      */
     public static function shouldCacheQueries()
     {
-        return self::shouldCache() && config('cache.query.enabled') === true;
+        return self::shouldCache() && config('cache.query.cache_queries') === true;
+    }
+
+    /**
+     * Verify if caching of duplicate queries should run.
+     *
+     * @return bool
+     */
+    public static function shouldCacheDuplicateQueries()
+    {
+        return self::shouldCache() && config('cache.query.cache_duplicate_queries') === true;
     }
 
     /**
@@ -72,9 +117,13 @@ class CacheService
      *
      * @throws Exception
      */
-    public static function flushAllCache()
+    public static function flushAllQueryCache()
     {
-        if (self::shouldCacheQueries() && self::canCacheQueries()) {
+        if (!self::canCacheQueries()) {
+            return;
+        }
+
+        if (self::shouldCacheQueries()) {
             cache()->store(self::getQueryCacheStore())->flush();
         }
     }
@@ -89,7 +138,7 @@ class CacheService
      */
     public static function clearQueryCache(Model $model)
     {
-        if (!(self::shouldCacheQueries() && self::canCacheQueries())) {
+        if (!((self::shouldCacheQueries() || self::shouldCacheDuplicateQueries()) && self::canCacheQueries())) {
             return;
         }
 
@@ -103,32 +152,32 @@ class CacheService
                     isset($attributes['model']) && ($related = $attributes['model']) &&
                     $related instanceof Model && array_key_exists(IsCacheable::class, class_uses($related))
                 ) {
-                    cache()->store(self::getQueryCacheStore())->tags($related->getQueryCacheTag())->flush();
+                    cache()->store(self::getQueryCacheStore())->tags(self::$model->getQueryCacheTag())->flush();
                 }
             }
         } catch (Exception $e) {
-            self::flushAllCache();
+            self::flushAllQueryCache();
         }
     }
 
     /**
-     * Verify if caching is enabled for the current request.
+     * Verify if either forever query caching or duplicate query caching are enabled.
      *
      * @return bool
      */
     public static function canCacheQueries()
     {
-        return self::$cacheQueries === true;
+        return self::$cacheQueries === true || self::$cacheDuplicateQueries === true;
     }
 
     /**
-     * Disabled caching of database queries for the current request.
+     * Disable caching of database queries for the current request.
      * This is generally useful when working with rolled back database migrations.
      *
      * @return void
      */
     public static function disableQueryCache()
     {
-        self::$cacheQueries = false;
+        self::$cacheQueries = self::$cacheDuplicateQueries = false;
     }
 }

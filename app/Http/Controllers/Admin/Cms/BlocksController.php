@@ -50,6 +50,7 @@ class BlocksController extends Controller
         if (!$type || !array_key_exists($type, Block::getTypes())) {
             $this->setMeta('title', 'Admin - Add Block');
             return view('admin.cms.blocks.init')->with([
+                'title' => 'Add Block',
                 'types' => Block::getTypes(),
                 'images' => Block::getImages(),
             ]);
@@ -214,12 +215,12 @@ class BlocksController extends Controller
     }
 
     /**
-     * @param BlockRequest $request
+     * @param Request $request
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws Exception
      */
-    public function limbo(BlockRequest $request, $id)
+    public function limbo(Request $request, $id)
     {
         return $this->_limbo(function () {
             $this->title = 'Block Draft';
@@ -227,7 +228,7 @@ class BlocksController extends Controller
         }, function () use ($request) {
             $this->item->saveAsDraft($request->all());
             $this->redirect = redirect()->route('admin.blocks.drafts');
-        }, $id, $request);
+        }, $id, $request, new BlockRequest());
     }
 
     /**

@@ -28,6 +28,7 @@ class MenusController extends Controller
         $this->setMeta('title', 'Admin - Menu Locations');
 
         return view('admin.cms.menus.locations')->with([
+            'title' => 'Menus',
             'locations' => Menu::$locations
         ]);
     }

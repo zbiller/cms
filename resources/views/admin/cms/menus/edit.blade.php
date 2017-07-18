@@ -1,11 +1,5 @@
 @extends('layouts::admin.default')
 
-@section('header')
-    @parent
-
-    <h1>Edit Menu</h1>
-@endsection
-
 @section('content')
     <section class="tabs">
         @include('admin.cms.menus._tabs')

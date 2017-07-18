@@ -111,7 +111,7 @@ class UploaderHelper
     ];
 
     /**
-     * The index used to identify an existing uploader place in a set.
+     * The index used to identify an existing uploader number.
      *
      * @var int
      */

@@ -110,7 +110,10 @@ class Email extends Model
             'partial' => 'password_recovery',
             'preview_image' => 'password_recovery.jpg',
             'variables' => [
-                'full_name', 'reset_password_url'
+                'first_name',
+                'last_name',
+                'full_name',
+                'reset_password_url',
             ],
         ],
         self::TYPE_EMAIL_VERIFICATION => [
@@ -119,7 +122,10 @@ class Email extends Model
             'partial' => 'email_verification',
             'preview_image' => 'email_verification.jpg',
             'variables' => [
-                'full_name', 'email_verification_url'
+                'first_name',
+                'last_name',
+                'full_name',
+                'email_verification_url',
             ],
         ],
     ];
@@ -140,6 +146,16 @@ class Email extends Model
      * @var array
      */
     public static $variables = [
+        'first_name' => [
+            'name' => 'First Name',
+            'label' => 'The first name of the logged in user.',
+            'description' => 'If used in an email, but no logged in user exists, this variable will not render anything.',
+        ],
+        'last_name' => [
+            'name' => 'Last Name',
+            'label' => 'The last name of the logged in user.',
+            'description' => 'If used in an email, but no logged in user exists, this variable will not render anything.',
+        ],
         'full_name' => [
             'name' => 'Full Name',
             'label' => 'The full name of the logged in user.',
