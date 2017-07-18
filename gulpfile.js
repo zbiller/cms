@@ -1,5 +1,4 @@
 const elixir = require('laravel-elixir');
-require('laravel-elixir-minify-html');
 
 /*
  |--------------------------------------------------------------------------
@@ -97,16 +96,5 @@ elixir(function (mix) {
             'assets/js/admin/app.js',
             'assets/css/front/app.css',
             'assets/js/front/app.js'
-        ])
-
-        /*.html(
-            'storage/framework/views/!*',
-            'storage/framework/views/',
-            {
-                collapseWhitespace: true,
-                removeAttributeQuotes: true,
-                removeComments: true,
-                minifyJS: true
-            }
-        )*/;
+        ]);
 });
