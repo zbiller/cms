@@ -23,7 +23,7 @@ return [
         'disk' => 'uploads',
 
         /**
-         * Flag indicating that on record upload, to keep or remove both old uploaded file (and it's dependencies) and database record.
+         * Flag indicating that on record upload, to keep or remove both old uploaded file (and it's dependencies) and the database record.
          *
          * Set this to true in order to keep old files and database records when uploading a new file for the same model entity field.
          * Set this to false in order to remove old files from disk and also delete the database record for the old file.
@@ -33,7 +33,7 @@ return [
         'keep_old' => true,
 
         /**
-         * Flag indicating that on file upload, to take into consideration if the existing file in the same full path.
+         * Flag indicating that on file upload, to take into consideration if the existing file is in the same full path.
          *
          * Given you attempt to store a file on disk with the full path of "x/y/z.ext".
          *
@@ -134,7 +134,7 @@ return [
          *
          * Specify the "ratio" = true individually on each style, to let the uploader know you want to preserve the original ratio.
          *
-         * If ratio preserving is enabled, the image will first be re-sized and the cropped.
+         * If ratio preserving is enabled, the image will first be re-sized and then cropped.
          * If ratio preserving is disabled, the image will only be re-sized at the width and height specified.
          *
          * Also, not specifying the ratio for a style, it will consider the ratio as enabled.
@@ -147,6 +147,9 @@ return [
          * With that said, keep in mind that you can specify other options, not just the image styles.
          *
          * To specify the image styles, return an array like: [images => [styles => [field => [name] => [width, height, ratio]]]]
+         *
+         * It is good to know that you can also specify multiple fields using regex.
+         * metadata[items][*][image] => applies to metadata[items][1][image], metadata[items][two][image], etc.
          */
         'styles' => []
     ],
