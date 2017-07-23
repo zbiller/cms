@@ -4,6 +4,9 @@
 
 @if($item->exists)
     {!! block()->tab($item) !!}
-    {!! draft()->tab($item, 'admin.pages.draft') !!}
-    {!! revision()->tab($item, 'admin.pages.revision') !!}
+
+    @if(!isset($on_draft) && !isset($on_limbo_draft) && !isset($on_revision))
+        {!! draft()->tab($item, 'admin.pages.draft') !!}
+        {!! revision()->tab($item, 'admin.pages.revision') !!}
+    @endif
 @endif

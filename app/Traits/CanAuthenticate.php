@@ -158,7 +158,7 @@ trait CanAuthenticate
     {
         if (!self::$authenticationOptions->validator || !(self::$authenticationOptions->validator instanceof FormRequest)) {
             throw new Exception(
-                'The controller ' . self::class . ' uses the CanRegister trait.' . PHP_EOL .
+                'The controller ' . self::class . ' uses the CanAuthenticate trait.' . PHP_EOL .
                 'You are required to set the "validator" form request that will validate a user registration.' . PHP_EOL .
                 'You can do this from inside the getAuthenticateOptions() method defined on the controller.' . PHP_EOL .
                 'Please note that the validator must be an instance of Illuminate\Foundation\Http\FormRequest.'

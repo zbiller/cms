@@ -1,3 +1,9 @@
+@if($item->exists)
+    {!! form_admin()->model($item, ['url' => $url, 'method' => 'PUT', 'class' => 'form', 'files' => true]) !!}
+@else
+    {!! form_admin()->open(['url' => $url, 'method' => 'POST', 'class' => 'form', 'files' => true]) !!}
+@endif
+
 {!! validation('admin')->errors() !!}
 
 <div id="tab-1" class="tab">
@@ -9,6 +15,8 @@
 @if($item->exists)
     {!! block()->container($item) !!}
 @endif
+
+{!! form_admin()->close() !!}
 
 @section('bottom_scripts')
     {!! JsValidator::formRequest(App\Http\Requests\LayoutRequest::class, '.form') !!}

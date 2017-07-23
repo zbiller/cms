@@ -11,6 +11,8 @@
 @endsection
 
 @section('footer')
+    {!! pagination('admin')->render($items) !!}
+
     <section class="actions">
         {!! button()->updatePage() !!}
         {!! button()->deletedRecords(route('admin.emails.deleted')) !!}

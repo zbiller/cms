@@ -6,18 +6,10 @@
     </section>
 
     <section class="view">
-        {!! form_admin()->open(['url' => route('admin.menus.store', ['location' => $location, 'parent' => $parent ?: null]), 'method' => 'POST', 'class' => 'form', 'files' => true]) !!}
-            @include('admin.cms.menus._form')
-        {!! form()->close() !!}
+        @include('admin.cms.menus._form', ['url' => route('admin.menus.store', ['location' => $location, 'parent' => $parent ?: null])])
     </section>
 @endsection
 
 @section('footer')
-    <section class="actions left">
-        {!! button()->cancelAction(route('admin.menus.index', $location)) !!}
-    </section>
-    <section class="actions">
-        {!! button()->saveAndStay() !!}
-        {!! button()->saveRecord() !!}
-    </section>
+    @include('admin.cms.menus._buttons')
 @endsection

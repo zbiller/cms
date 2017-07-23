@@ -6,18 +6,10 @@
     </section>
 
     <section class="view">
-        {!! form_admin()->open(['url' => route('admin.cities.store'), 'method' => 'POST', 'class' => 'form', 'files' => true]) !!}
-            @include('admin.location.cities._form')
-        {!! form()->close() !!}
+        @include('admin.location.cities._form', ['url' => route('admin.cities.store')])
     </section>
 @endsection
 
 @section('footer')
-    <section class="actions left">
-        {!! button()->cancelAction(route('admin.cities.index')) !!}
-    </section>
-    <section class="actions">
-        {!! button()->saveAndStay() !!}
-        {!! button()->saveRecord() !!}
-    </section>
+    @include('admin.location.cities._buttons')
 @endsection

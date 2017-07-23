@@ -6,22 +6,11 @@
     </section>
 
     <section class="view">
-        {!! form_admin()->model($item, ['url' => route('admin.pages.update', ['id' => $item->id]), 'method' => 'PUT', 'class' => 'form', 'files' => true]) !!}
-            @include('admin.cms.pages._form')
-        {!! form()->close() !!}
+        @include('admin.cms.pages._form', ['url' => route('admin.pages.update', ['id' => $item->id])])
     </section>
 @endsection
 
 @section('footer')
-    <section class="actions left">
-        {!! button()->cancelAction(route('admin.pages.index')) !!}
-    </section>
-    <section class="actions">
-        {!! button()->duplicateRecord(route('admin.pages.duplicate', $item->id)) !!}
-        {!! button()->previewRecord(route('admin.pages.preview', $item->id)) !!}
-        {!! button()->saveAsDraft(route('admin.drafts.save')) !!}
-        {!! button()->saveAndStay() !!}
-        {!! button()->saveRecord() !!}
-    </section>
+    @include('admin.cms.pages._buttons')
 @endsection
 

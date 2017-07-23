@@ -6,18 +6,10 @@
     </section>
 
     <section class="view">
-        {!! form_admin()->open(['url' => route('admin.roles.store'), 'method' => 'POST', 'class' => 'form', 'files' => true]) !!}
-            @include('admin.acl.roles._form')
-        {!! form()->close() !!}
+        @include('admin.acl.roles._form', ['url' => route('admin.roles.store')])
     </section>
 @endsection
 
 @section('footer')
-    <section class="actions left">
-        {!! button()->cancelAction(route('admin.roles.index')) !!}
-    </section>
-    <section class="actions">
-        {!! button()->saveAndStay() !!}
-        {!! button()->saveRecord() !!}
-    </section>
+    @include('admin.acl.roles._buttons')
 @endsection

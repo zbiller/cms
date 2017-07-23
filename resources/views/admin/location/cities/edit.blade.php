@@ -6,19 +6,11 @@
     </section>
 
     <section class="view">
-        {!! form_admin()->model($item, ['url' => route('admin.cities.update', ['id' => $item->id]), 'method' => 'PUT', 'class' => 'form', 'files' => true]) !!}
-            @include('admin.location.cities._form')
-        {!! form()->close() !!}
-</section>
+        @include('admin.location.cities._form', ['url' => route('admin.cities.update', ['id' => $item->id])])
+    </section>
 @endsection
 
 @section('footer')
-    <section class="actions left">
-        {!! button()->cancelAction(route('admin.cities.index')) !!}
-    </section>
-    <section class="actions">
-        {!! button()->saveAndStay() !!}
-        {!! button()->saveRecord() !!}
-    </section>
+    @include('admin.location.cities._buttons')
 @endsection
 

@@ -6,20 +6,10 @@
     </section>
 
     <section class="view">
-        {!! form_admin()->model($item, ['url' => route('admin.blocks.update', ['id' => $item->id]), 'method' => 'PUT', 'class' => 'form', 'files' => true]) !!}
-            @include('admin.cms.blocks._form')
-        {!! form()->close() !!}
+        @include('admin.cms.blocks._form', ['url' => route('admin.blocks.update', ['id' => $item->id])])
     </section>
 @endsection
 
 @section('footer')
-    <section class="actions left">
-        {!! button()->cancelAction(route('admin.blocks.index')) !!}
-    </section>
-    <section class="actions">
-        {!! button()->duplicateRecord(route('admin.blocks.duplicate', $item->id)) !!}
-        {!! button()->saveAsDraft(route('admin.drafts.save')) !!}
-        {!! button()->saveAndStay() !!}
-        {!! button()->saveRecord() !!}
-    </section>
+    @include('admin.cms.blocks._buttons')
 @endsection

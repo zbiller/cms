@@ -2,43 +2,12 @@
 
 @section('content')
     <section class="tabs">
-        <a href="#tab-1">Primary Information</a>
-        <a href="#tab-2">Manage Content</a>
-        <a href="#tab-3">Meta Tags</a>
-        {!! block()->tab($item) !!}
+        @include('admin.cms.pages._tabs', ['on_limbo_draft' => true])
     </section>
 
     <section class="view">
-        {!! form_admin()->model($item, ['method' => 'PUT', 'class' => 'form']) !!}
-
-        {!! validation('admin')->errors() !!}
-
-        {!! form()->hidden('_back', route('admin.pages.drafts')) !!}
-        {!! form()->hidden('_class', \App\Models\Cms\Page::class) !!}
-        {!! form()->hidden('_request', \App\Http\Requests\PageRequest::class) !!}
-        {!! form()->hidden('_id', $item->exists ? $item->id : null) !!}
-
-        <div id="tab-1" class="tab">
-            {!! form_admin()->select('layout_id', 'Layout', $layouts->pluck('name', 'id')) !!}
-            {!! form_admin()->select('type', 'Type', $types) !!}
-            {!! form_admin()->text('name', 'Name', null, $item->exists ? [] : ['id' => 'slug-from']) !!}
-            {!! form_admin()->text('slug', 'Slug', null, $item->exists ? [] : ['id' => 'slug-to']) !!}
-            {!! auth()->user()->isDeveloper() ? form_admin()->text('identifier') : '' !!}
-            {!! form_admin()->select('active', 'Active', $actives) !!}
-        </div>
-        <div id="tab-2" class="tab">
-            {!! form_admin()->text('metadata[title]', 'Title') !!}
-            {!! form_admin()->text('metadata[subtitle]', 'Subtitle') !!}
-            {!! form_admin()->editor('metadata[content]', 'Content') !!}
-        </div>
-        <div id="tab-3" class="tab">
-            {!! form_admin()->text('metadata[meta_title]', 'Meta Title') !!}
-            {!! form_admin()->textarea('metadata[meta_description]', 'Meta Description') !!}
-            {!! form_admin()->textarea('metadata[meta_keywords]', 'Meta Keywords') !!}
-        </div>
-        {!! block()->container($item) !!}
-        {!! form()->close() !!}
-</section>
+        @include('admin.cms.pages._form', ['on_limbo_draft' => true])
+    </section>
 @endsection
 
 @section('footer')
@@ -50,4 +19,3 @@
         {!! button()->publishDraft(route('admin.drafts.publish_limbo')) !!}
     </section>
 @endsection
-

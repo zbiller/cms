@@ -85,7 +85,7 @@ class Permission extends Model implements PermissionContract
     }
 
     /**
-     * Filter query results to exclude the given roles.
+     * Filter query results to exclude the given permissions.
      *
      * @param Builder $query
      * @param ...$permissions

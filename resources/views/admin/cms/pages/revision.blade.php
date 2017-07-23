@@ -2,36 +2,12 @@
 
 @section('content')
     <section class="tabs">
-        <a href="#tab-1">Primary Information</a>
-        <a href="#tab-2">Manage Content</a>
-        <a href="#tab-3">Meta Tags</a>
-        {!! block()->tab($item) !!}
+        @include('admin.cms.pages._tabs', ['on_revision' => true])
     </section>
 
     <section class="view">
-        {!! form_admin()->model($item, ['class' => 'form']) !!}
-            <div id="tab-1" class="tab">
-                {!! form_admin()->select('layout_id', 'Layout', $layouts->pluck('name', 'id')) !!}
-                {!! form_admin()->select('type', 'Type', $types) !!}
-                {!! form_admin()->text('name', 'Name') !!}
-                {!! form_admin()->text('slug', 'Slug') !!}
-                {!! auth()->user()->isDeveloper() ? form_admin()->text('identifier', 'Identifier') : '' !!}
-                {!! form_admin()->select('active', 'Active', $actives) !!}
-            </div>
-            <div id="tab-2" class="tab">
-                {!! form_admin()->text('metadata[title]', 'Title') !!}
-                {!! form_admin()->text('metadata[subtitle]', 'Subtitle') !!}
-                {!! form_admin()->editor('metadata[content]', 'Content') !!}
-            </div>
-            <div id="tab-3" class="tab">
-                {!! form_admin()->text('metadata[meta][title]', 'Meta Title') !!}
-                {!! uploader()->field('metadata[meta][image]')->label('Image')->model($item)->types('image')->manager() !!}
-                {!! form_admin()->textarea('metadata[meta][description]', 'Meta Description') !!}
-                {!! form_admin()->textarea('metadata[meta][keywords]', 'Meta Keywords') !!}
-            </div>
-            {!! block()->container($item, null, $revision, true) !!}
-        {!! form()->close() !!}
-</section>
+        @include('admin.cms.pages._form', ['on_revision' => true])
+    </section>
 @endsection
 
 {!! revision()->view($revision, $item) !!}

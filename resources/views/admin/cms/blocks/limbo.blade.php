@@ -2,30 +2,12 @@
 
 @section('content')
     <section class="tabs">
-        <a href="#tab-1">Primary Information</a>
-        <a href="#tab-2">Manage Details</a>
+        @include('admin.cms.blocks._tabs', ['on_limbo_draft' => true])
     </section>
 
     <section class="view">
-        {!! form_admin()->model($item, ['method' => 'PUT', 'class' => 'form']) !!}
-
-        {!! validation('admin')->errors() !!}
-
-        {!! form()->hidden('_back', route('admin.blocks.drafts')) !!}
-        {!! form()->hidden('_class', \App\Models\Cms\Block::class) !!}
-        {!! form()->hidden('_request', \App\Http\Requests\BlockRequest::class) !!}
-        {!! form()->hidden('_id', $item->exists ? $item->id : null) !!}
-
-        <div id="tab-1" class="tab">
-            {!! form_admin()->hidden('type', $item->exists ? $item->type : $type) !!}
-            {!! form_admin()->text('name') !!}
-            {!! form_admin()->text('anchor') !!}
-        </div>
-        <div id="tab-2" class="tab">
-            @include('blocks_' . ($item->exists ? $item->type : $type) . '::admin')
-        </div>
-        {!! form()->close() !!}
-</section>
+        @include('admin.cms.blocks._form', ['on_limbo_draft' => true])
+    </section>
 @endsection
 
 @section('footer')

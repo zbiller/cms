@@ -6,18 +6,10 @@
     </section>
 
     <section class="view">
-        {!! form_admin()->open(['url' => route('admin.users.store'), 'method' => 'POST', 'class' => 'form', 'files' => true]) !!}
-            @include('admin.acl.users._form')
-        {!! form_admin()->close() !!}
+        @include('admin.acl.users._form', ['url' => route('admin.users.store')])
     </section>
 @endsection
 
 @section('footer')
-    <section class="actions left">
-        {!! button()->cancelAction(route('admin.users.index')) !!}
-    </section>
-    <section class="actions">
-        {!! button()->saveAndStay() !!}
-        {!! button()->saveRecord() !!}
-    </section>
+    @include('admin.acl.users._buttons')
 @endsection

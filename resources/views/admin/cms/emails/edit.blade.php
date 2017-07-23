@@ -6,22 +6,10 @@
     </section>
 
     <section class="view">
-        {!! form_admin()->model($item, ['url' => route('admin.emails.update', ['id' => $item->id]), 'method' => 'PUT', 'class' => 'form', 'files' => true]) !!}
-        @include('admin.cms.emails._form')
-        {!! form()->close() !!}
+        @include('admin.cms.emails._form', ['url' => route('admin.emails.update', ['id' => $item->id])])
     </section>
 @endsection
 
 @section('footer')
-    <section class="actions left">
-        {!! button()->cancelAction(route('admin.emails.index')) !!}
-    </section>
-    <section class="actions">
-        {!! button()->duplicateRecord(route('admin.emails.duplicate', $item->id)) !!}
-        {!! button()->previewRecord(route('admin.emails.preview', $item->id)) !!}
-        {!! button()->saveAsDraft(route('admin.drafts.save')) !!}
-        {!! button()->saveAndStay() !!}
-        {!! button()->saveRecord() !!}
-    </section>
+    @include('admin.cms.emails._buttons')
 @endsection
-

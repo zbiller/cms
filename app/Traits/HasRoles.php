@@ -225,8 +225,10 @@ trait HasRoles
     {
         if (is_string($permission)) {
             try {
+                dd($permission);
                 $permission = Permission::findByName($permission);
             } catch (ModelNotFoundException $e) {
+                dd($e);
                 return false;
             }
         }

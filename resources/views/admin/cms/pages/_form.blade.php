@@ -1,8 +1,19 @@
+@if($item->exists)
+    @if(isset($on_draft) || isset($on_limbo_draft) || isset($on_revision))
+        {!! form_admin()->model($item, ['method' => isset($on_draft) || isset($on_revision) ? 'POST' : 'PUT','class' => 'form', 'files' => true]) !!}
+    @else
+        {!! form_admin()->model($item, ['url' => $url, 'method' => 'PUT', 'class' => 'form', 'files' => true]) !!}
+    @endif
+@else
+    {!! form_admin()->open(['url' => $url, 'method' => 'POST', 'class' => 'form', 'files' => true]) !!}
+@endif
+
 {!! validation('admin')->errors() !!}
 
 {!! form()->hidden('_class', \App\Models\Cms\Page::class) !!}
 {!! form()->hidden('_request', \App\Http\Requests\PageRequest::class) !!}
 {!! form()->hidden('_id', $item->exists ? $item->id : null) !!}
+{!! form()->hidden('_back', route('admin.pages.drafts')) !!}
 
 <div id="tab-1" class="tab">
     {!! form_admin()->select('type', 'Type', $types) !!}
@@ -26,14 +37,17 @@
 </div>
 
 @if($item->exists)
-    {!! block()->container($item) !!}
-    {!! draft()->container($item) !!}
-    {!! revision()->container($item) !!}
+    {!! block()->container($item, isset($on_draft) ? $draft : null, isset($on_revision) ? $revision : null, isset($on_revision) ? true : false) !!}
+
+    @if(!isset($on_draft) && !isset($on_limbo_draft) && !isset($on_revision))
+        {!! draft()->container($item) !!}
+        {!! revision()->container($item) !!}
+    @endif
 @endif
 
-@section('bottom_scripts')
-    {!! JsValidator::formRequest(App\Http\Requests\PageRequest::class, '.form') !!}
+{!! form_admin()->close() !!}
 
+@section('bottom_scripts')
     <script type="text/javascript">
         var type = $('select[name="type"]');
         var getLayouts = function (_this) {
@@ -60,13 +74,19 @@
         if (type.length) {
             @if(!$item->exists)
                 if (type.val()) {
-                    getLayouts();
-                }
+                getLayouts();
+            }
             @endif
 
             type.change(function () {
-                getLayouts();
-            });
+                        getLayouts();
+                    });
         }
     </script>
 @append
+
+@if(!isset($on_draft) && !isset($on_limbo_draft) && !isset($on_revision))
+    @section('bottom_scripts')
+        {!! JsValidator::formRequest(App\Http\Requests\PageRequest::class, '.form') !!}
+    @append
+@endif

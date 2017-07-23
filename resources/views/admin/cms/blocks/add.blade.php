@@ -6,19 +6,10 @@
     </section>
 
     <section class="view">
-        {!! form_admin()->open(['url' => route('admin.blocks.store'), 'method' => 'POST', 'class' => 'form', 'files' => true]) !!}
-            @include('admin.cms.blocks._form')
-        {!! form()->close() !!}
+        @include('admin.cms.blocks._form', ['url' => route('admin.blocks.store')])
     </section>
 @endsection
 
 @section('footer')
-    <section class="actions left">
-        {!! button()->cancelAction(route('admin.blocks.index')) !!}
-    </section>
-    <section class="actions">
-        {!! button()->saveAsDraft(route('admin.drafts.save')) !!}
-        {!! button()->saveAndStay() !!}
-        {!! button()->saveRecord() !!}
-    </section>
+    @include('admin.cms.blocks._buttons')
 @endsection

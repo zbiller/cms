@@ -1,3 +1,9 @@
+@if($item->exists)
+    {!! form_admin()->model($item, ['url' => $url, 'method' => 'PUT', 'class' => 'form', 'files' => true]) !!}
+@else
+    {!! form_admin()->open(['url' => $url, 'method' => 'POST', 'class' => 'form', 'files' => true]) !!}
+@endif
+
 {!! validation('admin')->errors() !!}
 
 <div id="tab-1" class="tab">
@@ -14,6 +20,8 @@
     {!! form_admin()->select('active', 'Active', $actives) !!}
     {!! form_admin()->select('metadata[new_window]', 'Open In New Window', $windows, ($item->exists && isset($item->metadata->new_window) ? $item->metadata->new_window : null)) !!}
 </div>
+
+{!! form_admin()->close() !!}
 
 @section('bottom_scripts')
     {!! JsValidator::formRequest(App\Http\Requests\MenuRequest::class, '.form') !!}

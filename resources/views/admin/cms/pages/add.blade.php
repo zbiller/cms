@@ -6,20 +6,10 @@
     </section>
 
     <section class="view">
-        {!! form_admin()->open(['url' => route('admin.pages.store', ['parent' => $parent ?: null]), 'method' => 'POST', 'class' => 'form', 'files' => true]) !!}
-            @include('admin.cms.pages._form')
-        {!! form()->close() !!}
+        @include('admin.cms.pages._form', ['url' => route('admin.pages.store', ['parent' => $parent ?: null])])
     </section>
 @endsection
 
 @section('footer')
-    <section class="actions left">
-        {!! button()->cancelAction(route('admin.pages.index')) !!}
-    </section>
-    <section class="actions">
-        {!! button()->previewRecord(route('admin.pages.preview', $item->id)) !!}
-        {!! button()->saveAsDraft(route('admin.drafts.save')) !!}
-        {!! button()->saveAndStay() !!}
-        {!! button()->saveRecord() !!}
-    </section>
+    @include('admin.cms.pages._buttons')
 @endsection
