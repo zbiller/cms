@@ -107,14 +107,6 @@ class MenuComposer
                     $item->name('Analytics')->url(route('admin.settings.analytics'))->permissions('settings-analytics')->active('admin/settings/analytics/*');
                 });
             });
-
-            /*$menu->add(function (MenuItem $item) use ($menu) {
-                $test = $item->name('Test')->data('icon', 'fa-text-width')->active('admin/cars/*');
-
-                $menu->child($test, function (MenuItem $item) {
-                    $item->name('Cars')->url(route('admin.cars.index'))->active('admin/cars/*');
-                });
-            });*/
         })->filter(function (MenuItem $item) use ($user) {
             return $user->isSuper() || $user->hasAnyPermission($item->permissions());
         });
