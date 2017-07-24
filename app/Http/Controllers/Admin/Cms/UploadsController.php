@@ -298,7 +298,7 @@ class UploadsController extends Controller
         $image = Image::make($path);
         $image->crop((int)$width, (int)$height, (int)$x, (int)$y);
 
-        if ($width > $size) {
+        if (is_numeric($width) && is_numeric($size) && $width > $size) {
             $image->resize(floor($width * ($size / $width)), floor($height * ($size / $width)));
         }
 

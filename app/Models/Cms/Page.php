@@ -391,4 +391,14 @@ class Page extends Model
     {
         return ActivityOptions::instance();
     }
+
+    /**
+     * Get the specific upload config parts for this model.
+     *
+     * @return array
+     */
+    public function getUploadConfig()
+    {
+        return [];
+    }
 }

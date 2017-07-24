@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.4.28 on 2017-07-10.
+ * Generated for Laravel 5.4.28 on 2017-07-24.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -13429,6 +13429,74 @@ namespace Spatie\Analytics {
  
 }
 
+namespace Spatie\LaravelImageOptimizer { 
+
+    class ImageOptimizerFacade {
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getOptimizers()
+        {
+            return \Spatie\ImageOptimizer\OptimizerChain::getOptimizers();
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function addOptimizer($optimizer)
+        {
+            return \Spatie\ImageOptimizer\OptimizerChain::addOptimizer($optimizer);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setOptimizers($optimizers)
+        {
+            return \Spatie\ImageOptimizer\OptimizerChain::setOptimizers($optimizers);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setTimeout($timeoutInSeconds)
+        {
+            return \Spatie\ImageOptimizer\OptimizerChain::setTimeout($timeoutInSeconds);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function useLogger($log)
+        {
+            return \Spatie\ImageOptimizer\OptimizerChain::useLogger($log);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function optimize($pathToImage, $pathToOutput = null)
+        {
+            return \Spatie\ImageOptimizer\OptimizerChain::optimize($pathToImage, $pathToOutput);
+        }
+         
+    }
+ 
+}
+
 namespace DaveJamesMiller\Breadcrumbs { 
 
     class Facade {
@@ -16254,6 +16322,8 @@ namespace  {
     class FFMpeg extends \Pbmedia\LaravelFFMpeg\FFMpegFacade {}
 
     class Analytics extends \Spatie\Analytics\AnalyticsFacade {}
+
+    class ImageOptimizer extends \Spatie\LaravelImageOptimizer\ImageOptimizerFacade {}
 
     class Breadcrumbs extends \DaveJamesMiller\Breadcrumbs\Facade {}
 
