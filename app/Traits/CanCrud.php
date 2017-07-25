@@ -2,16 +2,13 @@
 
 namespace App\Traits;
 
-use App\Services\CacheService;
 use DB;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rules\Unique;
-use Illuminate\Validation\ValidationException;
 use Route;
 use Closure;
 use Exception;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
+use App\Services\CacheService;
 use App\Exceptions\CrudException;
 use App\Exceptions\DuplicateException;
 use App\Exceptions\UrlException;
@@ -24,6 +21,8 @@ use Illuminate\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Routing\ControllerDispatcher;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 use Illuminate\Routing\Route as Router;
@@ -112,6 +111,9 @@ trait CanCrud
         'delete' => [
             'DELETE',
         ],
+        'duplicate' => [
+            'POST',
+        ],
         'drafts' => [
             'GET',
         ],
@@ -122,10 +124,13 @@ trait CanCrud
             'GET',
             'PUT',
         ],
+        'revision' => [
+            'GET',
+        ],
     ];
 
     /**
-     * The list of exceptions that are soft (no throwable).
+     * The list of exceptions that are soft (not throwable).
      * When the script fails with one of these exceptions, instead of throwing it, it will output an error message to the user.
      * 
      * @var array
@@ -419,12 +424,11 @@ trait CanCrud
 
         try {
             DB::beginTransaction();
+            CacheService::disableQueryCache();
 
             if ($function) {
                 call_user_func($function);
             }
-
-            CacheService::disableQueryCache();
 
             session()->flash('is_preview', true);
 
@@ -668,9 +672,9 @@ trait CanCrud
         } catch (ModelNotFoundException $e) {
             session()->flash('flash_error', __('crud.model_not_found'));
         } catch (Exception $e) {
-            session()->flash('flash_error', $e->getMessage());
-
-            if (!in_array(get_class($e), self::$softExceptions)) {
+            if (in_array(get_class($e), self::$softExceptions)) {
+                session()->flash('flash_error', $e->getMessage());
+            } else {
                 throw $e;
             }
         }

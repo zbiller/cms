@@ -83,6 +83,32 @@ class Builder extends QueryBuilder
     }
 
     /**
+     * Insert a new record into the database.
+     *
+     * @param array $values
+     * @return bool
+     */
+    public function insert(array $values)
+    {
+        cache()->store(CacheService::getQueryCacheStore())->tags($this->cacheTag)->flush();
+
+        return parent::insert($values);
+    }
+
+    /**
+     * Update a record in the database.
+     *
+     * @param array $values
+     * @return int
+     */
+    public function update(array $values)
+    {
+        cache()->store(CacheService::getQueryCacheStore())->tags($this->cacheTag)->flush();
+
+        return parent::update($values);
+    }
+
+    /**
      * Delete a record from the database.
      *
      * @param int|null $id

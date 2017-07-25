@@ -79,8 +79,8 @@
             @endif
 
             type.change(function () {
-                        getLayouts();
-                    });
+                getLayouts();
+            });
         }
     </script>
 @append
