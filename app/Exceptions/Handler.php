@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Illuminate\Auth\AuthenticationException;
+use Illuminate\Foundation\Http\Exceptions\MaintenanceModeException;
 use GrahamCampbell\Exceptions\NewExceptionHandler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
@@ -44,7 +45,11 @@ class Handler extends ExceptionHandler
     public function render($request, Exception $exception)
     {
         if ($exception instanceof AuthenticationException) {
-            return $this->unauthenticated($request, $exception);
+            return $this->notAuthenticated($request, $exception);
+        }
+
+        if ($exception instanceof MaintenanceModeException) {
+            return $this->underMaintenance($request, $exception);
         }
 
         return parent::render($request, $exception);
@@ -53,11 +58,11 @@ class Handler extends ExceptionHandler
     /**
      * Convert an authentication exception into an unauthenticated response.
      *
-     * @param \Illuminate\Http\Request  $request
-     * @param \Illuminate\Auth\AuthenticationException  $exception
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Auth\AuthenticationException $exception
      * @return \Illuminate\Http\Response
      */
-    protected function unauthenticated($request, AuthenticationException $exception)
+    protected function notAuthenticated($request, AuthenticationException $exception)
     {
         if ($request->expectsJson()) {
             return response()->json(['error' => 'Unauthenticated.'], 401);
@@ -66,5 +71,25 @@ class Handler extends ExceptionHandler
         return redirect()->guest(
             in_array('admin', $exception->guards()) ? route('admin.login') : route('login')
         );
+    }
+
+    /**
+     * Convert an maintenance mode exception into an maintenance mode response.
+     *
+     * @param \Illuminate\Http\Request $request
+     * @param \Illuminate\Foundation\Http\Exceptions\MaintenanceModeException $exception
+     * @return \Illuminate\Http\Response
+     */
+    protected function underMaintenance($request, MaintenanceModeException $exception)
+    {
+        if ($request->expectsJson()) {
+            return response()->json(['error' => 'Under Maintenance.'], 503);
+        }
+
+        if (config('app.debug') === false) {
+            return response()->view('errors.503');
+        }
+
+        return parent::render($request, $exception);
     }
 }

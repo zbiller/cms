@@ -7,6 +7,8 @@ use App\Models\Model;
 class BlockOptions
 {
     /**
+     * The locations available to assign blocks in.
+     *
      * @var array
      */
     public $locations;
