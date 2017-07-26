@@ -48,33 +48,48 @@ class FlashHelper
     }
 
     /**
-     * Render the success flash message.
+     * Set or render the success flash message.
      *
+     * @param string|null $message
      * @return \Illuminate\View\View
      */
-    public function success()
+    public function success($message = null)
     {
-        return $this->show('success', session()->get('flash_success'));
+        if ($message) {
+            session()->flash('flash_success', $message);
+        } else {
+            return $this->show('success', session()->get('flash_success'));
+        }
     }
 
     /**
-     * Render the error flash message.
+     * Set or render the error flash message.
      *
+     * @param string|null $message
      * @return \Illuminate\View\View
      */
-    public function error()
+    public function error($message = null)
     {
-        return $this->show('error', session()->get('flash_error'));
+        if ($message) {
+            session()->flash('flash_error', $message);
+        } else {
+            return $this->show('error', session()->get('flash_error'));
+        }
     }
 
     /**
-     * Render the warning flash message.
+     * Set or render the warning flash message.
      *
+     * @param string|null $message
      * @return \Illuminate\View\View
      */
-    public function warning()
+    public function warning($message = null)
     {
-        return $this->show('warning', session()->get('flash_warning'));
+        if ($message) {
+            session()->flash('flash_warning', $message);
+        } else {
+            return $this->show('warning', session()->get('flash_warning'));
+        }
     }
 
     /**

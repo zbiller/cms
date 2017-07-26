@@ -219,7 +219,7 @@ trait CanCrud
                 call_user_func($function);
             }
 
-            session()->flash('flash_success', __('crud.create_success'));
+            flash()->success(__('crud.create_success'));
         }, $request);
     }
 
@@ -273,7 +273,7 @@ trait CanCrud
                 call_user_func($function);
             }
 
-            session()->flash('flash_success', __('crud.update_success'));
+            flash()->success(__('crud.update_success'));
         }, $request);
     }
 
@@ -295,7 +295,7 @@ trait CanCrud
                 call_user_func($function);
             }
 
-            session()->flash('flash_success', __('crud.delete_success'));
+            flash()->success(__('crud.delete_success'));
         });
     }
 
@@ -347,7 +347,7 @@ trait CanCrud
                 call_user_func($function);
             }
 
-            session()->flash('flash_success', __('crud.restore_success'));
+            flash()->success(__('crud.restore_success'));
         });
     }
 
@@ -369,7 +369,7 @@ trait CanCrud
                 call_user_func($function);
             }
 
-            session()->flash('flash_success', __('crud.delete_success'));
+            flash()->success(__('crud.delete_success'));
         });
     }
 
@@ -392,7 +392,7 @@ trait CanCrud
                 call_user_func($function);
             }
 
-            session()->flash('flash_success', __('crud.duplicate_success'));
+            flash()->success(__('crud.duplicate_success'));
         }, $request);
     }
 
@@ -418,7 +418,7 @@ trait CanCrud
         $this->initCrudModel();
 
         if (!in_array(HasUrl::class, class_uses($this->model))) {
-            session()->flash('flash_error', 'You cannot preview an entity that does not have an URL!');
+            flash()->error('You cannot preview an entity that does not have an URL!');
             return back();
         }
 
@@ -616,11 +616,11 @@ trait CanCrud
                             call_user_func($putFunction);
                         }
 
-                        session()->flash('flash_success', __('crud.draft_save_success'));
+                        flash()->success(__('crud.draft_save_success'));
                     } catch (DraftException $e) {
-                        session()->flash('flash_error', $e->getMessage());
+                        flash()->error($e->getMessage());
                     } catch (Exception $e) {
-                        session()->flash('flash_error', $e->getMessage());
+                        flash()->error($e->getMessage());
 
                         if (!in_array(get_class($e), self::$softExceptions)) {
                             throw $e;
@@ -631,7 +631,7 @@ trait CanCrud
                     break;
             }
         } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', __('crud.draft_not_found'));
+            flash()->error(__('crud.draft_not_found'));
             return $this->redirect ?: back();
         }
     }
@@ -670,10 +670,10 @@ trait CanCrud
 
             return $this->view->with($this->vars);
         } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', __('crud.model_not_found'));
+            flash()->error(__('crud.model_not_found'));
         } catch (Exception $e) {
             if (in_array(get_class($e), self::$softExceptions)) {
-                session()->flash('flash_error', $e->getMessage());
+                flash()->error($e->getMessage());
             } else {
                 throw $e;
             }
@@ -720,12 +720,12 @@ trait CanCrud
         } catch (ModelNotFoundException $e) {
             DB::rollBack();
 
-            session()->flash('flash_error', __('crud.model_not_found'));
+            flash()->error(__('crud.model_not_found'));
         } catch (Exception $e) {
             DB::rollBack();
 
             if (in_array(get_class($e), self::$softExceptions)) {
-                session()->flash('flash_error', $e->getMessage());
+                flash()->error($e->getMessage());
                 return back()->withInput($request ? $request->all() : []);
             }
 

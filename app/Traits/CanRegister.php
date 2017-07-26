@@ -72,7 +72,7 @@ trait CanRegister
         $validator = Validator::make($request->all(), $validator->rules(), $validator->messages(), $validator->attributes());
 
         if ($validator->fails()) {
-            session()->flash('flash_error', $validator->errors()->first());
+            flash()->error($validator->errors()->first());
             return back()->withErrors($validator->errors());
         }
 
@@ -113,12 +113,12 @@ trait CanRegister
 
             $this->guard()->login($user);
 
-            session()->flash('flash_success', 'Your email address has been successfully verified and you have been logged into your account!');
+            flash()->success('Your email address has been successfully verified and you have been logged into your account!');
             return $this->verified($request, $user) ?: redirect(self::$registerOptions->verificationRedirect);
         } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', 'There is no user with the provided email and token in the system!');
+            flash()->error('There is no user with the provided email and token in the system!');
         } catch (VerificationException $e) {
-            session()->flash('flash_error', $e->getMessage());
+            flash()->error($e->getMessage());
         }
 
         return redirect('/');

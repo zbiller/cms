@@ -106,7 +106,7 @@ class DraftsController extends Controller
 
             $this->validateOriginalEntityData($request->all());
         } catch (ValidationException $e) {
-            session()->flash('flash_error', $e->getMessage());
+            flash()->error($e->getMessage());
             return back()->withInput($request->all())->withErrors($e->validator->errors());
         } catch (InvalidArgumentException $e) {
             throw new Exception($e->getMessage(), $e->getCode());
@@ -121,10 +121,10 @@ class DraftsController extends Controller
         try {
             $this->model->saveAsDraft($request->all());
 
-            session()->flash('flash_success', 'The draft was successfully saved!');
+            flash()->success('The draft was successfully saved!');
             return back();
         } catch (DraftException $e) {
-            session()->flash('flash_error', $e->getMessage());
+            flash()->error($e->getMessage());
             return back()->withInput($request->all());
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());
@@ -155,13 +155,13 @@ class DraftsController extends Controller
 
             $model->saveAsDraft($data);
 
-            session()->flash('flash_success', 'The draft was successfully created!');
+            flash()->success('The draft was successfully created!');
             return back();
         } catch (DraftException $e) {
-            session()->flash('flash_error', $e->getMessage());
+            flash()->error($e->getMessage());
             return back()->withInput($request->all());
         } catch (ValidationException $e) {
-            session()->flash('flash_error', $e->getMessage());
+            flash()->error($e->getMessage());
             return back()->withInput($request->all())->withErrors($e->validator->errors());
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());
@@ -194,13 +194,13 @@ class DraftsController extends Controller
                 $model->saveAsDraft($data, $draft);
             }
 
-            session()->flash('flash_success', 'The draft was successfully updated!');
+            flash()->success('The draft was successfully updated!');
             return back();
         } catch (DraftException $e) {
-            session()->flash('flash_error', $e->getMessage());
+            flash()->error($e->getMessage());
             return back()->withInput($request->all());
         } catch (ValidationException $e) {
-            session()->flash('flash_error', $e->getMessage());
+            flash()->error($e->getMessage());
             return back()->withInput($request->all())->withErrors($e->validator->errors());
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());
@@ -244,7 +244,7 @@ class DraftsController extends Controller
                 $model->publishDraft($draft->fresh());
             });
 
-            session()->flash('flash_success', 'The draft was successfully published!');
+            flash()->success('The draft was successfully published!');
 
             if (request()->ajax()) {
                 return ['status' => true];
@@ -252,7 +252,7 @@ class DraftsController extends Controller
 
             return $redirect ? redirect($redirect) : back();
         } catch (DraftException $e) {
-            session()->flash('flash_error', $e->getMessage());
+            flash()->error($e->getMessage());
 
             if (request()->ajax()) {
                 return ['status' => true];
@@ -260,7 +260,7 @@ class DraftsController extends Controller
 
             return back()->withInput($request->all());
         } catch (ValidationException $e) {
-            session()->flash('flash_error', $e->getMessage());
+            flash()->error($e->getMessage());
             return back()->withInput($request->all())->withErrors($e->validator->errors());
         } catch (Exception $e) {
             if (request()->ajax()) {
@@ -286,7 +286,7 @@ class DraftsController extends Controller
         ]);
 
         if ($validator->fails()) {
-            session()->flash('flash_error', 'Could not publish the draft! Please try again.');
+            flash()->error('Could not publish the draft! Please try again.');
             return back();
         }
 
@@ -310,13 +310,13 @@ class DraftsController extends Controller
                 $model->publishDraft();
             });
 
-            session()->flash('flash_success', 'The draft was successfully published!');
+            flash()->success('The draft was successfully published!');
             return $request->get('_back') ? redirect($request->get('_back')) : back();
         } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', 'You are trying to publish a draft that does not exist!');
+            flash()->error('You are trying to publish a draft that does not exist!');
             return $request->get('_back') ? redirect($request->get('_back')) : back();
         } catch (ValidationException $e) {
-            session()->flash('flash_error', $e->getMessage());
+            flash()->error($e->getMessage());
             return back()->withInput($request->all())->withErrors($e->validator->errors());
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
@@ -368,7 +368,7 @@ class DraftsController extends Controller
         ]);
 
         if ($validator->fails()) {
-            session()->flash('flash_error', 'Could not delete the draft! Please try again.');
+            flash()->error('Could not delete the draft! Please try again.');
             return back();
         }
 
@@ -379,13 +379,13 @@ class DraftsController extends Controller
 
             $model->deleteDraft();
 
-            session()->flash('flash_success', 'The draft was successfully deleted!');
+            flash()->success('The draft was successfully deleted!');
             return back();
         } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', 'You are trying to delete a draft that does not exist!');
+            flash()->error('You are trying to delete a draft that does not exist!');
             return back();
         } catch (DraftException $e) {
-            session()->flash('flash_error', $e->getMessage());
+            flash()->error($e->getMessage());
             return back();
         } catch (Exception $e) {
             throw new Exception($e->getMessage());

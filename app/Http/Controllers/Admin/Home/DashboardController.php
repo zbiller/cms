@@ -32,7 +32,7 @@ class DashboardController extends Controller
         }
 
         if ($startDate > $endDate) {
-            session()->flash('flash_error', 'Please select a valid time period in which to view Analytics data!');
+            flash()->error('Please select a valid time period in which to view Analytics data!');
             return back();
         }
 

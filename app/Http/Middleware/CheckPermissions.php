@@ -27,7 +27,7 @@ class CheckPermissions
         $this->setPermissions($permissions, $request->route()->action);
 
         if (!auth()->user()->isSuper() && !auth()->user()->hasAllPermissions($this->permissions)) {
-            session()->flash('flash_error', 'Permission denied!');
+            flash()->error('Permission denied!');
             return back();
         }
 

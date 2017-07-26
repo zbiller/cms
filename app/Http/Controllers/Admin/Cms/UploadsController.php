@@ -48,7 +48,7 @@ class UploadsController extends Controller
         try {
             return (new UploadService($upload->full_path))->show();
         } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', 'You are trying to view a record that does not exist!');
+            flash()->error('You are trying to view a record that does not exist!');
             return redirect()->route('admin.uploads.index');
         }
     }
@@ -143,19 +143,19 @@ class UploadsController extends Controller
         try {
             (new UploadService($upload->full_path))->unload();
 
-            session()->flash('flash_success', 'The record was successfully deleted!');
+            flash()->success('The record was successfully deleted!');
             return redirect()->route('admin.uploads.index', parse_url(url()->previous(), PHP_URL_QUERY) ?: []);
         } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', 'You are trying to delete a record that does not exist!');
+            flash()->error('You are trying to delete a record that does not exist!');
             return redirect()->route('admin.uploads.index');
         } catch (QueryException $e) {
-            session()->flash('flash_error', 'Could not delete the file because it is used by other entities!');
+            flash()->error('Could not delete the file because it is used by other entities!');
             return redirect()->route('admin.uploads.index');
         } catch (UploadException $e) {
-            session()->flash('flash_error', $e->getMessage());
+            flash()->error($e->getMessage());
             return back();
         } catch (Exception $e) {
-            session()->flash('flash_error', 'The record could not be deleted! Please try again.');
+            flash()->error('The record could not be deleted! Please try again.');
             return back();
         }
     }
@@ -170,7 +170,7 @@ class UploadsController extends Controller
         try {
             return (new UploadService($upload->full_path))->download();
         } catch (ModelNotFoundException $e) {
-            session()->flash('flash_error', 'You are trying to download a file that does not exist!');
+            flash()->error('You are trying to download a file that does not exist!');
             return redirect()->route('admin.uploads.index');
         }
     }

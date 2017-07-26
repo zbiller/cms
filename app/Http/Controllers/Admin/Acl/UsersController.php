@@ -124,7 +124,7 @@ class UsersController extends Controller
     public function impersonate(User $user)
     {
         auth()->guard('user')->login($user);
-        session()->flash('flash_error', 'You are now signed in as ' . $user->full_name);
+        flash()->error('You are now signed in as ' . $user->full_name);
 
         return redirect('/');
     }

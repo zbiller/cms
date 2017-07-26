@@ -70,9 +70,9 @@ class ActivityController extends Controller
         try {
             Activity::clean();
 
-            session()->flash('flash_success', 'The records were successfully cleaned up!');
+            flash()->success('The records were successfully cleaned up!');
         } catch (Exception $e) {
-            session()->flash('flash_error', 'Could not clean up the records! Please try again.');
+            flash()->error('Could not clean up the records! Please try again.');
         }
 
         return back();
@@ -87,9 +87,9 @@ class ActivityController extends Controller
         try {
             Activity::getQuery()->delete();
 
-            session()->flash('flash_success', 'All records were successfully deleted!');
+            flash()->success('All records were successfully deleted!');
         } catch (Exception $e) {
-            session()->flash('flash_error', 'Could not delete the records! Please try again.');
+            flash()->error('Could not delete the records! Please try again.');
         }
 
         return back();

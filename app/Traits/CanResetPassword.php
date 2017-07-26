@@ -129,7 +129,7 @@ trait CanResetPassword
      */
     protected function sendResetResponse($response)
     {
-        session()->flash('flash_success', __($response));
+        flash()->success(__($response));
         return $this->baseSendResetResponse($response);
     }
 
@@ -142,7 +142,7 @@ trait CanResetPassword
      */
     protected function sendResetFailedResponse(Request $request, $response)
     {
-        session()->flash('flash_error', __($response));
+        flash()->error(__($response));
         return back();
     }
 
@@ -155,11 +155,11 @@ trait CanResetPassword
     protected function sendResetLinkResponse($response)
     {
         if (self::$resetPasswordOptions->redirect) {
-            session()->flash('flash_success', __($response));
+            flash()->success(__($response));
             return redirect(self::$resetPasswordOptions->redirect);
         }
 
-        session()->flash('flash_error', __($response));
+        flash()->error(__($response));
         return $this->baseSendResetLinkResponse($response);
     }
 
@@ -172,7 +172,7 @@ trait CanResetPassword
      */
     protected function sendResetLinkFailedResponse(Request $request, $response)
     {
-        session()->flash('flash_error', __($response));
+        flash()->error(__($response));
         return back();
     }
 

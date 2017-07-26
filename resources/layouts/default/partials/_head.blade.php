@@ -3,7 +3,6 @@
 <link href="http://fonts.googleapis.com/css?family=Hind:300,400,500,600,700" rel="stylesheet" type="text/css">
 
 {!! Meta::tags('title', 'image', 'description', 'keywords') !!}
-
 {{ Html::style(elixir('assets/css/front/app.css')) }}
 
 {!! setting()->value('analytics-code') !!}

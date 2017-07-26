@@ -262,12 +262,12 @@ class FormAdminHelper
      * Create an email input field.
      *
      * @param string $name
-     * @param string|null $value
      * @param string|null $label
+     * @param string|null $value
      * @param array $options
      * @return string
      */
-    public function email($name, $value = null, $label = null, array $options = [])
+    public function email($name, $label = null, $value = null, array $options = [])
     {
         $options['data-value'] = $value;
 
@@ -281,12 +281,12 @@ class FormAdminHelper
      * Create a phone input field.
      *
      * @param string $name
-     * @param string|null $value
      * @param string|null $label
+     * @param string|null $value
      * @param array $options
      * @return string
      */
-    public function phone($name, $value = null, $label = null, array $options = [])
+    public function phone($name, $label = null, $value = null, array $options = [])
     {
         $options['data-value'] = $value;
 

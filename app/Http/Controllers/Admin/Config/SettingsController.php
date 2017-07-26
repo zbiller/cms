@@ -85,11 +85,11 @@ class SettingsController extends Controller
                     }
                 }
 
-                session()->flash('flash_success', __('crud.update_success'));
+                flash()->success(__('crud.update_success'));
                 return redirect()->route('admin.settings.general');
             });
         } catch (Exception $e) {
-            session()->flash('flash_success', 'Something went wrong! Please try again.');
+            flash()->success('Something went wrong! Please try again.');
             return redirect()->route('admin.settings.general');
         }
     }
@@ -123,11 +123,11 @@ class SettingsController extends Controller
                     }
                 }
 
-                session()->flash('flash_success', __('crud.update_success'));
+                flash()->success(__('crud.update_success'));
                 return redirect()->route('admin.settings.analytics');
             });
         } catch (Exception $e) {
-            session()->flash('flash_success', 'Something went wrong! Please try again.');
+            flash()->success('Something went wrong! Please try again.');
             return redirect()->route('admin.settings.analytics');
         }
     }

@@ -64,7 +64,7 @@ class RevisionsController extends Controller
             $redirect = session()->pull('revision_back_url_' . $revision->id);
             $revision->revisionable->rollbackToRevision($revision);
 
-            session()->flash('flash_success', 'The revision was successfully rolled back!');
+            flash()->success('The revision was successfully rolled back!');
 
             if (request()->ajax()) {
                 return [
