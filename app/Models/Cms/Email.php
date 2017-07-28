@@ -107,7 +107,6 @@ class Email extends Model
         self::TYPE_PASSWORD_RECOVERY => [
             'class' => 'App\Mail\PasswordRecovery',
             'view' => 'emails.password_recovery',
-            'partial' => 'password_recovery',
             'preview_image' => 'password_recovery.jpg',
             'variables' => [
                 'first_name',
@@ -119,7 +118,6 @@ class Email extends Model
         self::TYPE_EMAIL_VERIFICATION => [
             'class' => 'App\Mail\EmailVerifications',
             'view' => 'emails.email_verification',
-            'partial' => 'email_verification',
             'preview_image' => 'email_verification.jpg',
             'variables' => [
                 'first_name',
@@ -312,21 +310,6 @@ class Email extends Model
         }
 
         return self::$map[$this->type]['view'];
-    }
-
-    /**
-     * Get the corresponding view from the $map property, for a loaded email instance.
-     *
-     * @return mixed
-     * @throws EmailException
-     */
-    public function getPartial()
-    {
-        if (!isset(self::$map[$this->type]['partial'])) {
-            throw new EmailException('Email partial not found!');
-        }
-
-        return self::$map[$this->type]['partial'];
     }
 
     /**

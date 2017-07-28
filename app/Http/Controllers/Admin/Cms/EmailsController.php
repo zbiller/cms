@@ -63,7 +63,6 @@ class EmailsController extends Controller
             $this->view = view('admin.cms.emails.add');
             $this->vars = [
                 'type' => $type,
-                'partial' => Email::$map[$type]['partial'],
                 'variables' => Email::getVariables($type),
                 'fromEmail' => Email::getFromAddress(),
                 'fromName' => Email::getFromName(),
@@ -96,7 +95,6 @@ class EmailsController extends Controller
             $this->title = 'Edit Email';
             $this->view = view('admin.cms.emails.edit');
             $this->vars = [
-                'partial' => $this->item->getPartial(),
                 'variables' => Email::getVariables($this->item->type),
                 'fromEmail' => Email::getFromAddress(),
                 'fromName' => Email::getFromName(),
@@ -255,7 +253,6 @@ class EmailsController extends Controller
             $this->title = 'Email Draft';
             $this->view = view('admin.cms.emails.draft');
             $this->vars = [
-                'partial' => $this->item->getPartial(),
                 'variables' => Email::getVariables($this->item->type),
                 'fromEmail' => Email::getFromAddress(),
                 'fromName' => Email::getFromName(),
@@ -275,7 +272,6 @@ class EmailsController extends Controller
             $this->title = 'Email Draft';
             $this->view = view('admin.cms.emails.limbo');
             $this->vars = [
-                'partial' => $this->item->getPartial(),
                 'variables' => Email::getVariables($this->item->type),
                 'fromEmail' => Email::getFromAddress(),
                 'fromName' => Email::getFromName(),
@@ -299,7 +295,6 @@ class EmailsController extends Controller
             $this->title = 'Email Revision';
             $this->view = view('admin.cms.emails.revision');
             $this->vars = [
-                'partial' => $this->item->getPartial(),
                 'variables' => Email::getVariables($this->item->type),
                 'fromEmail' => Email::getFromAddress(),
                 'fromName' => Email::getFromName(),

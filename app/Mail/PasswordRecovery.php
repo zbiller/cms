@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use App\Models\Cms\Email;
 use App\Exceptions\EmailException;
-use File;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;

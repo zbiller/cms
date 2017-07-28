@@ -7,13 +7,6 @@ use App\Models\Config\Setting;
 class SettingHelper
 {
     /**
-     * The key to find the setting by.
-     *
-     * @var bool
-     */
-    protected $key;
-
-    /**
      * @var Setting
      */
     private static $settings = [];
