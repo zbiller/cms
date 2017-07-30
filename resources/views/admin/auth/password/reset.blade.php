@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="header">
-        Neurony
+        {{ setting()->value('company-name') }}
     </div>
     <div class="content">
         {!! validation('admin')->errors() !!}

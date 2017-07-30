@@ -426,7 +426,7 @@ class PagesController extends Controller
 
         if ((int)$data['parent'] != (int)$data['old_parent']) {
             $parent = Page::find($data['parent']);
-            $page = Page::find($data['page']);
+            $page = Page::find($data['node']);
 
             $page->url()->update([
                 'url' => trim(($parent ? $parent->url->url . '/' : '') . $page->slug, '/')

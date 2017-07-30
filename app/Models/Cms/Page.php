@@ -4,6 +4,7 @@ namespace App\Models\Cms;
 
 use Exception;
 use App\Models\Model;
+use App\Traits\HasUploads;
 use App\Traits\HasBlocks;
 use App\Traits\HasUrl;
 use App\Traits\HasNodes;
@@ -27,6 +28,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Page extends Model
 {
+    use HasUploads;
     use HasBlocks {
         getInheritedBlocks as baseGetInheritedBlocks;
     }
@@ -374,12 +376,8 @@ class Page extends Model
     public static function getDuplicateOptions()
     {
         return DuplicateOptions::instance()
-            ->excludeColumns([
-                '_lft', '_rgt', 'identifier', 'created_at', 'updated_at'
-            ])
-            ->excludeRelations([
-                'parent', 'children', 'url', 'layout'
-            ]);
+            ->excludeColumns('_lft', '_rgt', 'identifier', 'created_at', 'updated_at')
+            ->excludeRelations('parent', 'children', 'url', 'layout', 'drafts', 'revisions');
     }
 
     /**
