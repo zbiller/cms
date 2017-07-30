@@ -269,6 +269,34 @@ Breadcrumbs::register('admin.emails.limbo', function($breadcrumbs, $draft) {
 
 /**
 | ---------------------------------------------------------------------------------------------------------------------
+| Discounts
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+/* Home > Discounts */
+Breadcrumbs::register('admin.discounts.index', function($breadcrumbs) {
+    $breadcrumbs->parent('admin');
+    $breadcrumbs->push('Discounts', route('admin.discounts.index'));
+});
+
+/* Home > Discounts > Add */
+Breadcrumbs::register('admin.discounts.create', function($breadcrumbs) {
+    $breadcrumbs->parent('admin.discounts.index');
+    $breadcrumbs->push('Add', route('admin.discounts.create'));
+});
+
+/* Home > Discounts > Edit */
+Breadcrumbs::register('admin.discounts.edit', function($breadcrumbs, $discount) {
+    $breadcrumbs->parent('admin.discounts.index');
+    $breadcrumbs->push('Edit', route('admin.discounts.edit', $discount));
+});
+/**
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+
+
+
+/**
+| ---------------------------------------------------------------------------------------------------------------------
 | Users
 | ---------------------------------------------------------------------------------------------------------------------
  */
@@ -341,9 +369,9 @@ Breadcrumbs::register('admin.roles.create', function($breadcrumbs) {
 });
 
 /* Home > Roles > Edit */
-Breadcrumbs::register('admin.roles.edit', function($breadcrumbs, $admin) {
+Breadcrumbs::register('admin.roles.edit', function($breadcrumbs, $role) {
     $breadcrumbs->parent('admin.roles.index');
-    $breadcrumbs->push('Edit', route('admin.roles.edit', $admin));
+    $breadcrumbs->push('Edit', route('admin.roles.edit', $role));
 });
 /**
 | ---------------------------------------------------------------------------------------------------------------------
@@ -385,9 +413,9 @@ Breadcrumbs::register('admin.countries.create', function($breadcrumbs) {
 });
 
 /* Home > Countries > Edit */
-Breadcrumbs::register('admin.countries.edit', function($breadcrumbs, $admin) {
+Breadcrumbs::register('admin.countries.edit', function($breadcrumbs, $country) {
     $breadcrumbs->parent('admin.countries.index');
-    $breadcrumbs->push('Edit', route('admin.countries.edit', $admin));
+    $breadcrumbs->push('Edit', route('admin.countries.edit', $country));
 });
 /**
 | ---------------------------------------------------------------------------------------------------------------------
@@ -413,9 +441,9 @@ Breadcrumbs::register('admin.states.create', function($breadcrumbs) {
 });
 
 /* Home > States > Edit */
-Breadcrumbs::register('admin.states.edit', function($breadcrumbs, $admin) {
+Breadcrumbs::register('admin.states.edit', function($breadcrumbs, $state) {
     $breadcrumbs->parent('admin.states.index');
-    $breadcrumbs->push('Edit', route('admin.states.edit', $admin));
+    $breadcrumbs->push('Edit', route('admin.states.edit', $state));
 });
 /**
 | ---------------------------------------------------------------------------------------------------------------------
@@ -441,9 +469,9 @@ Breadcrumbs::register('admin.cities.create', function($breadcrumbs) {
 });
 
 /* Home > Cities > Edit */
-Breadcrumbs::register('admin.cities.edit', function($breadcrumbs, $admin) {
+Breadcrumbs::register('admin.cities.edit', function($breadcrumbs, $city) {
     $breadcrumbs->parent('admin.cities.index');
-    $breadcrumbs->push('Edit', route('admin.cities.edit', $admin));
+    $breadcrumbs->push('Edit', route('admin.cities.edit', $city));
 });
 /**
 | ---------------------------------------------------------------------------------------------------------------------

@@ -298,6 +298,27 @@ Route::group([
         });
 
         /**
+         * Shop Panel.
+         */
+        Route::group([
+            'namespace' => 'Shop',
+        ], function () {
+            /**
+             * CRUD Discounts.
+             */
+            Route::group([
+                'prefix' => 'discounts',
+            ], function () {
+                Route::get('/', ['as' => 'admin.discounts.index', 'uses' => 'DiscountsController@index', 'permissions' => 'discounts-list']);
+                Route::get('create', ['as' => 'admin.discounts.create', 'uses' => 'DiscountsController@create', 'permissions' => 'discounts-add']);
+                Route::get('edit/{discount}', ['as' => 'admin.discounts.edit', 'uses' => 'DiscountsController@edit', 'permissions' => 'discounts-edit']);
+                Route::post('store', ['as' => 'admin.discounts.store', 'uses' => 'DiscountsController@store', 'permissions' => 'discounts-add']);
+                Route::put('update/{discount}', ['as' => 'admin.discounts.update', 'uses' => 'DiscountsController@update', 'permissions' => 'discounts-edit']);
+                Route::delete('destroy/{discount}', ['as' => 'admin.discounts.destroy', 'uses' => 'DiscountsController@destroy', 'permissions' => 'discounts-delete']);
+            });
+        });
+
+        /**
          * Access Control Level.
          */
         Route::group([

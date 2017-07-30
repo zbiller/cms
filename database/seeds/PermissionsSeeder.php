@@ -336,6 +336,32 @@ class PermissionsSeeder extends Seeder
                 'name' => 'layouts-delete',
             ],
         ],
+        'Discounts' => [
+            'List' => [
+                'group' => 'Discounts',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'discounts-list',
+            ],
+            'Add' => [
+                'group' => 'Discounts',
+                'label' => 'Add',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'discounts-add',
+            ],
+            'Edit' => [
+                'group' => 'Discounts',
+                'label' => 'Edit',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'discounts-edit',
+            ],
+            'Delete' => [
+                'group' => 'Discounts',
+                'label' => 'Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'discounts-delete',
+            ],
+        ],
         'Users' => [
             'List' => [
                 'group' => 'Users',
