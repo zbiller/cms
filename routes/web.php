@@ -304,6 +304,54 @@ Route::group([
             'namespace' => 'Shop',
         ], function () {
             /**
+             * CRUD Product.
+             */
+            Route::group([
+                'prefix' => 'products',
+            ], function () {
+                Route::get('/', ['as' => 'admin.products.index', 'uses' => 'ProductsController@index', 'permissions' => 'products-list']);
+                Route::get('create', ['as' => 'admin.products.create', 'uses' => 'ProductsController@create', 'permissions' => 'products-add']);
+                Route::get('edit/{product}', ['as' => 'admin.products.edit', 'uses' => 'ProductsController@edit', 'permissions' => 'products-edit']);
+                Route::post('store', ['as' => 'admin.products.store', 'uses' => 'ProductsController@store', 'permissions' => 'products-add']);
+                Route::put('update/{product}', ['as' => 'admin.products.update', 'uses' => 'ProductsController@update', 'permissions' => 'products-edit']);
+                Route::delete('destroy/{product}', ['as' => 'admin.products.destroy', 'uses' => 'ProductsController@destroy', 'permissions' => 'products-soft-delete']);
+
+                /**
+                 * Image Upload.
+                 */
+                Route::post('upload', ['as' => 'admin.products.upload', 'uses' => 'ProductsController@upload', 'permissions' => 'uploads-upload']);
+
+                /**
+                 * Soft Delete Actions.
+                 */
+                Route::get('deleted', ['as' => 'admin.products.deleted', 'uses' => 'ProductsController@deleted', 'permissions' => 'products-deleted']);
+                Route::put('restore/{id}', ['as' => 'admin.products.restore', 'uses' => 'ProductsController@restore', 'permissions' => 'products-restore']);
+                Route::delete('delete/{id}', ['as' => 'admin.products.delete', 'uses' => 'ProductsController@delete', 'permissions' => 'products-force-delete']);
+
+                /**
+                 * Duplicate Actions.
+                 */
+                Route::post('duplicate/{product}', ['as' => 'admin.products.duplicate', 'uses' => 'ProductsController@duplicate', 'permissions' => 'products-duplicate']);
+
+                /**
+                 * Preview Actions.
+                 */
+                Route::match(['post', 'put'], 'preview/{product?}', ['as' => 'admin.products.preview', 'uses' => 'ProductsController@preview', 'permissions' => 'products-preview']);
+
+                /**
+                 * Draft Actions.
+                 */
+                Route::get('drafts', ['as' => 'admin.products.drafts', 'uses' => 'ProductsController@drafts', 'permissions' => 'drafts-list']);
+                Route::get('draft/{draft}', ['as' => 'admin.products.draft', 'uses' => 'ProductsController@draft', 'permissions' => 'drafts-publish']);
+                Route::match(['get', 'put'], 'limbo/{id}', ['as' => 'admin.products.limbo', 'uses' => 'ProductsController@limbo', 'permissions' => 'drafts-save']);
+
+                /**
+                 * Revision Actions.
+                 */
+                Route::get('revision/{revision}', ['as' => 'admin.products.revision', 'uses' => 'ProductsController@revision', 'permissions' => 'revisions-rollback']);
+            });
+
+            /**
              * CRUD Categories.
              */
             Route::group([

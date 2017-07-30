@@ -24,7 +24,7 @@ class DiscountFilter extends Filter
         return [
             'search' => 'operator:like|condition:or|columns:name',
             'type' => 'operator:=|condition:or|columns:type',
-            'usage' => 'operator:=|condition:or|columns:usage',
+            'for' => 'operator:=|condition:or|columns:for',
             'active' => 'operator:=|condition:or|columns:active',
             'start_date' => 'operator:date >=|condition:or|columns:created_at',
             'end_date' => 'operator:date <=|condition:or|columns:created_at',

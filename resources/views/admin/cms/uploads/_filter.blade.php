@@ -7,7 +7,7 @@
     </fieldset>
     <fieldset>
         {!! form()->text('size[0]', request('size')[0] ?: null, ['placeholder' => 'Size From', 'style' => 'width: 48%;']) !!}
-        {!! form()->text('size[1]', request('size')[1] ?: null, ['placeholder' => 'Size From', 'style' => 'width: 48%;']) !!}
+        {!! form()->text('size[1]', request('size')[1] ?: null, ['placeholder' => 'Size To', 'style' => 'width: 48%;']) !!}
     </fieldset>
     <fieldset>
         {!! form_admin()->calendar('start_date', false, request('start_date') !== null ? request('start_date') : null, ['placeholder' => 'Date From', 'style' => 'width: 48%;']) !!}

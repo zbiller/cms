@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Models\Cms\Layout;
 use DB;
 use Exception;
 use ReflectionMethod;
@@ -119,21 +120,39 @@ trait HasBlocks
     public function getInheritedBlocks($location)
     {
         if (!self::$blockOptions->inherit) {
-            return null;
+            return $this->getBlocksInLocation($location);
         }
 
-        if (self::$blockOptions->inherit instanceof Model && self::$blockOptions->inherit->exists) {
-            $blocks = self::$blockOptions->inherit->getBlocksInLocation($location);
+        $inheritor = null;
+
+        if (is_string(self::$blockOptions->inherit)) {
+            if ($this->{self::$blockOptions->inherit} instanceof Model && $this->{self::$blockOptions->inherit}->exists) {
+                $inheritor = $this->{self::$blockOptions->inherit};
+            }
+        } elseif (self::$blockOptions->inherit instanceof Model && self::$blockOptions->inherit->exists) {
+            $inheritor = self::$blockOptions->inherit;
+        }
+
+        if ($inheritor instanceof Model) {
+            $blocks = $inheritor->getBlocksInLocation($location);
 
             if ($blocks->count() > 0) {
                 return $blocks;
             }
 
             if (
-                self::$blockOptions->inherit->getBlockOptions()->inherit instanceof Model &&
-                get_class(self::$blockOptions->inherit->getBlockOptions()->inherit) != get_class($this)
+                is_string($inheritor->getBlockOptions()->inherit) &&
+                $inheritor->{$inheritor->getBlockOptions()->inherit} instanceof Model &&
+                $inheritor->{$inheritor->getBlockOptions()->inherit}->exists
             ) {
-                return self::$blockOptions->inherit->getInheritedBlocks($location);
+                return $inheritor->{$inheritor->getBlockOptions()->inherit}->getInheritedBlocks($location);
+            }
+
+            if (
+                $inheritor->getBlockOptions()->inherit instanceof Model &&
+                get_class($inheritor->getBlockOptions()->inherit) != get_class($this)
+            ) {
+                return $inheritor->getInheritedBlocks($location);
             }
         }
 

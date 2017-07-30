@@ -6,7 +6,7 @@
         {!! form()->select('type', ['' => 'All Types'] + $types, request('type') ?: null) !!}
     </fieldset>
     <fieldset>
-        {!! form()->select('usage', ['' => 'For ALl'] + $for, request('usage') ?: null) !!}
+        {!! form()->select('for', ['' => 'For All'] + $for, request('usage') ?: null) !!}
     </fieldset>
     <fieldset>
         {!! form()->select('active', ['' => 'Active'] + $actives, request('active') ?: null) !!}

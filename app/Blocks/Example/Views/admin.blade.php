@@ -4,13 +4,13 @@
 {!! form_admin()->calendar('metadata[date]', 'Date') !!}
 {!! form_admin()->editor('metadata[content]', 'Content') !!}
 
-<a id="block-add-item" class="btn dark-blue full centered no-margin-left no-margin-right no-margin-bottom">
+<a id="multiple-add-item" class="btn dark-blue full centered no-margin-left no-margin-right no-margin-bottom">
     <i class="fa fa-plus"></i>&nbsp; Add new item
 </a>
-<div id="block-items-container">
+<div id="multiple-items-container">
     @if($item->exists && isset($item->metadata->items))
         @foreach($item->metadata->items as $index => $_item)
-            <div class="block-item" data-index="{{ $index }}">
+            <div class="multiple-item" data-index="{{ $index }}">
                 {!! block()->buttons() !!}
 
                 {!! form_admin()->text('metadata[items][' . $index . '][title]', 'Title') !!}
@@ -25,8 +25,8 @@
         @endforeach
     @endif
 </div>
-<script type="x-template" id="block-items-template">
-    <div class="block-item" data-index="#index">
+<script type="x-template" id="multiple-items-template">
+    <div class="multiple-item" data-index="#index">
         {!! block()->buttons() !!}
 
         {!! form_admin()->text('metadata[items][#index][title]', 'Title', '#title#') !!}

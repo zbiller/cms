@@ -2,7 +2,7 @@
 
 namespace App\Http\Filters;
 
-class TaxFilter extends Filter
+class ProductFilter extends Filter
 {
     /**
      * Get the main where condition between entire request fields.
@@ -22,9 +22,9 @@ class TaxFilter extends Filter
     public function filters()
     {
         return [
-            'search' => 'operator:like|condition:or|columns:name',
-            'type' => 'operator:=|condition:or|columns:type',
-            'for' => 'operator:=|condition:or|columns:for',
+            'search' => 'operator:like|condition:or|columns:sku,name,slug,content',
+            'price' => 'operator:between|condition:or|columns:price',
+            'quantity' => 'operator:between|condition:or|columns:quantity',
             'active' => 'operator:=|condition:or|columns:active',
             'start_date' => 'operator:date >=|condition:or|columns:created_at',
             'end_date' => 'operator:date <=|condition:or|columns:created_at',

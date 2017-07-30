@@ -29,9 +29,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Page extends Model
 {
     use HasUploads;
-    use HasBlocks {
-        getInheritedBlocks as baseGetInheritedBlocks;
-    }
+    use HasBlocks;
     use HasUrl;
     use HasNodes;
     use HasDrafts;
@@ -276,26 +274,6 @@ class Page extends Model
     public function scopeWhereIdentifier($query, $identifier)
     {
         $query->where('identifier', $identifier);
-    }
-
-    /**
-     * Get the inherited blocks for a model instance.
-     * Inherited blocks can come from page or layout (recursively).
-     *
-     * @param string|$location
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getInheritedBlocks($location)
-    {
-        if (!method_exists($this, 'getBlockOptions')) {
-            return null;
-        }
-
-        if (static::getBlockOptions()->inherit == 'layout') {
-            return $this->layout->getBlocksInLocation($location);
-        }
-
-        return $this->baseGetInheritedBlocks($location);
     }
 
     /**

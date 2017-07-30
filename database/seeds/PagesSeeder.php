@@ -19,19 +19,28 @@ class PagesSeeder extends Seeder
         DB::table('urls')->where('urlable_type', Page::class)->delete();
 
         /**
-         * Get the default or first layout.
+         * Get the home or first layout.
          */
         try {
-            $layout = Layout::whereIdentifier('default')->firstOrFail();
+            $homeLayout = Layout::whereIdentifier('home')->firstOrFail();
         } catch (ModelNotFoundException $e) {
-            $layout = Layout::first();
+            $homeLayout = Layout::first();
+        }
+
+        /**
+         * Get the home or first layout.
+         */
+        try {
+            $defaultLayout = Layout::whereIdentifier('default')->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            $defaultLayout = Layout::first();
         }
 
         /**
          * Create the home page.
          */
         Page::create([
-            'layout_id' => $layout->id,
+            'layout_id' => $homeLayout->id,
             'name' => 'Home',
             'slug' => '/',
             'identifier' => 'home',
@@ -43,7 +52,7 @@ class PagesSeeder extends Seeder
          * Create the shop page.
          */
         Page::create([
-            'layout_id' => $layout->id,
+            'layout_id' => $defaultLayout->id,
             'name' => 'Shop',
             'slug' => 'shop',
             'identifier' => 'shop',

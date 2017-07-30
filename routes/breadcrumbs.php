@@ -269,6 +269,64 @@ Breadcrumbs::register('admin.emails.limbo', function($breadcrumbs, $draft) {
 
 /**
 | ---------------------------------------------------------------------------------------------------------------------
+| Products
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+/* Home > Products */
+Breadcrumbs::register('admin.products.index', function($breadcrumbs) {
+    $breadcrumbs->parent('admin');
+    $breadcrumbs->push('Products', route('admin.products.index'));
+});
+
+/* Home > Products > Add */
+Breadcrumbs::register('admin.products.create', function($breadcrumbs) {
+    $breadcrumbs->parent('admin.products.index');
+    $breadcrumbs->push('Add', route('admin.products.create'));
+});
+
+/* Home > Products > Edit */
+Breadcrumbs::register('admin.products.edit', function($breadcrumbs, $product) {
+    $breadcrumbs->parent('admin.products.index');
+    $breadcrumbs->push('Edit', route('admin.products.edit', $product));
+});
+
+/* Home > Products > Edit > Draft */
+Breadcrumbs::register('admin.products.draft', function($breadcrumbs, $draft) {
+    $breadcrumbs->parent('admin.products.edit', $draft->draftable);
+    $breadcrumbs->push('Draft', route('admin.products.draft', $draft));
+});
+
+/* Home > Products > Edit > Revision */
+Breadcrumbs::register('admin.products.revision', function($breadcrumbs, $revision) {
+    $breadcrumbs->parent('admin.products.edit', $revision->revisionable);
+    $breadcrumbs->push('Revision', route('admin.products.revision', $revision));
+});
+
+/* Home > Products > Deleted */
+Breadcrumbs::register('admin.products.deleted', function($breadcrumbs) {
+    $breadcrumbs->parent('admin.products.index');
+    $breadcrumbs->push('Deleted', route('admin.products.deleted'));
+});
+
+/* Home > Products > Drafts */
+Breadcrumbs::register('admin.products.drafts', function($breadcrumbs) {
+    $breadcrumbs->parent('admin.products.index');
+    $breadcrumbs->push('Drafts', route('admin.products.drafts'));
+});
+
+/* Home > Products > Drafts > Draft */
+Breadcrumbs::register('admin.products.limbo', function($breadcrumbs, $draft) {
+    $breadcrumbs->parent('admin.products.drafts');
+    $breadcrumbs->push('Draft', route('admin.products.draft', $draft));
+});
+/**
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+
+
+
+/**
+| ---------------------------------------------------------------------------------------------------------------------
 | Categories
 | ---------------------------------------------------------------------------------------------------------------------
  */

@@ -1,5 +1,5 @@
 <fieldset>
-    <label>{{ $label }}</label>
+    <label>{!! $label !!}</label>
     <div class="field-wrapper">
         @include('helpers::uploader.partials.new')
         @include('helpers::uploader.partials.current')

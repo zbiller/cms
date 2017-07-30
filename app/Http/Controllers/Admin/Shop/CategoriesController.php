@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin\Shop;
 
+use Exception;
 use App\Models\Shop\Category;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
-use Exception;
 use App\Http\Controllers\Controller;
 use App\Traits\CanCrud;
 use App\Http\Requests\CategoryRequest;

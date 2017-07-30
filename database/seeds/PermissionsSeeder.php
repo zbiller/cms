@@ -336,6 +336,62 @@ class PermissionsSeeder extends Seeder
                 'name' => 'layouts-delete',
             ],
         ],
+        'Products' => [
+            'List' => [
+                'group' => 'Products',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'products-list',
+            ],
+            'Add' => [
+                'group' => 'Products',
+                'label' => 'Add',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'products-add',
+            ],
+            'Edit' => [
+                'group' => 'Products',
+                'label' => 'Edit',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'products-edit',
+            ],
+            'Duplicate' => [
+                'group' => 'Products',
+                'label' => 'Duplicate',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'products-duplicate',
+            ],
+            'Preview' => [
+                'group' => 'Products',
+                'label' => 'Preview',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'products-preview',
+            ],
+            'Deleted' => [
+                'group' => 'Products',
+                'label' => 'Deleted',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'products-deleted',
+            ],
+            'Restore' => [
+                'group' => 'Products',
+                'label' => 'Restore',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'products-restore',
+            ],
+            'Soft Delete' => [
+                'group' => 'Products',
+                'label' => 'Soft Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'products-soft-delete',
+            ],
+            'Force Delete' => [
+                'group' => 'Products',
+                'label' => 'Force Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'products-force-delete',
+            ],
+        ],
         'Categories' => [
             'List' => [
                 'group' => 'Categories',
@@ -390,6 +446,58 @@ class PermissionsSeeder extends Seeder
                 'label' => 'Force Delete',
                 'type' => Permission::TYPE_ADMIN,
                 'name' => 'categories-force-delete',
+            ],
+        ],
+        'Sets' => [
+            'List' => [
+                'group' => 'Sets',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'sets-list',
+            ],
+            'Add' => [
+                'group' => 'Sets',
+                'label' => 'Add',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'sets-add',
+            ],
+            'Edit' => [
+                'group' => 'Sets',
+                'label' => 'Edit',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'sets-edit',
+            ],
+            'Delete' => [
+                'group' => 'Sets',
+                'label' => 'Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'sets-delete',
+            ],
+        ],
+        'Attributes' => [
+            'List' => [
+                'group' => 'Attributes',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'attributes-list',
+            ],
+            'Add' => [
+                'group' => 'Attributes',
+                'label' => 'Add',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'attributes-add',
+            ],
+            'Edit' => [
+                'group' => 'Attributes',
+                'label' => 'Edit',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'attributes-edit',
+            ],
+            'Delete' => [
+                'group' => 'Attributes',
+                'label' => 'Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'attributes-delete',
             ],
         ],
         'Discounts' => [
