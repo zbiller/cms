@@ -21,6 +21,7 @@ class LayoutsSeeder extends Seeder
         foreach (Layout::$map as $type => $options) {
             Layout::create([
                 'name' => Layout::$types[$type],
+                'identifier' => str_slug(strtolower(Layout::$types[$type])),
                 'type' => $type,
             ]);
         }

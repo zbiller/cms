@@ -38,5 +38,17 @@ class PagesSeeder extends Seeder
             'active' => Page::ACTIVE_YES,
             'type' => Page::TYPE_DEFAULT,
         ]);
+
+        /**
+         * Create the shop page.
+         */
+        Page::create([
+            'layout_id' => $layout->id,
+            'name' => 'Shop',
+            'slug' => 'shop',
+            'identifier' => 'shop',
+            'active' => Page::ACTIVE_YES,
+            'type' => Page::TYPE_DEFAULT,
+        ]);
     }
 }
