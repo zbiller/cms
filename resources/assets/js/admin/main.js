@@ -274,7 +274,7 @@ function order()
  */
 function tabs() {
     var hash = window.location.hash,
-        button = $('section.tabs > a'),
+        button = $('section.tabs > a:not(.real-tab)'),
         container = $('div.tab');
 
     //display the correct tab on load

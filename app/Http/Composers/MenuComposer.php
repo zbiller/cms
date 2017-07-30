@@ -68,6 +68,10 @@ class MenuComposer
                 });
 
                 $menu->child($shop, function (MenuItem $item) {
+                    $item->name('Attributes')->url(route('admin.sets.index'))->permissions('sets-list')->active('admin/sets/*', 'admin/attributes/*');
+                });
+
+                $menu->child($shop, function (MenuItem $item) {
                     $item->name('Discounts')->url(route('admin.discounts.index'))->permissions('discounts-list')->active('admin/discounts/*');
                 });
 

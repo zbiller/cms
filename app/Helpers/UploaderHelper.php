@@ -295,7 +295,7 @@ class UploaderHelper
             } catch (Exception $e) {
                 $this->current = null;
             }
-        } elseif ($this->model->{$this->field} && $this->model->{'_' . $this->field}->exists()) {
+        } elseif ($this->model->{$this->field} && ($field = $this->model->{'_' . $this->field}) && $field->exists()) {
             $this->current = $this->model->{'_' . $this->field};
         }
 

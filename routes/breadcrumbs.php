@@ -327,6 +327,62 @@ Breadcrumbs::register('admin.categories.limbo', function($breadcrumbs, $draft) {
 
 /**
 | ---------------------------------------------------------------------------------------------------------------------
+| Sets
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+/* Home > Sets */
+Breadcrumbs::register('admin.sets.index', function($breadcrumbs) {
+    $breadcrumbs->parent('admin');
+    $breadcrumbs->push('Sets', route('admin.sets.index'));
+});
+
+/* Home > Sets > Add */
+Breadcrumbs::register('admin.sets.create', function($breadcrumbs) {
+    $breadcrumbs->parent('admin.sets.index');
+    $breadcrumbs->push('Add', route('admin.sets.create'));
+});
+
+/* Home > Sets > Edit */
+Breadcrumbs::register('admin.sets.edit', function($breadcrumbs, $set) {
+    $breadcrumbs->parent('admin.sets.index');
+    $breadcrumbs->push('Edit', route('admin.sets.edit', $set));
+});
+/**
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+
+
+
+/**
+| ---------------------------------------------------------------------------------------------------------------------
+| Attributes
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+/* Home > Attributes */
+Breadcrumbs::register('admin.attributes.index', function($breadcrumbs, $set) {
+    $breadcrumbs->parent('admin.sets.edit', $set);
+    $breadcrumbs->push('Attributes', route('admin.attributes.index', $set));
+});
+
+/* Home > Sets > Add */
+Breadcrumbs::register('admin.attributes.create', function($breadcrumbs, $set) {
+    $breadcrumbs->parent('admin.attributes.index', $set);
+    $breadcrumbs->push('Add', route('admin.attributes.create', $set));
+});
+
+/* Home > Sets > Edit */
+Breadcrumbs::register('admin.attributes.edit', function($breadcrumbs, $set, $attribute) {
+    $breadcrumbs->parent('admin.attributes.index', $set);
+    $breadcrumbs->push('Edit', route('admin.attributes.edit', ['set' => $set->id, 'id' => $attribute->id]));
+});
+/**
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+
+
+
+/**
+| ---------------------------------------------------------------------------------------------------------------------
 | Discounts
 | ---------------------------------------------------------------------------------------------------------------------
  */

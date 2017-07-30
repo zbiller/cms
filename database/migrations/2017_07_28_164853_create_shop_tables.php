@@ -53,8 +53,8 @@ class CreateShopTables extends Migration
             $table->increments('id');
             $table->integer('set_id')->unsigned()->index();
 
-            $table->string('name')->unique();
-            $table->string('slug')->unique();
+            $table->string('name');
+            $table->string('slug');
             $table->text('value');
 
             $table->tinyInteger('type')->default(1);
