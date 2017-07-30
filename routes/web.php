@@ -316,6 +316,20 @@ Route::group([
                 Route::put('update/{discount}', ['as' => 'admin.discounts.update', 'uses' => 'DiscountsController@update', 'permissions' => 'discounts-edit']);
                 Route::delete('destroy/{discount}', ['as' => 'admin.discounts.destroy', 'uses' => 'DiscountsController@destroy', 'permissions' => 'discounts-delete']);
             });
+
+            /**
+             * CRUD Taxes.
+             */
+            Route::group([
+                'prefix' => 'taxes',
+            ], function () {
+                Route::get('/', ['as' => 'admin.taxes.index', 'uses' => 'TaxesController@index', 'permissions' => 'taxes-list']);
+                Route::get('create', ['as' => 'admin.taxes.create', 'uses' => 'TaxesController@create', 'permissions' => 'taxes-add']);
+                Route::get('edit/{tax}', ['as' => 'admin.taxes.edit', 'uses' => 'TaxesController@edit', 'permissions' => 'taxes-edit']);
+                Route::post('store', ['as' => 'admin.taxes.store', 'uses' => 'TaxesController@store', 'permissions' => 'taxes-add']);
+                Route::put('update/{tax}', ['as' => 'admin.taxes.update', 'uses' => 'TaxesController@update', 'permissions' => 'taxes-edit']);
+                Route::delete('destroy/{tax}', ['as' => 'admin.taxes.destroy', 'uses' => 'TaxesController@destroy', 'permissions' => 'taxes-delete']);
+            });
         });
 
         /**

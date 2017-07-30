@@ -66,6 +66,10 @@ class MenuComposer
                 $menu->child($shop, function (MenuItem $item) {
                     $item->name('Discounts')->url(route('admin.discounts.index'))->permissions('discounts-list')->active('admin/discounts/*');
                 });
+
+                $menu->child($shop, function (MenuItem $item) {
+                    $item->name('Taxes')->url(route('admin.taxes.index'))->permissions('taxes-list')->active('admin/taxes/*');
+                });
             });
 
             $menu->add(function ($item) use ($menu) {

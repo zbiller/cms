@@ -362,6 +362,32 @@ class PermissionsSeeder extends Seeder
                 'name' => 'discounts-delete',
             ],
         ],
+        'Taxes' => [
+            'List' => [
+                'group' => 'Taxes',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'taxes-list',
+            ],
+            'Add' => [
+                'group' => 'Taxes',
+                'label' => 'Add',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'taxes-add',
+            ],
+            'Edit' => [
+                'group' => 'Taxes',
+                'label' => 'Edit',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'taxes-edit',
+            ],
+            'Delete' => [
+                'group' => 'Taxes',
+                'label' => 'Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'taxes-delete',
+            ],
+        ],
         'Users' => [
             'List' => [
                 'group' => 'Users',

@@ -297,6 +297,34 @@ Breadcrumbs::register('admin.discounts.edit', function($breadcrumbs, $discount) 
 
 /**
 | ---------------------------------------------------------------------------------------------------------------------
+| Taxes
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+/* Home > Taxes */
+Breadcrumbs::register('admin.taxes.index', function($breadcrumbs) {
+    $breadcrumbs->parent('admin');
+    $breadcrumbs->push('Taxes', route('admin.taxes.index'));
+});
+
+/* Home > Taxes > Add */
+Breadcrumbs::register('admin.taxes.create', function($breadcrumbs) {
+    $breadcrumbs->parent('admin.taxes.index');
+    $breadcrumbs->push('Add', route('admin.taxes.create'));
+});
+
+/* Home > Taxes > Edit */
+Breadcrumbs::register('admin.taxes.edit', function($breadcrumbs, $tax) {
+    $breadcrumbs->parent('admin.taxes.index');
+    $breadcrumbs->push('Edit', route('admin.taxes.edit', $tax));
+});
+/**
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+
+
+
+/**
+| ---------------------------------------------------------------------------------------------------------------------
 | Users
 | ---------------------------------------------------------------------------------------------------------------------
  */
