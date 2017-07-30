@@ -304,6 +304,62 @@ Route::group([
             'namespace' => 'Shop',
         ], function () {
             /**
+             * CRUD Categories.
+             */
+            Route::group([
+                'prefix' => 'categories',
+            ], function () {
+                Route::get('/', ['as' => 'admin.categories.index', 'uses' => 'CategoriesController@index', 'permissions' => 'categories-list']);
+                Route::get('create/{parent?}', ['as' => 'admin.categories.create', 'uses' => 'CategoriesController@create', 'permissions' => 'categories-add']);
+                Route::get('edit/{category}', ['as' => 'admin.categories.edit', 'uses' => 'CategoriesController@edit', 'permissions' => 'categories-edit']);
+                Route::post('store/{parent?}', ['as' => 'admin.categories.store', 'uses' => 'CategoriesController@store', 'permissions' => 'categories-add']);
+                Route::put('update/{category}', ['as' => 'admin.categories.update', 'uses' => 'CategoriesController@update', 'permissions' => 'categories-edit']);
+                Route::delete('destroy/{category}', ['as' => 'admin.categories.destroy', 'uses' => 'CategoriesController@destroy', 'permissions' => 'categories-delete']);
+
+                /**
+                 * Soft Delete Actions.
+                 */
+                Route::get('deleted', ['as' => 'admin.categories.deleted', 'uses' => 'CategoriesController@deleted', 'permissions' => 'categories-deleted']);
+                Route::put('restore/{id}', ['as' => 'admin.categories.restore', 'uses' => 'CategoriesController@restore', 'permissions' => 'categories-restore']);
+                Route::delete('delete/{id}', ['as' => 'admin.categories.delete', 'uses' => 'CategoriesController@delete', 'permissions' => 'categories-force-delete']);
+
+                /**
+                 * Duplicate Actions.
+                 */
+                Route::post('duplicate/{category}', ['as' => 'admin.categories.duplicate', 'uses' => 'CategoriesController@duplicate', 'permissions' => 'categories-duplicate']);
+
+                /**
+                 * Preview Actions.
+                 */
+                Route::match(['post', 'put'], 'preview/{category?}', ['as' => 'admin.categories.preview', 'uses' => 'CategoriesController@preview', 'permissions' => 'categories-preview']);
+
+                /**
+                 * Draft Actions.
+                 */
+                Route::get('drafts', ['as' => 'admin.categories.drafts', 'uses' => 'CategoriesController@drafts', 'permissions' => 'drafts-list']);
+                Route::get('draft/{draft}', ['as' => 'admin.categories.draft', 'uses' => 'CategoriesController@draft', 'permissions' => 'drafts-publish']);
+                Route::match(['get', 'put'], 'limbo/{id}', ['as' => 'admin.categories.limbo', 'uses' => 'CategoriesController@limbo', 'permissions' => 'drafts-save']);
+
+                /**
+                 * Revision Actions.
+                 */
+                Route::get('revision/{revision}', ['as' => 'admin.categories.revision', 'uses' => 'CategoriesController@revision', 'permissions' => 'revisions-rollback']);
+
+                /**
+                 * Tree Actions.
+                 */
+                Route::group([
+                    'prefix' => 'tree'
+                ], function () {
+                    Route::get('fix', ['as' => 'admin.categories.tree.fix', 'uses' => 'CategoriesController@fixTree', 'acl' => 'pages-list']);
+                    Route::get('load/{parent?}', ['as' => 'admin.categories.tree.load', 'uses' => 'CategoriesController@loadTreeNodes', 'acl' => 'pages-list']);
+                    Route::get('list/{parent?}', ['as' => 'admin.categories.tree.list', 'uses' => 'CategoriesController@listTreeItems', 'acl' => 'pages-list']);
+                    Route::post('sort', ['as' => 'admin.categories.tree.sort', 'uses' => 'CategoriesController@sortTreeItems', 'acl' => 'pages-list']);
+                    Route::post('url', ['as' => 'admin.categories.tree.url', 'uses' => 'CategoriesController@refreshTreeItemsUrls', 'acl' => 'pages-list']);
+                });
+            });
+
+            /**
              * CRUD Discounts.
              */
             Route::group([

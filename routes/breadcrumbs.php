@@ -269,6 +269,64 @@ Breadcrumbs::register('admin.emails.limbo', function($breadcrumbs, $draft) {
 
 /**
 | ---------------------------------------------------------------------------------------------------------------------
+| Categories
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+/* Home > Categories */
+Breadcrumbs::register('admin.categories.index', function($breadcrumbs) {
+    $breadcrumbs->parent('admin');
+    $breadcrumbs->push('Categories', route('admin.categories.index'));
+});
+
+/* Home > Categories > Add */
+Breadcrumbs::register('admin.categories.create', function($breadcrumbs) {
+    $breadcrumbs->parent('admin.categories.index');
+    $breadcrumbs->push('Add', route('admin.categories.create'));
+});
+
+/* Home > Categories > Edit */
+Breadcrumbs::register('admin.categories.edit', function($breadcrumbs, $category) {
+    $breadcrumbs->parent('admin.categories.index');
+    $breadcrumbs->push('Edit', route('admin.categories.edit', $category));
+});
+
+/* Home > Categories > Edit > Draft */
+Breadcrumbs::register('admin.categories.draft', function($breadcrumbs, $draft) {
+    $breadcrumbs->parent('admin.categories.edit', $draft->draftable);
+    $breadcrumbs->push('Draft', route('admin.categories.draft', $draft));
+});
+
+/* Home > Categories > Edit > Revision */
+Breadcrumbs::register('admin.categories.revision', function($breadcrumbs, $revision) {
+    $breadcrumbs->parent('admin.categories.edit', $revision->revisionable);
+    $breadcrumbs->push('Revision', route('admin.categories.revision', $revision));
+});
+
+/* Home > Categories > Deleted */
+Breadcrumbs::register('admin.categories.deleted', function($breadcrumbs) {
+    $breadcrumbs->parent('admin.categories.index');
+    $breadcrumbs->push('Deleted', route('admin.categories.deleted'));
+});
+
+/* Home > Categories > Drafts */
+Breadcrumbs::register('admin.categories.drafts', function($breadcrumbs) {
+    $breadcrumbs->parent('admin.categories.index');
+    $breadcrumbs->push('Drafts', route('admin.categories.drafts'));
+});
+
+/* Home > Categories > Drafts > Draft */
+Breadcrumbs::register('admin.categories.limbo', function($breadcrumbs, $draft) {
+    $breadcrumbs->parent('admin.categories.drafts');
+    $breadcrumbs->push('Draft', route('admin.categories.draft', $draft));
+});
+/**
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+
+
+
+/**
+| ---------------------------------------------------------------------------------------------------------------------
 | Discounts
 | ---------------------------------------------------------------------------------------------------------------------
  */

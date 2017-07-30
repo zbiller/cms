@@ -336,6 +336,62 @@ class PermissionsSeeder extends Seeder
                 'name' => 'layouts-delete',
             ],
         ],
+        'Categories' => [
+            'List' => [
+                'group' => 'Categories',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'categories-list',
+            ],
+            'Add' => [
+                'group' => 'Categories',
+                'label' => 'Add',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'categories-add',
+            ],
+            'Edit' => [
+                'group' => 'Categories',
+                'label' => 'Edit',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'categories-edit',
+            ],
+            'Duplicate' => [
+                'group' => 'Categories',
+                'label' => 'Duplicate',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'categories-duplicate',
+            ],
+            'Preview' => [
+                'group' => 'Categories',
+                'label' => 'Preview',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'categories-preview',
+            ],
+            'Deleted' => [
+                'group' => 'Categories',
+                'label' => 'Deleted',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'categories-deleted',
+            ],
+            'Restore' => [
+                'group' => 'Categories',
+                'label' => 'Restore',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'categories-restore',
+            ],
+            'Soft Delete' => [
+                'group' => 'Categories',
+                'label' => 'Soft Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'categories-soft-delete',
+            ],
+            'Force Delete' => [
+                'group' => 'Categories',
+                'label' => 'Force Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'categories-force-delete',
+            ],
+        ],
         'Discounts' => [
             'List' => [
                 'group' => 'Discounts',

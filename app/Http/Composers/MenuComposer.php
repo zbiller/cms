@@ -64,6 +64,10 @@ class MenuComposer
                 $shop = $item->name('Shop Panel')->data('icon', 'fa-shopping-cart')->active('admin/categories/*', 'admin/sets/*', 'admin/attributes/*', 'admin/discounts/*', 'admin/taxes/*');
 
                 $menu->child($shop, function (MenuItem $item) {
+                    $item->name('Categories')->url(route('admin.categories.index'))->permissions('categories-list')->active('admin/categories/*');
+                });
+
+                $menu->child($shop, function (MenuItem $item) {
                     $item->name('Discounts')->url(route('admin.discounts.index'))->permissions('discounts-list')->active('admin/discounts/*');
                 });
 
