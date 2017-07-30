@@ -296,6 +296,10 @@ function tabs() {
     button.click(function (e) {
         e.preventDefault();
 
+        window.history.pushState(
+            null , null, window.location.href.split('#')[0] + $(this).attr('href')
+        );
+
         button.removeClass('active');
         container.removeClass('active');
 
@@ -516,7 +520,7 @@ function tree()
             var _tree = tree.jstree().get_json();
             var _node = data.node;
             var _data = {
-                page: parseInt(_node.id) ? _node.id : '',
+                node: parseInt(_node.id) ? _node.id : '',
                 children: _node.children,
                 parent: parseInt(data.parent) ? data.parent : '',
                 old_parent: parseInt(data.old_parent) ? data.old_parent : ''

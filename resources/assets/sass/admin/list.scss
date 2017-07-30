@@ -5,7 +5,7 @@ section.list {
     border-bottom: none;
 
     &.list-small {
-        width: 300px;
+        width: 400px;
         margin: 0 0 20px;
         border-right: 1px solid $colorGallery;
         border-bottom: 1px solid $colorGallery;
@@ -16,7 +16,7 @@ section.list {
         }
 
         @include media-query('tablet-wide') {
-            width: 300px;
+            width: 350px;
             border-right: 1px solid $colorGallery;
         }
 
@@ -27,7 +27,7 @@ section.list {
     }
 
     &.list-big {
-        @include calc(width, '100% - 322px');
+        @include calc(width, '100% - 422px');
 
         border-left: 1px solid $colorGallery;
 
@@ -37,7 +37,7 @@ section.list {
         }
 
         @include media-query('tablet-wide') {
-            @include calc(width, '100% - 322px');
+            @include calc(width, '100% - 372px');
 
             border-left: 1px solid $colorGallery;
         }
