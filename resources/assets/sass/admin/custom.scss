@@ -94,7 +94,7 @@ td .upload-aligned-image {
     }
 }
 
-.block-item {
+.multiple-item {
     @include clear-padding();
 
     display: block;
@@ -106,7 +106,7 @@ td .upload-aligned-image {
     border: 3px dashed $colorPictonBlue;
 }
 
-.block-item-btn {
+.multiple-item-btn {
     width: 33.3%;
     background: #FFF !important;
 }

@@ -353,6 +353,9 @@
   transition: width 300ms ease-in-out; }
 .dropzone .dz-preview.dz-error .dz-error-message {
   display: block; }
+.dropzone .dz-preview.dz-error .dz-error-message > span {
+  color: #FFF;
+}
 .dropzone .dz-preview.dz-error:hover .dz-error-message {
   opacity: 1;
   pointer-events: auto; }
@@ -1310,6 +1313,9 @@ span.extra-currency {
 
 .dropzone .dz-preview.dz-error .dz-error-message {
   display: block; }
+.dropzone .dz-preview.dz-error .dz-error-message > span {
+  color: #FFF;
+}
 
 .dropzone .dz-preview.dz-error:hover .dz-error-message {
   opacity: 1;

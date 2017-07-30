@@ -231,11 +231,11 @@ var disable = {
             $('form.form select.select-input').prop('disabled', true).trigger("chosen:updated");
 
             //disable block specific buttons
-            $('form.form #block-add-item').remove();
-            $('form.form .block-move-item-up').remove();
-            $('form.form .block-move-item-down').remove();
-            $('form.form .block-delete-item').remove();
-            $('form.form .block-item br').remove();
+            $('form.form #multiple-add-item').remove();
+            $('form.form .multiple-move-item-up').remove();
+            $('form.form .multiple-move-item-down').remove();
+            $('form.form .multiple-delete-item').remove();
+            $('form.form .multiple-item br').remove();
         }, 500);
 
         setTimeout(function () {

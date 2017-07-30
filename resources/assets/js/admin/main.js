@@ -22,6 +22,7 @@ $(window).load(function(){
     tree();
     menus();
     blocks();
+    items();
     emails();
 });
 
@@ -639,16 +640,25 @@ function blocks()
         });
     }
 
-    //manage multiple items block type
-    if ($('#block-items-template').length && $('#block-items-container').length) {
-        var template = $('#block-items-template');
-        var container = $('#block-items-container');
+    //assign blocks
+    $('.block-assign-select').chosen({
+        width: '100%',
+        inherit_select_classes: true
+    });
+}
 
-        var addBlockItem = function (index, data) {
+function items()
+{
+    //manage multiple items inside a form
+    if ($('#multiple-items-template').length && $('#multiple-items-container').length) {
+        var template = $('#multiple-items-template');
+        var container = $('#multiple-items-container');
+
+        var addMultipleItem = function (index, data) {
             var item, text, current;
 
             if (!index) {
-                item = container.find('.block-item:last');
+                item = container.find('.multiple-item:last');
                 index = item.length ? parseInt(item.attr('data-index')) + 1 : 0;
             }
 
@@ -664,7 +674,7 @@ function blocks()
 
             container.append(text);
 
-            current = container.find('.block-item[data-index="' + index + '"]');
+            current = container.find('.multiple-item[data-index="' + index + '"]');
 
             current.find('select').each(function (index, select) {
                 if ($(select).data('selected')) {
@@ -684,10 +694,10 @@ function blocks()
             }, 500);
         };
 
-        var deleteBlockItem = function (item) {
+        var deleteMultipleItem = function (item) {
             var oldIndex, newIndex;
 
-            item.nextAll('.block-item').each(function (index, selector) {
+            item.nextAll('.multiple-item').each(function (index, selector) {
                 oldIndex = parseInt($(selector).attr('data-index'));
                 newIndex = parseInt($(selector).attr('data-index')) - 1;
 
@@ -704,7 +714,7 @@ function blocks()
             item.remove();
         };
 
-        var moveBlockItem = function (item, direction) {
+        var moveMultipleItem = function (item, direction) {
             var currentItem, previousItem, nextItem;
             var currentIndex, previousIndex, nextIndex;
 
@@ -766,32 +776,26 @@ function blocks()
             }
         };
 
-        $(document).on('click', 'a#block-add-item', function (e) {
+        $(document).on('click', 'a#multiple-add-item', function (e) {
             e.preventDefault();
-            addBlockItem();
+            addMultipleItem();
         });
 
-        $(document).on('click', 'a.block-delete-item', function (e) {
+        $(document).on('click', 'a.multiple-delete-item', function (e) {
             e.preventDefault();
-            deleteBlockItem($(this).closest('.block-item'));
+            deleteMultipleItem($(this).closest('.multiple-item'));
         });
 
-        $(document).on('click', 'a.block-move-item-up', function (e) {
+        $(document).on('click', 'a.multiple-move-item-up', function (e) {
             e.preventDefault();
-            moveBlockItem($(this).closest('.block-item'), 'up');
+            moveMultipleItem($(this).closest('.multiple-item'), 'up');
         });
 
-        $(document).on('click', 'a.block-move-item-down', function (e) {
+        $(document).on('click', 'a.multiple-move-item-down', function (e) {
             e.preventDefault();
-            moveBlockItem($(this).closest('.block-item'), 'down');
+            moveMultipleItem($(this).closest('.multiple-item'), 'down');
         });
     }
-
-    //assign blocks
-    $('.block-assign-select').chosen({
-        width: '100%',
-        inherit_select_classes: true
-    });
 }
 
 function emails()
