@@ -1,13 +1,31 @@
 @if($item->exists)
-    {!! form_admin()->model($item, ['url' => $url, 'method' => 'PUT', 'class' => 'form', 'files' => true]) !!}
+    @if(isset($on_draft) || isset($on_limbo_draft) || isset($on_revision))
+        {!! form_admin()->model($item, ['method' => isset($on_draft) || isset($on_revision) ? 'POST' : 'PUT','class' => 'form', 'files' => true]) !!}
+    @else
+        {!! form_admin()->model($item, ['url' => $url, 'method' => 'PUT', 'class' => 'form', 'files' => true]) !!}
+    @endif
 @else
     {!! form_admin()->open(['url' => $url, 'method' => 'POST', 'class' => 'form', 'files' => true]) !!}
 @endif
 
 {!! validation('admin')->errors() !!}
 
+{!! form()->hidden('_class', \App\Models\Shop\Product::class) !!}
+{!! form()->hidden('_request', \App\Http\Requests\ProductRequest::class) !!}
+{!! form()->hidden('_id', $item->exists ? $item->id : null) !!}
+{!! form()->hidden('_back', route('admin.products.drafts')) !!}
+
 <div id="tab-1" class="tab">
-    {!! form_admin()->select('category_id', 'Category', $categories->pluck('name', 'id')) !!}
+    <fieldset>
+        <label>Category</label>
+        <select class="select-input" name="category_id">
+            @foreach($categories as $category)
+                <option value="{{ $category->id }}" style="padding-left: {{ 6 + ($category->depth * 15) }}px" {{ $item->exists && $category->id == $item->category_id ? 'selected="selected"' : '' }}>
+                    {{ $category->name }}
+                </option>
+            @endforeach
+        </select>
+    </fieldset>
     {!! form_admin()->text('sku') !!}
     {!! form_admin()->text('name', 'Name', null, $item->exists ? [] : ['id' => 'slug-from']) !!}
     {!! form_admin()->text('slug', 'Slug', null, $item->exists ? [] : ['id' => 'slug-to']) !!}

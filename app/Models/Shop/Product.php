@@ -56,7 +56,7 @@ class Product extends Model
         'sku',
         'name',
         'slug',
-        'description',
+        'content',
         'price',
         'quantity',
         'views',
@@ -240,7 +240,7 @@ class Product extends Model
     public static function getRevisionOptions()
     {
         return RevisionOptions::instance()
-            ->limitRevisionsTo(50)
+            ->limitRevisionsTo(100)
             ->relationsToRevision('blocks');
     }
 
@@ -252,9 +252,9 @@ class Product extends Model
     public static function getDuplicateOptions()
     {
         return DuplicateOptions::instance()
-            ->uniqueColumns('name')
-            ->excludeColumns('created_at', 'updated_at')
-            ->excludeRelations('parent', 'children', 'url', 'drafts', 'revisions');
+            ->uniqueColumns('sku', 'name', 'slug')
+            ->excludeColumns('views', 'sales', 'created_at', 'updated_at')
+            ->excludeRelations('url', 'category', 'currency', 'drafts', 'revisions');
     }
 
     /**

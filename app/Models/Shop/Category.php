@@ -90,7 +90,9 @@ class Category extends Model
     /**
      * Boot the model.
      *
-     * On delete verify if page has children. If it does, don't delete the category and throw an exception.
+     * On delete verify if the category has children. If it does, don't delete the category and throw an exception.
+     * After soft-deleting a category, soft-delete all its related products.
+     * After restoring a category, restore all its related products.
      *
      * @return void
      */
@@ -98,13 +100,31 @@ class Category extends Model
     {
         parent::boot();
 
-        static::deleting(function (Model $model) {
-            if ($model->children()->count() > 0) {
+        static::deleting(function (Category $category) {
+            if ($category->children()->count() > 0) {
                 throw new CrudException(
                     'Could not delete the record because it has children!'
                 );
             }
         });
+
+        static::deleted(function (Category $category) {
+            $category->products()->delete();
+        });
+
+        static::restored(function (Category $category) {
+            $category->products()->restore();
+        });
+    }
+
+    /**
+     * Category has many products.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'category_id');
     }
 
     /**
@@ -207,7 +227,7 @@ class Category extends Model
     public static function getRevisionOptions()
     {
         return RevisionOptions::instance()
-            ->limitRevisionsTo(50)
+            ->limitRevisionsTo(100)
             ->relationsToRevision('blocks');
     }
 
@@ -219,9 +239,9 @@ class Category extends Model
     public static function getDuplicateOptions()
     {
         return DuplicateOptions::instance()
-            ->uniqueColumns('name')
+            ->uniqueColumns('name', 'slug')
             ->excludeColumns('_lft', '_rgt', 'created_at', 'updated_at')
-            ->excludeRelations('parent', 'children', 'url', 'drafts', 'revisions');
+            ->excludeRelations('parent', 'children', 'url', 'products', 'drafts', 'revisions');
     }
 
     /**

@@ -2,20 +2,20 @@
 
 namespace App\Http\Controllers\Admin\Shop;
 
-use App\Exceptions\UploadException;
+use App\Models\Version\Draft;
+use App\Models\Version\Revision;
+use Exception;
 use App\Http\Controllers\Controller;
 use App\Models\Shop\Category;
-use App\Models\Shop\Currency;
-use App\Models\Shop\Discount;
 use App\Models\Shop\Product;
+use App\Models\Shop\Currency;
 use App\Services\UploadService;
 use App\Traits\CanCrud;
 use App\Http\Requests\ProductRequest;
 use App\Http\Filters\ProductFilter;
 use App\Http\Sorts\ProductSort;
-use Exception;
+use App\Exceptions\UploadException;
 use Illuminate\Http\Request;
-use Illuminate\Http\UploadedFile;
 
 class ProductsController extends Controller
 {
@@ -25,6 +25,104 @@ class ProductsController extends Controller
      * @var string
      */
     protected $model = Product::class;
+
+    /**
+     * @param Request $request
+     * @param ProductFilter $filter
+     * @param ProductSort $sort
+     * @return \Illuminate\View\View
+     */
+    public function index(Request $request, ProductFilter $filter, ProductSort $sort)
+    {
+        return $this->_index(function () use ($request, $filter, $sort) {
+            $this->items = Product::with(['category', 'currency'])->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->title = 'Products';
+            $this->view = view('admin.shop.products.index');
+            $this->vars = [
+                'categories' => Category::withDepth()->defaultOrder()->get(),
+                'currencies' => Currency::alphabeticallyByCode()->get(),
+                'actives' => Product::$actives,
+            ];
+        });
+    }
+
+    /**
+     * @return \Illuminate\View\View
+     */
+    public function create()
+    {
+        return $this->_create(function () {
+            $this->title = 'Add Product';
+            $this->view = view('admin.shop.products.add');
+            $this->vars = [
+                'categories' => Category::withDepth()->defaultOrder()->get(),
+                'currencies' => Currency::alphabeticallyByCode()->get(),
+                'actives' => Product::$actives,
+            ];
+        });
+    }
+
+    /**
+     * @param ProductRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function store(ProductRequest $request)
+    {
+        return $this->_store(function () use ($request) {
+            $this->item = Product::create($request->all());
+            $this->redirect = redirect()->route('admin.products.index');
+        }, $request);
+    }
+
+    /**
+     * @param Product $product
+     * @return \Illuminate\View\View
+     */
+    public function edit(Product $product)
+    {
+        return $this->_edit(function () use ($product) {
+            $this->item = $product;
+            $this->title = 'Edit Product';
+            $this->view = view('admin.shop.products.edit');
+            $this->vars = [
+                'categories' => Category::withDepth()->defaultOrder()->get(),
+                'currencies' => Currency::alphabeticallyByCode()->get(),
+                'actives' => Product::$actives,
+            ];
+        });
+    }
+
+    /**
+     * @param ProductRequest $request
+     * @param Product $product
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function update(ProductRequest $request, Product $product)
+    {
+        return $this->_update(function () use ($request, $product) {
+            $this->item = $product;
+            $this->redirect = redirect()->route('admin.products.index');
+
+            $this->item->update($request->all());
+        }, $request);
+    }
+
+    /**
+     * @param Product $product
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function destroy(Product $product)
+    {
+        return $this->_destroy(function () use ($product) {
+            $this->item = $product;
+            $this->redirect = redirect()->route('admin.products.index');
+
+            $this->item->delete();
+        });
+    }
 
     /**
      * @param Request $request
@@ -62,14 +160,14 @@ class ProductsController extends Controller
      * @param ProductSort $sort
      * @return \Illuminate\View\View
      */
-    public function index(Request $request, ProductFilter $filter, ProductSort $sort)
+    public function deleted(Request $request, ProductFilter $filter, ProductSort $sort)
     {
-        return $this->_index(function () use ($request, $filter, $sort) {
-            $this->items = Product::with(['category', 'currency'])->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
-            $this->title = 'Products';
-            $this->view = view('admin.shop.products.index');
+        return $this->_deleted(function () use ($request, $filter, $sort) {
+            $this->items = Product::with(['category', 'currency'])->onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->title = 'Deleted Products';
+            $this->view = view('admin.shop.products.deleted');
             $this->vars = [
-                'categories' => Category::alphabetically()->get(),
+                'categories' => Category::withDepth()->defaultOrder()->get(),
                 'currencies' => Currency::alphabeticallyByCode()->get(),
                 'actives' => Product::$actives,
             ];
@@ -77,49 +175,45 @@ class ProductsController extends Controller
     }
 
     /**
-     * @return \Illuminate\View\View
-     */
-    public function create()
-    {
-        return $this->_create(function () {
-            $this->title = 'Add Product';
-            $this->view = view('admin.shop.products.add');
-            $this->vars = [
-                'categories' => Category::alphabetically()->get(),
-                'currencies' => Currency::alphabeticallyByCode()->get(),
-                'actives' => Product::$actives,
-            ];
-        });
-    }
-
-    /**
-     * @param ProductRequest $request
+     * @param int $id
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function store(ProductRequest $request)
+    public function restore($id)
     {
-        return $this->_store(function () use ($request) {
-            $this->item = Product::create($request->all());
-            $this->redirect = redirect()->route('admin.products.index');
-        }, $request);
+        return $this->_restore(function () use ($id) {
+            $this->item = Product::onlyTrashed()->findOrFail($id);
+            $this->redirect = redirect()->route('admin.products.deleted');
+
+            $this->item->doNotGenerateUrl()->doNotSaveBlocks()->restore();
+        });
+    }
+
+    /**
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function delete($id)
+    {
+        return $this->_delete(function () use ($id) {
+            $this->item = Product::onlyTrashed()->findOrFail($id);
+            $this->redirect = redirect()->route('admin.products.deleted');
+
+            $this->item->forceDelete();
+        });
     }
 
     /**
      * @param Product $product
-     * @return \Illuminate\View\View
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
      */
-    public function edit(Product $product)
+    public function duplicate(Product $product)
     {
-        return $this->_edit(function () use ($product) {
-            $this->item = $product;
-            $this->title = 'Edit Product';
-            $this->view = view('admin.shop.products.edit');
-            $this->vars = [
-                'categories' => Category::alphabetically()->get(),
-                'currencies' => Currency::alphabeticallyByCode()->get(),
-                'actives' => Product::$actives,
-            ];
+        return $this->_duplicate(function () use ($product) {
+            $this->item = $product->saveAsDuplicate();
+            $this->redirect = redirect()->route('admin.products.edit', $this->item->id);
         });
     }
 
@@ -127,30 +221,98 @@ class ProductsController extends Controller
      * @param ProductRequest $request
      * @param Product $product
      * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @throws Exception
      */
-    public function update(ProductRequest $request, Product $product)
+    public function preview(ProductRequest $request, Product $product = null)
     {
-        return $this->_update(function () use ($request, $product) {
-            $this->item = $product;
-            $this->redirect = redirect()->route('admin.products.index');
-
-            $this->item->update($request->all());
-        }, $request);
+        return $this->_preview(function () use ($product, $request) {
+            if ($product && $product->exists) {
+                $this->item = $product;
+                $this->item->update($request->all());
+            } else {
+                $this->item = Product::create($request->all());
+            }
+        });
     }
 
     /**
-     * @param Product $product
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
+     * @param Request $request
+     * @param ProductFilter $filter
+     * @param ProductSort $sort
+     * @return \Illuminate\View\View
      */
-    public function destroy(Product $product)
+    public function drafts(Request $request, ProductFilter $filter, ProductSort $sort)
     {
-        return $this->_destroy(function () use ($product) {
-            $this->item = $product;
-            $this->redirect = redirect()->route('admin.products.index');
-
-            $this->item->delete();
+        return $this->_drafts(function () use ($request, $filter, $sort) {
+            $this->items = Product::with(['category', 'currency'])->onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->title = 'Drafted Products';
+            $this->view = view('admin.shop.products.drafts');
+            $this->vars = [
+                'categories' => Category::withDepth()->defaultOrder()->get(),
+                'currencies' => Currency::alphabeticallyByCode()->get(),
+                'actives' => Product::$actives,
+            ];
         });
+    }
+
+    /**
+     * @param Draft $draft
+     * @return \Illuminate\View\View
+     */
+    public function draft(Draft $draft)
+    {
+        return $this->_draft(function () use ($draft) {
+            $this->item = $draft->draftable;
+            $this->item->publishDraft($draft);
+
+            $this->title = 'Product Draft';
+            $this->view = view('admin.shop.products.draft');
+            $this->vars = [
+                'categories' => Category::withDepth()->defaultOrder()->get(),
+                'currencies' => Currency::alphabeticallyByCode()->get(),
+                'actives' => Product::$actives,
+            ];
+        }, $draft);
+    }
+
+    /**
+     * @param Request $request
+     * @param int $id
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function limbo(Request $request, $id)
+    {
+        return $this->_limbo(function () {
+            $this->title = 'Product Draft';
+            $this->view = view('admin.shop.products.limbo');
+            $this->vars = [
+                'categories' => Category::withDepth()->defaultOrder()->get(),
+                'currencies' => Currency::alphabeticallyByCode()->get(),
+                'actives' => Product::$actives,
+            ];
+        }, function () use ($request) {
+            $this->item->saveAsDraft($request->all());
+            $this->redirect = redirect()->route('admin.products.drafts');
+        }, $id, $request, new ProductRequest());
+    }
+
+    /**
+     * @param Revision $revision
+     * @return \Illuminate\View\View
+     */
+    public function revision(Revision $revision)
+    {
+        return $this->_revision(function () use ($revision) {
+            $this->item = $revision->revisionable;
+            $this->item->rollbackToRevision($revision);
+
+            $this->title = 'Product Revision';
+            $this->view = view('admin.shop.products.revision');
+            $this->vars = [
+                'categories' => Category::withDepth()->defaultOrder()->get(),
+                'currencies' => Currency::alphabeticallyByCode()->get(),
+                'actives' => Product::$actives,
+            ];
+        }, $revision);
     }
 }

@@ -3,6 +3,16 @@
         {!! form()->text('search', request()->get('search') ?: null, ['placeholder' => 'Search']) !!}
     </fieldset>
     <fieldset>
+        <select name="category">
+            <option value="" selected="selected">All Categories</option>
+            @foreach($categories as $category)
+                <option value="{{ $category->id }}" {{ $category->id == request('category') ? 'selected="selected"' : '' }}>
+                    {{ str_repeat('&nbsp;', $category->depth * 4) . $category->name }}
+                </option>
+            @endforeach
+        </select>
+    </fieldset>
+    <fieldset>
         {!! form()->text('price[0]', request('price')[0] ?: null, ['placeholder' => 'Price From', 'style' => 'width: 48%;']) !!}
         {!! form()->text('price[1]', request('price')[1] ?: null, ['placeholder' => 'Price To', 'style' => 'width: 48%;']) !!}
     </fieldset>

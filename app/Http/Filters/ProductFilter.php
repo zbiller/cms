@@ -23,6 +23,7 @@ class ProductFilter extends Filter
     {
         return [
             'search' => 'operator:like|condition:or|columns:sku,name,slug,content',
+            'category' => 'operator:=|condition:or|columns:category_id',
             'price' => 'operator:between|condition:or|columns:price',
             'quantity' => 'operator:between|condition:or|columns:quantity',
             'active' => 'operator:=|condition:or|columns:active',
