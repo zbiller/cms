@@ -106,6 +106,19 @@ trait HasUrl
     }
 
     /**
+     * @return void
+     * @throws UrlException
+     */
+    public function saveUrl()
+    {
+        if ($this->url && $this->url->exists) {
+            $this->updateUrl();
+        } else {
+            $this->createUrl();
+        }
+    }
+
+    /**
      * Create a new url for the model.
      *
      * @return void
@@ -142,6 +155,10 @@ trait HasUrl
 
         try {
             DB::transaction(function () {
+                if ($this->url()->count() == 0) {
+                    $this->createUrl();
+                }
+
                 $this->url()->update([
                     'url' => $this->buildFullUrl()
                 ]);
