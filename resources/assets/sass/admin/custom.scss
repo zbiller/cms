@@ -307,3 +307,63 @@ td .upload-aligned-image {
     width: 100%;
     margin: 10px 0;
 }
+
+/* Discount Styles */
+.loading-discounts {
+    display: none;
+    text-align: center;
+}
+
+.actions-discounts {
+    width: 165px;
+    padding: 10px;
+
+    @include media-query('tablet') {
+        display: table-cell;
+        width: 78px;
+    }
+}
+
+.discount-assign-container {
+    @include clear-padding();
+
+    display: block;
+    float: left;
+    width: 100%;
+    padding: 15px;
+    background: $colorAlabaster;
+    border: 1px solid $colorGallery;
+    border-top: none;
+}
+
+.discount-assign-select-container {
+    @include calc(width, '100% - 95px');
+
+    float: left;
+
+    @include media-query('tablet') {
+        @include calc(width, '100% - 45px');
+    }
+}
+
+.discount-assign-btn-container {
+    width: 95px;
+    float: right;
+
+    @include media-query('tablet') {
+        width: 45px;
+    }
+}
+
+.discount-assign-select {
+    float: left;
+    width: 100%;
+    border: 1px solid $colorGallery;
+    padding: 4px 5px 9px;
+    max-height: none;
+    margin-top: 0;
+
+    @include media-query('tablet') {
+        padding: 4px 5px 8px;
+    }
+}
