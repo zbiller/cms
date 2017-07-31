@@ -491,36 +491,6 @@ trait HasDrafts
      */
     protected function buildDraftDataFromPivotedRelation(array $params = [], $relation, array $attributes = [], Draft $draft = null)
     {
-        if (!function_exists('attach_from_existing_or_new_related')) {
-            /**
-             * @param Model $model
-             * @param int $id
-             * @param string $relation
-             * @param array $attributes
-             * @param Draft|null $draft
-             */
-            function attach_from_existing_or_new_related(Model $model, $id, $relation, array $attributes = [], Draft $draft = null) {
-                $related = $model->{$relation}()->getRelated()->findOrNew($id);
-
-                if ($related->exists) {
-                    $model->{$relation}()->attach($id, $attributes);
-                } elseif ($draft->exists) {
-                    if (isset($draft->metadata->relations->{$relation}->records->items)) {
-                        foreach ($draft->metadata->relations->{$relation}->records->items as $item) {
-                            if (isset($item->id) && $item->id == $id) {
-                                foreach ((array)$item as $field => $value) {
-                                    $related->{$field} = $value;
-                                }
-
-                                $related->save();
-                                $model->{$relation}()->attach($id, $attributes);
-                            }
-                        }
-                    }
-                }
-            };
-        }
-
         $data = [
             'type' => $attributes['type'],
             'class' => get_class($attributes['model']),
@@ -545,10 +515,14 @@ trait HasDrafts
             foreach ($params[$relation] as $index => $parameters) {
                 if (is_array($parameters)) {
                     foreach ($parameters as $id => $attributes) {
-                        attach_from_existing_or_new_related($this, $id, $relation, $attributes, $draft);
+                        $this->attachPivotedRelationFromExistingOrNewRelated(
+                            $this, $id, $relation, $attributes, $draft
+                        );
                     }
                 } else {
-                    attach_from_existing_or_new_related($this, $parameters, $relation, $attributes, $draft);
+                    $this->attachPivotedRelationFromExistingOrNewRelated(
+                        $this, $parameters, $relation, $attributes, $draft
+                    );
                 }
             }
 
@@ -758,6 +732,34 @@ trait HasDrafts
         }
 
         return $relations;
+    }
+
+    /**
+     * @param Model $model
+     * @param int $id
+     * @param string $relation
+     * @param array $attributes
+     * @param Draft|null $draft
+     */
+    private function attachPivotedRelationFromExistingOrNewRelated(Model $model, $id, $relation, array $attributes = [], Draft $draft = null) {
+        $related = $model->{$relation}()->getRelated()->findOrNew($id);
+
+        if ($related->exists) {
+            $model->{$relation}()->attach($id, $attributes);
+        } elseif ($draft->exists) {
+            if (isset($draft->metadata->relations->{$relation}->records->items)) {
+                foreach ($draft->metadata->relations->{$relation}->records->items as $item) {
+                    if (isset($item->id) && $item->id == $id) {
+                        foreach ((array)$item as $field => $value) {
+                            $related->{$field} = $value;
+                        }
+
+                        $related->save();
+                        $model->{$relation}()->attach($id, $attributes);
+                    }
+                }
+            }
+        }
     }
 
     /**
