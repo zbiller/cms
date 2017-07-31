@@ -4,7 +4,9 @@
 <a href="#tab-4">Images</a>
 
 @if($item->exists)
-    <a href="#tab-5">Discounts</a>
+    <a href="#tab-5">Attributes</a>
+    <a href="#tab-6">Discounts</a>
+    <a href="#tab-7">Taxes</a>
 
     {!! block()->tab($item) !!}
 

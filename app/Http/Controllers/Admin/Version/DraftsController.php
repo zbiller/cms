@@ -113,7 +113,7 @@ class DraftsController extends Controller
         }
 
         try {
-            $this->model = (new $this->class())->findOrFail($this->id);
+            $this->model = app($this->class)->findOrFail($this->id);
         } catch (Exception $e) {
             $this->model = app($this->class);
         }

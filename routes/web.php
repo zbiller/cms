@@ -477,6 +477,12 @@ Route::group([
                 Route::post('store', ['as' => 'admin.taxes.store', 'uses' => 'TaxesController@store', 'permissions' => 'taxes-add']);
                 Route::put('update/{tax}', ['as' => 'admin.taxes.update', 'uses' => 'TaxesController@update', 'permissions' => 'taxes-edit']);
                 Route::delete('destroy/{tax}', ['as' => 'admin.taxes.destroy', 'uses' => 'TaxesController@destroy', 'permissions' => 'taxes-delete']);
+
+                /**
+                 * Product Assignment.
+                 */
+                Route::get('get', ['as' => 'admin.taxes.get', 'uses' => 'TaxesController@get', 'permissions' => 'taxes-list']);
+                Route::post('row', ['as' => 'admin.taxes.row', 'uses' => 'TaxesController@row', 'permissions' => 'taxes-list']);
             });
         });
 

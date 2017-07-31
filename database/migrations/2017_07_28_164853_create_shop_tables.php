@@ -24,6 +24,74 @@ class CreateShopTables extends Migration
             $table->timestamps();
         });
 
+        Schema::create('categories', function (Blueprint $table) {
+            $table->increments('id');
+            NestedSet::columns($table);
+
+            $table->string('name')->unique();
+            $table->string('slug')->unique();
+
+            $table->longText('metadata');
+            $table->tinyInteger('active')->default(1);
+
+            $table->timestamps();
+            $table->softDeletes();
+            Draft::column($table);
+        });
+
+        Schema::create('products', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('category_id')->unsigned()->index();
+            $table->integer('currency_id')->unsigned()->index()->nullable();
+
+            $table->string('sku')->unique();
+            $table->string('name')->unique();
+            $table->string('slug')->unique();
+            $table->text('content')->nullable();
+
+            $table->float('price')->default(0);
+            $table->integer('quantity')->default(0);
+
+            $table->integer('views')->default(0);
+            $table->integer('sales')->default(0);
+
+            $table->text('metadata')->nullable();
+            $table->tinyInteger('active')->default(1);
+
+            $table->timestamps();
+            $table->softDeletes();
+            Draft::column($table);
+
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('currency_id')->references('id')->on('currencies')->onDelete('set null')->onUpdate('set null');
+        });
+
+        Schema::create('sets', function (Blueprint $table) {
+            $table->increments('id');
+
+            $table->string('name')->unique();
+            $table->string('slug')->unique();
+            $table->integer('ord')->default(0);
+
+            $table->timestamps();
+        });
+
+        Schema::create('attributes', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('set_id')->unsigned()->index();
+
+            $table->string('name');
+            $table->string('slug');
+            $table->text('value');
+
+            $table->tinyInteger('type')->default(1);
+            $table->integer('ord')->default(0);
+
+            $table->timestamps();
+
+            $table->foreign('set_id')->references('id')->on('sets')->onDelete('cascade')->onUpdate('cascade');
+        });
+
         Schema::create('discounts', function (Blueprint $table) {
             $table->increments('id');
 
@@ -60,72 +128,30 @@ class CreateShopTables extends Migration
             $table->timestamps();
         });
 
-        Schema::create('sets', function (Blueprint $table) {
+        Schema::create('product_discount', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->string('name')->unique();
-            $table->string('slug')->unique();
-            $table->integer('ord')->default(0);
+            $table->integer('product_id')->unsigned()->index();
+            $table->integer('discount_id')->unsigned()->index();
+            $table->integer('ord');
 
             $table->timestamps();
+
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('discount_id')->references('id')->on('discounts')->onDelete('cascade')->onUpdate('cascade');
         });
 
-        Schema::create('attributes', function (Blueprint $table) {
+        Schema::create('product_tax', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('set_id')->unsigned()->index();
 
-            $table->string('name');
-            $table->string('slug');
-            $table->text('value');
-
-            $table->tinyInteger('type')->default(1);
-            $table->integer('ord')->default(0);
+            $table->integer('product_id')->unsigned()->index();
+            $table->integer('tax_id')->unsigned()->index();
+            $table->integer('ord');
 
             $table->timestamps();
 
-            $table->foreign('set_id')->references('id')->on('sets')->onDelete('cascade')->onUpdate('cascade');
-        });
-
-        Schema::create('categories', function (Blueprint $table) {
-            $table->increments('id');
-            NestedSet::columns($table);
-
-            $table->string('name')->unique();
-            $table->string('slug')->unique();
-
-            $table->longText('metadata');
-            $table->tinyInteger('active')->default(1);
-
-            $table->timestamps();
-            $table->softDeletes();
-            Draft::column($table);
-        });
-
-        Schema::create('products', function (Blueprint $table) {
-            $table->increments('id');
-            $table->integer('category_id')->unsigned()->index();
-            $table->integer('currency_id')->unsigned()->index()->nullable();
-
-            $table->string('sku')->unique();
-            $table->string('name')->unique();
-            $table->string('slug')->unique();
-            $table->text('content');
-
-            $table->float('price')->default(0);
-            $table->integer('quantity')->default(0);
-
-            $table->integer('views')->default(0);
-            $table->integer('sales')->default(0);
-
-            $table->longText('metadata');
-            $table->tinyInteger('active')->default(1);
-
-            $table->timestamps();
-            $table->softDeletes();
-            Draft::column($table);
-
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('currency_id')->references('id')->on('currencies')->onDelete('set null')->onUpdate('set null');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('tax_id')->references('id')->on('taxes')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
@@ -136,12 +162,14 @@ class CreateShopTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('products');
-        Schema::dropIfExists('categories');
-        Schema::dropIfExists('attributes');
-        Schema::dropIfExists('sets');
+        Schema::dropIfExists('product_tax');
+        Schema::dropIfExists('product_discount');
         Schema::dropIfExists('taxes');
         Schema::dropIfExists('discounts');
+        Schema::dropIfExists('attributes');
+        Schema::dropIfExists('sets');
+        Schema::dropIfExists('products');
+        Schema::dropIfExists('categories');
         Schema::dropIfExists('currencies');
     }
 }

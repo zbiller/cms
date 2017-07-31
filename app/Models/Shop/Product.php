@@ -86,6 +86,9 @@ class Product extends Model
 
     /**
      * Boot the model.
+     *
+     * Save assigned discounts for the product.
+     * Save assigned taxes for the product.
      */
     public static function boot()
     {
@@ -93,6 +96,7 @@ class Product extends Model
 
         static::saved(function (Product $product) {
             $discounts = request()->get('discounts');
+            $taxes = request()->get('taxes');
 
             if ($discounts && is_array($discounts) && !empty($discounts)) {
                 ksort($discounts);
@@ -103,6 +107,22 @@ class Product extends Model
                     foreach ($data as $id => $attributes) {
                         if ($id && ($discount = Discount::find($id))) {
                             $product->discounts()->save($discount, [
+                                'ord' => isset($attributes['ord']) ? (int)$attributes['ord'] : 0
+                            ]);
+                        }
+                    }
+                }
+            }
+
+            if ($taxes && is_array($taxes) && !empty($taxes)) {
+                ksort($taxes);
+
+                $product->taxes()->detach();
+
+                foreach ($taxes as $data) {
+                    foreach ($data as $id => $attributes) {
+                        if ($id && ($tax = Tax::find($id))) {
+                            $product->taxes()->save($tax, [
                                 'ord' => isset($attributes['ord']) ? (int)$attributes['ord'] : 0
                             ]);
                         }
@@ -141,6 +161,18 @@ class Product extends Model
     public function discounts()
     {
         return $this->belongsToMany(Discount::class, 'product_discount', 'product_id', 'discount_id')->withPivot([
+            'id', 'ord'
+        ])->withTimestamps()->orderBy('ord', 'asc');
+    }
+
+    /**
+     * Product has and belongs to many taxes.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function taxes()
+    {
+        return $this->belongsToMany(Tax::class, 'product_tax', 'product_id', 'tax_id')->withPivot([
             'id', 'ord'
         ])->withTimestamps()->orderBy('ord', 'asc');
     }
@@ -273,7 +305,7 @@ class Product extends Model
     public static function getDraftOptions()
     {
         return DraftOptions::instance()
-            ->relationsToDraft('blocks', 'discounts');
+            ->relationsToDraft('blocks', 'discounts', 'taxes');
     }
 
     /**
@@ -283,7 +315,7 @@ class Product extends Model
     {
         return RevisionOptions::instance()
             ->limitRevisionsTo(100)
-            ->relationsToRevision('blocks', 'discounts');
+            ->relationsToRevision('blocks', 'discounts', 'taxes');
     }
 
     /**

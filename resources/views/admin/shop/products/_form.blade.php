@@ -72,16 +72,15 @@
     </script>
 </div>
 
-
-
-
-
-
-
-
 @if($item->exists)
-    <div id="tab-5" class="tab tab-discounts">
+    <div id="tab-5" class="tab tab-attributes">
+
+    </div>
+    <div id="tab-6" class="tab tab-discounts">
         @include('admin.shop.discounts.assign.container', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
+    </div>
+    <div id="tab-7" class="tab tab-taxes">
+        @include('admin.shop.taxes.assign.container', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
     </div>
 
     {!! block()->container($item, isset($on_draft) ? $draft : null, isset($on_revision) ? $revision : null, isset($on_revision) ? true : false) !!}
