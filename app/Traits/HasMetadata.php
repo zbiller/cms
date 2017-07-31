@@ -37,6 +37,10 @@ trait HasMetadata
      */
     public function metadata($raw)
     {
+        if (!$this->metadata) {
+            return null;
+        }
+
         $metadata = get_object_vars_recursive($this->metadata);
         $field = str_replace('][', '.', trim(str_replace('metadata', '', $raw), '.[]'));
 
