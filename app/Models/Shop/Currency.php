@@ -48,6 +48,17 @@ class Currency extends Model
     }
 
     /**
+     * Filter the query by code.
+     *
+     * @param Builder $query
+     * @param string $code
+     */
+    public function scopeWhereCode($query, $code)
+    {
+        $query->where('code', strtoupper($code));
+    }
+
+    /**
      * @param $amount
      * @param $from
      * @param $to

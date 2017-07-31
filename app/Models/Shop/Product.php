@@ -22,6 +22,7 @@ use App\Options\UrlOptions;
 use App\Options\ActivityOptions;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Http\Request;
 
 class Product extends Model
 {
@@ -84,6 +85,35 @@ class Product extends Model
     ];
 
     /**
+     * Boot the model.
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::saved(function (Product $product) {
+            $discounts = request()->get('discounts');
+
+            if ($discounts && is_array($discounts) && !empty($discounts)) {
+                ksort($discounts);
+
+                $product->discounts()->detach();
+
+                foreach ($discounts as $data) {
+                    foreach ($data as $id => $attributes) {
+                        if ($id && ($discount = Discount::find($id))) {
+                            $product->discounts()->save($discount, [
+                                'ord' => isset($attributes['ord']) ? (int)$attributes['ord'] : 0
+                            ]);
+                        }
+
+                    }
+                }
+            }
+        });
+    }
+
+    /**
      * Product belongs to category.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -101,6 +131,18 @@ class Product extends Model
     public function currency()
     {
         return $this->belongsTo(Currency::class, 'currency_id');
+    }
+
+    /**
+     * Product has and belongs to many discounts.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function discounts()
+    {
+        return $this->belongsToMany(Discount::class, 'product_discount', 'product_id', 'discount_id')->withPivot([
+            'id', 'ord'
+        ])->withTimestamps()->orderBy('ord', 'asc');
     }
 
     /**
@@ -231,7 +273,7 @@ class Product extends Model
     public static function getDraftOptions()
     {
         return DraftOptions::instance()
-            ->relationsToDraft('blocks');
+            ->relationsToDraft('blocks', 'discounts');
     }
 
     /**
@@ -241,7 +283,7 @@ class Product extends Model
     {
         return RevisionOptions::instance()
             ->limitRevisionsTo(100)
-            ->relationsToRevision('blocks');
+            ->relationsToRevision('blocks', 'discounts');
     }
 
     /**

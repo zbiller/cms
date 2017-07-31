@@ -4,8 +4,6 @@
         var blocksTab = $('div#tab-blocks');
         var blocksContainer = $('div.blocks-container');
 
-        console.log(blocksContainer.data('draft'));
-
         var listBlocks = function () {
             $.ajax({
                 type : 'GET',
@@ -141,8 +139,6 @@
                     max = $(selector).attr('data-index');
                 }
             });
-
-            console.log(max);
 
             return max;
         }, initBlockSelect = function () {

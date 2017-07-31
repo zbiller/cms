@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin\Shop;
 
-use App\Models\Version\Draft;
-use App\Models\Version\Revision;
 use Exception;
 use App\Http\Controllers\Controller;
 use App\Models\Shop\Category;
 use App\Models\Shop\Product;
 use App\Models\Shop\Currency;
+use App\Models\Version\Draft;
+use App\Models\Version\Revision;
 use App\Services\UploadService;
 use App\Traits\CanCrud;
 use App\Http\Requests\ProductRequest;

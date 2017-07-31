@@ -38,11 +38,19 @@
     {!! form_admin()->editor('content') !!}
 </div>
 <div id="tab-3" class="tab">
-    <div class="dropzone" style="margin: 0 0 20px 0;">
-        <div class="ddTitle" style="width: 380px;">
-            Drag & drop images or click the area to upload
+    {!! form_admin()->text('metadata[meta][title]', 'Title') !!}
+    {!! uploader()->field('metadata[meta][image]')->label('Image')->model($item)->types('image')->manager() !!}
+    {!! form_admin()->textarea('metadata[meta][description]', 'Description') !!}
+    {!! form_admin()->textarea('metadata[meta][keywords]', 'Keywords') !!}
+</div>
+<div id="tab-4" class="tab">
+    @if(!isset($on_revision))
+        <div class="dropzone" style="margin: 0 0 20px 0;">
+            <div class="ddTitle" style="width: 380px;">
+                Drag & drop images or click the area to upload
+            </div>
         </div>
-    </div>
+    @endif
     <a id="multiple-add-item" class="btn dark-blue full centered no-margin-left no-margin-right no-margin-bottom">
         <i class="fa fa-plus"></i>&nbsp; Add new image
     </a>
@@ -63,14 +71,19 @@
         </div>
     </script>
 </div>
-<div id="tab-4" class="tab">
-    {!! form_admin()->text('metadata[meta][title]', 'Title') !!}
-    {!! uploader()->field('metadata[meta][image]')->label('Image')->model($item)->types('image')->manager() !!}
-    {!! form_admin()->textarea('metadata[meta][description]', 'Description') !!}
-    {!! form_admin()->textarea('metadata[meta][keywords]', 'Keywords') !!}
-</div>
+
+
+
+
+
+
+
 
 @if($item->exists)
+    <div id="tab-5" class="tab tab-discounts">
+        @include('admin.shop.discounts.assign.container', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
+    </div>
+
     {!! block()->container($item, isset($on_draft) ? $draft : null, isset($on_revision) ? $revision : null, isset($on_revision) ? true : false) !!}
 
     @if(!isset($on_draft) && !isset($on_limbo_draft) && !isset($on_revision))

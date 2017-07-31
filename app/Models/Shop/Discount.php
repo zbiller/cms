@@ -136,6 +136,57 @@ class Discount extends Model
     }
 
     /**
+     * Filter the query by type.
+     *
+     * @param Builder $query
+     * @param int $type
+     */
+    public function scopeWhereType($query, $type)
+    {
+        $query->where('type', $type);
+    }
+
+    /**
+     * Filter the query by applicability to product.
+     *
+     * @param Builder $query
+     */
+    public function scopeForProduct($query)
+    {
+        $query->where('for', self::FOR_PRODUCT);
+    }
+
+    /**
+     * Filter the query by applicability to order.
+     *
+     * @param Builder $query
+     */
+    public function scopeForOrder($query)
+    {
+        $query->where('for', self::FOR_ORDER);
+    }
+
+    /**
+     * Filter the query by active yes.
+     *
+     * @param Builder $query
+     */
+    public function scopeActive($query)
+    {
+        $query->where('active', self::ACTIVE_YES);
+    }
+
+    /**
+     * Filter the query by active no.
+     *
+     * @param Builder $query
+     */
+    public function scopeInactive($query)
+    {
+        $query->where('active', self::ACTIVE_NO);
+    }
+
+    /**
      * Set the options for the HasActivity trait.
      *
      * @return ActivityOptions

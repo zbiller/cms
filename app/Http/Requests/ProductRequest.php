@@ -70,4 +70,17 @@ class ProductRequest extends Request
             ],
         ];
     }
+
+    /**
+     * Get the pretty name of attributes.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'category_id' => 'category',
+            'currency_id' => 'currency',
+        ];
+    }
 }

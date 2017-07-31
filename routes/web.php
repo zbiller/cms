@@ -457,6 +457,12 @@ Route::group([
                 Route::post('store', ['as' => 'admin.discounts.store', 'uses' => 'DiscountsController@store', 'permissions' => 'discounts-add']);
                 Route::put('update/{discount}', ['as' => 'admin.discounts.update', 'uses' => 'DiscountsController@update', 'permissions' => 'discounts-edit']);
                 Route::delete('destroy/{discount}', ['as' => 'admin.discounts.destroy', 'uses' => 'DiscountsController@destroy', 'permissions' => 'discounts-delete']);
+
+                /**
+                 * Product Assignment.
+                 */
+                Route::get('get', ['as' => 'admin.discounts.get', 'uses' => 'DiscountsController@get', 'permissions' => 'discounts-list']);
+                Route::post('row', ['as' => 'admin.discounts.row', 'uses' => 'DiscountsController@row', 'permissions' => 'discounts-list']);
             });
 
             /**

@@ -13,15 +13,15 @@
         </select>
     </fieldset>
     <fieldset>
+        {!! form()->select('active', ['' => 'Active'] + $actives, request('active') ?: null) !!}
+    </fieldset>
+    <fieldset>
         {!! form()->text('price[0]', request('price')[0] ?: null, ['placeholder' => 'Price From', 'style' => 'width: 48%;']) !!}
         {!! form()->text('price[1]', request('price')[1] ?: null, ['placeholder' => 'Price To', 'style' => 'width: 48%;']) !!}
     </fieldset>
     <fieldset>
         {!! form()->text('quantity[0]', request('quantity')[0] ?: null, ['placeholder' => 'Quant. From', 'style' => 'width: 48%;']) !!}
         {!! form()->text('quantity[1]', request('quantity')[1] ?: null, ['placeholder' => 'Quant. To', 'style' => 'width: 48%;']) !!}
-    </fieldset>
-    <fieldset>
-        {!! form()->select('active', ['' => 'Active'] + $actives, request('active') ?: null) !!}
     </fieldset>
     <fieldset>
         {!! form_admin()->calendar('start_date', false, request('start_date') !== null ? request('start_date') : null, ['placeholder' => 'Date From', 'style' => 'width: 48%;']) !!}
