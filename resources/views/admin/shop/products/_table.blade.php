@@ -1,14 +1,20 @@
-<table cellspacing="0" cellpadding="0" border="0">
+<table
+    cellspacing="0" cellpadding="0" border="0"
+    data-orderable="{{ $orderable ? 'true' : 'false' }}"
+    data-order-url="{{ route('admin.products.order') }}"
+    data-order-model="{{ \App\Models\Shop\Product::class }}"
+    data-order-token="{{ csrf_token() }}"
+>
     <thead>
-        <tr>
-            <td class="sortable" data-sort="category_id">
-                <i class="fa fa-sort"></i>&nbsp; Category
-            </td>
+        <tr class="nodrag nodrop">
             <td class="sortable" data-sort="sku">
                 <i class="fa fa-sort"></i>&nbsp; SKU
             </td>
             <td class="sortable" data-sort="name">
                 <i class="fa fa-sort"></i>&nbsp; Name
+            </td>
+            <td class="sortable" data-sort="category_id">
+                <i class="fa fa-sort"></i>&nbsp; Category
             </td>
             <td class="sortable" data-sort="price">
                 <i class="fa fa-sort"></i>&nbsp; Price
@@ -25,10 +31,10 @@
     <tbody>
         @if($items->count() > 0)
             @foreach($items as $index => $item)
-                <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
-                    <td>{{ $item->category ? $item->category->name : 'N/A' }}</td>
+                <tr id="{{ $item->id }}" class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
                     <td>{{ $item->sku ?: 'N/A' }}</td>
                     <td>{{ $item->name ?: 'N/A' }}</td>
+                    <td>{{ $item->category ? $item->category->name : 'N/A' }}</td>
                     <td>{{ $item->price ? number_format($item->price) . ' ' . $item->currency->code : 'N/A' }}</td>
                     <td>{{ $item->quantity ?: 'N/A' }}</td>
                     <td>{{ isset($actives[$item->active]) ? $actives[$item->active] : 'N/A' }}</td>

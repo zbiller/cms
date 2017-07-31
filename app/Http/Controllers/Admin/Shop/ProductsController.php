@@ -11,6 +11,7 @@ use App\Models\Version\Draft;
 use App\Models\Version\Revision;
 use App\Services\UploadService;
 use App\Traits\CanCrud;
+use App\Traits\CanOrder;
 use App\Http\Requests\ProductRequest;
 use App\Http\Filters\ProductFilter;
 use App\Http\Sorts\ProductSort;
@@ -20,11 +21,17 @@ use Illuminate\Http\Request;
 class ProductsController extends Controller
 {
     use CanCrud;
+    use CanOrder;
 
     /**
      * @var string
      */
     protected $model = Product::class;
+
+    /**
+     * @var bool
+     */
+    protected $orderable = true;
 
     /**
      * @param Request $request
@@ -35,13 +42,23 @@ class ProductsController extends Controller
     public function index(Request $request, ProductFilter $filter, ProductSort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
-            $this->items = Product::with(['category', 'currency'])->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->isOrderableOrNot($request);
+
+            $query = Product::with(['category', 'currency']);
+
+            if ($this->orderable) {
+                $this->items = $query->whereCategory($request->get('category'))->ordered()->get();
+            } else {
+                $this->items = $query->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            }
+
             $this->title = 'Products';
             $this->view = view('admin.shop.products.index');
             $this->vars = [
                 'categories' => Category::withDepth()->defaultOrder()->get(),
                 'currencies' => Currency::alphabeticallyByCode()->get(),
                 'actives' => Product::$actives,
+                'orderable' => $this->orderable,
             ];
         });
     }
@@ -314,5 +331,27 @@ class ProductsController extends Controller
                 'actives' => Product::$actives,
             ];
         }, $revision);
+    }
+
+    /**
+     * @param Request $request
+     * @return void
+     */
+    private function isOrderableOrNot(Request $request)
+    {
+        $this->orderable = true;
+
+        foreach ($request->except('category') as $input => $value) {
+            $value = is_array($value) ? array_filter($value) : $value;
+
+            if ($request->has('category') && !is_null($value) && !empty($value) && $value != '') {
+                $this->orderable = false;
+                break;
+            }
+        }
+
+        if (!$request->get('category')) {
+            $this->orderable = false;
+        }
     }
 }

@@ -339,6 +339,11 @@ Route::group([
                 Route::match(['post', 'put'], 'preview/{product?}', ['as' => 'admin.products.preview', 'uses' => 'ProductsController@preview', 'permissions' => 'products-preview']);
 
                 /**
+                 * Order Actions.
+                 */
+                Route::patch('order', ['as' => 'admin.products.order', 'uses' => 'ProductsController@order']);
+
+                /**
                  * Draft Actions.
                  */
                 Route::get('drafts', ['as' => 'admin.products.drafts', 'uses' => 'ProductsController@drafts', 'permissions' => 'drafts-list']);

@@ -57,6 +57,7 @@ class CreateShopTables extends Migration
 
             $table->text('metadata')->nullable();
             $table->tinyInteger('active')->default(1);
+            $table->integer('ord')->default(0);
 
             $table->timestamps();
             $table->softDeletes();

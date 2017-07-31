@@ -11,7 +11,9 @@
 @endsection
 
 @section('footer')
-    {!! pagination('admin')->render($items) !!}
+    @if(!$orderable)
+        {!! pagination('admin')->render($items) !!}
+    @endif
 
     <section class="actions">
         {!! button()->updatePage() !!}

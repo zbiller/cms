@@ -3,10 +3,6 @@
 namespace App\Models\Shop;
 
 use App\Models\Model;
-use App\Options\BlockOptions;
-use App\Options\DraftOptions;
-use App\Options\DuplicateOptions;
-use App\Options\RevisionOptions;
 use App\Traits\HasBlocks;
 use App\Traits\HasDrafts;
 use App\Traits\HasDuplicates;
@@ -18,11 +14,16 @@ use App\Traits\HasMetadata;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
+use App\Traits\IsOrderable;
+use App\Options\BlockOptions;
 use App\Options\UrlOptions;
+use App\Options\DraftOptions;
+use App\Options\RevisionOptions;
+use App\Options\DuplicateOptions;
+use App\Options\OrderOptions;
 use App\Options\ActivityOptions;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Http\Request;
 
 class Product extends Model
 {
@@ -37,6 +38,7 @@ class Product extends Model
     use IsCacheable;
     use IsFilterable;
     use IsSortable;
+    use IsOrderable;
     use SoftDeletes;
 
     /**
@@ -250,6 +252,17 @@ class Product extends Model
     }
 
     /**
+     * Filter the query by category.
+     *
+     * @param Builder $query
+     * @param int $category
+     */
+    public function scopeWhereCategory($query, $category)
+    {
+        $query->where('category_id', $category);
+    }
+
+    /**
      * Filter the query to return only active results.
      *
      * @param Builder $query
@@ -329,6 +342,16 @@ class Product extends Model
             ->uniqueColumns('sku', 'name', 'slug')
             ->excludeColumns('views', 'sales', 'created_at', 'updated_at')
             ->excludeRelations('url', 'category', 'currency', 'drafts', 'revisions');
+    }
+
+    /**
+     * Get the options for the IsOrderable trait.
+     *
+     * @return OrderOptions
+     */
+    public static function getOrderOptions()
+    {
+        return OrderOptions::instance();
     }
 
     /**
