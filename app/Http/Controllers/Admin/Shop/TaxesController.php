@@ -162,7 +162,8 @@ class TaxesController extends Controller
             ];
         } catch (Exception $e) {
             return [
-                'status' => false
+                'status' => false,
+                'message' => $e->getMessage(),
             ];
         }
     }
@@ -192,7 +193,8 @@ class TaxesController extends Controller
             ];
         } catch (Exception $e) {
             return [
-                'status' => false
+                'status' => false,
+                'message' => $e->getMessage(),
             ];
         }
     }

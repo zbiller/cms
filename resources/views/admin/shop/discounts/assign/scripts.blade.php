@@ -8,6 +8,7 @@
             $.ajax({
                 type : 'GET',
                 url: '{{ route('admin.discounts.get') }}',
+                async: false,
                 data: {
                     _token: token,
                     product_id: discountsContainer.data('product-id'),

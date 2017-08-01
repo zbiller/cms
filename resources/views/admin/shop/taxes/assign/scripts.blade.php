@@ -8,6 +8,7 @@
             $.ajax({
                 type : 'GET',
                 url: '{{ route('admin.taxes.get') }}',
+                async: false,
                 data: {
                     _token: token,
                     product_id: taxesContainer.data('product-id'),

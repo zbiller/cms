@@ -9,6 +9,7 @@
             $.ajax({
                 type : 'GET',
                 url: '{{ route('admin.attributes.get') }}',
+                async: false,
                 data: {
                     _token: token,
                     product_id: attributesContainer.data('product-id'),
@@ -212,6 +213,14 @@
 
             $(document).on('change', 'select.assign-attribute-set', function (e) {
                 loadAttributes($(this));
+            });
+
+            $(document).on('click', 'textarea.attribute-value-change', function (e) {
+                $(this).addClass('expanded');
+            });
+
+            $(document).on('mouseleave', 'textarea.attribute-value-change', function (e) {
+                $(this).removeClass('expanded');
             });
 
             $(document).on('keyup', 'textarea.attribute-value-change', function (e) {

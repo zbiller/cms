@@ -289,7 +289,8 @@ class BlocksController extends Controller
             ];
         } catch (Exception $e) {
             return [
-                'status' => false
+                'status' => false,
+                'message' => $e->getMessage(),
             ];
         }
     }
@@ -318,7 +319,8 @@ class BlocksController extends Controller
             ];
         } catch (Exception $e) {
             return [
-                'status' => false
+                'status' => false,
+                'message' => $e->getMessage(),
             ];
         }
     }

@@ -101,10 +101,10 @@ class Product extends Model
             $discounts = request()->get('discounts');
             $taxes = request()->get('taxes');
 
+            $product->attributes()->detach();
+
             if ($attributes && is_array($attributes) && !empty($attributes)) {
                 ksort($attributes);
-
-                $product->attributes()->detach();
 
                 foreach ($attributes as $data) {
                     foreach ($data as $id => $attr) {
@@ -118,10 +118,10 @@ class Product extends Model
                 }
             }
 
+            $product->discounts()->detach();
+
             if ($discounts && is_array($discounts) && !empty($discounts)) {
                 ksort($discounts);
-
-                $product->discounts()->detach();
 
                 foreach ($discounts as $data) {
                     foreach ($data as $id => $attributes) {
@@ -134,10 +134,10 @@ class Product extends Model
                 }
             }
 
+            $product->taxes()->detach();
+
             if ($taxes && is_array($taxes) && !empty($taxes)) {
                 ksort($taxes);
-
-                $product->taxes()->detach();
 
                 foreach ($taxes as $data) {
                     foreach ($data as $id => $attributes) {

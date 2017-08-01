@@ -489,10 +489,15 @@ td .upload-aligned-image {
 }
 
 .attribute-value-change {
+    @include transition(none !important);
+
     float: left !important;
     width: 100% !important;
     border: 1px solid $colorGallery !important;
     padding: 5px 8px !important;
-    height: 80px !important;
-    margin-bottom: 15px !important;
+    height: 32px !important;
+
+    &.expanded {
+        height: 150px !important;
+    }
 }

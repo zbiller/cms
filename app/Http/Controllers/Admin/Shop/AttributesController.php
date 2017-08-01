@@ -189,7 +189,8 @@ class AttributesController extends Controller
             ];
         } catch (Exception $e) {
             return [
-                'status' => false
+                'status' => false,
+                'message' => $e->getMessage(),
             ];
         }
     }
@@ -221,7 +222,8 @@ class AttributesController extends Controller
             ];
         } catch (Exception $e) {
             return [
-                'status' => false
+                'status' => false,
+                'message' => $e->getMessage(),
             ];
         }
     }
@@ -235,7 +237,6 @@ class AttributesController extends Controller
         $this->validate($request, [
             'attribute_id' => 'required|numeric',
             'pivot_id' => 'required|numeric',
-            'value' => 'required',
         ]);
 
         try {
@@ -252,7 +253,8 @@ class AttributesController extends Controller
             ];
         } catch (Exception $e) {
             return [
-                'status' => false
+                'status' => false,
+                'message' => $e->getMessage(),
             ];
         }
     }
