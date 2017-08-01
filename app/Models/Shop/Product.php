@@ -97,8 +97,26 @@ class Product extends Model
         parent::boot();
 
         static::saved(function (Product $product) {
+            $attributes = request()->get('attributes');
             $discounts = request()->get('discounts');
             $taxes = request()->get('taxes');
+
+            if ($attributes && is_array($attributes) && !empty($attributes)) {
+                ksort($attributes);
+
+                $product->attributes()->detach();
+
+                foreach ($attributes as $data) {
+                    foreach ($data as $id => $attr) {
+                        if ($id && ($attribute = Attribute::find($id))) {
+                            $product->attributes()->save($attribute, [
+                                'ord' => isset($attr['ord']) ? (int)$attr['ord'] : 0,
+                                'val' => isset($attr['val']) ? $attr['val'] : null,
+                            ]);
+                        }
+                    }
+                }
+            }
 
             if ($discounts && is_array($discounts) && !empty($discounts)) {
                 ksort($discounts);
@@ -156,6 +174,25 @@ class Product extends Model
     }
 
     /**
+     * Product has and belongs to many attributes.
+     *
+     * @param bool $ordered
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function attributes($ordered = true)
+    {
+        $query = $this->belongsToMany(Attribute::class, 'product_attribute', 'product_id', 'attribute_id')->withPivot([
+            'id', 'ord', 'val'
+        ])->withTimestamps();
+
+        if ($ordered === true) {
+            $query->orderBy('product_attribute.ord', 'asc');
+        }
+
+        return $query;
+    }
+
+    /**
      * Product has and belongs to many discounts.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -164,7 +201,7 @@ class Product extends Model
     {
         return $this->belongsToMany(Discount::class, 'product_discount', 'product_id', 'discount_id')->withPivot([
             'id', 'ord'
-        ])->withTimestamps()->orderBy('ord', 'asc');
+        ])->withTimestamps()->orderBy('product_discount.ord', 'asc');
     }
 
     /**
@@ -176,7 +213,20 @@ class Product extends Model
     {
         return $this->belongsToMany(Tax::class, 'product_tax', 'product_id', 'tax_id')->withPivot([
             'id', 'ord'
-        ])->withTimestamps()->orderBy('ord', 'asc');
+        ])->withTimestamps()->orderBy('product_tax.ord', 'asc');
+    }
+
+    /**
+     * Get the final price with discounts and taxes applied.
+     *
+     * @return mixed
+     */
+    public function getFinalPriceAttribute()
+    {
+        $this->attributes['price'] = $this->price_with_discounts;
+        $this->attributes['price'] = $this->price_with_taxes;
+
+        return $this->attributes['price'];
     }
 
     /**
@@ -193,6 +243,84 @@ class Product extends Model
         }
 
         return $images;
+    }
+
+    /**
+     * Get the product's price with discounts applied.
+     * Discounts are applied in cascade.
+     *
+     * @return float
+     */
+    public function getPriceWithDiscountsAttribute()
+    {
+        return $this->attributes['price'] - $this->discount_value;
+    }
+
+    /**
+     * Get the product's price with taxes applied.
+     * Taxes are applied in cascade.
+     *
+     * @return float
+     */
+    public function getPriceWithTaxesAttribute()
+    {
+        return $this->attributes['price'] + $this->tax_value;
+    }
+
+    /**
+     * Get only the value of discounts for a product.
+     * Discounts are applied in cascade.
+     *
+     * @return mixed
+     */
+    public function getDiscountValueAttribute()
+    {
+        $price = $this->attributes['price'];
+
+        foreach ($this->discounts as $discount) {
+            if (!$discount->canBeApplied()) {
+                continue;
+            }
+
+            switch ($discount->type) {
+                case Discount::TYPE_FIXED:
+                    $price -= $discount->rate;
+                    break;
+                case Discount::TYPE_PERCENT:
+                    $price -= ($discount->rate / 100) * $price;
+                    break;
+            }
+        }
+
+        return $this->attributes['price'] - $price;
+    }
+
+    /**
+     * Get only the value of taxes for a product.
+     * Taxes are applied in cascade.
+     *
+     * @return float
+     */
+    public function getTaxValueAttribute()
+    {
+        $price = $this->attributes['price'];
+
+        foreach ($this->taxes as $tax) {
+            if (!$tax->canBeApplied()) {
+                continue;
+            }
+
+            switch ($tax->type) {
+                case Tax::TYPE_FIXED:
+                    $price += $tax->rate;
+                    break;
+                case Tax::TYPE_PERCENT:
+                    $price += ($tax->rate / 100) * $price;
+                    break;
+            }
+        }
+
+        return $price - $this->attributes['price'];
     }
 
     /**
@@ -229,6 +357,46 @@ class Product extends Model
         $image = array_last($images);
 
         return isset($image['image']) ? $image['image'] : null;
+    }
+
+    /**
+     * Get the product's specifications mapped into an array.
+     *
+     * Array format:
+     *
+     * [
+     *     set_name =>
+     *     [
+     *         [
+     *             "name" => attribute_name,
+     *             "value" => attribute_value,
+     *         ],
+     *         ...
+     *     ],
+     *     ...
+     * ]
+     *
+     * @return array
+     */
+    public function getSpecificationsAttribute()
+    {
+        $specifications = [];
+
+        $attributes = $this->attributes(false)->with('set')
+            ->join('sets', 'sets.id', '=', 'attributes.set_id')
+            ->orderBy('sets.ord')->orderBy('product_attribute.ord');
+
+        foreach ($attributes->get() as $attribute) {
+            $set = $attribute->set;
+            $pivot = $attribute->pivot;
+
+            $specifications[$set->name][] = [
+                'name' => $attribute->name,
+                'value' => $pivot->val ?: $attribute->value,
+            ];
+        }
+
+        return $specifications;
     }
 
     /**
@@ -318,7 +486,7 @@ class Product extends Model
     public static function getDraftOptions()
     {
         return DraftOptions::instance()
-            ->relationsToDraft('blocks', 'discounts', 'taxes');
+            ->relationsToDraft('blocks', 'attributes', 'discounts', 'taxes');
     }
 
     /**
@@ -328,7 +496,7 @@ class Product extends Model
     {
         return RevisionOptions::instance()
             ->limitRevisionsTo(100)
-            ->relationsToRevision('blocks', 'discounts', 'taxes');
+            ->relationsToRevision('blocks', 'attributes', 'discounts', 'taxes');
     }
 
     /**
