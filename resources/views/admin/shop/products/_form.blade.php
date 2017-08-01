@@ -33,6 +33,8 @@
     {!! form_admin()->select('currency_id', 'Currency', $currencies->pluck('code', 'id')) !!}
     {!! form_admin()->number('quantity') !!}
     {!! form_admin()->select('active', 'Active', $actives) !!}
+    {!! form_admin()->number('views', null, 'Views Count', ['disabled' => 'disabled']) !!}
+    {!! form_admin()->number('sales', null, 'Sales Count', ['disabled' => 'disabled']) !!}
 </div>
 <div id="tab-2" class="tab">
     {!! form_admin()->editor('content') !!}
@@ -74,12 +76,22 @@
 
 @if($item->exists)
     <div id="tab-5" class="tab tab-attributes">
-
+        @include('admin.shop.attributes.assign.container', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
     </div>
     <div id="tab-6" class="tab tab-discounts">
+        <div class="box notification" style="margin-bottom: 20px;">
+            <span>
+                Please note that when applying multiple discounts, the product's final price will lower progressively, applying the discounts in cascade in the order they are assigned.
+            </span>
+        </div>
         @include('admin.shop.discounts.assign.container', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
     </div>
     <div id="tab-7" class="tab tab-taxes">
+        <div class="box notification" style="margin-bottom: 20px;">
+            <span>
+                Please note that when applying multiple taxes, the product's final price will increase progressively, applying the taxes in cascade in the order they are assigned.
+            </span>
+        </div>
         @include('admin.shop.taxes.assign.container', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
     </div>
 

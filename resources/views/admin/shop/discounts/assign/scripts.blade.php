@@ -66,7 +66,7 @@
                             table.find('tr.no-discounts-assigned').remove();
                             table.find('tbody').append(
                                 $('#discount-row-template').html()
-                                    .replace(/#index#/g, parseInt(getLastIndex()) + 1)
+                                    .replace(/#index#/g, parseInt(getLastDiscountIndex()) + 1)
                                     .replace(/#discount_id#/g, data.data.id)
                                     .replace(/#discount_name#/g, data.data.name)
                                     .replace(/#discount_rate#/g, data.data.rate)
@@ -76,7 +76,7 @@
 
                             $('.discounts-request').append(
                                 $('#discount-request-template').html()
-                                    .replace(/#index#/g, parseInt(getLastIndex()) + 1)
+                                    .replace(/#index#/g, parseInt(getLastDiscountIndex()) + 1)
                                     .replace(/#discount_id#/g, data.data.id)
                                     .replace(/#discount_ord#/g, table.find('tbody > tr').length)
                             );
@@ -129,7 +129,7 @@
                     });
                 }
             });
-        }, getLastIndex = function () {
+        }, getLastDiscountIndex = function () {
             var inputs = $('.discounts-request').find('input.discount-input');
             var max = 0;
 

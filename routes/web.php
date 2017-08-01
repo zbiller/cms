@@ -437,6 +437,13 @@ Route::group([
             Route::group([
                 'prefix' => 'attributes',
             ], function () {
+                /**
+                 * Product Assignment.
+                 */
+                Route::get('get/{set?}', ['as' => 'admin.attributes.get', 'uses' => 'AttributesController@get', 'permissions' => 'attributes-list']);
+                Route::post('row', ['as' => 'admin.attributes.row', 'uses' => 'AttributesController@row', 'permissions' => 'attributes-list']);
+                Route::post('value', ['as' => 'admin.attributes.value', 'uses' => 'AttributesController@value', 'permissions' => 'attributes-edit']);
+
                 Route::get('{set}', ['as' => 'admin.attributes.index', 'uses' => 'AttributesController@index', 'permissions' => 'attributes-list']);
                 Route::get('create/{set}', ['as' => 'admin.attributes.create', 'uses' => 'AttributesController@create', 'permissions' => 'attributes-add']);
                 Route::get('edit/{set}/{attribute}', ['as' => 'admin.attributes.edit', 'uses' => 'AttributesController@edit', 'permissions' => 'attributes-edit']);

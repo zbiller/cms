@@ -26,7 +26,8 @@
 <div id="tab-3" class="tab">
     <div class="box notification" style="margin-bottom: 20px;">
         <span>
-            This tax will be applied only before the maximum value is met
+            This tax will be applied only before the maximum value is met.<br />
+            The "maximum value" represents either the product's price or the order's total, depending on your discount applicability.
         </span>
     </div>
     {!! form_admin()->text('max_val', 'Maximum Value') !!}

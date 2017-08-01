@@ -2,6 +2,7 @@
 
 namespace App\Models\Shop;
 
+use Carbon\Carbon;
 use App\Models\Model;
 use App\Traits\HasActivity;
 use App\Traits\IsCacheable;
@@ -106,6 +107,18 @@ class Tax extends Model
     ];
 
     /**
+     * Tax has and belongs to many products.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_tax', 'tax_id', 'product_id')->withPivot([
+            'id', 'ord'
+        ])->withTimestamps()->orderBy('product_tax.ord', 'asc');
+    }
+
+    /**
      * Sort the query with newest records first.
      *
      * @param Builder $query
@@ -184,6 +197,24 @@ class Tax extends Model
     public function scopeInactive($query)
     {
         $query->where('active', self::ACTIVE_NO);
+    }
+
+    /**
+     * Verify if a tax  can be applied.
+     * Check the tax conditions.
+     *
+     * @return bool
+     */
+    public function canBeApplied()
+    {
+        if (
+            ($this->start_date && Carbon::now() < $this->start_date) ||
+            ($this->end_date && Carbon::now() > $this->end_date)
+        ) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

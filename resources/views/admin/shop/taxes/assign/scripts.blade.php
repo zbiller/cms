@@ -66,7 +66,7 @@
                             table.find('tr.no-taxes-assigned').remove();
                             table.find('tbody').append(
                                 $('#tax-row-template').html()
-                                    .replace(/#index#/g, parseInt(getLastIndex()) + 1)
+                                    .replace(/#index#/g, parseInt(getLastTaxIndex()) + 1)
                                     .replace(/#tax_id#/g, data.data.id)
                                     .replace(/#tax_name#/g, data.data.name)
                                     .replace(/#tax_rate#/g, data.data.rate)
@@ -76,7 +76,7 @@
 
                             $('.taxes-request').append(
                                 $('#tax-request-template').html()
-                                    .replace(/#index#/g, parseInt(getLastIndex()) + 1)
+                                    .replace(/#index#/g, parseInt(getLastTaxIndex()) + 1)
                                     .replace(/#tax_id#/g, data.data.id)
                                     .replace(/#tax_ord#/g, table.find('tbody > tr').length)
                             );
@@ -129,7 +129,7 @@
                     });
                 }
             });
-        }, getLastIndex = function () {
+        }, getLastTaxIndex = function () {
             var inputs = $('.taxes-request').find('input.tax-input');
             var max = 0;
 

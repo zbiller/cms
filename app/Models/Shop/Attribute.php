@@ -76,6 +76,18 @@ class Attribute extends Model
     }
 
     /**
+     * Attribute has and belongs to many products.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'product_attribute', 'attribute_id', 'product_id')->withPivot([
+            'id', 'ord', 'val'
+        ])->withTimestamps()->orderBy('product_attribute.ord', 'asc');
+    }
+
+    /**
      * Sort the query with newest records first.
      *
      * @param Builder $query

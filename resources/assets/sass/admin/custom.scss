@@ -427,3 +427,72 @@ td .upload-aligned-image {
         padding: 4px 5px 8px;
     }
 }
+
+/* Attribute Styles */
+.loading-attributes {
+    display: none;
+    text-align: center;
+}
+
+.actions-attributes {
+    width: 165px;
+    padding: 10px;
+
+    @include media-query('tablet') {
+        display: table-cell;
+        width: 78px;
+    }
+}
+
+.attribute-assign-container {
+    @include clear-padding();
+
+    display: block;
+    float: left;
+    width: 100%;
+    padding: 15px;
+    background: $colorAlabaster;
+    border: 1px solid $colorGallery;
+    border-top: none;
+}
+
+.attribute-assign-select-container {
+    width: 100%;
+    float: left;
+}
+
+.attribute-assign-btn-container {
+    float: left;
+}
+
+.attribute-assign-select {
+    float: left;
+    width: 100%;
+    border: 1px solid $colorGallery;
+    padding: 4px 5px 9px;
+    max-height: none;
+    margin-top: 0;
+    margin-bottom: 15px;
+
+    @include media-query('tablet') {
+        padding: 4px 5px 8px;
+    }
+}
+
+.attribute-value-assign-textarea {
+    float: left !important;
+    width: 100% !important;
+    border: 1px solid $colorGallery !important;
+    padding: 5px 8px !important;
+    height: 120px !important;
+    margin-bottom: 15px !important;
+}
+
+.attribute-value-change {
+    float: left !important;
+    width: 100% !important;
+    border: 1px solid $colorGallery !important;
+    padding: 5px 8px !important;
+    height: 80px !important;
+    margin-bottom: 15px !important;
+}

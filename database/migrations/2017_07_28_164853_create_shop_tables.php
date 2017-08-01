@@ -129,12 +129,26 @@ class CreateShopTables extends Migration
             $table->timestamps();
         });
 
+        Schema::create('product_attribute', function (Blueprint $table) {
+            $table->increments('id');
+
+            $table->integer('product_id')->unsigned()->index();
+            $table->integer('attribute_id')->unsigned()->index();
+            $table->text('val')->nullable();
+            $table->integer('ord')->default(0);
+
+            $table->timestamps();
+
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('attribute_id')->references('id')->on('attributes')->onDelete('cascade')->onUpdate('cascade');
+        });
+
         Schema::create('product_discount', function (Blueprint $table) {
             $table->increments('id');
 
             $table->integer('product_id')->unsigned()->index();
             $table->integer('discount_id')->unsigned()->index();
-            $table->integer('ord');
+            $table->integer('ord')->default(0);
 
             $table->timestamps();
 
@@ -147,7 +161,7 @@ class CreateShopTables extends Migration
 
             $table->integer('product_id')->unsigned()->index();
             $table->integer('tax_id')->unsigned()->index();
-            $table->integer('ord');
+            $table->integer('ord')->default(0);
 
             $table->timestamps();
 

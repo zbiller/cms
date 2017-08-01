@@ -161,7 +161,6 @@ class DiscountsController extends Controller
                 ])->render(),
             ];
         } catch (Exception $e) {
-            dd($e);
             return [
                 'status' => false
             ];
