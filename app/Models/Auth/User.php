@@ -336,41 +336,14 @@ class User extends Authenticatable
     }
 
     /**
-     * Compose the log name.
-     *
-     * @param string|null $event
-     * @return string
-     */
-    public function getLogName($event = null)
-    {
-        $user = auth()->check() ? auth()->user() : null;
-        $name = $user && $user->exists ? $user->full_name : 'A user';
-
-        if ($event && in_array(strtolower($event), array_map('strtolower', static::getEventsToBeLogged()->toArray()))) {
-            $name .= ' ' . $event . ' a';
-        } else {
-            $name .= ' performed an action on a';
-        }
-
-        $name .= ' ' . strtolower(last(explode('\\', get_class($this))));
-
-        if (!empty($this->getAttributes())) {
-            if ($this->getAttribute('username')) {
-                $name .= ' (' . $this->getAttribute('username') . ')';
-            }
-        }
-
-        return $name;
-    }
-
-    /**
      * Set the options for the HasActivityLog trait.
      *
      * @return ActivityOptions
      */
     public static function getActivityOptions()
     {
-        return ActivityOptions::instance();
+        return ActivityOptions::instance()
+            ->logByField('username');
     }
 
     /**

@@ -287,34 +287,6 @@ class Upload extends Model
     }
 
     /**
-     * Compose the log name.
-     *
-     * @param string|null $event
-     * @return string
-     */
-    public function getLogName($event = null)
-    {
-        $user = auth()->check() ? auth()->user() : null;
-        $name = $user && $user->exists ? $user->full_name : 'A user';
-
-        if ($event && in_array(strtolower($event), array_map('strtolower', static::getEventsToBeLogged()->toArray()))) {
-            $name .= ' ' . $event . ' a';
-        } else {
-            $name .= ' performed an action on a';
-        }
-
-        $name .= ' ' . strtolower(last(explode('\\', get_class($this))));
-
-        if (!empty($this->getAttributes())) {
-            if ($this->getAttribute('original_name')) {
-                $name .= ' (' . $this->getAttribute('original_name') . ')';
-            }
-        }
-
-        return $name;
-    }
-
-    /**
      * Create a fully qualified upload column in a database table.
      *
      * @param string $name
@@ -336,6 +308,7 @@ class Upload extends Model
      */
     public static function getActivityOptions()
     {
-        return ActivityOptions::instance();
+        return ActivityOptions::instance()
+            ->logByField('original_name');
     }
 }

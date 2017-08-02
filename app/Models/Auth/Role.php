@@ -126,6 +126,7 @@ class Role extends Model implements RoleContract
      */
     public static function getActivityOptions()
     {
-        return ActivityOptions::instance();
+        return ActivityOptions::instance()
+            ->logByField('name');
     }
 }

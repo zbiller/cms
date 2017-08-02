@@ -440,6 +440,7 @@ class Email extends Model
      */
     public static function getActivityOptions()
     {
-        return ActivityOptions::instance();
+        return ActivityOptions::instance()
+            ->logByField('name');
     }
 }

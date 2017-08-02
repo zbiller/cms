@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Exceptions\ActivityException;
 use Exception;
 use ReflectionMethod;
 use App\Models\Auth\Activity;
@@ -26,11 +27,7 @@ trait HasActivity
      */
     public static function bootHasActivity()
     {
-        if (app()->runningInConsole()) {
-            return;
-        }
-
-        if (config('activity.enabled') !== true) {
+        if (app()->runningInConsole() || config('activity.enabled') !== true) {
             return;
         }
 
@@ -38,13 +35,12 @@ trait HasActivity
 
         self::$activityLogOptions = self::getActivityOptions();
 
+        self::validateActivityOptions();
+
         static::getEventsToBeLogged()->each(function ($event) {
             return static::$event(function (Model $model) use ($event) {
                 if (auth()->check()) {
-                    activity_log()
-                        ->causedBy(auth()->user())
-                        ->performedOn($model)
-                        ->log($model->getLogName($event));
+                    activity_log()->causedBy(auth()->user())->performedOn($model)->log($model->getLogName($event));
                 }
             });
         });
@@ -73,36 +69,25 @@ trait HasActivity
      * @param string|null $event
      * @return string
      */
-    public function getLogName($event = null)
+    public function getLogName($event)
     {
         $user = auth()->check() ? auth()->user() : null;
-        $name = $user && $user->exists ? $user->full_name : 'A user';
+        $name[] = $user && $user->exists ? $user->full_name : 'A user';
 
         if ($event && in_array(strtolower($event), array_map('strtolower', static::getEventsToBeLogged()->toArray()))) {
             if (strtolower($event) == 'deleted' && array_key_exists(SoftDeletes::class, class_uses($this))) {
-                if ($this->forceDeleting) {
-                    $event = ($this->forceDeleting ? 'force-' : 'soft-') . $event;
-                } else {
-                    $event = 'soft-' . $event;
-                }
+                $event = ($this->forceDeleting ? 'force-' : 'soft-') . $event;
             }
-
-            $name .= ' ' . $event . ' a';
-        } else {
-            $name .= ' performed an action on a';
         }
 
-        $name .= ' ' . strtolower(last(explode('\\', get_class($this))));
+        $name[] = $event . ' a';
+        $name[] = strtolower(last(explode('\\', get_class($this))));
 
         if (!empty($this->getAttributes())) {
-            if ($this->getAttribute('name')) {
-                $name .= ' (' . $this->getAttribute('name') . ')';
-            } elseif ($this->getAttribute('title')) {
-                $name .= ' (' . $this->getAttribute('title') . ')';
-            }
+            $name[] = '(' . $this->getAttribute(self::$activityLogOptions->field) . ')';
         }
 
-        return $name;
+        return implode(' ', $name);
     }
 
     /**
@@ -142,6 +127,24 @@ trait HasActivity
         }
 
         return $events;
+    }
+
+    /**
+     * Check if mandatory activity options have been properly set from the model.
+     * Check if $field has been set.
+     *
+     * @return void
+     * @throws ActivityException
+     */
+    protected static function validateActivityOptions()
+    {
+        if (!self::$activityLogOptions->field) {
+            throw new ActivityException(
+                'The model ' . self::class . ' uses the HasActivity trait' . PHP_EOL .
+                'You are required to set the field that should act as the title for when logging activity.' . PHP_EOL .
+                'You can do this from inside the getActivityOptions() method defined on the model.'
+            );
+        }
     }
 
     /**

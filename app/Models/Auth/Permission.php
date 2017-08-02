@@ -128,6 +128,7 @@ class Permission extends Model implements PermissionContract
      */
     public static function getActivityOptions()
     {
-        return ActivityOptions::instance();
+        return ActivityOptions::instance()
+            ->logByField('name');
     }
 }

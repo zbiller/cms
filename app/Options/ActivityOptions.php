@@ -5,6 +5,14 @@ namespace App\Options;
 class ActivityOptions
 {
     /**
+     * The database field of the model, the event should be logged with.
+     * This field should contain the name, title or something similar for the entity.
+     *
+     * @var array
+     */
+    public $field = [];
+
+    /**
      * The eloquent model events that should trigger an activity being logged.
      * By default (empty) all {after} model events will log activity.
      * created | updated | deleted | restored(*) | drafted(*)
@@ -21,6 +29,19 @@ class ActivityOptions
     public static function instance(): ActivityOptions
     {
         return new static();
+    }
+
+    /**
+     * Set the $field to work with in the App\Traits\HasActivity trait.
+     *
+     * @param $field
+     * @return ActivityOptions
+     */
+    public function logByField($field): ActivityOptions
+    {
+        $this->field = $field;
+
+        return $this;
     }
 
     /**
