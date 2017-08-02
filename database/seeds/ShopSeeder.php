@@ -1,0 +1,293 @@
+<?php
+
+use App\Models\Shop\Attribute;
+use App\Models\Shop\Currency;
+use App\Models\Shop\Discount;
+use App\Models\Shop\Product;
+use App\Models\Shop\Set;
+use App\Models\Shop\Tax;
+use Illuminate\Database\Seeder;
+use App\Models\Shop\Category as ProductCategory;
+
+class ShopSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     *
+     * @return void
+     */
+    public function run()
+    {
+        DB::table('categories')->delete();
+        DB::table('products')->delete();
+        DB::table('discounts')->delete();
+        DB::table('taxes')->delete();
+        DB::table('sets')->delete();
+        DB::table('attributes')->delete();
+
+        DB::table('urls')->whereNotIn('url', [
+            '/', 'shop'
+        ])->delete();
+
+        /**
+         * Create shop categories.
+         */
+        $category_1 = ProductCategory::create([
+            'name' => 'Laptops',
+            'slug' => 'laptops',
+            'active' => ProductCategory::ACTIVE_YES,
+        ]);
+
+        $category_1_1 = ProductCategory::create([
+            'name' => 'Mac',
+            'slug' => 'mac',
+            'active' => ProductCategory::ACTIVE_YES,
+        ], $category_1);
+
+        $category_1_2 = ProductCategory::create([
+            'name' => 'Asus',
+            'slug' => 'asus',
+            'active' => ProductCategory::ACTIVE_YES,
+        ], $category_1);
+
+        $category_1_3 = ProductCategory::create([
+            'name' => 'Acer',
+            'slug' => 'acer',
+            'active' => ProductCategory::ACTIVE_YES,
+        ], $category_1);
+
+        $category_1_4 = ProductCategory::create([
+            'name' => 'Lenovo',
+            'slug' => 'Lenovo',
+            'active' => ProductCategory::ACTIVE_YES,
+        ], $category_1);
+
+        $category_1_5 = ProductCategory::create([
+            'name' => 'HP',
+            'slug' => 'hp',
+            'active' => ProductCategory::ACTIVE_YES,
+        ], $category_1);
+
+        $category_2 = ProductCategory::create([
+            'name' => 'Phones',
+            'slug' => 'phones',
+            'active' => ProductCategory::ACTIVE_YES,
+        ]);
+
+        $category_2_1 = ProductCategory::create([
+            'name' => 'iPhone',
+            'slug' => 'iphone',
+            'active' => ProductCategory::ACTIVE_YES,
+        ], $category_2);
+
+        $category_2_2 = ProductCategory::create([
+            'name' => 'Samsung',
+            'slug' => 'samsung',
+            'active' => ProductCategory::ACTIVE_YES,
+        ], $category_2);
+
+        $category_2_3 = ProductCategory::create([
+            'name' => 'HTC',
+            'slug' => 'htc',
+            'active' => ProductCategory::ACTIVE_YES,
+        ], $category_2);
+
+        /**
+         * Create shop discounts.
+         */
+        $discount_product_1 = Discount::create([
+            'name' => '20% off',
+            'rate' => '20',
+            'type' => Discount::TYPE_PERCENT,
+            'for' => Discount::FOR_PRODUCT,
+            'active' => Discount::ACTIVE_YES,
+        ]);
+
+        $discount_product_2 = Discount::create([
+            'name' => '50% off',
+            'rate' => '50',
+            'type' => Discount::TYPE_PERCENT,
+            'for' => Discount::FOR_PRODUCT,
+            'active' => Discount::ACTIVE_YES,
+        ]);
+
+        $discount_product_3 = Discount::create([
+            'name' => 'Minus 30',
+            'rate' => '30',
+            'type' => Discount::TYPE_FIXED,
+            'for' => Discount::FOR_PRODUCT,
+            'active' => Discount::ACTIVE_YES,
+        ]);
+
+        $discount_product_4 = Discount::create([
+            'name' => 'Minus 70',
+            'rate' => '70',
+            'type' => Discount::TYPE_FIXED,
+            'for' => Discount::FOR_PRODUCT,
+            'active' => Discount::ACTIVE_YES,
+        ]);
+
+        $discount_order_1 = Discount::create([
+            'name' => 'All around 25%',
+            'rate' => '25',
+            'type' => Discount::TYPE_PERCENT,
+            'for' => Discount::FOR_ORDER,
+            'active' => Discount::ACTIVE_YES,
+        ]);
+
+        $discount_order_2 = Discount::create([
+            'name' => 'All around minus 85',
+            'rate' => '82',
+            'type' => Discount::TYPE_FIXED,
+            'for' => Discount::FOR_ORDER,
+            'active' => Discount::ACTIVE_YES,
+        ]);
+
+        /**
+         * Create shop discounts.
+         */
+        $tax_order_1 = Tax::create([
+            'name' => 'TVA',
+            'rate' => '24',
+            'type' => Tax::TYPE_PERCENT,
+            'for' => Tax::FOR_ORDER,
+            'active' => Tax::ACTIVE_YES,
+        ]);
+
+        $tax_product_1 = Tax::create([
+            'name' => '20% over',
+            'rate' => '20',
+            'type' => Tax::TYPE_PERCENT,
+            'for' => Tax::FOR_PRODUCT,
+            'active' => Tax::ACTIVE_YES,
+        ]);
+
+        $tax_product_2 = Tax::create([
+            'name' => '50 over',
+            'rate' => '50',
+            'type' => Tax::TYPE_FIXED,
+            'for' => Tax::FOR_PRODUCT,
+            'active' => Tax::ACTIVE_YES,
+        ]);
+
+        /**
+         * Create shop sets.
+         */
+        $set_1 = Set::create([
+            'name' => 'Producer',
+            'slug' => 'producer',
+        ]);
+
+        $set_2 = Set::create([
+            'name' => 'Processor',
+            'slug' => 'processor',
+        ]);
+
+        $set_3 = Set::create([
+            'name' => 'Memory',
+            'slug' => 'memory',
+        ]);
+
+        /**
+         * Create shop attributes.
+         */
+        $attribute_1_1 = Attribute::create([
+            'set_id' => $set_1->id,
+            'name' => 'Producer',
+            'value' => 'Apple',
+            'slug' => 'producer-apple',
+            'type' => Attribute::TYPE_TEXT,
+        ]);
+
+        $attribute_1_2 = Attribute::create([
+            'set_id' => $set_1->id,
+            'name' => 'Producer',
+            'value' => 'Hewllet Packard',
+            'slug' => 'producer-hewllet-packard',
+            'type' => Attribute::TYPE_TEXT,
+        ]);
+
+        $attribute_1_3 = Attribute::create([
+            'set_id' => $set_1->id,
+            'name' => 'Producer',
+            'value' => 'Samsung',
+            'slug' => 'producer-samsung',
+            'type' => Attribute::TYPE_TEXT,
+        ]);
+
+        $attribute_2_1 = Attribute::create([
+            'set_id' => $set_2->id,
+            'name' => 'Socket',
+            'value' => '2066',
+            'slug' => 'socket-2066',
+            'type' => Attribute::TYPE_TEXT,
+        ]);
+
+        $attribute_2_2 = Attribute::create([
+            'set_id' => $set_2->id,
+            'name' => 'Processor Type',
+            'value' => 'Core i9',
+            'slug' => 'processor-type-core-i9',
+            'type' => Attribute::TYPE_TEXT,
+        ]);
+
+        $attribute_2_3 = Attribute::create([
+            'set_id' => $set_2->id,
+            'name' => 'Frequency',
+            'value' => '1.81 - 2 Ghz',
+            'slug' => 'frequency-1-8-2-ghz',
+            'type' => Attribute::TYPE_TEXT,
+        ]);
+
+        $attribute_3_1 = Attribute::create([
+            'set_id' => $set_2->id,
+            'name' => 'Capacity',
+            'value' => '200 GB',
+            'slug' => 'capacity-200-gb',
+            'type' => Attribute::TYPE_TEXT,
+        ]);
+
+        $attribute_3_2 = Attribute::create([
+            'set_id' => $set_3->id,
+            'name' => 'Frequency',
+            'value' => '2400 Mhz',
+            'slug' => 'frequency-2400-mhz',
+            'type' => Attribute::TYPE_TEXT,
+        ]);
+
+        $attribute_3_3 = Attribute::create([
+            'set_id' => $set_3->id,
+            'name' => 'Type',
+            'value' => 'DDR3',
+            'slug' => 'type-ddr3',
+            'type' => Attribute::TYPE_TEXT,
+        ]);
+
+        /**
+         * Create shop products.
+         */
+        $product_1 = Product::create([
+            'category_id' => $category_1_1->id,
+            'currency_id' => Currency::whereCode('USD')->first()->id,
+            'sku' => 'ZBL-MAC-1',
+            'name' => 'Macbook Pro 15',
+            'slug' => 'macbook-pro-15',
+            'price' => '3000',
+            'quantity' => '15',
+            'content' => '<p>Some content here</p>',
+            'active' => Product::ACTIVE_YES,
+        ]);
+
+        $product_2 = Product::create([
+            'category_id' => $category_2_1->id,
+            'currency_id' => Currency::whereCode('RON')->first()->id,
+            'sku' => 'ZBL-IPHONE-1',
+            'name' => 'iPhone 7S 32GB',
+            'slug' => 'iphone-7s-32gb',
+            'price' => '4600',
+            'quantity' => '50',
+            'content' => '<p>Some content here</p>',
+            'active' => Product::ACTIVE_YES,
+        ]);
+    }
+}
