@@ -3,8 +3,8 @@
 namespace App\Models\Shop;
 
 use App\Models\Model;
-use App\Traits\HasActivity;
 use App\Traits\HasSlug;
+use App\Traits\HasActivity;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
@@ -14,7 +14,7 @@ use App\Options\ActivityOptions;
 use App\Options\OrderOptions;
 use Illuminate\Database\Eloquent\Builder;
 
-class Set extends Model
+class Value extends Model
 {
     use HasSlug;
     use HasActivity;
@@ -28,36 +28,26 @@ class Set extends Model
      *
      * @var string
      */
-    protected $table = 'sets';
+    protected $table = 'values';
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name',
-        'slug',
+        'attribute_id',
+        'value',
     ];
 
     /**
-     * A set has many attributes.
+     A value belongs to an attribute.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function attributes()
+    public function attribute()
     {
-        return $this->hasMany(Attribute::class, 'set_id')->orderBy('ord', 'asc');
-    }
-
-    /**
-     * A set has many values through the attributes.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
-     */
-    public function values()
-    {
-        return $this->hasManyThrough(Value::class, Attribute::class, 'set_id', 'attribute_id');
+        return $this->belongsTo(Attribute::class, 'attribute_id');
     }
 
     /**
@@ -81,6 +71,17 @@ class Set extends Model
     }
 
     /**
+     * Filter the query by the given attribute id.
+     *
+     * @param Builder $query
+     * @param int $id
+     */
+    public function scopeWhereAttribute($query, $id)
+    {
+        $query->where('attribute_id', $id);
+    }
+
+    /**
      * Get the options for the HasSlug trait.
      *
      * @return SlugOptions
@@ -88,7 +89,7 @@ class Set extends Model
     public static function getSlugOptions()
     {
         return SlugOptions::instance()
-            ->generateSlugFrom('slug')
+            ->generateSlugFrom('value')
             ->saveSlugTo('slug');
     }
 
@@ -100,7 +101,7 @@ class Set extends Model
     public static function getActivityOptions()
     {
         return ActivityOptions::instance()
-            ->logByField('name');
+            ->logByField('value');
     }
 
     /**

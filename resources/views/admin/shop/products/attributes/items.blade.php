@@ -1,5 +1,5 @@
 <table class="attributes-table" cellspacing="0" cellpadding="0" border="0">
-    @include('admin.shop.attributes.assign.table')
+    @include('admin.shop.products.attributes.table')
 </table>
 
 @if($disabled === false)
@@ -13,6 +13,9 @@
             </select>
             <select class="attribute-assign-select assign-attribute-id">
                 <option value="" selected="selected" disabled>Attribute</option>
+            </select>
+            <select class="attribute-assign-select assign-value-id">
+                <option value="" selected="selected" disabled>Value</option>
             </select>
             <textarea class="attribute-value-assign-textarea assign-attribute-value" placeholder="Custom Value"></textarea>
         </div>
@@ -30,8 +33,9 @@
         @foreach($attributes as $index => $attribute)
             @php($pivot = $attribute->pivot)
             {!! form()->hidden('attributes[' . $pivot->id . '][' . $attribute->id . ']', $pivot->product_id, ['class' => 'attribute-input', 'data-index' => $pivot->id]) !!}
+            {!! form()->hidden('attributes[' . $pivot->id . '][' . $attribute->id . '][value_id]', $pivot->value_id, ['class' => 'attribute-input', 'data-index' => $pivot->id]) !!}
+            {!! form()->hidden('attributes[' . $pivot->id . '][' . $attribute->id . '][value]', $pivot->value, ['class' => 'attribute-input attribute-custom-value', 'data-index' => $pivot->id]) !!}
             {!! form()->hidden('attributes[' . $pivot->id . '][' . $attribute->id . '][ord]', $pivot->ord, ['class' => 'attribute-input', 'data-index' => $pivot->id]) !!}
-            {!! form()->hidden('attributes[' . $pivot->id . '][' . $attribute->id . '][val]', $pivot->val, ['class' => 'attribute-input', 'data-index' => $pivot->id]) !!}
         @endforeach
     @endif
 </div>

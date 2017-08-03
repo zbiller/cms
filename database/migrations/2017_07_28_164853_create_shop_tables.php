@@ -83,14 +83,24 @@ class CreateShopTables extends Migration
 
             $table->string('name');
             $table->string('slug');
-            $table->text('value');
-
-            $table->tinyInteger('type')->default(1);
             $table->integer('ord')->default(0);
 
             $table->timestamps();
 
             $table->foreign('set_id')->references('id')->on('sets')->onDelete('cascade')->onUpdate('cascade');
+        });
+
+        Schema::create('values', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('attribute_id')->unsigned()->index();
+
+            $table->text('value');
+            $table->string('slug');
+            $table->integer('ord')->default(0);
+
+            $table->timestamps();
+
+            $table->foreign('attribute_id')->references('id')->on('attributes')->onDelete('cascade')->onUpdate('cascade');
         });
 
         Schema::create('discounts', function (Blueprint $table) {
@@ -134,13 +144,15 @@ class CreateShopTables extends Migration
 
             $table->integer('product_id')->unsigned()->index();
             $table->integer('attribute_id')->unsigned()->index();
-            $table->text('val')->nullable();
+            $table->integer('value_id')->unsigned()->index()->nullable();
+            $table->text('value')->nullable();
             $table->integer('ord')->default(0);
 
             $table->timestamps();
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('attribute_id')->references('id')->on('attributes')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('value_id')->references('id')->on('values')->onDelete('set null');
         });
 
         Schema::create('product_discount', function (Blueprint $table) {
@@ -177,14 +189,20 @@ class CreateShopTables extends Migration
      */
     public function down()
     {
+        Schema::disableForeignKeyConstraints();
+
         Schema::dropIfExists('product_tax');
         Schema::dropIfExists('product_discount');
+        Schema::dropIfExists('product_attribute');
         Schema::dropIfExists('taxes');
         Schema::dropIfExists('discounts');
+        Schema::dropIfExists('values');
         Schema::dropIfExists('attributes');
         Schema::dropIfExists('sets');
         Schema::dropIfExists('products');
         Schema::dropIfExists('categories');
         Schema::dropIfExists('currencies');
+
+        Schema::enableForeignKeyConstraints();
     }
 }

@@ -6,6 +6,7 @@ use App\Models\Shop\Discount;
 use App\Models\Shop\Product;
 use App\Models\Shop\Set;
 use App\Models\Shop\Tax;
+use App\Models\Shop\Value;
 use Illuminate\Database\Seeder;
 use App\Models\Shop\Category as ProductCategory;
 
@@ -191,76 +192,91 @@ class ShopSeeder extends Seeder
         /**
          * Create shop attributes.
          */
-        $attribute_1_1 = Attribute::create([
+        $attribute_1 = Attribute::create([
             'set_id' => $set_1->id,
             'name' => 'Producer',
-            'value' => 'Apple',
-            'slug' => 'producer-apple',
-            'type' => Attribute::TYPE_TEXT,
+            'slug' => 'producer',
         ]);
 
-        $attribute_1_2 = Attribute::create([
-            'set_id' => $set_1->id,
-            'name' => 'Producer',
-            'value' => 'Hewllet Packard',
-            'slug' => 'producer-hewllet-packard',
-            'type' => Attribute::TYPE_TEXT,
-        ]);
-
-        $attribute_1_3 = Attribute::create([
-            'set_id' => $set_1->id,
-            'name' => 'Producer',
-            'value' => 'Samsung',
-            'slug' => 'producer-samsung',
-            'type' => Attribute::TYPE_TEXT,
-        ]);
-
-        $attribute_2_1 = Attribute::create([
+        $attribute_2 = Attribute::create([
             'set_id' => $set_2->id,
             'name' => 'Socket',
-            'value' => '2066',
-            'slug' => 'socket-2066',
-            'type' => Attribute::TYPE_TEXT,
+            'slug' => 'socket',
         ]);
 
-        $attribute_2_2 = Attribute::create([
-            'set_id' => $set_2->id,
-            'name' => 'Processor Type',
-            'value' => 'Core i9',
-            'slug' => 'processor-type-core-i9',
-            'type' => Attribute::TYPE_TEXT,
-        ]);
-
-        $attribute_2_3 = Attribute::create([
-            'set_id' => $set_2->id,
-            'name' => 'Frequency',
-            'value' => '1.81 - 2 Ghz',
-            'slug' => 'frequency-1-8-2-ghz',
-            'type' => Attribute::TYPE_TEXT,
-        ]);
-
-        $attribute_3_1 = Attribute::create([
-            'set_id' => $set_2->id,
+        $attribute_3 = Attribute::create([
+            'set_id' => $set_3->id,
             'name' => 'Capacity',
-            'value' => '200 GB',
-            'slug' => 'capacity-200-gb',
-            'type' => Attribute::TYPE_TEXT,
+            'slug' => 'capacity',
         ]);
 
-        $attribute_3_2 = Attribute::create([
+        $attribute_4 = Attribute::create([
             'set_id' => $set_3->id,
             'name' => 'Frequency',
-            'value' => '2400 Mhz',
-            'slug' => 'frequency-2400-mhz',
-            'type' => Attribute::TYPE_TEXT,
+            'slug' => 'frequency',
         ]);
 
-        $attribute_3_3 = Attribute::create([
-            'set_id' => $set_3->id,
-            'name' => 'Type',
-            'value' => 'DDR3',
-            'slug' => 'type-ddr3',
-            'type' => Attribute::TYPE_TEXT,
+        /**
+         * Create shop attribute values.
+         */
+        $value_1_1 = Value::create([
+            'attribute_id' => $attribute_1->id,
+            'value' => 'Apple',
+            'slug' => 'apple',
+        ]);
+
+        $value_1_2 = Value::create([
+            'attribute_id' => $attribute_1->id,
+            'value' => 'Samsung',
+            'slug' => 'samsung',
+        ]);
+
+        $value_1_3 = Value::create([
+            'attribute_id' => $attribute_1->id,
+            'value' => 'Hewllet Packard',
+            'slug' => 'hewllet-packard',
+        ]);
+
+        $value_2_1 = Value::create([
+            'attribute_id' => $attribute_2->id,
+            'value' => '2066',
+            'slug' => '2066',
+        ]);
+
+        $value_2_2 = Value::create([
+            'attribute_id' => $attribute_2->id,
+            'value' => '4018',
+            'slug' => '4018',
+        ]);
+
+        $value_3_1 = Value::create([
+            'attribute_id' => $attribute_3->id,
+            'value' => '200 GB',
+            'slug' => '200-gb',
+        ]);
+
+        $value_3_2 = Value::create([
+            'attribute_id' => $attribute_3->id,
+            'value' => '500 GB',
+            'slug' => '500-gb',
+        ]);
+
+        $value_3_3 = Value::create([
+            'attribute_id' => $attribute_3->id,
+            'value' => '1 TB',
+            'slug' => '1-tb',
+        ]);
+
+        $value_4_1 = Value::create([
+            'attribute_id' => $attribute_4->id,
+            'value' => '2400 Mhz',
+            'slug' => '2400-mhz',
+        ]);
+
+        $value_4_2 = Value::create([
+            'attribute_id' => $attribute_4->id,
+            'value' => '1 Ghz',
+            'slug' => '1-ghz',
         ]);
 
         /**

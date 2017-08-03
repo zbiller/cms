@@ -5,15 +5,14 @@
 @endif
 
 {!! validation('admin')->errors() !!}
-{!! form()->hidden('set_id', $set->id) !!}
+{!! form()->hidden('attribute_id', $attribute->id) !!}
 
 <div id="tab-1" class="tab">
-    {!! form_admin()->text('name', 'Name', null, $item->exists ? [] : ['id' => 'slug-from']) !!}
-    {!! form_admin()->text('slug', 'Slug', null, $item->exists ? [] : ['id' => 'slug-to']) !!}
+    {!! form_admin()->textarea('value', 'Value') !!}
 </div>
 
 {!! form_admin()->close() !!}
 
 @section('bottom_scripts')
-    {!! JsValidator::formRequest(App\Http\Requests\AttributeRequest::class, '.form') !!}
+    {!! JsValidator::formRequest(App\Http\Requests\ValueRequest::class, '.form') !!}
 @append

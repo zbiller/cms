@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Shop\Set;
+use App\Models\Shop\Attribute;
 use Illuminate\Validation\Rule;
 
-class AttributeRequest extends Request
+class ValueRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,15 +25,12 @@ class AttributeRequest extends Request
     public function rules()
     {
         return [
-            'set_id' => [
+            'attribute_id' => [
                 'required',
                 'numeric',
-                Rule::in(Set::all()->pluck('id')->toArray()),
+                Rule::in(Attribute::all()->pluck('id')->toArray()),
             ],
-            'name' => [
-                'required',
-            ],
-            'slug' => [
+            'value' => [
                 'required',
             ],
         ];

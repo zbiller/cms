@@ -3,7 +3,6 @@
 namespace App\Models\Shop;
 
 use App\Models\Model;
-use App\Traits\HasUploads;
 use App\Traits\HasSlug;
 use App\Traits\HasActivity;
 use App\Traits\IsCacheable;
@@ -14,10 +13,10 @@ use App\Options\SlugOptions;
 use App\Options\ActivityOptions;
 use App\Options\OrderOptions;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Attribute extends Model
 {
-    use HasUploads;
     use HasSlug;
     use HasActivity;
     use IsCacheable;
@@ -42,28 +41,21 @@ class Attribute extends Model
         'name',
         'slug',
         'value',
-        'type',
     ];
 
     /**
-     * The constants defining the attribute value type.
+     * Boot the model.
      *
-     * @const
+     * Always eager load the values by a anonymous global scope.
      */
-    const TYPE_TEXT = 1;
-    const TYPE_FILE = 2;
-    const TYPE_EDITOR = 3;
+    public static function boot()
+    {
+        parent::boot();
 
-    /**
-     * The property defining the attribute value types.
-     *
-     * @var array
-     */
-    public static $types = [
-        self::TYPE_TEXT => 'Text',
-        self::TYPE_FILE => 'File',
-        self::TYPE_EDITOR => 'Editor',
-    ];
+        static::addGlobalScope('values', function (Builder $builder) {
+            $builder->with('values');
+        });
+    }
 
     /**
      * An attribute belongs to a set.
@@ -76,6 +68,16 @@ class Attribute extends Model
     }
 
     /**
+     * An attribute has many values.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function values()
+    {
+        return $this->hasMany(Value::class, 'attribute_id')->orderBy('ord');
+    }
+
+    /**
      * Attribute has and belongs to many products.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -85,6 +87,22 @@ class Attribute extends Model
         return $this->belongsToMany(Product::class, 'product_attribute', 'attribute_id', 'product_id')->withPivot([
             'id', 'ord', 'val'
         ])->withTimestamps()->orderBy('product_attribute.ord', 'asc');
+    }
+
+    /**
+     * Get the value (string) of the first Value object assigned to the attribute.
+     *
+     * @return mixed|null
+     */
+    public function getValueAttribute()
+    {
+        try {
+            $value = $this->values()->firstOrFail();
+
+            return $value->value;
+        } catch (ModelNotFoundException $e) {
+            return null;
+        }
     }
 
     /**
@@ -149,15 +167,5 @@ class Attribute extends Model
     public static function getOrderOptions()
     {
         return OrderOptions::instance();
-    }
-
-    /**
-     * Get the specific upload config parts for this model.
-     *
-     * @return array
-     */
-    public function getUploadConfig()
-    {
-        return [];
     }
 }

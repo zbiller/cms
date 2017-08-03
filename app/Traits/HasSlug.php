@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use Closure;
 use Exception;
 use ReflectionMethod;
 use App\Models\Model;
@@ -152,7 +153,7 @@ trait HasSlug
      */
     protected function getSlugSource()
     {
-        if (is_callable(self::$slugOptions->fromField)) {
+        if (self::$slugOptions->fromField instanceof Closure) {
             $source = call_user_func(self::$slugOptions->fromField, $this);
 
             return substr($source, 0, self::$slugOptions->fromField);

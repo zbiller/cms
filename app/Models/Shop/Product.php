@@ -109,10 +109,7 @@ class Product extends Model
                 foreach ($attributes as $data) {
                     foreach ($data as $id => $attr) {
                         if ($id && ($attribute = Attribute::find($id))) {
-                            $product->attributes()->save($attribute, [
-                                'ord' => isset($attr['ord']) ? (int)$attr['ord'] : 0,
-                                'val' => isset($attr['val']) ? $attr['val'] : null,
-                            ]);
+                            $product->attributes()->save($attribute, $attr);
                         }
                     }
                 }
@@ -182,7 +179,7 @@ class Product extends Model
     public function attributes($ordered = true)
     {
         $query = $this->belongsToMany(Attribute::class, 'product_attribute', 'product_id', 'attribute_id')->withPivot([
-            'id', 'ord', 'val'
+            'id', 'value_id', 'value', 'ord'
         ])->withTimestamps();
 
         if ($ordered === true) {
@@ -392,7 +389,7 @@ class Product extends Model
 
             $specifications[$set->name][] = [
                 'name' => $attribute->name,
-                'value' => $pivot->val ?: $attribute->value,
+                'value' => $pivot->value ?: $attribute->value,
             ];
         }
 

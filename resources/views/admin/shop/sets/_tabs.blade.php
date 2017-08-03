@@ -1,4 +1,4 @@
-<a href="#tab-1">Primary Information</a>
+<a href="#tab-1">Basic</a>
 
 @if($item->exists)
     <a href="{{ route('admin.attributes.index', $item->id) }}" class="real-tab">Attributes</a>

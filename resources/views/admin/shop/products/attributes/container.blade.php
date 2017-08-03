@@ -9,7 +9,7 @@
 ></div>
 
 <script type="x-template" id="attribute-row-template">
-    <tr id="#index#" data-attribute-id="#attribute_id#" data-index="#index#" class="{!! $disabled === true ? 'nodrag nodrop' : '' !!}">
+    <tr id="#index#" data-attribute-id="#attribute_id#" data-value-id="#value_id#" data-index="#index#" class="{!! $disabled === true ? 'nodrag nodrop' : '' !!}">
         <td>#attribute_name#</td>
         <td>
             <textarea class="attribute-value-change">#attribute_value#</textarea>
@@ -33,8 +33,9 @@
 </script>
 <script type="x-template" id="attribute-request-template">
     {!! form()->hidden('attributes[#index#][#attribute_id#]', '#attribute_id#', ['class' => 'attribute-input', 'data-index' => '#index#']) !!}
+    {!! form()->hidden('attributes[#index#][#attribute_id#][value_id]', '#value_id#', ['class' => 'attribute-input', 'data-index' => '#index#']) !!}
+    {!! form()->hidden('attributes[#index#][#attribute_id#][value]', '#attribute_value#', ['class' => 'attribute-input attribute-custom-value', 'data-index' => '#index#']) !!}
     {!! form()->hidden('attributes[#index#][#attribute_id#][ord]', '#attribute_ord#', ['class' => 'attribute-input', 'data-index' => '#index#']) !!}
-    {!! form()->hidden('attributes[#index#][#attribute_id#][val]', '#attribute_val#', ['class' => 'attribute-input', 'data-index' => '#index#']) !!}
 </script>
 
-@include('admin.shop.attributes.assign.scripts')
+@include('admin.shop.products.attributes.scripts')

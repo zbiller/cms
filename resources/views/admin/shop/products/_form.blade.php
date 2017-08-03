@@ -76,7 +76,7 @@
 
 @if($item->exists)
     <div id="tab-5" class="tab tab-attributes">
-        @include('admin.shop.attributes.assign.container', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
+        @include('admin.shop.products.attributes.container', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
     </div>
     <div id="tab-6" class="tab tab-discounts">
         <div class="box notification" style="margin-bottom: 20px;">

@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Admin\Shop;
 use DB;
 use Exception;
 use App\Http\Controllers\Controller;
-use App\Models\Shop\Attribute;
 use App\Models\Shop\Product;
 use App\Models\Shop\Set;
+use App\Models\Shop\Attribute;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
 use App\Traits\CanCrud;
@@ -49,7 +49,6 @@ class AttributesController extends Controller
             $this->view = view('admin.shop.attributes.index');
             $this->vars = [
                 'set' => $set,
-                'types' => Attribute::$types,
             ];
         });
     }
@@ -65,7 +64,6 @@ class AttributesController extends Controller
             $this->view = view('admin.shop.attributes.add');
             $this->vars = [
                 'set' => $set,
-                'types' => Attribute::$types,
             ];
         });
     }
@@ -96,7 +94,6 @@ class AttributesController extends Controller
             $this->view = view('admin.shop.attributes.edit');
             $this->vars = [
                 'set' => $set,
-                'types' => Attribute::$types,
             ];
         });
     }
@@ -137,125 +134,27 @@ class AttributesController extends Controller
      * @param Set|null $set
      * @return array
      */
-    public function get(Request $request, Set $set = null)
+    public function get(Request $request, Set $set)
     {
-        if ($set && $set->exists) {
-            $result = [
-                'items' => [],
+        $result = [
+            'items' => [],
+        ];
+
+        foreach ($set->attributes as $index => $attribute) {
+            $result['items'][$index] = [
+                'id' => $attribute->id,
+                'name' => $attribute->name,
+                'values' => [],
             ];
 
-            foreach ($set->attributes as $attribute) {
-                $result['items'][] = [
-                    'id' => $attribute->id,
-                    'name' => $attribute->name,
-                    'value' => $attribute->value,
+            foreach ($attribute->values as $value) {
+                $result['items'][$index]['values'][] = [
+                    'id' => $value->id,
+                    'value' => $value->value,
                 ];
             }
-
-            return $result;
         }
 
-        $this->validate($request, [
-            'product_id' => 'required|numeric',
-        ]);
-
-        try {
-            $id = $request->get('product_id');
-            $product = Product::withoutGlobalScopes()->findOrFail($id);
-
-            if ($request->has('draft') && ($draft = Draft::find((int)$request->get('draft')))) {
-                DB::beginTransaction();
-
-                $product = $draft->draftable;
-                $product->publishDraft($draft);
-            }
-
-            if ($request->has('revision') && ($revision = Revision::find((int)$request->get('revision')))) {
-                DB::beginTransaction();
-
-                $product = $revision->revisionable;
-                $product->rollbackToRevision($revision);
-            }
-
-            return [
-                'status' => true,
-                'html' => view('admin.shop.attributes.assign.attributes')->with([
-                    'product' => $product,
-                    'sets' => Set::ordered()->get(),
-                    'draft' => isset($draft) ? $draft : null,
-                    'revision' => isset($revision) ? $revision : null,
-                    'disabled' => $request->get('disabled') ? true : false,
-                ])->render(),
-            ];
-        } catch (Exception $e) {
-            return [
-                'status' => false,
-                'message' => $e->getMessage(),
-            ];
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function row(Request $request)
-    {
-        $this->validate($request, [
-            'set_id' => 'required|numeric',
-            'attribute_id' => 'required|numeric',
-        ]);
-
-        try {
-            $set = Set::findOrFail($request->get('set_id'));
-            $attribute = Attribute::findOrFail($request->get('attribute_id'));
-
-            return [
-                'status' => true,
-                'data' => [
-                    'id' => $attribute->id,
-                    'name' => $attribute->name ?: 'N/A',
-                    'value' => $attribute->value ?: 'N/A',
-                    'val' => $request->get('val') ?: '',
-                    'url' => route('admin.attributes.edit', ['set' => $set->id, 'id' => $attribute->id]),
-                ],
-            ];
-        } catch (Exception $e) {
-            return [
-                'status' => false,
-                'message' => $e->getMessage(),
-            ];
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function value(Request $request)
-    {
-        $this->validate($request, [
-            'attribute_id' => 'required|numeric',
-            'pivot_id' => 'required|numeric',
-        ]);
-
-        try {
-            $attribute = Attribute::findOrFail($request->get('attribute_id'));
-            $pivot = DB::table('product_attribute')->where('id', $request->get('pivot_id'));
-
-            $pivot->update([
-                'val' => $request->get('value') && $request->get('value') != $attribute->value ?
-                    $request->get('value') : null
-            ]);
-
-            return [
-                'status' => true
-            ];
-        } catch (Exception $e) {
-            return [
-                'status' => false,
-                'message' => $e->getMessage(),
-            ];
-        }
+        return $result;
     }
 }

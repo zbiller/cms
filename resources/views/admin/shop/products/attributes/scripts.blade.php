@@ -5,10 +5,65 @@
         var attributesTab = $('div.tab-attributes');
         var attributesContainer = $('div.attributes-container');
 
-        var listAttributes = function () {
+        var loadAttributes = function (_this) {
+            var set_id = _this.val();
+            var selectAttribute = $('select.assign-attribute-id');
+            var selectValue = $('select.assign-value-id');
+
+            if (set_id) {
+                $.ajax({
+                    type : 'GET',
+                    url: '{{ route('admin.attributes.get') }}' + '/' + set_id,
+                    success : function(data) {
+                        selectAttribute.empty();
+
+                        $.each(data.items, function (index, attribute) {
+                            selectAttribute.append('<option value="' + attribute.id + '">' + attribute.name + '</option>');
+
+                            if (index == 0) {
+                                selectValue.empty();
+
+                                $.each(attribute.values, function (i, value) {
+                                    selectValue.append('<option value="' + value.id + '">' + value.value + '</option>');
+                                });
+                            }
+                        });
+
+                        selectAttribute.trigger("chosen:updated");
+                        selectValue.trigger("chosen:updated");
+                    },
+                    error: function (err) {
+                        init.FlashMessage('error', 'Could not load the attributes! Please try again.');
+                    }
+                });
+            }
+        },loadValues = function (_this) {
+            var set_id = $('select.assign-attribute-set').val();
+            var attribute_id = _this.val();
+            var selectValue = $('select.assign-value-id');
+
+            if (set_id && attribute_id) {
+                $.ajax({
+                    type: 'GET',
+                    url: '{{ route('admin.values.get') }}' + '/' + set_id + '/' + attribute_id,
+                    success: function (data) {
+                        selectValue.empty();
+
+                        $.each(data.items, function (index, value) {
+                            selectValue.append('<option value="' + value.id + '">' + value.value + '</option>');
+                        });
+
+                        selectValue.trigger("chosen:updated");
+                    },
+                    error: function (err) {
+                        init.FlashMessage('error', 'Could not load the attributes! Please try again.');
+                    }
+                });
+            }
+        }, listAttributes = function () {
             $.ajax({
                 type : 'GET',
-                url: '{{ route('admin.attributes.get') }}',
+                url: '{{ route('admin.products.load_all_attributes') }}',
                 async: false,
                 data: {
                     _token: token,
@@ -44,44 +99,24 @@
                     init.FlashMessage('error', 'Could not load the attributes! Please try again.');
                 }
             });
-        }, loadAttributes = function (_this) {
-            var set_id = _this.val();
-            var select = $('select.assign-attribute-id');
-
-            if (set_id) {
-                $.ajax({
-                    type : 'GET',
-                    url: '{{ route('admin.attributes.get') }}' + '/' + set_id,
-                    success : function(data) {
-                        select.empty();
-
-                        $.each(data.items, function (index, item) {
-                            select.append('<option value="' + item.id + '">' + item.name + ' --- ' + item.value + '</option>');
-                        });
-
-                        select.trigger("chosen:updated");
-                    },
-                    error: function (err) {
-                        init.FlashMessage('error', 'Could not load the attributes! Please try again.');
-                    }
-                });
-            }
         }, assignAttribute = function (_this) {
             var container = _this.closest('.attributes-container');
             var table = container.find('.attributes-table');
             var set_id = container.find('.assign-attribute-set').val();
             var attribute_id = container.find('.assign-attribute-id').val();
+            var value_id = container.find('.assign-value-id').val();
             var value = container.find('.assign-attribute-value').val();
 
             if (set_id && attribute_id) {
                 $.ajax({
                     type : 'POST',
-                    url: '{{ route('admin.attributes.row') }}',
+                    url: '{{ route('admin.products.load_one_attribute') }}',
                     data: {
                         _token: token,
                         set_id: set_id,
                         attribute_id: attribute_id,
-                        val: value
+                        value_id: value_id,
+                        value: value
                     },
                     beforeSend: function () {
                         container.css({opacity: 0.5});
@@ -96,19 +131,20 @@
                             table.find('tbody').append(
                                 $('#attribute-row-template').html()
                                     .replace(/#index#/g, parseInt(getLastAttributeIndex()) + 1)
-                                    .replace(/#attribute_id#/g, data.data.id)
-                                    .replace(/#attribute_name#/g, data.data.name)
-                                    .replace(/#attribute_value#/g, data.data.val ? data.data.val : data.data.value)
-                                    .replace(/#attribute_val#/g, data.data.val)
+                                    .replace(/#attribute_id#/g, data.data.attribute_id)
+                                    .replace(/#attribute_name#/g, data.data.attribute_name)
+                                    .replace(/#attribute_value#/g, data.data.attribute_value)
                                     .replace(/#attribute_url#/g, data.data.url)
+                                    .replace(/#value_id#/g, data.data.value_id)
                             );
 
                             $('.attributes-request').append(
                                 $('#attribute-request-template').html()
                                     .replace(/#index#/g, parseInt(getLastAttributeIndex()) + 1)
-                                    .replace(/#attribute_id#/g, data.data.id)
-                                    .replace(/#attribute_val#/g, data.data.val)
                                     .replace(/#attribute_ord#/g, table.find('tbody > tr').length)
+                                    .replace(/#attribute_id#/g, data.data.attribute_id)
+                                    .replace(/#attribute_value#/g, data.data.value)
+                                    .replace(/#value_id#/g, data.data.value_id)
                             );
 
                             orderAttributes();
@@ -160,21 +196,29 @@
                 }
             });
         }, changeAttributeValue = function (_this) {
-            var pivot_id = _this.closest('tr').attr('id');
-            var attribute_id = _this.closest('tr').attr('data-attribute-id');
             var value = _this.val();
+            var index = _this.closest('tr').attr('data-index');
+            var value_id = _this.closest('tr').attr('data-value-id');
+            var pivot_id = _this.closest('tr').attr('id');
 
             clearTimeout(timer);
 
             timer = setTimeout(function() {
                 $.ajax({
                     type : 'POST',
-                    url: '{{ route('admin.attributes.value') }}',
+                    url: '{{ route('admin.products.save_custom_attribute_value') }}',
                     data: {
                         _token: token,
+                        value_id: value_id,
                         pivot_id: pivot_id,
-                        attribute_id: attribute_id,
                         value: value
+                    },
+                    success : function(data) {
+                        if (data.status == true) {
+                            $('.attributes-request').find('input.attribute-custom-value[data-index="' + index + '"]').val(value);
+                        } else {
+                            init.FlashMessage('error', 'Could not assign the attribute! Please try again.');
+                        }
                     }
                 });
             }, 600);
@@ -190,7 +234,7 @@
 
             return max;
         }, initAttributeSelect = function () {
-            $('.assign-attribute-set, .assign-attribute-id').chosen({
+            $('.assign-attribute-set, .assign-attribute-id, .assign-value-id').chosen({
                 width: '100%',
                 inherit_select_classes: true
             });
@@ -213,6 +257,10 @@
 
             $(document).on('change', 'select.assign-attribute-set', function (e) {
                 loadAttributes($(this));
+            });
+
+            $(document).on('change', 'select.assign-attribute-id', function (e) {
+                loadValues($(this));
             });
 
             $(document).on('click', 'textarea.attribute-value-change', function (e) {

@@ -2,6 +2,10 @@
 
 namespace App\Http\Controllers\Admin\Shop;
 
+use App\Models\Shop\Attribute;
+use App\Models\Shop\Set;
+use App\Models\Shop\Value;
+use DB;
 use Exception;
 use App\Http\Controllers\Controller;
 use App\Models\Shop\Category;
@@ -352,6 +356,137 @@ class ProductsController extends Controller
 
         if (!$request->get('category')) {
             $this->orderable = false;
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function loadAllAttributes(Request $request)
+    {
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'Bad request'
+            ], 400);
+        }
+
+        $this->validate($request, [
+            'product_id' => 'required|numeric',
+        ]);
+
+        try {
+            $id = $request->get('product_id');
+            $product = Product::withoutGlobalScopes()->findOrFail($id);
+
+            if ($request->has('draft') && ($draft = Draft::find((int)$request->get('draft')))) {
+                DB::beginTransaction();
+
+                $product = $draft->draftable;
+                $product->publishDraft($draft);
+            }
+
+            if ($request->has('revision') && ($revision = Revision::find((int)$request->get('revision')))) {
+                DB::beginTransaction();
+
+                $product = $revision->revisionable;
+                $product->rollbackToRevision($revision);
+            }
+
+            return [
+                'status' => true,
+                'html' => view('admin.shop.products.attributes.items')->with([
+                    'product' => $product,
+                    'sets' => Set::ordered()->get(),
+                    'draft' => isset($draft) ? $draft : null,
+                    'revision' => isset($revision) ? $revision : null,
+                    'disabled' => $request->get('disabled') ? true : false,
+                ])->render(),
+            ];
+        } catch (Exception $e) {
+            return [
+                'status' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function loadOneAttribute(Request $request)
+    {
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'Bad request'
+            ], 400);
+        }
+
+        $this->validate($request, [
+            'set_id' => 'required|numeric',
+            'attribute_id' => 'required|numeric',
+            'value_id' => 'nullable|numeric',
+        ]);
+
+        try {
+            $set = Set::findOrFail($request->get('set_id'));
+            $attribute = Attribute::findOrFail($request->get('attribute_id'));
+            $value = Value::findOrFail($request->get('value_id'));
+
+            return [
+                'status' => true,
+                'data' => [
+                    'attribute_id' => $attribute->id,
+                    'attribute_name' => $attribute->name,
+                    'attribute_value' => $request->get('value') ?: $value->value,
+                    'value_id' => $value->id,
+                    'value' => $request->get('value') ?: '',
+                    'url' => route('admin.attributes.edit', [$set, $attribute]),
+                ],
+            ];
+        } catch (Exception $e) {
+            return [
+                'status' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function saveCustomAttributeValue(Request $request)
+    {
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'Bad request'
+            ], 400);
+        }
+
+        $this->validate($request, [
+            'value_id' => 'required|numeric',
+            'pivot_id' => 'required|numeric',
+        ]);
+
+        try {
+            $value = Value::findOrFail($request->get('value_id'));
+            $pivot = DB::table('product_attribute')->where('id', $request->get('pivot_id'));
+
+            $pivot->update([
+                'value' => $request->get('value') && $request->get('value') != $value->value ?
+                    $request->get('value') : null
+            ]);
+
+            return [
+                'status' => true
+            ];
+        } catch (Exception $e) {
+            return [
+                'status' => false,
+                'message' => $e->getMessage(),
+            ];
         }
     }
 }

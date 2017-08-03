@@ -354,6 +354,13 @@ Route::group([
                  * Revision Actions.
                  */
                 Route::get('revision/{revision}', ['as' => 'admin.products.revision', 'uses' => 'ProductsController@revision', 'permissions' => 'revisions-rollback']);
+
+                /**
+                 * Product Assignment.
+                 */
+                Route::get('load-all-attributes', ['as' => 'admin.products.load_all_attributes', 'uses' => 'ProductsController@loadAllAttributes', 'permissions' => 'products-edit']);
+                Route::post('load-one-attribute', ['as' => 'admin.products.load_one_attribute', 'uses' => 'ProductsController@loadOneAttribute', 'permissions' => 'products-edit']);
+                Route::post('save-custom-attribute-value', ['as' => 'admin.products.save_custom_attribute_value', 'uses' => 'ProductsController@saveCustomAttributeValue', 'permissions' => 'products-edit']);
             });
 
             /**
@@ -429,32 +436,50 @@ Route::group([
                  * Order Actions.
                  */
                 Route::patch('order', ['as' => 'admin.sets.order', 'uses' => 'SetsController@order']);
-            });
-
-            /**
-             * CRUD Attributes.
-             */
-            Route::group([
-                'prefix' => 'attributes',
-            ], function () {
-                /**
-                 * Product Assignment.
-                 */
-                Route::get('get/{set?}', ['as' => 'admin.attributes.get', 'uses' => 'AttributesController@get', 'permissions' => 'attributes-list']);
-                Route::post('row', ['as' => 'admin.attributes.row', 'uses' => 'AttributesController@row', 'permissions' => 'attributes-list']);
-                Route::post('value', ['as' => 'admin.attributes.value', 'uses' => 'AttributesController@value', 'permissions' => 'attributes-edit']);
-
-                Route::get('{set}', ['as' => 'admin.attributes.index', 'uses' => 'AttributesController@index', 'permissions' => 'attributes-list']);
-                Route::get('create/{set}', ['as' => 'admin.attributes.create', 'uses' => 'AttributesController@create', 'permissions' => 'attributes-add']);
-                Route::get('edit/{set}/{attribute}', ['as' => 'admin.attributes.edit', 'uses' => 'AttributesController@edit', 'permissions' => 'attributes-edit']);
-                Route::post('store/{set}', ['as' => 'admin.attributes.store', 'uses' => 'AttributesController@store', 'permissions' => 'attributes-add']);
-                Route::put('update/{set}/{attribute}', ['as' => 'admin.attributes.update', 'uses' => 'AttributesController@update', 'permissions' => 'attributes-edit']);
-                Route::delete('destroy/{set}/{attribute}', ['as' => 'admin.attributes.destroy', 'uses' => 'AttributesController@destroy', 'permissions' => 'attributes-delete']);
 
                 /**
-                 * Order Actions.
+                 * Fetch attributes & values endpoints.
                  */
-                Route::patch('order', ['as' => 'admin.attributes.order', 'uses' => 'AttributesController@order']);
+                Route::get('attributes/get/{set?}', ['as' => 'admin.attributes.get', 'uses' => 'AttributesController@get', 'permissions' => 'attributes-list']);
+                Route::get('values/get/{set?}/{attribute?}', ['as' => 'admin.values.get', 'uses' => 'ValuesController@get', 'permissions' => 'values-edit']);
+
+                /**
+                 * CRUD Attributes.
+                 */
+                Route::group([
+                    'prefix' => 'edit/{set}/attributes',
+                ], function () {
+                    Route::get('/', ['as' => 'admin.attributes.index', 'uses' => 'AttributesController@index', 'permissions' => 'attributes-list']);
+                    Route::get('create', ['as' => 'admin.attributes.create', 'uses' => 'AttributesController@create', 'permissions' => 'attributes-add']);
+                    Route::get('edit/{attribute}', ['as' => 'admin.attributes.edit', 'uses' => 'AttributesController@edit', 'permissions' => 'attributes-edit']);
+                    Route::post('store', ['as' => 'admin.attributes.store', 'uses' => 'AttributesController@store', 'permissions' => 'attributes-add']);
+                    Route::put('update/{attribute}', ['as' => 'admin.attributes.update', 'uses' => 'AttributesController@update', 'permissions' => 'attributes-edit']);
+                    Route::delete('destroy/{attribute}', ['as' => 'admin.attributes.destroy', 'uses' => 'AttributesController@destroy', 'permissions' => 'attributes-delete']);
+
+                    /**
+                     * Order Actions.
+                     */
+                    Route::patch('order', ['as' => 'admin.attributes.order', 'uses' => 'AttributesController@order']);
+
+                    /**
+                     * CRUD Values.
+                     */
+                    Route::group([
+                        'prefix' => 'edit/{attribute}/values',
+                    ], function () {
+                        Route::get('/', ['as' => 'admin.values.index', 'uses' => 'ValuesController@index', 'permissions' => 'attributes-edit']);
+                        Route::get('create', ['as' => 'admin.values.create', 'uses' => 'ValuesController@create', 'permissions' => 'attributes-edit']);
+                        Route::get('edit/{value}', ['as' => 'admin.values.edit', 'uses' => 'ValuesController@edit', 'permissions' => 'attributes-edit']);
+                        Route::post('store', ['as' => 'admin.values.store', 'uses' => 'ValuesController@store', 'permissions' => 'attributes-edit']);
+                        Route::put('update/{value}', ['as' => 'admin.values.update', 'uses' => 'ValuesController@update', 'permissions' => 'attributes-edit']);
+                        Route::delete('destroy/{value}', ['as' => 'admin.values.destroy', 'uses' => 'ValuesController@destroy', 'permissions' => 'attributes-edit']);
+
+                        /**
+                         * Order Actions.
+                         */
+                        Route::patch('order', ['as' => 'admin.values.order', 'uses' => 'ValuesController@order']);
+                    });
+                });
             });
 
             /**

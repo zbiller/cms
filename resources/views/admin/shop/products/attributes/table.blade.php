@@ -6,17 +6,17 @@
     </tr>
 </thead>
 <tbody>
-    @php($attributes = $product->attributes)
+    @php($attributes = $product->attributes()->with('set')->get())
     @if($attributes->count())
         @foreach($attributes as $attribute)
             @php($pivot = $attribute->pivot)
-            <tr id="{{ $pivot->id }}" data-attribute-id="{{ $attribute->id }}" data-index="{{ $pivot->id }}" class="{!! $disabled === true ? 'nodrag nodrop' : '' !!}">
+            <tr id="{{ $pivot->id }}" data-attribute-id="{{ $attribute->id }}" data-value-id="{{ $pivot->value_id }}" data-index="{{ $pivot->id }}" class="{!! $disabled === true ? 'nodrag nodrop' : '' !!}">
                 <td>{{ $attribute->name ?: 'N/A' }}</td>
                 <td>
-                    <textarea class="attribute-value-change">{{ $pivot->val ? $pivot->val : ($attribute->value ?: '') }}</textarea>
+                    <textarea class="attribute-value-change">{{ $pivot->value ?: (($value = \App\Models\Shop\Value::find($pivot->value_id)) ? $value->value : '') }}</textarea>
                 </td>
                 <td>
-                    <a href="{{ route('admin.attributes.edit', ['set' => $attribute->set->id, 'id' => $attribute->id]) }}" class="btn yellow no-margin-top no-margin-bottom no-margin-left" target="_blank">
+                    <a href="{{ route('admin.attributes.edit', ['set' => $attribute->set, 'attribute' => $attribute]) }}" class="btn yellow no-margin-top no-margin-bottom no-margin-left" target="_blank">
                         <i class="fa fa-eye"></i>&nbsp; View
                     </a>
                     <a href="#" class="attribute-remove btn red no-margin-top no-margin-bottom no-margin-right {!! $disabled === true ? 'disabled' : '' !!}">

@@ -2,7 +2,7 @@
 
 namespace App\Http\Filters;
 
-class AttributeFilter extends Filter
+class ValueFilter extends Filter
 {
     /**
      * Get the main where condition between entire request fields.
@@ -22,7 +22,7 @@ class AttributeFilter extends Filter
     public function filters()
     {
         return [
-            'search' => 'operator:like|condition:or|columns:name,slug,value',
+            'search' => 'operator:like|condition:or|columns:value,slug',
             'start_date' => 'operator:date >=|condition:or|columns:created_at',
             'end_date' => 'operator:date <=|condition:or|columns:created_at',
         ];
