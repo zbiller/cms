@@ -84,7 +84,7 @@
                 Please note that when applying multiple discounts, the product's final price will lower progressively, applying the discounts in cascade in the order they are assigned.
             </span>
         </div>
-        @include('admin.shop.discounts.assign.container', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
+        @include('admin.shop.products.discounts.container', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
     </div>
     <div id="tab-7" class="tab tab-taxes">
         <div class="box notification" style="margin-bottom: 20px;">

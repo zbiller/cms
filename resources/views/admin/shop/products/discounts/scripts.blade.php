@@ -7,7 +7,7 @@
         var listDiscounts = function () {
             $.ajax({
                 type : 'GET',
-                url: '{{ route('admin.discounts.get') }}',
+                url: '{{ route('admin.products.load_all_discounts') }}',
                 async: false,
                 data: {
                     _token: token,
@@ -51,7 +51,7 @@
             if (select.val()) {
                 $.ajax({
                     type : 'POST',
-                    url: '{{ route('admin.discounts.row') }}',
+                    url: '{{ route('admin.products.load_one_discount') }}',
                     data: {
                         _token: token,
                         discount_id: select.val()

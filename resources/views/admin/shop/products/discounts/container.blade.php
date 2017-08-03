@@ -35,4 +35,4 @@
     {!! form()->hidden('discounts[#index#][#discount_id#][ord]', '#discount_ord#', ['class' => 'discount-input', 'data-index' => '#index#']) !!}
 </script>
 
-@include('admin.shop.discounts.assign.scripts')
+@include('admin.shop.products.discounts.scripts')

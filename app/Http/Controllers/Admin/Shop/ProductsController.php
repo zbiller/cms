@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Admin\Shop;
 
-use App\Models\Shop\Attribute;
-use App\Models\Shop\Set;
-use App\Models\Shop\Value;
 use DB;
 use Exception;
 use App\Http\Controllers\Controller;
 use App\Models\Shop\Category;
 use App\Models\Shop\Product;
+use App\Models\Shop\Set;
+use App\Models\Shop\Attribute;
+use App\Models\Shop\Value;
+use App\Models\Shop\Discount;
 use App\Models\Shop\Currency;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
@@ -481,6 +482,95 @@ class ProductsController extends Controller
 
             return [
                 'status' => true
+            ];
+        } catch (Exception $e) {
+            return [
+                'status' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function loadAllDiscounts(Request $request)
+    {
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'Bad request'
+            ], 400);
+        }
+
+        $this->validate($request, [
+            'product_id' => 'required|numeric',
+        ]);
+
+        try {
+            $id = $request->get('product_id');
+            $product = Product::withoutGlobalScopes()->findOrFail($id);
+
+            if ($request->has('draft') && ($draft = Draft::find((int)$request->get('draft')))) {
+                DB::beginTransaction();
+
+                $product = $draft->draftable;
+                $product->publishDraft($draft);
+            }
+
+            if ($request->has('revision') && ($revision = Revision::find((int)$request->get('revision')))) {
+                DB::beginTransaction();
+
+                $product = $revision->revisionable;
+                $product->rollbackToRevision($revision);
+            }
+
+            return [
+                'status' => true,
+                'html' => view('admin.shop.products.discounts.items')->with([
+                    'product' => $product,
+                    'discounts' => Discount::alphabetically()->active()->forProduct()->get(),
+                    'draft' => isset($draft) ? $draft : null,
+                    'revision' => isset($revision) ? $revision : null,
+                    'disabled' => $request->get('disabled') ? true : false,
+                ])->render(),
+            ];
+        } catch (Exception $e) {
+            return [
+                'status' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function loadOneDiscount(Request $request)
+    {
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'Bad request'
+            ], 400);
+        }
+
+        $this->validate($request, [
+            'discount_id' => 'required|numeric',
+        ]);
+
+        try {
+            $discount = Discount::findOrFail($request->get('discount_id'));
+
+            return [
+                'status' => true,
+                'data' => [
+                    'id' => $discount->id,
+                    'name' => $discount->name ?: 'N/A',
+                    'rate' => $discount->rate ?: 'N/A',
+                    'type' => isset(Discount::$types[$discount->type]) ? Discount::$types[$discount->type] : 'N/A',
+                    'url' => route('admin.discounts.edit', $discount->id),
+                ],
             ];
         } catch (Exception $e) {
             return [

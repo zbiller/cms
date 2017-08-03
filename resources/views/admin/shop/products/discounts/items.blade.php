@@ -1,5 +1,5 @@
 <table class="discounts-table" cellspacing="0" cellpadding="0" border="0">
-    @include('admin.shop.discounts.assign.table')
+    @include('admin.shop.products.discounts.table')
 </table>
 
 @if($disabled === false)

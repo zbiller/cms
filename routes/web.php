@@ -356,11 +356,17 @@ Route::group([
                 Route::get('revision/{revision}', ['as' => 'admin.products.revision', 'uses' => 'ProductsController@revision', 'permissions' => 'revisions-rollback']);
 
                 /**
-                 * Product Assignment.
+                 * Attributes Assignment.
                  */
                 Route::get('load-all-attributes', ['as' => 'admin.products.load_all_attributes', 'uses' => 'ProductsController@loadAllAttributes', 'permissions' => 'products-edit']);
                 Route::post('load-one-attribute', ['as' => 'admin.products.load_one_attribute', 'uses' => 'ProductsController@loadOneAttribute', 'permissions' => 'products-edit']);
                 Route::post('save-custom-attribute-value', ['as' => 'admin.products.save_custom_attribute_value', 'uses' => 'ProductsController@saveCustomAttributeValue', 'permissions' => 'products-edit']);
+
+                /**
+                 * Discounts Assignment.
+                 */
+                Route::get('load-all-discounts', ['as' => 'admin.products.load_all_discounts', 'uses' => 'ProductsController@loadAllDiscounts', 'permissions' => 'products-edit']);
+                Route::post('load-one-discount', ['as' => 'admin.products.load_one_discount', 'uses' => 'ProductsController@loadOneDiscount', 'permissions' => 'products-edit']);
             });
 
             /**
@@ -494,12 +500,6 @@ Route::group([
                 Route::post('store', ['as' => 'admin.discounts.store', 'uses' => 'DiscountsController@store', 'permissions' => 'discounts-add']);
                 Route::put('update/{discount}', ['as' => 'admin.discounts.update', 'uses' => 'DiscountsController@update', 'permissions' => 'discounts-edit']);
                 Route::delete('destroy/{discount}', ['as' => 'admin.discounts.destroy', 'uses' => 'DiscountsController@destroy', 'permissions' => 'discounts-delete']);
-
-                /**
-                 * Product Assignment.
-                 */
-                Route::get('get', ['as' => 'admin.discounts.get', 'uses' => 'DiscountsController@get', 'permissions' => 'discounts-list']);
-                Route::post('row', ['as' => 'admin.discounts.row', 'uses' => 'DiscountsController@row', 'permissions' => 'discounts-list']);
             });
 
             /**

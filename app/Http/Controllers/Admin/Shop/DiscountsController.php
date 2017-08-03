@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers\Admin\Shop;
 
-use DB;
 use Exception;
 use App\Http\Controllers\Controller;
-use App\Models\Shop\Product;
 use App\Models\Shop\Discount;
-use App\Models\Version\Draft;
-use App\Models\Version\Revision;
 use App\Traits\CanCrud;
 use App\Http\Requests\DiscountRequest;
 use App\Http\Filters\DiscountFilter;
@@ -120,82 +116,5 @@ class DiscountsController extends Controller
 
             $this->item->delete();
         });
-    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function get(Request $request)
-    {
-        $this->validate($request, [
-            'product_id' => 'required|numeric',
-        ]);
-
-        try {
-            $id = $request->get('product_id');
-            $product = Product::withoutGlobalScopes()->findOrFail($id);
-
-            if ($request->has('draft') && ($draft = Draft::find((int)$request->get('draft')))) {
-                DB::beginTransaction();
-
-                $product = $draft->draftable;
-                $product->publishDraft($draft);
-            }
-
-            if ($request->has('revision') && ($revision = Revision::find((int)$request->get('revision')))) {
-                DB::beginTransaction();
-
-                $product = $revision->revisionable;
-                $product->rollbackToRevision($revision);
-            }
-
-            return [
-                'status' => true,
-                'html' => view('admin.shop.discounts.assign.discounts')->with([
-                    'product' => $product,
-                    'discounts' => Discount::alphabetically()->active()->forProduct()->get(),
-                    'draft' => isset($draft) ? $draft : null,
-                    'revision' => isset($revision) ? $revision : null,
-                    'disabled' => $request->get('disabled') ? true : false,
-                ])->render(),
-            ];
-        } catch (Exception $e) {
-            return [
-                'status' => false,
-                'message' => $e->getMessage(),
-            ];
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function row(Request $request)
-    {
-        $this->validate($request, [
-            'discount_id' => 'required|numeric',
-        ]);
-
-        try {
-            $discount = Discount::findOrFail($request->get('discount_id'));
-
-            return [
-                'status' => true,
-                'data' => [
-                    'id' => $discount->id,
-                    'name' => $discount->name ?: 'N/A',
-                    'rate' => $discount->rate ?: 'N/A',
-                    'type' => isset(Discount::$types[$discount->type]) ? Discount::$types[$discount->type] : 'N/A',
-                    'url' => route('admin.discounts.edit', $discount->id),
-                ],
-            ];
-        } catch (Exception $e) {
-            return [
-                'status' => false,
-                'message' => $e->getMessage(),
-            ];
-        }
     }
 }
