@@ -35,4 +35,4 @@
     {!! form()->hidden('taxes[#index#][#tax_id#][ord]', '#tax_ord#', ['class' => 'tax-input', 'data-index' => '#index#']) !!}
 </script>
 
-@include('admin.shop.taxes.assign.scripts')
+@include('admin.shop.products.taxes.scripts')

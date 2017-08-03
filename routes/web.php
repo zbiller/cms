@@ -367,6 +367,12 @@ Route::group([
                  */
                 Route::get('load-all-discounts', ['as' => 'admin.products.load_all_discounts', 'uses' => 'ProductsController@loadAllDiscounts', 'permissions' => 'products-edit']);
                 Route::post('load-one-discount', ['as' => 'admin.products.load_one_discount', 'uses' => 'ProductsController@loadOneDiscount', 'permissions' => 'products-edit']);
+
+                /**
+                 * Taxes Assignment.
+                 */
+                Route::get('load-all-taxes', ['as' => 'admin.products.load_all_taxes', 'uses' => 'ProductsController@loadAllTaxes', 'permissions' => 'products-edit']);
+                Route::post('load-one-tax', ['as' => 'admin.products.load_one_tax', 'uses' => 'ProductsController@loadOneTax', 'permissions' => 'products-edit']);
             });
 
             /**
@@ -514,12 +520,6 @@ Route::group([
                 Route::post('store', ['as' => 'admin.taxes.store', 'uses' => 'TaxesController@store', 'permissions' => 'taxes-add']);
                 Route::put('update/{tax}', ['as' => 'admin.taxes.update', 'uses' => 'TaxesController@update', 'permissions' => 'taxes-edit']);
                 Route::delete('destroy/{tax}', ['as' => 'admin.taxes.destroy', 'uses' => 'TaxesController@destroy', 'permissions' => 'taxes-delete']);
-
-                /**
-                 * Product Assignment.
-                 */
-                Route::get('get', ['as' => 'admin.taxes.get', 'uses' => 'TaxesController@get', 'permissions' => 'taxes-list']);
-                Route::post('row', ['as' => 'admin.taxes.row', 'uses' => 'TaxesController@row', 'permissions' => 'taxes-list']);
             });
         });
 

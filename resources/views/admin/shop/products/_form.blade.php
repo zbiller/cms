@@ -92,7 +92,7 @@
                 Please note that when applying multiple taxes, the product's final price will increase progressively, applying the taxes in cascade in the order they are assigned.
             </span>
         </div>
-        @include('admin.shop.taxes.assign.container', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
+        @include('admin.shop.products.taxes.container', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
     </div>
 
     {!! block()->container($item, isset($on_draft) ? $draft : null, isset($on_revision) ? $revision : null, isset($on_revision) ? true : false) !!}
@@ -106,7 +106,9 @@
 {!! form_admin()->close() !!}
 
 @section('bottom_scripts')
-    {!! JsValidator::formRequest(App\Http\Requests\ProductRequest::class, '.form') !!}
+    @if(!isset($on_draft) && !isset($on_limbo_draft) && !isset($on_revision))
+        {!! JsValidator::formRequest(App\Http\Requests\ProductRequest::class, '.form') !!}
+    @endif
 
     <script type="text/javascript">
         $(".dropzone").dropzone({

@@ -11,6 +11,7 @@ use App\Models\Shop\Set;
 use App\Models\Shop\Attribute;
 use App\Models\Shop\Value;
 use App\Models\Shop\Discount;
+use App\Models\Shop\Tax;
 use App\Models\Shop\Currency;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
@@ -570,6 +571,95 @@ class ProductsController extends Controller
                     'rate' => $discount->rate ?: 'N/A',
                     'type' => isset(Discount::$types[$discount->type]) ? Discount::$types[$discount->type] : 'N/A',
                     'url' => route('admin.discounts.edit', $discount->id),
+                ],
+            ];
+        } catch (Exception $e) {
+            return [
+                'status' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function loadAllTaxes(Request $request)
+    {
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'Bad request'
+            ], 400);
+        }
+
+        $this->validate($request, [
+            'product_id' => 'required|numeric',
+        ]);
+
+        try {
+            $id = $request->get('product_id');
+            $product = Product::withoutGlobalScopes()->findOrFail($id);
+
+            if ($request->has('draft') && ($draft = Draft::find((int)$request->get('draft')))) {
+                DB::beginTransaction();
+
+                $product = $draft->draftable;
+                $product->publishDraft($draft);
+            }
+
+            if ($request->has('revision') && ($revision = Revision::find((int)$request->get('revision')))) {
+                DB::beginTransaction();
+
+                $product = $revision->revisionable;
+                $product->rollbackToRevision($revision);
+            }
+
+            return [
+                'status' => true,
+                'html' => view('admin.shop.products.taxes.items')->with([
+                    'product' => $product,
+                    'taxes' => Tax::alphabetically()->active()->forProduct()->get(),
+                    'draft' => isset($draft) ? $draft : null,
+                    'revision' => isset($revision) ? $revision : null,
+                    'disabled' => $request->get('disabled') ? true : false,
+                ])->render(),
+            ];
+        } catch (Exception $e) {
+            return [
+                'status' => false,
+                'message' => $e->getMessage(),
+            ];
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function loadOneTax(Request $request)
+    {
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'Bad request'
+            ], 400);
+        }
+
+        $this->validate($request, [
+            'tax_id' => 'required|numeric',
+        ]);
+
+        try {
+            $tax = Tax::findOrFail($request->get('tax_id'));
+
+            return [
+                'status' => true,
+                'data' => [
+                    'id' => $tax->id,
+                    'name' => $tax->name ?: 'N/A',
+                    'rate' => $tax->rate ?: 'N/A',
+                    'type' => isset(Tax::$types[$tax->type]) ? Tax::$types[$tax->type] : 'N/A',
+                    'url' => route('admin.taxes.edit', $tax->id),
                 ],
             ];
         } catch (Exception $e) {

@@ -1,5 +1,5 @@
 <table class="taxes-table" cellspacing="0" cellpadding="0" border="0">
-    @include('admin.shop.taxes.assign.table')
+    @include('admin.shop.products.taxes.table')
 </table>
 
 @if($disabled === false)
