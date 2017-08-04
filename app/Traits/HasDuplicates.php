@@ -233,11 +233,12 @@ trait HasDuplicates
             return $model;
         }
 
-        foreach ($unique as $i => $column) {
+        foreach ($unique as $column) {
+            $i = 1;
             $original = $value = $model->{$column};
 
             while (static::withoutGlobalScopes()->where($column, $value)->first()) {
-                $value = $original . ' (' . ++$i . ')';
+                $value = $original . ' (' . $i++ . ')';
 
                 $model->{$column} = $value;
             }
@@ -284,11 +285,12 @@ trait HasDuplicates
         }
 
         if (array_key_exists($relation, $unique)) {
-            foreach ($unique[$relation] as $i => $column) {
+            foreach ($unique[$relation] as $column) {
+                $i = 1;
                 $original = $value = $model->{$column};
 
                 while ($model->where($column, $value)->first()) {
-                    $value = $original . ' (' . ++$i . ')';
+                    $value = $original . ' (' . $i++ . ')';
 
                     $model->{$column} = $value;
                 }
