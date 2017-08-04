@@ -641,10 +641,10 @@ function blocks()
     }
 
     //assign blocks
-    $('.block-assign-select').chosen({
+    /*$('.block-assign-select').chosen({
         width: '100%',
         inherit_select_classes: true
-    });
+    });*/
 }
 
 function items()

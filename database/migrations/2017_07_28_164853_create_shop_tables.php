@@ -31,7 +31,7 @@ class CreateShopTables extends Migration
             $table->string('name')->unique();
             $table->string('slug')->unique();
 
-            $table->longText('metadata');
+            $table->text('metadata')->nullable();
             $table->tinyInteger('active')->default(1);
 
             $table->timestamps();
@@ -55,7 +55,7 @@ class CreateShopTables extends Migration
             $table->integer('views')->default(0);
             $table->integer('sales')->default(0);
 
-            $table->text('metadata')->nullable();
+            $table->text('metadata')->nullable()->nullable();
             $table->tinyInteger('active')->default(1);
             $table->integer('ord')->default(0);
 
@@ -139,6 +139,18 @@ class CreateShopTables extends Migration
             $table->timestamps();
         });
 
+        Schema::create('product_category', function (Blueprint $table) {
+            $table->increments('id');
+
+            $table->integer('product_id')->unsigned()->index();
+            $table->integer('category_id')->unsigned()->index();
+
+            $table->timestamps();
+
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade')->onUpdate('cascade');
+        });
+
         Schema::create('product_attribute', function (Blueprint $table) {
             $table->increments('id');
 
@@ -194,6 +206,7 @@ class CreateShopTables extends Migration
         Schema::dropIfExists('product_tax');
         Schema::dropIfExists('product_discount');
         Schema::dropIfExists('product_attribute');
+        Schema::dropIfExists('product_category');
         Schema::dropIfExists('taxes');
         Schema::dropIfExists('discounts');
         Schema::dropIfExists('values');

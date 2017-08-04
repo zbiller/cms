@@ -17,10 +17,21 @@
 
 <div id="tab-1" class="tab">
     <fieldset>
-        <label>Category</label>
+        <label>Main Category</label>
         <select class="select-input" name="category_id">
             @foreach($categories as $category)
-                <option value="{{ $category->id }}" style="padding-left: {{ 6 + ($category->depth * 15) }}px" {{ $item->exists && $category->id == $item->category_id ? 'selected="selected"' : '' }}>
+                <option value="{{ $category->id }}" style="padding-left: {{ 6 + ($category->depth * 20) }}px" {{ $item->exists && $category->id == $item->category_id ? 'selected="selected"' : '' }}>
+                    {{ $category->name }}
+                </option>
+            @endforeach
+        </select>
+    </fieldset>
+    <fieldset>
+        <label>Other Categories</label>
+        @php($selectedCategories = $item->categories()->pluck('category_id')->toArray())
+        <select class="select-input" name="categories[]" multiple="multiple">
+            @foreach($categories as $category)
+                <option value="{{ $category->id }}" style="padding-left: {{ 6 + ($category->depth * 20) }}px" {{ in_array($category->id, $selectedCategories) ? 'selected="selected"' : '' }}>
                     {{ $category->name }}
                 </option>
             @endforeach
@@ -76,23 +87,13 @@
 
 @if($item->exists)
     <div id="tab-5" class="tab tab-attributes">
-        @include('admin.shop.products.attributes.container', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
+        @include('admin.shop.products.attributes.assign', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
     </div>
     <div id="tab-6" class="tab tab-discounts">
-        <div class="box notification" style="margin-bottom: 20px;">
-            <span>
-                Please note that when applying multiple discounts, the product's final price will lower progressively, applying the discounts in cascade in the order they are assigned.
-            </span>
-        </div>
-        @include('admin.shop.products.discounts.container', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
+        @include('admin.shop.products.discounts.assign', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
     </div>
     <div id="tab-7" class="tab tab-taxes">
-        <div class="box notification" style="margin-bottom: 20px;">
-            <span>
-                Please note that when applying multiple taxes, the product's final price will increase progressively, applying the taxes in cascade in the order they are assigned.
-            </span>
-        </div>
-        @include('admin.shop.products.taxes.container', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
+        @include('admin.shop.products.taxes.assign', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
     </div>
 
     {!! block()->container($item, isset($on_draft) ? $draft : null, isset($on_revision) ? $revision : null, isset($on_revision) ? true : false) !!}

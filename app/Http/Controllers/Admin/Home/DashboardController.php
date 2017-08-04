@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Home;
 
 use Analytics;
 use App\Mail\PasswordRecovery;
+use App\Models\Shop\Product;
 use Carbon\Carbon;
 use App\Http\Controllers\Controller;
 use File;

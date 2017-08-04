@@ -97,55 +97,16 @@ class Product extends Model
         parent::boot();
 
         static::saved(function (Product $product) {
-            $attributes = request()->get('attributes');
-            $discounts = request()->get('discounts');
-            $taxes = request()->get('taxes');
-
-            $product->attributes()->detach();
-
-            if ($attributes && is_array($attributes) && !empty($attributes)) {
-                ksort($attributes);
-
-                foreach ($attributes as $data) {
-                    foreach ($data as $id => $attr) {
-                        if ($id && ($attribute = Attribute::find($id))) {
-                            $product->attributes()->save($attribute, $attr);
-                        }
-                    }
-                }
+            if (request()->has('touch_attributes')) {
+                $product->touchAttributes();
             }
 
-            $product->discounts()->detach();
-
-            if ($discounts && is_array($discounts) && !empty($discounts)) {
-                ksort($discounts);
-
-                foreach ($discounts as $data) {
-                    foreach ($data as $id => $attributes) {
-                        if ($id && ($discount = Discount::find($id))) {
-                            $product->discounts()->save($discount, [
-                                'ord' => isset($attributes['ord']) ? (int)$attributes['ord'] : 0
-                            ]);
-                        }
-                    }
-                }
+            if (request()->has('touch_discounts')) {
+                $product->touchDiscounts();
             }
 
-            $product->taxes()->detach();
-
-            if ($taxes && is_array($taxes) && !empty($taxes)) {
-                ksort($taxes);
-
-                foreach ($taxes as $data) {
-                    foreach ($data as $id => $attributes) {
-                        if ($id && ($tax = Tax::find($id))) {
-                            $product->taxes()->save($tax, [
-                                'ord' => isset($attributes['ord']) ? (int)$attributes['ord'] : 0
-                            ]);
-                        }
-
-                    }
-                }
+            if (request()->has('touch_taxes')) {
+                $product->touchTaxes();
             }
         });
     }
@@ -158,6 +119,16 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
+    }
+
+    /**
+     * Product has and belongs to many categories.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'product_category', 'product_id', 'category_id')->withTimestamps();
     }
 
     /**
@@ -483,7 +454,7 @@ class Product extends Model
     public static function getDraftOptions()
     {
         return DraftOptions::instance()
-            ->relationsToDraft('blocks', 'attributes', 'discounts', 'taxes');
+            ->relationsToDraft('blocks', 'categories', 'attributes', 'discounts', 'taxes');
     }
 
     /**
@@ -493,7 +464,7 @@ class Product extends Model
     {
         return RevisionOptions::instance()
             ->limitRevisionsTo(100)
-            ->relationsToRevision('blocks', 'attributes', 'discounts', 'taxes');
+            ->relationsToRevision('blocks', 'categories', 'attributes', 'discounts', 'taxes');
     }
 
     /**
@@ -559,5 +530,77 @@ class Product extends Model
                 ]
             ]
         ];
+    }
+
+    /**
+     * Update the attributes many to many relation.
+     *
+     * @return void
+     */
+    private function touchAttributes()
+    {
+        $attributes = request()->get('attributes');
+
+        $this->attributes()->detach();
+
+        if ($attributes && is_array($attributes) && !empty($attributes)) {
+            ksort($attributes);
+
+            foreach ($attributes as $data) {
+                foreach ($data as $id => $attr) {
+                    if ($id && ($attribute = Attribute::find($id))) {
+                        $this->attributes()->save($attribute, $attr);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Update the discounts many to many relation.
+     *
+     * @return void
+     */
+    private function touchDiscounts()
+    {
+        $discounts = request()->get('discounts');
+
+        $this->discounts()->detach();
+
+        if ($discounts && is_array($discounts) && !empty($discounts)) {
+            ksort($discounts);
+
+            foreach ($discounts as $data) {
+                foreach ($data as $id => $attributes) {
+                    if ($id && ($discount = Discount::find($id))) {
+                        $this->discounts()->save($discount, $attributes);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Update the taxes many to many relation.
+     *
+     * @return void
+     */
+    private function touchTaxes()
+    {
+        $taxes = request()->get('taxes');
+
+        $this->taxes()->detach();
+
+        if ($taxes && is_array($taxes) && !empty($taxes)) {
+            ksort($taxes);
+
+            foreach ($taxes as $data) {
+                foreach ($data as $id => $attributes) {
+                    if ($id && ($tax = Tax::find($id))) {
+                        $this->taxes()->save($tax, $attributes);
+                    }
+                }
+            }
+        }
     }
 }

@@ -128,6 +128,16 @@ class Category extends Model
     }
 
     /**
+     * Category has and belongs to many products.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function relatedProducts()
+    {
+        return $this->belongsToMany(Category::class, 'product_category', 'category_id', 'product_id')->withTimestamps();
+    }
+
+    /**
      * Sort the query with newest records first.
      *
      * @param Builder $query

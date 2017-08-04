@@ -113,6 +113,7 @@ trait HasDrafts
 
             return $model;
         } catch (Exception $e) {
+            dd($e);
             throw new DraftException(
                 'Could not save the draft for the record!', $e->getCode(), $e
             );
@@ -521,7 +522,7 @@ trait HasDrafts
                     }
                 } else {
                     $this->attachPivotedRelationFromExistingOrNewRelated(
-                        $this, $parameters, $relation, $attributes, $draft
+                        $this, $parameters, $relation, [], $draft
                     );
                 }
             }
@@ -741,7 +742,8 @@ trait HasDrafts
      * @param array $attributes
      * @param Draft|null $draft
      */
-    private function attachPivotedRelationFromExistingOrNewRelated(Model $model, $id, $relation, array $attributes = [], Draft $draft = null) {
+    private function attachPivotedRelationFromExistingOrNewRelated(Model $model, $id, $relation, array $attributes = [], Draft $draft = null)
+    {
         $related = $model->{$relation}()->getRelated()->findOrNew($id);
 
         if ($related->exists) {

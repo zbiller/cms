@@ -6,11 +6,9 @@
     </tr>
 </thead>
 <tbody>
-    @php
-        $blocksInLocation = $model->getBlocksInLocation($location);
-        $shouldInheritBlocks = (bool)$blocksInLocation->count() == 0;
-        $inheritedBlocks = $shouldInheritBlocks ? $model->getInheritedBlocks($location) : null;
-    @endphp
+    @php($blocksInLocation = $model->getBlocksInLocation($location))
+    @php($shouldInheritBlocks = (bool)$blocksInLocation->count() == 0)
+    @php($inheritedBlocks = $shouldInheritBlocks ? $model->getInheritedBlocks($location) : null)
     @if($blocksInLocation->count())
         @foreach($blocksInLocation as $block)
             <tr id="{{ $block->pivot->id }}" data-block-id="{{ $block->id }}" data-index="{{ $block->pivot->id }}" class="{!! $disabled === true ? 'nodrag nodrop' : '' !!}">

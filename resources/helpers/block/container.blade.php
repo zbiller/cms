@@ -40,7 +40,5 @@
         {!! form()->hidden('blocks[#index#][#block_id#][ord]', '#block_ord#', ['class' => 'block-input', 'data-index' => '#index#']) !!}
     </script>
 
-    @php
-        DB::rollBack();
-    @endphp
+    @php(DB::rollBack())
 @endpermission

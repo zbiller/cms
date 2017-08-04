@@ -95,6 +95,8 @@ class ProductsController extends Controller
         return $this->_store(function () use ($request) {
             $this->item = Product::create($request->all());
             $this->redirect = redirect()->route('admin.products.index');
+
+            $this->item->categories()->attach($request->get('categories'));
         }, $request);
     }
 
@@ -105,13 +107,26 @@ class ProductsController extends Controller
     public function edit(Product $product)
     {
         return $this->_edit(function () use ($product) {
+            $categories = Category::withDepth()->defaultOrder()->get();
+            $sets = Set::ordered()->get();
+            $attributes = $product->attributes()->with(['set', 'values'])->get();
+            $discounts = Discount::alphabetically()->active()->forProduct()->get();
+            $taxes = Tax::alphabetically()->active()->forProduct()->get();
+            $currencies = Currency::alphabeticallyByCode()->get();
+
             $this->item = $product;
             $this->title = 'Edit Product';
             $this->view = view('admin.shop.products.edit');
             $this->vars = [
-                'categories' => Category::withDepth()->defaultOrder()->get(),
-                'currencies' => Currency::alphabeticallyByCode()->get(),
+                'categories' => $categories,
+                'sets' => $sets,
+                'attributes' => $attributes,
+                'discounts' => $discounts,
+                'taxes' => $taxes,
+                'currencies' => $currencies,
                 'actives' => Product::$actives,
+                'discountTypes' => Discount::$types,
+                'taxTypes' => Tax::$types,
             ];
         });
     }
@@ -129,6 +144,7 @@ class ProductsController extends Controller
             $this->redirect = redirect()->route('admin.products.index');
 
             $this->item->update($request->all());
+            $this->item->categories()->sync($request->get('categories'));
         }, $request);
     }
 
@@ -288,12 +304,25 @@ class ProductsController extends Controller
             $this->item = $draft->draftable;
             $this->item->publishDraft($draft);
 
+            $categories = Category::withDepth()->defaultOrder()->get();
+            $sets = Set::ordered()->get();
+            $attributes = $this->item->attributes()->with(['set', 'values'])->get();
+            $discounts = Discount::alphabetically()->active()->forProduct()->get();
+            $taxes = Tax::alphabetically()->active()->forProduct()->get();
+            $currencies = Currency::alphabeticallyByCode()->get();
+
             $this->title = 'Product Draft';
             $this->view = view('admin.shop.products.draft');
             $this->vars = [
-                'categories' => Category::withDepth()->defaultOrder()->get(),
-                'currencies' => Currency::alphabeticallyByCode()->get(),
+                'categories' => $categories,
+                'sets' => $sets,
+                'attributes' => $attributes,
+                'discounts' => $discounts,
+                'taxes' => $taxes,
+                'currencies' => $currencies,
                 'actives' => Product::$actives,
+                'discountTypes' => Discount::$types,
+                'taxTypes' => Tax::$types,
             ];
         }, $draft);
     }
@@ -305,13 +334,27 @@ class ProductsController extends Controller
      */
     public function limbo(Request $request, $id)
     {
-        return $this->_limbo(function () {
+        return $this->_limbo(function () use ($id) {
+            $product = Product::findOrFail($id);
+            $categories = Category::withDepth()->defaultOrder()->get();
+            $sets = Set::ordered()->get();
+            $attributes = $product->attributes()->with(['set', 'values'])->get();
+            $discounts = Discount::alphabetically()->active()->forProduct()->get();
+            $taxes = Tax::alphabetically()->active()->forProduct()->get();
+            $currencies = Currency::alphabeticallyByCode()->get();
+
             $this->title = 'Product Draft';
             $this->view = view('admin.shop.products.limbo');
             $this->vars = [
-                'categories' => Category::withDepth()->defaultOrder()->get(),
-                'currencies' => Currency::alphabeticallyByCode()->get(),
+                'categories' => $categories,
+                'sets' => $sets,
+                'attributes' => $attributes,
+                'discounts' => $discounts,
+                'taxes' => $taxes,
+                'currencies' => $currencies,
                 'actives' => Product::$actives,
+                'discountTypes' => Discount::$types,
+                'taxTypes' => Tax::$types,
             ];
         }, function () use ($request) {
             $this->item->saveAsDraft($request->all());
@@ -329,12 +372,25 @@ class ProductsController extends Controller
             $this->item = $revision->revisionable;
             $this->item->rollbackToRevision($revision);
 
+            $categories = Category::withDepth()->defaultOrder()->get();
+            $sets = Set::ordered()->get();
+            $attributes = $this->item->attributes()->with(['set', 'values'])->get();
+            $discounts = Discount::alphabetically()->active()->forProduct()->get();
+            $taxes = Tax::alphabetically()->active()->forProduct()->get();
+            $currencies = Currency::alphabeticallyByCode()->get();
+
             $this->title = 'Product Revision';
             $this->view = view('admin.shop.products.revision');
             $this->vars = [
-                'categories' => Category::withDepth()->defaultOrder()->get(),
-                'currencies' => Currency::alphabeticallyByCode()->get(),
+                'categories' => $categories,
+                'sets' => $sets,
+                'attributes' => $attributes,
+                'discounts' => $discounts,
+                'taxes' => $taxes,
+                'currencies' => $currencies,
                 'actives' => Product::$actives,
+                'discountTypes' => Discount::$types,
+                'taxTypes' => Tax::$types,
             ];
         }, $revision);
     }
@@ -365,7 +421,7 @@ class ProductsController extends Controller
      * @param Request $request
      * @return array
      */
-    public function loadAllAttributes(Request $request)
+    public function saveCustomAttributeValue(Request $request)
     {
         if (!$request->ajax()) {
             return response()->json([
@@ -374,36 +430,21 @@ class ProductsController extends Controller
         }
 
         $this->validate($request, [
-            'product_id' => 'required|numeric',
+            'value_id' => 'required|numeric',
+            'pivot_id' => 'required|numeric',
         ]);
 
         try {
-            $id = $request->get('product_id');
-            $product = Product::withoutGlobalScopes()->findOrFail($id);
+            $value = Value::findOrFail($request->get('value_id'));
+            $pivot = DB::table('product_attribute')->where('id', $request->get('pivot_id'));
 
-            if ($request->has('draft') && ($draft = Draft::find((int)$request->get('draft')))) {
-                DB::beginTransaction();
-
-                $product = $draft->draftable;
-                $product->publishDraft($draft);
-            }
-
-            if ($request->has('revision') && ($revision = Revision::find((int)$request->get('revision')))) {
-                DB::beginTransaction();
-
-                $product = $revision->revisionable;
-                $product->rollbackToRevision($revision);
-            }
+            $pivot->update([
+                'value' => $request->get('value') && $request->get('value') != $value->value ?
+                    $request->get('value') : null
+            ]);
 
             return [
-                'status' => true,
-                'html' => view('admin.shop.products.attributes.items')->with([
-                    'product' => $product,
-                    'sets' => Set::ordered()->get(),
-                    'draft' => isset($draft) ? $draft : null,
-                    'revision' => isset($revision) ? $revision : null,
-                    'disabled' => $request->get('disabled') ? true : false,
-                ])->render(),
+                'status' => true
             ];
         } catch (Exception $e) {
             return [
@@ -459,95 +500,6 @@ class ProductsController extends Controller
      * @param Request $request
      * @return array
      */
-    public function saveCustomAttributeValue(Request $request)
-    {
-        if (!$request->ajax()) {
-            return response()->json([
-                'error' => 'Bad request'
-            ], 400);
-        }
-
-        $this->validate($request, [
-            'value_id' => 'required|numeric',
-            'pivot_id' => 'required|numeric',
-        ]);
-
-        try {
-            $value = Value::findOrFail($request->get('value_id'));
-            $pivot = DB::table('product_attribute')->where('id', $request->get('pivot_id'));
-
-            $pivot->update([
-                'value' => $request->get('value') && $request->get('value') != $value->value ?
-                    $request->get('value') : null
-            ]);
-
-            return [
-                'status' => true
-            ];
-        } catch (Exception $e) {
-            return [
-                'status' => false,
-                'message' => $e->getMessage(),
-            ];
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function loadAllDiscounts(Request $request)
-    {
-        if (!$request->ajax()) {
-            return response()->json([
-                'error' => 'Bad request'
-            ], 400);
-        }
-
-        $this->validate($request, [
-            'product_id' => 'required|numeric',
-        ]);
-
-        try {
-            $id = $request->get('product_id');
-            $product = Product::withoutGlobalScopes()->findOrFail($id);
-
-            if ($request->has('draft') && ($draft = Draft::find((int)$request->get('draft')))) {
-                DB::beginTransaction();
-
-                $product = $draft->draftable;
-                $product->publishDraft($draft);
-            }
-
-            if ($request->has('revision') && ($revision = Revision::find((int)$request->get('revision')))) {
-                DB::beginTransaction();
-
-                $product = $revision->revisionable;
-                $product->rollbackToRevision($revision);
-            }
-
-            return [
-                'status' => true,
-                'html' => view('admin.shop.products.discounts.items')->with([
-                    'product' => $product,
-                    'discounts' => Discount::alphabetically()->active()->forProduct()->get(),
-                    'draft' => isset($draft) ? $draft : null,
-                    'revision' => isset($revision) ? $revision : null,
-                    'disabled' => $request->get('disabled') ? true : false,
-                ])->render(),
-            ];
-        } catch (Exception $e) {
-            return [
-                'status' => false,
-                'message' => $e->getMessage(),
-            ];
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
     public function loadOneDiscount(Request $request)
     {
         if (!$request->ajax()) {
@@ -572,58 +524,6 @@ class ProductsController extends Controller
                     'type' => isset(Discount::$types[$discount->type]) ? Discount::$types[$discount->type] : 'N/A',
                     'url' => route('admin.discounts.edit', $discount->id),
                 ],
-            ];
-        } catch (Exception $e) {
-            return [
-                'status' => false,
-                'message' => $e->getMessage(),
-            ];
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function loadAllTaxes(Request $request)
-    {
-        if (!$request->ajax()) {
-            return response()->json([
-                'error' => 'Bad request'
-            ], 400);
-        }
-
-        $this->validate($request, [
-            'product_id' => 'required|numeric',
-        ]);
-
-        try {
-            $id = $request->get('product_id');
-            $product = Product::withoutGlobalScopes()->findOrFail($id);
-
-            if ($request->has('draft') && ($draft = Draft::find((int)$request->get('draft')))) {
-                DB::beginTransaction();
-
-                $product = $draft->draftable;
-                $product->publishDraft($draft);
-            }
-
-            if ($request->has('revision') && ($revision = Revision::find((int)$request->get('revision')))) {
-                DB::beginTransaction();
-
-                $product = $revision->revisionable;
-                $product->rollbackToRevision($revision);
-            }
-
-            return [
-                'status' => true,
-                'html' => view('admin.shop.products.taxes.items')->with([
-                    'product' => $product,
-                    'taxes' => Tax::alphabetically()->active()->forProduct()->get(),
-                    'draft' => isset($draft) ? $draft : null,
-                    'revision' => isset($revision) ? $revision : null,
-                    'disabled' => $request->get('disabled') ? true : false,
-                ])->render(),
             ];
         } catch (Exception $e) {
             return [

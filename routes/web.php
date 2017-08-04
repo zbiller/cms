@@ -356,22 +356,11 @@ Route::group([
                 Route::get('revision/{revision}', ['as' => 'admin.products.revision', 'uses' => 'ProductsController@revision', 'permissions' => 'revisions-rollback']);
 
                 /**
-                 * Attributes Assignment.
+                 * Assignment Actions.
                  */
-                Route::get('load-all-attributes', ['as' => 'admin.products.load_all_attributes', 'uses' => 'ProductsController@loadAllAttributes', 'permissions' => 'products-edit']);
-                Route::post('load-one-attribute', ['as' => 'admin.products.load_one_attribute', 'uses' => 'ProductsController@loadOneAttribute', 'permissions' => 'products-edit']);
                 Route::post('save-custom-attribute-value', ['as' => 'admin.products.save_custom_attribute_value', 'uses' => 'ProductsController@saveCustomAttributeValue', 'permissions' => 'products-edit']);
-
-                /**
-                 * Discounts Assignment.
-                 */
-                Route::get('load-all-discounts', ['as' => 'admin.products.load_all_discounts', 'uses' => 'ProductsController@loadAllDiscounts', 'permissions' => 'products-edit']);
+                Route::post('load-one-attribute', ['as' => 'admin.products.load_one_attribute', 'uses' => 'ProductsController@loadOneAttribute', 'permissions' => 'products-edit']);
                 Route::post('load-one-discount', ['as' => 'admin.products.load_one_discount', 'uses' => 'ProductsController@loadOneDiscount', 'permissions' => 'products-edit']);
-
-                /**
-                 * Taxes Assignment.
-                 */
-                Route::get('load-all-taxes', ['as' => 'admin.products.load_all_taxes', 'uses' => 'ProductsController@loadAllTaxes', 'permissions' => 'products-edit']);
                 Route::post('load-one-tax', ['as' => 'admin.products.load_one_tax', 'uses' => 'ProductsController@loadOneTax', 'permissions' => 'products-edit']);
             });
 
