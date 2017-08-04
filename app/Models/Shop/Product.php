@@ -3,12 +3,12 @@
 namespace App\Models\Shop;
 
 use App\Models\Model;
-use App\Traits\HasBlocks;
-use App\Traits\HasDrafts;
-use App\Traits\HasDuplicates;
-use App\Traits\HasRevisions;
 use App\Traits\HasUploads;
+use App\Traits\HasBlocks;
 use App\Traits\HasUrl;
+use App\Traits\HasDrafts;
+use App\Traits\HasRevisions;
+use App\Traits\HasDuplicates;
 use App\Traits\HasActivity;
 use App\Traits\HasMetadata;
 use App\Traits\IsCacheable;
@@ -20,8 +20,8 @@ use App\Options\UrlOptions;
 use App\Options\DraftOptions;
 use App\Options\RevisionOptions;
 use App\Options\DuplicateOptions;
-use App\Options\OrderOptions;
 use App\Options\ActivityOptions;
+use App\Options\OrderOptions;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -122,16 +122,6 @@ class Product extends Model
     }
 
     /**
-     * Product has and belongs to many categories.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function categories()
-    {
-        return $this->belongsToMany(Category::class, 'product_category', 'product_id', 'category_id')->withTimestamps();
-    }
-
-    /**
      * Product belongs to currency.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -139,6 +129,16 @@ class Product extends Model
     public function currency()
     {
         return $this->belongsTo(Currency::class, 'currency_id');
+    }
+
+    /**
+     * Product has and belongs to many categories.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'product_category', 'product_id', 'category_id')->withTimestamps();
     }
 
     /**
@@ -185,19 +185,6 @@ class Product extends Model
     }
 
     /**
-     * Get the final price with discounts and taxes applied.
-     *
-     * @return mixed
-     */
-    public function getFinalPriceAttribute()
-    {
-        $this->attributes['price'] = $this->price_with_discounts;
-        $this->attributes['price'] = $this->price_with_taxes;
-
-        return $this->attributes['price'];
-    }
-
-    /**
      * Get all images of a product as a collection.
      *
      * @return \Illuminate\Support\Collection
@@ -211,6 +198,54 @@ class Product extends Model
         }
 
         return $images;
+    }
+
+    /**
+     * Get the first image of a product.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getFirstImageAttribute()
+    {
+        $images = (array)$this->metadata('images');
+
+        if (empty($images)) {
+            return null;
+        }
+
+        $image = array_first($images);
+
+        return isset($image['image']) ? $image['image'] : null;
+    }
+
+    /**
+     * Get the last image of a product.
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getLastImageAttribute()
+    {
+        $images = (array)$this->metadata('images');
+
+        if (empty($images)) {
+            return null;
+        }
+
+        $image = array_last($images);
+
+        return isset($image['image']) ? $image['image'] : null;
+    }
+
+    /**
+     * Get the product's final price with discounts and taxes applied.
+     * First, the discounts are applied to the price and then the taxes.
+     * The discounts and taxes are applied in cascade.
+     *
+     * @return mixed
+     */
+    public function getFinalPriceAttribute()
+    {
+        return $this->attributes['price'] - $this->discount_value + $this->tax_value;
     }
 
     /**
@@ -292,42 +327,6 @@ class Product extends Model
     }
 
     /**
-     * Get the first image of a product.
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function getFirstImageAttribute()
-    {
-        $images = (array)$this->metadata('images');
-
-        if (empty($images)) {
-            return null;
-        }
-
-        $image = array_first($images);
-
-        return isset($image['image']) ? $image['image'] : null;
-    }
-
-    /**
-     * Get the last image of a product.
-     *
-     * @return \Illuminate\Support\Collection
-     */
-    public function getLastImageAttribute()
-    {
-        $images = (array)$this->metadata('images');
-
-        if (empty($images)) {
-            return null;
-        }
-
-        $image = array_last($images);
-
-        return isset($image['image']) ? $image['image'] : null;
-    }
-
-    /**
      * Get the product's specifications mapped into an array.
      *
      * Array format:
@@ -360,7 +359,9 @@ class Product extends Model
 
             $specifications[$set->name][] = [
                 'name' => $attribute->name,
-                'value' => $pivot->value ?: $attribute->value,
+                'value' => $pivot->value ?: (
+                    ($value = Value::find($pivot->value_id)) ? $value->value : 'N/A'
+                ),
             ];
         }
 

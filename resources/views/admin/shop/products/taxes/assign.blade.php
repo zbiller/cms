@@ -1,5 +1,7 @@
 @php($productTaxes = $item->taxes()->get())
 
+{!! form()->hidden('touch_taxes', true) !!}
+
 <div class="box notification" style="margin-bottom: 20px;">
     <span>
         Please note that when applying multiple taxes, the product's final price will increase progressively, applying the taxes in cascade in the order they are assigned.

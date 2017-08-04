@@ -1,3 +1,5 @@
+{!! form()->hidden('touch_attributes', true) !!}
+
 <div class="attributes-container">
     <table class="assign-table attributes-table" cellspacing="0" cellpadding="0" border="0">
         <thead>
@@ -14,7 +16,7 @@
                     @php($value = \App\Models\Shop\Value::find($pivot->value_id))
                     <tr id="{{ $pivot->id }}" data-attribute-id="{{ $attribute->id }}" data-value-id="{{ $pivot->value_id }}" data-index="{{ $pivot->id }}" class="{!! $disabled === true ? 'nodrag nodrop' : '' !!}">
                         <td>{{ $attribute->name ?: 'N/A' }}</td>
-                        <td>{!! form()->textarea('', $pivot->value ?: ($value && $value->exists ? $value->value : ''), ['class' => 'assign-attribute-value assign-textarea-update']) !!}</td>
+                        <td>{!! form()->textarea('', $pivot->value ?: ($value && $value->exists ? $value->value : ''), ['class' => 'assign-attribute-value-update assign-textarea-update']) !!}</td>
                         <td>
                             <a href="{{ route('admin.attributes.edit', ['set' => $attribute->set, 'attribute' => $attribute]) }}" class="assign-view btn yellow no-margin-top no-margin-bottom no-margin-left" target="_blank">
                                 <i class="fa fa-eye"></i>&nbsp; View
@@ -79,7 +81,7 @@
             #attribute_name#
         </td>
         <td>
-            {!! form()->textarea('', '#attribute_value#', ['class' => 'assign-attribute-value assign-textarea-update']) !!}
+            {!! form()->textarea('', '#attribute_value#', ['class' => 'assign-attribute-value-update assign-textarea-update']) !!}
         </td>
         <td>
             <a href="#attribute_url#" class="assign-view btn yellow no-margin-top no-margin-bottom no-margin-left" target="_blank">
@@ -175,7 +177,7 @@
             var set_id = container.find('select.assign-set').val();
             var attribute_id = container.find('select.assign-attribute').val();
             var value_id = container.find('select.assign-value').val();
-            var value = container.find('select.assign-attribute-value').val();
+            var value = container.find('textarea.assign-attribute-value').val();
 
             if (set_id && attribute_id && value_id) {
                 $.ajax({
@@ -222,6 +224,7 @@
                             );
 
                             orderAttributes();
+                            container.find('textarea.assign-attribute-value').val('');
                         } else {
                             init.FlashMessage('error', 'Could not assign the attribute! Please try again.');
                         }
@@ -338,15 +341,15 @@
                 loadAttributeValues($(this));
             });
 
-            $(document).on('click', 'textarea.assign-attribute-value', function (e) {
+            $(document).on('click', 'textarea.assign-attribute-value-update', function (e) {
                 $(this).addClass('expanded');
             });
 
-            $(document).on('mouseleave', 'textarea.assign-attribute-value', function (e) {
+            $(document).on('mouseleave', 'textarea.assign-attribute-value-update', function (e) {
                 $(this).removeClass('expanded');
             });
 
-            $(document).on('keyup', 'textarea.assign-attribute-value', function (e) {
+            $(document).on('keyup', 'textarea.assign-attribute-value-update', function (e) {
                 updateAttributeValue($(this));
             });
         });
