@@ -67,6 +67,31 @@ class CreateShopTables extends Migration
             $table->foreign('currency_id')->references('id')->on('currencies')->onDelete('set null')->onUpdate('set null');
         });
 
+        Schema::create('carts', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('user_id')->unsigned()->index()->nullable();
+
+            $table->string('user_token')->unique()->nullable();
+            $table->string('identifier')->unique();
+
+            $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+        });
+
+        Schema::create('cart_items', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('cart_id')->unsigned()->index()->nullable();
+            $table->integer('product_id')->unsigned()->index()->nullable();
+
+            $table->integer('quantity')->default(1);
+
+            $table->timestamps();
+
+            $table->foreign('cart_id')->references('id')->on('carts')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
+        });
+
         Schema::create('sets', function (Blueprint $table) {
             $table->increments('id');
 
@@ -212,6 +237,8 @@ class CreateShopTables extends Migration
         Schema::dropIfExists('values');
         Schema::dropIfExists('attributes');
         Schema::dropIfExists('sets');
+        Schema::dropIfExists('cart_items');
+        Schema::dropIfExists('carts');
         Schema::dropIfExists('products');
         Schema::dropIfExists('categories');
         Schema::dropIfExists('currencies');

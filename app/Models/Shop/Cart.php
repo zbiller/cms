@@ -2,13 +2,16 @@
 
 namespace App\Models\Shop;
 
+use DB;
+use Exception;
 use App\Models\Model;
-use App\Traits\HasActivity;
+use App\Models\Auth\User;
+use App\Models\Shop\Cart\Item;
 use App\Traits\IsCacheable;
+use App\Exceptions\CartException;
 
 class Cart extends Model
 {
-    use HasActivity;
     use IsCacheable;
 
     /**
@@ -16,7 +19,7 @@ class Cart extends Model
      *
      * @var string
      */
-    protected $table = 'cart';
+    protected $table = 'carts';
 
     /**
      * The attributes that mass assignable.
@@ -24,10 +27,356 @@ class Cart extends Model
      * @var array
      */
     protected $fillable = [
-        'set_id',
-        'name',
-        'slug',
-        'value',
-        'type',
+        'user_id',
+        'user_token',
+        'identifier',
     ];
+
+    /**
+     * The constants defining the type of a "total".
+     *
+     * @const
+     */
+    const TOTAL_RAW = 1;
+    const TOTAL_SUB = 2;
+    const TOTAL_GRAND = 3;
+
+    /**
+     * @var Cart
+     */
+    protected static $cart;
+
+    /**
+     * @var User
+     */
+    protected static $user;
+
+    /**
+     * @var string
+     */
+    protected static $token;
+
+    /**
+     * @var string
+     */
+    protected static $identifier;
+
+    /**
+     * A cart has many cart items.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function items()
+    {
+        return $this->hasMany(Item::class, 'cart_id');
+    }
+
+    /**
+     * Get the cart's total price (raw | sub | grand).
+     * Depending on the type specified, the "raw total", "sub total" or "grand_total" will be returned.
+     *
+     * @param string $currency
+     * @param int $type
+     * @return float|int
+     */
+    public static function getTotal($currency = 'USD', $type)
+    {
+        $total = 0;
+
+        self::$cart = static::identifyCart();
+
+        foreach (self::$cart->items()->with('product')->get() as $item) {
+            $product = $item->product;
+
+            switch ($type) {
+                case static::TOTAL_GRAND;
+                    $price = $product->final_price;
+                    break;
+                case static::TOTAL_SUB;
+                    $price = $product->price_with_discounts;
+                    break;
+                default:
+                    $price = $product->price_with_discounts;
+                    break;
+            }
+
+            $total += Currency::convert(
+                $price, $product->currency->code, $currency
+            ) * $item->quantity;
+        }
+
+        return $total;
+    }
+
+    /**
+     * Get the cart's raw total price.
+     * The total represented by the "raw total" does not include discounts or taxes.
+     *
+     * @param string $currency
+     * @return float|int
+     */
+    public static function getRawTotal($currency = 'USD')
+    {
+        return static::getTotal($currency, static::TOTAL_RAW);
+    }
+
+    /**
+     * Get the cart's sub total price.
+     * The total represented by the "sub total" only includes discounts, but not taxes.
+     *
+     * @param string $currency
+     * @return float|int
+     */
+    public static function getSubTotal($currency = 'USD')
+    {
+        return static::getTotal($currency, static::TOTAL_SUB);
+    }
+
+    /**
+     * Get the cart's final total price.
+     * The total represented by the "grand total" also includes discounts and taxes.
+     *
+     * @param string $currency
+     * @return float|int
+     */
+    public static function getGrandTotal($currency = 'USD')
+    {
+        return static::getTotal($currency, static::TOTAL_GRAND);
+    }
+
+    /**
+     * Get the number of different items in a cart instance.
+     *
+     * @return int
+     */
+    public static function getItemsCount()
+    {
+        self::$cart = static::identifyCart();
+
+        return self::$cart->items()->count();
+    }
+
+    /**
+     * Add a product to a cart instance.
+     *
+     * @param Product $product
+     * @param int $quantity
+     * @return bool
+     * @throws CartException
+     */
+    public static function addProduct(Product $product, $quantity = 1)
+    {
+        if (!$product->exists) {
+            throw CartException::invalidProductInstance();
+        }
+
+        if ($product->quantity < $quantity) {
+            throw CartException::quantityExceeded();
+        }
+
+        try {
+            self::$cart = static::identifyCart();
+
+            return DB::transaction(function () use ($product, $quantity) {
+                if ($item = self::$cart->items()->where('product_id', $product->id)->first()) {
+                    $item->update([
+                        'quantity' => $item->quantity + $quantity,
+                    ]);
+                } else {
+                    self::$cart->items()->create([
+                        'product_id' => $product->id,
+                        'quantity' => $quantity
+                    ]);
+                }
+
+                $product->quantity -= $quantity;
+                $product->save();
+
+                return true;
+            });
+        } catch (Exception $e) {
+            throw new CartException(
+                'Could not add the product to cart!'
+            );
+        }
+    }
+
+    /**
+     * Add a product to a cart instance.
+     *
+     * @param Product $product
+     * @param int $quantity
+     * @return bool
+     * @throws CartException
+     */
+    public static function updateProduct(Product $product, $quantity)
+    {
+        if (!$product->exists) {
+            throw CartException::invalidProductInstance();
+        }
+
+        try {
+            self::$cart = static::identifyCart();
+
+            return DB::transaction(function () use ($product, $quantity) {
+                if ($item = self::$cart->items()->where('product_id', $product->id)->first()) {
+                    if ($quantity > $item->quantity) {
+                        $product->quantity -= $quantity - $item->quantity;
+                    } elseif ($quantity < $item->quantity) {
+                        $product->quantity += $item->quantity - $quantity;
+                    }
+
+                    $item->update([
+                        'quantity' => $quantity
+                    ]);
+
+                    $product->save();
+                }
+
+                return true;
+            });
+        } catch (Exception $e) {
+            throw new CartException(
+                'Could not update the product from cart!'
+            );
+        }
+    }
+
+    /**
+     * Remove a product from a cart instance.
+     *
+     * @param Product $product
+     * @return bool
+     * @throws CartException
+     */
+    public static function removeProduct(Product $product)
+    {
+        if (!$product->exists) {
+            throw CartException::invalidProductInstance();
+        }
+
+        try {
+            self::$cart = static::identifyCart();
+
+            return DB::transaction(function () use ($product) {
+                if ($item = self::$cart->items()->where('product_id', $product->id)->first()) {
+                    $product->quantity += $item->quantity;
+
+                    $product->save();
+                    $item->delete();
+                }
+
+                return true;
+            });
+        } catch (Exception $e) {
+            throw new CartException(
+                'Could not remove the product from cart!'
+            );
+        }
+    }
+
+    /**
+     * Remove all products from a cart instance.
+     *
+     * @return bool
+     * @throws CartException
+     */
+    public static function removeAllProducts()
+    {
+        try {
+            self::$cart = static::identifyCart();
+
+            return DB::transaction(function () {
+                foreach (self::$cart->items()->with('product')->get() as $item) {
+                    $product = $item->product;
+                    $product->quantity += $item->quantity;
+
+                    $product->save();
+                    $item->delete();
+                }
+
+                return true;
+            });
+        } catch (Exception $e) {
+            throw new CartException(
+                'Could not remove the products from cart!'
+            );
+        }
+    }
+
+    /**
+     * Get the correct cart instance if exists.
+     * Otherwise create a new one to be used.
+     *
+     * @return Cart
+     */
+    protected static function identifyCart()
+    {
+        if (!auth()->check()) {
+            self::$user = auth()->user();
+        } else {
+            self::$token = static::getToken();
+        }
+
+        self::$identifier = static::getIdentifier();
+
+        if (!(self::$cart = static::where('identifier', self::$identifier)->first())) {
+            self::$cart = static::create([
+                'user_id' => self::$user,
+                'user_token' => self::$token,
+                'identifier' => self::$identifier,
+            ]);
+        }
+
+        return self::$cart;
+    }
+
+    /**
+     * Get a new or existing identifier for the cart.
+     *
+     * @return mixed|string
+     */
+    private static function getIdentifier()
+    {
+        $identifier = str_random(10);
+        $condition = null;
+
+        if (self::$user) {
+            $condition = ['user_id' => self::$user];
+        } elseif (self::$token) {
+            $condition = ['user_token' => self::$token];
+        }
+
+        if ($cart = static::where($condition)->first()) {
+            return $cart->identifier;
+        }
+
+        while (static::where('identifier', $identifier)->count() > 0) {
+            $identifier = str_random(20);
+        }
+
+        return $identifier;
+    }
+
+    /**
+     * Get a new or existing unique cart token from the user's cookie storage.
+     *
+     * @return string
+     */
+    private static function getToken()
+    {
+        if (isset($_COOKIE['cart_user_token'])) {
+            return $_COOKIE['cart_user_token'];
+        }
+
+        $token = str_random(20);
+
+        while (static::where('user_token', $token)->count() > 0) {
+            $token = str_random(20);
+        }
+
+        setcookie('cart_user_token', $token, time()+ 60 * 60 * 24 * 30 * 12, '/');
+
+        return $token;
+    }
 }

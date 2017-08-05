@@ -22,6 +22,7 @@ use App\Options\RevisionOptions;
 use App\Options\DuplicateOptions;
 use App\Options\ActivityOptions;
 use App\Options\OrderOptions;
+use App\Exceptions\CartException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -417,6 +418,47 @@ class Product extends Model
     public function scopeInactive($query)
     {
         $query->where('active', self::ACTIVE_NO);
+    }
+
+    /**
+     * Add the product to the identified cart instance.
+     *
+     * @param int $quantity
+     * @return $this
+     * @throws CartException
+     */
+    public function addToCart($quantity = 1)
+    {
+        Cart::addProduct($this, $quantity);
+
+        return $this;
+    }
+
+    /**
+     * Remove the product from the identified cart instance.
+     *
+     * @return $this
+     * @throws CartException
+     */
+    public function removeFromCart()
+    {
+        Cart::removeProduct($this);
+
+        return $this;
+    }
+
+    /**
+     * Update the product's quantity inside the identified cart instance.
+     *
+     * @param int $quantity
+     * @return $this
+     * @throws CartException
+     */
+    public function updateInCart($quantity)
+    {
+        Cart::updateProduct($this, $quantity);
+
+        return $this;
     }
 
     /**
