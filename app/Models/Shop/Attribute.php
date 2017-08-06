@@ -52,6 +52,10 @@ class Attribute extends Model
     {
         parent::boot();
 
+        static::addGlobalScope('set', function (Builder $builder) {
+            $builder->with('set');
+        });
+
         static::addGlobalScope('values', function (Builder $builder) {
             $builder->with('values');
         });

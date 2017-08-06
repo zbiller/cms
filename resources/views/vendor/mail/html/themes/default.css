@@ -190,7 +190,7 @@ img {
     -premailer-width: 100%;
 }
 
-.table th {
+.header-cell {
     border-bottom: 1px solid #EDEFF2;
     padding-bottom: 8px;
 }
@@ -207,6 +207,7 @@ img {
 }
 
 .footer-cell {
+    border-top: 1px solid #EDEFF2;
     padding: 25px 25px 15px 25px;
 }
 

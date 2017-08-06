@@ -50,7 +50,7 @@ class ProductsController extends Controller
         return $this->_index(function () use ($request, $filter, $sort) {
             $this->isOrderableOrNot($request);
 
-            $query = Product::with(['category', 'currency']);
+            $query = Product::with('category');
 
             if ($this->orderable) {
                 $this->items = $query->whereCategory($request->get('category'))->ordered()->get();
@@ -109,7 +109,7 @@ class ProductsController extends Controller
         return $this->_edit(function () use ($product) {
             $categories = Category::withDepth()->defaultOrder()->get();
             $sets = Set::ordered()->get();
-            $attributes = $product->attributes()->with(['set', 'values'])->get();
+            $attributes = $product->attributes()->get();
             $discounts = Discount::alphabetically()->active()->forProduct()->get();
             $taxes = Tax::alphabetically()->active()->forProduct()->get();
             $currencies = Currency::alphabeticallyByCode()->get();
@@ -202,7 +202,7 @@ class ProductsController extends Controller
     public function deleted(Request $request, ProductFilter $filter, ProductSort $sort)
     {
         return $this->_deleted(function () use ($request, $filter, $sort) {
-            $this->items = Product::with(['category', 'currency'])->onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Product::with('category')->onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
             $this->title = 'Deleted Products';
             $this->view = view('admin.shop.products.deleted');
             $this->vars = [
@@ -283,7 +283,7 @@ class ProductsController extends Controller
     public function drafts(Request $request, ProductFilter $filter, ProductSort $sort)
     {
         return $this->_drafts(function () use ($request, $filter, $sort) {
-            $this->items = Product::with(['category', 'currency'])->onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Product::with('category')->onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
             $this->title = 'Drafted Products';
             $this->view = view('admin.shop.products.drafts');
             $this->vars = [
@@ -306,7 +306,7 @@ class ProductsController extends Controller
 
             $categories = Category::withDepth()->defaultOrder()->get();
             $sets = Set::ordered()->get();
-            $attributes = $this->item->attributes()->with(['set', 'values'])->get();
+            $attributes = $this->item->attributes()->get();
             $discounts = Discount::alphabetically()->active()->forProduct()->get();
             $taxes = Tax::alphabetically()->active()->forProduct()->get();
             $currencies = Currency::alphabeticallyByCode()->get();
@@ -338,7 +338,7 @@ class ProductsController extends Controller
             $product = Product::findOrFail($id);
             $categories = Category::withDepth()->defaultOrder()->get();
             $sets = Set::ordered()->get();
-            $attributes = $product->attributes()->with(['set', 'values'])->get();
+            $attributes = $product->attributes()->get();
             $discounts = Discount::alphabetically()->active()->forProduct()->get();
             $taxes = Tax::alphabetically()->active()->forProduct()->get();
             $currencies = Currency::alphabeticallyByCode()->get();
@@ -374,7 +374,7 @@ class ProductsController extends Controller
 
             $categories = Category::withDepth()->defaultOrder()->get();
             $sets = Set::ordered()->get();
-            $attributes = $this->item->attributes()->with(['set', 'values'])->get();
+            $attributes = $this->item->attributes()->get();
             $discounts = Discount::alphabetically()->active()->forProduct()->get();
             $taxes = Tax::alphabetically()->active()->forProduct()->get();
             $currencies = Currency::alphabeticallyByCode()->get();

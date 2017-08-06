@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Console\Commands\CartReminderCommand;
 use App\Console\Commands\UploadsLinkCommand;
 use App\Console\Commands\BlockMakeCommand;
 use App\Console\Commands\CurrencyUpdateCommand;
@@ -22,6 +23,7 @@ class Kernel extends ConsoleKernel
         BlockMakeCommand::class,
         CurrencyUpdateCommand::class,
         CartCleanCommand::class,
+        CartReminderCommand::class,
         ActivityCleanCommand::class,
     ];
 
@@ -33,7 +35,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        //$schedule->command('inspire')->hourly();
+        $schedule->command(CurrencyUpdateCommand::class)->daily()
+            ->withoutOverlapping()->emailOutputTo(setting()->value('company-email'));
     }
 
     /**

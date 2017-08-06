@@ -2,6 +2,7 @@
 
 namespace App\Models\Shop;
 
+use App\Mail\UserCartReminder;
 use DB;
 use Exception;
 use Carbon\Carbon;
@@ -13,6 +14,8 @@ use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
 use App\Scopes\WithCartTotalAndCountScope;
 use App\Exceptions\CartException;
+use Illuminate\Database\Eloquent\Builder;
+use Mail;
 
 class Cart extends Model
 {
@@ -36,6 +39,15 @@ class Cart extends Model
         'user_id',
         'user_token',
         'identifier',
+    ];
+
+    /**
+     * The relations that are eager-loaded.
+     *
+     * @var array
+     */
+    protected $with = [
+        'user',
     ];
 
     /**
@@ -88,7 +100,7 @@ class Cart extends Model
         static::addGlobalScope(new WithCartTotalAndCountScope);
 
         static::deleting(function (Cart $cart) {
-            foreach ($cart->items()->with('product')->get() as $item) {
+            foreach ($cart->items()->get() as $item) {
                 $product = $item->product;
                 $product->quantity += $item->quantity;
 
@@ -115,6 +127,90 @@ class Cart extends Model
     public function items()
     {
         return $this->hasMany(Item::class, 'cart_id');
+    }
+
+    /**
+     * Sort the query with newest records first.
+     *
+     * @param Builder $query
+     */
+    public function scopeNewest($query)
+    {
+        $query->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Filter the query by existing users.
+     *
+     * @param Builder $query
+     */
+    public function scopeOnlyUsers($query)
+    {
+        $query->whereNotNull('user_id');
+    }
+
+    /**
+     * Filter the query by guests.
+     *
+     * @param Builder $query
+     */
+    public function scopeOnlyGuests($query)
+    {
+        $query->whereNull('user_id');
+    }
+
+    /**
+     * Get the raw total of a given cart instance.
+     *
+     * @return float
+     */
+    public function getRawTotalAttribute()
+    {
+        $total = 0;
+
+        foreach ($this->items()->get() as $item) {
+            $total += $item->quantity * Currency::convert(
+                $item->product->price, $item->product->currency->code, config('shop.price.default_currency')
+            );
+        }
+
+        return $total;
+    }
+
+    /**
+     * Get the grand total of a given cart instance.
+     *
+     * @return float
+     */
+    public function getSubTotalAttribute()
+    {
+        $total = 0;
+
+        foreach ($this->items()->get() as $item) {
+            $total += $item->quantity * Currency::convert(
+                $item->product->price_with_discounts, $item->product->currency->code, config('shop.price.default_currency')
+            );
+        }
+
+        return $total;
+    }
+
+    /**
+     * Get the grand total of a given cart instance.
+     *
+     * @return float
+     */
+    public function getGrandTotalAttribute()
+    {
+        $total = 0;
+
+        foreach ($this->items()->get() as $item) {
+            $total += $item->quantity * Currency::convert(
+                $item->product->final_price, $item->product->currency->code, config('shop.price.default_currency')
+            );
+        }
+
+        return $total;
     }
 
     /**
@@ -176,7 +272,7 @@ class Cart extends Model
             self::$cart = static::getCart();
         }
 
-        foreach (self::$cart->items()->with('product')->get() as $item) {
+        foreach (self::$cart->items()->get() as $item) {
             $product = $item->product;
 
             switch ($type) {
@@ -388,7 +484,7 @@ class Cart extends Model
             }
 
             return DB::transaction(function () {
-                foreach (self::$cart->items()->with('product')->get() as $item) {
+                foreach (self::$cart->items()->get() as $item) {
                     $product = $item->product;
                     $product->quantity += $item->quantity;
 
@@ -438,6 +534,39 @@ class Cart extends Model
         } catch (Exception $e) {
             throw new CartException(
                 'Could not clean up the old carts! Please try again.', $e->getCode(), $e
+            );
+        }
+    }
+
+    /**
+     * Attempt to clean old shopping carts.
+     *
+     * A cart qualifies as being old if:
+     * "created_at" field is smaller than the current date minus the number of days set in the
+     * "cart.delete_records_older_than" key of config/shop.php file.
+     *
+     * @return bool|void
+     * @throws CartException
+     */
+    public static function sendReminders()
+    {
+        set_time_limit(0);
+
+        $days = (int)config('shop.cart.remind_only_older_than');
+
+        try {
+            $date = Carbon::now()->subDays($days)->format('Y-m-d H:i:s');
+
+            foreach (static::onlyUsers()->where('carts.created_at', '<', $date)->get() as $cart) {
+                Mail::to($cart->user)->queue(
+                    new UserCartReminder('cart-reminder', $cart->user, $cart)
+                );
+            }
+
+            return true;
+        } catch (Exception $e) {
+            throw new CartException(
+                'Could not send the reminders to every user! Please try again.', $e->getCode(), $e
             );
         }
     }

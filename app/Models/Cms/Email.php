@@ -67,6 +67,7 @@ class Email extends Model
      */
     const TYPE_PASSWORD_RECOVERY = 1;
     const TYPE_EMAIL_VERIFICATION = 2;
+    const TYPE_USER_CART_REMINDER = 3;
 
     /**
      * The property defining the email types.
@@ -76,6 +77,7 @@ class Email extends Model
     public static $types = [
         self::TYPE_PASSWORD_RECOVERY => 'Password Recovery',
         self::TYPE_EMAIL_VERIFICATION => 'Email Verification',
+        self::TYPE_USER_CART_REMINDER => 'Cart Reminder',
     ];
 
     /**
@@ -126,6 +128,18 @@ class Email extends Model
                 'email_verification_url',
             ],
         ],
+        self::TYPE_USER_CART_REMINDER => [
+            'class' => 'App\Mail\UserCartReminder',
+            'view' => 'emails.user_cart_reminder',
+            'preview_image' => 'user_cart_reminder.jpg',
+            'variables' => [
+                'first_name',
+                'last_name',
+                'full_name',
+                'cart_contents',
+                'home_url',
+            ],
+        ],
     ];
 
     /**
@@ -158,6 +172,16 @@ class Email extends Model
             'name' => 'Full Name',
             'label' => 'The full name of the logged in user.',
             'description' => 'If used in an email, but no logged in user exists, this variable will not render anything.',
+        ],
+        'cart_contents' => [
+            'name' => 'Cart Contents',
+            'label' => 'The contents of a user\'s shopping cart.',
+            'description' => 'This automatically generates the HTML for a table displaying the products and their quantities from inside a user\'s shopping cart',
+        ],
+        'home_url' => [
+            'name' => 'Home URL',
+            'label' => 'The home URL of the site.',
+            'description' => 'This URL will direct the users to the site\'s homepage.',
         ],
         'reset_password_url' => [
             'name' => 'Reset Password URL',

@@ -70,6 +70,15 @@ class Product extends Model
     ];
 
     /**
+     * The relations that are eager-loaded.
+     *
+     * @var array
+     */
+    protected $with = [
+        'currency',
+    ];
+
+    /**
      * The constants defining the category visibility.
      *
      * @const

@@ -417,6 +417,12 @@ class PermissionsSeeder extends Seeder
                 'type' => Permission::TYPE_ADMIN,
                 'name' => 'carts-clean',
             ],
+            'Remind' => [
+                'group' => 'Carts',
+                'label' => 'Remind',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'carts-remind',
+            ],
         ],
         'Categories' => [
             'List' => [

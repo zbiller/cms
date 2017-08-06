@@ -28,7 +28,16 @@ return [
          *
          * If set to "null" or "0", no past carts will be deleted whatsoever.
          */
-        'delete_records_older_than' => 30
+        'delete_records_older_than' => 30,
+
+        /**
+         * This option accepts an integer, representing the number of days.
+         *
+         * When the "send reminders" operation is fired, only users having created their cart earlier that this value will be notified.
+         *
+         * If set to "null" or "0", every user with an ongoing shopping cart will be notified.
+         */
+        'remind_only_older_than' => null,
     ],
 
 ];

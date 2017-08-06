@@ -30,6 +30,15 @@ class Item extends Model
     ];
 
     /**
+     * The relations that are eager-loaded.
+     *
+     * @var array
+     */
+    protected $with = [
+        'product',
+    ];
+
+    /**
      * Cart item belongs to cart.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Admin\Shop;
 
-use App\Models\Auth\Activity;
-use DB;
 use Exception;
 use App\Http\Controllers\Controller;
 use App\Models\Auth\User;
@@ -12,8 +10,6 @@ use App\Traits\CanCrud;
 use App\Http\Filters\CartFilter;
 use App\Http\Sorts\CartSort;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\Paginator;
-use Illuminate\Support\Collection;
 
 class CartsController extends Controller
 {
@@ -36,24 +32,29 @@ class CartsController extends Controller
             $query = Cart::query();
             $paginate = true;
 
-            if (($totalFrom = $request->get('total')[0]) && $totalFrom > 0) {
-                $query->having('total', '>=', $totalFrom);
+            if ($request->has('total_from')) {
+                $query->having('total', '>=', (float)$request->get('total_from'));
                 $paginate = false;
             }
 
-            if (($totalTo = $request->get('total')[1]) && $totalTo > 0) {
-                $query->having('total', '<=', $totalTo);
+            if ($request->has('total_to')) {
+                $query->having('total', '<=', (float)$request->get('total_to'));
                 $paginate = false;
             }
 
-            if (($countFrom = $request->get('count')[0]) && $countFrom > 0) {
-                $query->having('count', '>=', $countFrom);
+            if ($request->has('count_from')) {
+                $query->having('count', '>=', (int)$request->get('count_from'));
                 $paginate = false;
             }
 
-            if (($countTo = $request->get('count')[1]) && $countTo > 0) {
-                $query->having('count', '<=', $countTo);
+            if ($request->has('count_to')) {
+                $query->having('count', '<=', (int)$request->get('count_to'));
                 $paginate = false;
+            }
+
+            if ($request->has('user') && $request->get('user') == 'guests_only') {
+                $query->whereNull('user_id');
+                $request = new Request($request->except('user'));
             }
 
             $query->filtered($request, $filter)->sorted($request, $sort);
@@ -80,7 +81,7 @@ class CartsController extends Controller
             $this->view = view('admin.shop.carts.view');
             $this->vars = [
                 'users' => User::alphabetically()->get(),
-                'items' => $this->item->items()->with('product')->get(),
+                'items' => $this->item->items()->get(),
             ];
         });
     }
@@ -112,6 +113,22 @@ class CartsController extends Controller
             flash()->success('The records were successfully cleaned up!');
         } catch (Exception $e) {
             flash()->error('Could not clean up the records! Please try again.');
+        }
+
+        return back();
+    }
+
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function remind()
+    {
+        try {
+            Cart::sendReminders();
+
+            flash()->success('The reminders have been successfully sent!');
+        } catch (Exception $e) {
+            flash()->error('Could not send the reminders to every user! Please try again.');
         }
 
         return back();

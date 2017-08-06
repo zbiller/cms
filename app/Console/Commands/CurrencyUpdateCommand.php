@@ -37,14 +37,13 @@ class CurrencyUpdateCommand extends Command
 
         foreach (Currency::all() as $currency) {
             try {
-                $currency->exchange_rate = Swap::latest(
-                    "{$currency->code}/{$defaultCurrency}"
-                )->getValue();
+                $value = Swap::latest("{$currency->code}/{$defaultCurrency}")->getValue();
+                $currency->exchange_rate = $value;
 
                 $currency->save();
                 $count++;
 
-                $this->info("{$currency->code}/{$defaultCurrency} currency exchange rate updated.");
+                $this->info("{$currency->code}/{$defaultCurrency} currency exchange rate updated. Exchange rate = " . number_format($value, 4));
             } catch (ChainException $e) {
                 $this->info("{$currency->code}/{$defaultCurrency} currency exchange rate update failed. The {$currency->code} is obsolete.");
             }
