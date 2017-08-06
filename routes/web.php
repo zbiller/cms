@@ -421,6 +421,18 @@ Route::group([
             });
 
             /**
+             * CRUD Carts.
+             */
+            Route::group([
+                'prefix' => 'carts',
+            ], function () {
+                Route::get('/', ['as' => 'admin.carts.index', 'uses' => 'CartsController@index', 'permissions' => 'carts-list']);
+                Route::get('view/{cart}', ['as' => 'admin.carts.view', 'uses' => 'CartsController@view', 'permissions' => 'carts-view']);
+                Route::delete('destroy/{cart}', ['as' => 'admin.carts.destroy', 'uses' => 'CartsController@destroy', 'permissions' => 'carts-delete']);
+                Route::delete('clean', ['as' => 'admin.carts.clean', 'uses' => 'CartsController@clean', 'permissions' => 'carts-clean']);
+            });
+
+            /**
              * CRUD Sets.
              */
             Route::group([

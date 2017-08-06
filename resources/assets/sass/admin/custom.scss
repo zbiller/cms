@@ -394,3 +394,12 @@ td .upload-aligned-image {
         height: 150px !important;
     }
 }
+
+/* View Styles */
+.actions-view {
+    width: 75px !important;
+
+    @include media-query('tablet') {
+        width: 75px !important;
+    }
+}

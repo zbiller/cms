@@ -385,6 +385,28 @@ Breadcrumbs::register('admin.categories.limbo', function($breadcrumbs, $draft) {
 
 /**
 | ---------------------------------------------------------------------------------------------------------------------
+| Carts
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+/* Home > Carts */
+Breadcrumbs::register('admin.carts.index', function($breadcrumbs) {
+    $breadcrumbs->parent('admin');
+    $breadcrumbs->push('Carts', route('admin.carts.index'));
+});
+
+/* Home > Carts > View */
+Breadcrumbs::register('admin.carts.view', function($breadcrumbs, $cart) {
+    $breadcrumbs->parent('admin.carts.index');
+    $breadcrumbs->push('View', route('admin.carts.view', $cart));
+});
+/**
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+
+
+
+/**
+| ---------------------------------------------------------------------------------------------------------------------
 | Sets
 | ---------------------------------------------------------------------------------------------------------------------
  */

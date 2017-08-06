@@ -392,6 +392,32 @@ class PermissionsSeeder extends Seeder
                 'name' => 'products-force-delete',
             ],
         ],
+        'Carts' => [
+            'List' => [
+                'group' => 'Carts',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'carts-list',
+            ],
+            'View' => [
+                'group' => 'Carts',
+                'label' => 'View',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'carts-view',
+            ],
+            'Delete' => [
+                'group' => 'Carts',
+                'label' => 'Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'carts-delete',
+            ],
+            'Clean' => [
+                'group' => 'Carts',
+                'label' => 'Clean',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'carts-clean',
+            ],
+        ],
         'Categories' => [
             'List' => [
                 'group' => 'Categories',
@@ -643,17 +669,17 @@ class PermissionsSeeder extends Seeder
                 'type' => Permission::TYPE_ADMIN,
                 'name' => 'activity-list',
             ],
-            'Clean' => [
-                'group' => 'Activity',
-                'label' => 'Clean',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'activity-clean',
-            ],
             'Delete' => [
                 'group' => 'Activity',
                 'label' => 'Delete',
                 'type' => Permission::TYPE_ADMIN,
                 'name' => 'activity-delete',
+            ],
+            'Clean' => [
+                'group' => 'Activity',
+                'label' => 'Clean',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'activity-clean',
             ],
         ],
         'Countries' => [

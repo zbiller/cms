@@ -8,11 +8,15 @@ use App\Models\Model;
 use App\Models\Auth\User;
 use App\Models\Shop\Cart\Item;
 use App\Traits\IsCacheable;
+use App\Traits\IsFilterable;
+use App\Traits\IsSortable;
 use App\Exceptions\CartException;
 
 class Cart extends Model
 {
     use IsCacheable;
+    use IsFilterable;
+    use IsSortable;
 
     /**
      * The database table.
@@ -33,6 +37,15 @@ class Cart extends Model
     ];
 
     /**
+     * The accessor attributes to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'total'
+    ];
+
+    /**
      * The constants defining the type of a "total".
      *
      * @const
@@ -42,24 +55,63 @@ class Cart extends Model
     const TOTAL_GRAND = 3;
 
     /**
+     * The cart instance identified for the current user browsing.
+     *
      * @var Cart
      */
     protected static $cart;
 
     /**
+     * The authenticated user, if any.
+     *
      * @var User
      */
     protected static $user;
 
     /**
+     * The user token generated for un-authenticated users.
+     *
      * @var string
      */
     protected static $token;
 
     /**
+     * The cart's identifier value.
+     *
      * @var string
      */
     protected static $identifier;
+
+    /**
+     * Boot the model.
+     * After deleting a cart instance, update the products quantities.
+     *
+     * @return void
+     */
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleting(function (Cart $cart) {
+            foreach ($cart->items()->with('product')->get() as $item) {
+                $product = $item->product;
+                $product->quantity += $item->quantity;
+
+                $product->save();
+            }
+        });
+    }
+
+
+    /**
+     * A cart belongs to a user.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     /**
      * A cart has many cart items.
@@ -69,6 +121,36 @@ class Cart extends Model
     public function items()
     {
         return $this->hasMany(Item::class, 'cart_id');
+    }
+
+    /**
+     * Get the grand total of a given cart (in USD).
+     *
+     * @return float|int
+     */
+    public function getTotalAttribute()
+    {
+        $total = 0;
+
+        foreach ($this->items()->with('product')->get() as $item) {
+            $product = $item->product;
+
+            $total += Currency::convert(
+                    $product->final_price, $product->currency->code, 'USD'
+                ) * $item->quantity;
+        }
+
+        return $total;
+    }
+
+    /**
+     * Get the grand total of a given cart (in USD).
+     *
+     * @return float|int
+     */
+    public function getCountAttribute()
+    {
+        return $this->items()->count();
     }
 
     /**
@@ -312,7 +394,7 @@ class Cart extends Model
      */
     protected static function identifyCart()
     {
-        if (!auth()->check()) {
+        if (auth()->check()) {
             self::$user = auth()->user();
         } else {
             self::$token = static::getToken();
@@ -322,8 +404,8 @@ class Cart extends Model
 
         if (!(self::$cart = static::where('identifier', self::$identifier)->first())) {
             self::$cart = static::create([
-                'user_id' => self::$user,
-                'user_token' => self::$token,
+                'user_id' => self::$user ? self::$user->id : null,
+                'user_token' => self::$token ?: null,
                 'identifier' => self::$identifier,
             ]);
         }
@@ -342,7 +424,7 @@ class Cart extends Model
         $condition = null;
 
         if (self::$user) {
-            $condition = ['user_id' => self::$user];
+            $condition = ['user_id' => self::$user->id];
         } elseif (self::$token) {
             $condition = ['user_token' => self::$token];
         }
