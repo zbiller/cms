@@ -175,6 +175,7 @@ return [
         Spatie\Analytics\AnalyticsServiceProvider::class,
         Spatie\LaravelImageOptimizer\ImageOptimizerServiceProvider::class,
         DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
+        Swap\Laravel\SwapServiceProvider::class,
 
         /*
          * Application Service Providers
@@ -252,6 +253,7 @@ return [
         'Analytics' => Spatie\Analytics\AnalyticsFacade::class,
         'ImageOptimizer' => Spatie\LaravelImageOptimizer\ImageOptimizerFacade::class,
         'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
+        'Swap' => Swap\Laravel\Facades\Swap::class,
 
         /**
          * Application Facades

@@ -19,7 +19,10 @@ class CreateShopTables extends Migration
             $table->increments('id');
 
             $table->string('name')->unique();
-            $table->string('code')->unique();
+            $table->string('code')->index()->unique();
+            $table->string('symbol');
+            $table->string('format');
+            $table->float('exchange_rate', 8, 4);
 
             $table->timestamps();
         });

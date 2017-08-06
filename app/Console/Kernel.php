@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Console\Commands\UploadsLinkCommand;
 use App\Console\Commands\BlockMakeCommand;
+use App\Console\Commands\CurrencyUpdateCommand;
 use App\Console\Commands\CartCleanCommand;
 use App\Console\Commands\ActivityCleanCommand;
 use Illuminate\Console\Scheduling\Schedule;
@@ -19,6 +20,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         UploadsLinkCommand::class,
         BlockMakeCommand::class,
+        CurrencyUpdateCommand::class,
         CartCleanCommand::class,
         ActivityCleanCommand::class,
     ];

@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.4.32 on 2017-08-05.
+ * Generated for Laravel 5.4.32 on 2017-08-06.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -13706,6 +13706,41 @@ namespace DaveJamesMiller\Breadcrumbs {
  
 }
 
+namespace Swap\Laravel\Facades { 
+
+    class Swap {
+        
+        /**
+         * Quotes a currency pair.
+         *
+         * @param string $currencyPair The currency pair like "EUR/USD"
+         * @param array $options An array of query options
+         * @return \Exchanger\ExchangeRate 
+         * @static 
+         */ 
+        public static function latest($currencyPair, $options = array())
+        {
+            return \Swap\Swap::latest($currencyPair, $options);
+        }
+        
+        /**
+         * Quotes a currency pair.
+         *
+         * @param string $currencyPair The currency pair like "EUR/USD"
+         * @param \DateTimeInterface $date An optional date for historical rates
+         * @param array $options An array of query options
+         * @return \Exchanger\ExchangeRate 
+         * @static 
+         */ 
+        public static function historical($currencyPair, $date, $options = array())
+        {
+            return \Swap\Swap::historical($currencyPair, $date, $options);
+        }
+         
+    }
+ 
+}
+
 namespace App\Facades { 
 
     class UploaderFacade {
@@ -16363,6 +16398,8 @@ namespace  {
     class ImageOptimizer extends \Spatie\LaravelImageOptimizer\ImageOptimizerFacade {}
 
     class Breadcrumbs extends \DaveJamesMiller\Breadcrumbs\Facade {}
+
+    class Swap extends \Swap\Laravel\Facades\Swap {}
 
     class Uploader extends \App\Facades\UploaderFacade {}
 

@@ -2,6 +2,7 @@
 
 namespace App\Models\Shop;
 
+use Swap;
 use App\Models\Model;
 use App\Traits\IsCacheable;
 use Illuminate\Database\Eloquent\Builder;
@@ -59,37 +60,15 @@ class Currency extends Model
     }
 
     /**
-     * @param $amount
-     * @param $from
-     * @param $to
-     * @param int $precision
+     * Convert an amount between 2 currencies.
+     *
+     * @param float $amount
+     * @param string $from
+     * @param string $to
      * @return float
      */
-    public static function convert($amount, $from, $to, $precision = 2)
+    public static function convert($amount, $from, $to)
     {
-        $amount = (float)$amount;
-        $from = strtoupper($from);
-        $to = strtoupper($to);
-
-        if ($from == $to) {
-            return round($amount, $precision);
-        }
-
-        $url = 'http://www.google.com/finance/converter?a=' . urlencode($amount) . '&from=' . urlencode($from) . '&to=' . urlencode($to);
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_USERAGENT, "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 6.1)");
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 0);
-
-        $result = curl_exec($ch);
-
-        curl_close($ch);
-
-        $data = explode("bld>", $result);
-        $data = explode($to, $data[1]);
-
-        return round($data[0], $precision);
+        return $amount * Swap::latest("{$from}/{$to}")->getValue();
     }
 }

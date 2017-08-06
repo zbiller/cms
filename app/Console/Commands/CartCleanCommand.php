@@ -43,7 +43,7 @@ class CartCleanCommand extends Command
             $date = Carbon::now()->subDays($days)->format('Y-m-d H:i:s');
             $number = 0;
 
-            foreach (Cart::where('created_at', '<', $date)->get() as $cart) {
+            foreach (Cart::where('carts.created_at', '<', $date)->get() as $cart) {
                 $cart->delete();
                 $number++;
             }
