@@ -23,6 +23,7 @@ class CartFilter extends Filter
     {
         return [
             'search' => 'operator:like|condition:or|columns:identifier',
+            'user' => 'operator:=|condition:or|columns:user_id',
             'start_date' => 'operator:date >=|condition:or|columns:created_at',
             'end_date' => 'operator:date <=|condition:or|columns:created_at',
         ];

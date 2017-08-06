@@ -8,8 +8,7 @@ use App\Traits\IsCacheable;
 use App\Traits\IsVerifiable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
-use App\Scopes\SelectUserScope;
-use App\Scopes\JoinPersonScope;
+use App\Scopes\WithUserPersonScope;
 use App\Options\ActivityOptions;
 use App\Options\VerifyOptions;
 use Illuminate\Database\Query\Builder;
@@ -100,8 +99,7 @@ class User extends Authenticatable
     {
         parent::boot();
 
-        static::addGlobalScope(new SelectUserScope);
-        static::addGlobalScope(new JoinPersonScope);
+        static::addGlobalScope(new WithUserPersonScope);
     }
 
     /**

@@ -2,16 +2,16 @@
 
 namespace App\Models\Shop;
 
-use App\Scopes\WithCartTotalScope;
-use Carbon\Carbon;
 use DB;
 use Exception;
+use Carbon\Carbon;
 use App\Models\Model;
 use App\Models\Auth\User;
 use App\Models\Shop\Cart\Item;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
+use App\Scopes\WithCartTotalAndCountScope;
 use App\Exceptions\CartException;
 
 class Cart extends Model
@@ -85,7 +85,7 @@ class Cart extends Model
     {
         parent::boot();
 
-        static::addGlobalScope(new WithCartTotalScope);
+        static::addGlobalScope(new WithCartTotalAndCountScope);
 
         static::deleting(function (Cart $cart) {
             foreach ($cart->items()->with('product')->get() as $item) {
@@ -118,35 +118,42 @@ class Cart extends Model
     }
 
     /**
-     * Get the grand total of a given cart (in USD).
+     * Override route model binding default column value.
+     * This is done because the cart is joined with items, products and currencies by the global scope.
+     * Otherwise, the model binding will throw an "ambiguous column" error.
      *
-     * @return float|int
+     * @return string
      */
-    public function getTotalAttribute()
+    public function getRouteKeyName()
     {
-        $total = 0;
-
-        foreach ($this->items()->with('product')->get() as $item) {
-            $product = $item->product;
-
-            $total += Currency::convert(
-                $product->final_price,
-                $product->currency->code,
-                config('shop.price.default_currency')
-            ) * $item->quantity;
-        }
-
-        return $total;
+        return $this->getTable() . '.' . $this->getKeyName();
     }
 
     /**
-     * Get the grand total of a given cart (in USD).
+     * Get the correct cart instance for the user if exists.
+     * Otherwise create a new one to be used.
      *
-     * @return float|int
+     * @return Cart
      */
-    public function getCountAttribute()
+    public static function getCart()
     {
-        return $this->items()->count();
+        if (auth()->check()) {
+            self::$user = auth()->user();
+        } else {
+            self::$token = static::getToken();
+        }
+
+        self::$identifier = static::getIdentifier();
+
+        if (!(self::$cart = static::where('identifier', self::$identifier)->first())) {
+            self::$cart = static::create([
+                'user_id' => self::$user ? self::$user->id : null,
+                'user_token' => self::$token ?: null,
+                'identifier' => self::$identifier,
+            ]);
+        }
+
+        return self::$cart;
     }
 
     /**
@@ -165,7 +172,9 @@ class Cart extends Model
 
         $total = 0;
 
-        self::$cart = static::identifyCart();
+        if (!self::$cart) {
+            self::$cart = static::getCart();
+        }
 
         foreach (self::$cart->items()->with('product')->get() as $item) {
             $product = $item->product;
@@ -231,9 +240,11 @@ class Cart extends Model
      *
      * @return int
      */
-    public static function getItemsCount()
+    public static function getProductsCount()
     {
-        self::$cart = static::identifyCart();
+        if (!self::$cart) {
+            self::$cart = static::getCart();
+        }
 
         return self::$cart->items()->count();
     }
@@ -257,7 +268,9 @@ class Cart extends Model
         }
 
         try {
-            self::$cart = static::identifyCart();
+            if (!self::$cart) {
+                self::$cart = static::getCart();
+            }
 
             return DB::transaction(function () use ($product, $quantity) {
                 if ($item = self::$cart->items()->where('product_id', $product->id)->first()) {
@@ -298,7 +311,9 @@ class Cart extends Model
         }
 
         try {
-            self::$cart = static::identifyCart();
+            if (!self::$cart) {
+                self::$cart = static::getCart();
+            }
 
             return DB::transaction(function () use ($product, $quantity) {
                 if ($item = self::$cart->items()->where('product_id', $product->id)->first()) {
@@ -338,7 +353,9 @@ class Cart extends Model
         }
 
         try {
-            self::$cart = static::identifyCart();
+            if (!self::$cart) {
+                self::$cart = static::getCart();
+            }
 
             return DB::transaction(function () use ($product) {
                 if ($item = self::$cart->items()->where('product_id', $product->id)->first()) {
@@ -366,7 +383,9 @@ class Cart extends Model
     public static function removeAllProducts()
     {
         try {
-            self::$cart = static::identifyCart();
+            if (!self::$cart) {
+                self::$cart = static::getCart();
+            }
 
             return DB::transaction(function () {
                 foreach (self::$cart->items()->with('product')->get() as $item) {
@@ -410,7 +429,7 @@ class Cart extends Model
             DB::transaction(function () use ($days) {
                 $date = Carbon::now()->subDays($days)->format('Y-m-d H:i:s');
 
-                foreach (static::where('created_at', '<', $date)->get() as $cart) {
+                foreach (static::where('carts.created_at', '<', $date)->get() as $cart) {
                     $cart->delete();
                 }
             });
@@ -421,33 +440,6 @@ class Cart extends Model
                 'Could not clean up the old carts! Please try again.', $e->getCode(), $e
             );
         }
-    }
-
-    /**
-     * Get the correct cart instance if exists.
-     * Otherwise create a new one to be used.
-     *
-     * @return Cart
-     */
-    protected static function identifyCart()
-    {
-        if (auth()->check()) {
-            self::$user = auth()->user();
-        } else {
-            self::$token = static::getToken();
-        }
-
-        self::$identifier = static::getIdentifier();
-
-        if (!(self::$cart = static::where('identifier', self::$identifier)->first())) {
-            self::$cart = static::create([
-                'user_id' => self::$user ? self::$user->id : null,
-                'user_token' => self::$token ?: null,
-                'identifier' => self::$identifier,
-            ]);
-        }
-
-        return self::$cart;
     }
 
     /**

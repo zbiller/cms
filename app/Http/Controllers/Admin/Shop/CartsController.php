@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Shop;
 
 use App\Models\Auth\Activity;
+use DB;
 use Exception;
 use App\Http\Controllers\Controller;
 use App\Models\Auth\User;
@@ -11,6 +12,8 @@ use App\Traits\CanCrud;
 use App\Http\Filters\CartFilter;
 use App\Http\Sorts\CartSort;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
 
 class CartsController extends Controller
 {
@@ -30,19 +33,38 @@ class CartsController extends Controller
     public function index(Request $request, CartFilter $filter, CartSort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
-
             $query = Cart::query();
+            $paginate = true;
 
-            vd($query->toSql(), $query->getBindings());
-
-            foreach ($query->get() as $item) {
-                dd($item, $item->total);
+            if (($totalFrom = $request->get('total')[0]) && $totalFrom > 0) {
+                $query->having('total', '>=', $totalFrom);
+                $paginate = false;
             }
 
-            $this->items = Cart::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            if (($totalTo = $request->get('total')[1]) && $totalTo > 0) {
+                $query->having('total', '<=', $totalTo);
+                $paginate = false;
+            }
 
+            if (($countFrom = $request->get('count')[0]) && $countFrom > 0) {
+                $query->having('count', '>=', $countFrom);
+                $paginate = false;
+            }
+
+            if (($countTo = $request->get('count')[1]) && $countTo > 0) {
+                $query->having('count', '<=', $countTo);
+                $paginate = false;
+            }
+
+            $query->filtered($request, $filter)->sorted($request, $sort);
+
+            $this->items = $paginate ? $query->paginate(10) : $query->get();
             $this->title = 'Carts';
             $this->view = view('admin.shop.carts.index');
+            $this->vars = [
+                'users' => User::alphabetically()->get(),
+                'paginate' => $paginate,
+            ];
         });
     }
 

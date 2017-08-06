@@ -11,16 +11,17 @@
 @endsection
 
 @section('footer')
-    {!! pagination('admin')->render($items) !!}
+    @if($paginate)
+        {!! pagination('admin')->render($items) !!}
+    @endif
 
     <section class="actions">
         {!! button()->updatePage() !!}
 
-        {{--@if((int)config('activity.delete_records_older_than') > 0)--}}
+        @if((int)config('shop.cart.delete_records_older_than') > 0)
             {!! form()->open(['url' => route('admin.carts.clean'), 'method' => 'DELETE', 'class' => 'left']) !!}
-            {{--{!! form()->button('<i class="fa fa-ban"></i>&nbsp; Cleanup Carts Older Than ' . (int)config('activity.delete_records_older_than') . ' Days', ['type' => 'submit', 'class' => 'btn blue no-margin-right', 'onclick' => 'return confirm("Are you sure you want to clean the activity log?")']) !!}--}}
-            {!! form()->button('<i class="fa fa-ban"></i>&nbsp; Cleanup carts older than 30 days', ['type' => 'submit', 'class' => 'btn blue no-margin-right', 'onclick' => 'return confirm("Are you sure you want to clean the carts?")']) !!}
+            {!! form()->button('<i class="fa fa-ban"></i>&nbsp; Cleanup carts older than ' . (int)config('shop.cart.delete_records_older_than') . ' days', ['type' => 'submit', 'class' => 'btn blue no-margin-right', 'onclick' => 'return confirm("Are you sure you want to clean the carts?")']) !!}
             {!! form()->close() !!}
-        {{--@endif--}}
+        @endif
     </section>
 @endsection
