@@ -28,6 +28,8 @@ class CartsController extends Controller
      */
     public function index(Request $request, CartFilter $filter, CartSort $sort)
     {
+        dd(json_decode('{"from_name":null,"from_email":null,"reply_to":null,"attachment":null,"subject":"Verify your email address","message":"<p>Hello [full_name],<\/p>\r\n<p>You have successfully registered on our site.<br \/>In order to sign in, you need to verify your email address.<\/p>\r\n<p><a class=\"button button-blue\" href=\"[email_verification_url]\" target=\"_blank\" rel=\"noopener noreferrer\">Verify Your Email Address Now<\/a><\/p>\r\n<p>Once this email address is verified, you will be able to access your account.<\/p>\r\n<hr \/>\r\n<p>Thank you!<\/p>"}'));
+
         return $this->_index(function () use ($request, $filter, $sort) {
             $query = Cart::query();
             $paginate = true;
