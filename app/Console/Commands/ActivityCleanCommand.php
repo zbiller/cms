@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use App\Models\Auth\Activity;
 use Illuminate\Console\Command;
 
-class ActivityClean extends Command
+class ActivityCleanCommand extends Command
 {
     /**
      * The name and signature of the console command.
@@ -32,7 +32,7 @@ class ActivityClean extends Command
         $days = (int)config('activity.delete_records_older_than');
 
         if (!($days > 0)) {
-            $this->info("Could not clean up the activity because the key 'delete_records_older_than' is not set in the config/activity-log.php file.");
+            $this->info("Could not clean up the activity because the key 'delete_records_older_than' is not set in the config/activity.php file.");
             return;
         }
 

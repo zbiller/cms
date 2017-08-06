@@ -21,7 +21,7 @@
             @foreach($items as $index => $item)
                 <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
                     <td>{!! ($user = $item->user) && $user->exists ? '<a href="' . route('admin.users.edit', $user->id) . '" target="_blank">' . $user->full_name . '</a>' : 'Guest' !!}</td>
-                    <td>{{ ($total = $item->total) ? number_format($total, 2) . ' USD' : 'N/A' }}</td>
+                    <td>{{ ($total = $item->total) ? number_format($total, 2) . ' ' . config('shop.price.default_currency') : 'N/A' }}</td>
                     <td>{{ ($count = $item->count) ? $count : 'N/A' }}</td>
                     <td>{{ $item->created_at ? $item->created_at->diffForHumans() : 'N/A' }}</td>
                     <td>

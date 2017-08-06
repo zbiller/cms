@@ -2,6 +2,8 @@
 
 namespace App\Models\Shop;
 
+use App\Scopes\WithCartTotalScope;
+use Carbon\Carbon;
 use DB;
 use Exception;
 use App\Models\Model;
@@ -34,15 +36,6 @@ class Cart extends Model
         'user_id',
         'user_token',
         'identifier',
-    ];
-
-    /**
-     * The accessor attributes to append to the model's array form.
-     *
-     * @var array
-     */
-    protected $appends = [
-        'total'
     ];
 
     /**
@@ -92,6 +85,8 @@ class Cart extends Model
     {
         parent::boot();
 
+        static::addGlobalScope(new WithCartTotalScope);
+
         static::deleting(function (Cart $cart) {
             foreach ($cart->items()->with('product')->get() as $item) {
                 $product = $item->product;
@@ -101,7 +96,6 @@ class Cart extends Model
             }
         });
     }
-
 
     /**
      * A cart belongs to a user.
@@ -136,8 +130,10 @@ class Cart extends Model
             $product = $item->product;
 
             $total += Currency::convert(
-                    $product->final_price, $product->currency->code, 'USD'
-                ) * $item->quantity;
+                $product->final_price,
+                $product->currency->code,
+                config('shop.price.default_currency')
+            ) * $item->quantity;
         }
 
         return $total;
@@ -157,12 +153,16 @@ class Cart extends Model
      * Get the cart's total price (raw | sub | grand).
      * Depending on the type specified, the "raw total", "sub total" or "grand_total" will be returned.
      *
-     * @param string $currency
+     * @param string|null $currency
      * @param int $type
      * @return float|int
      */
-    public static function getTotal($currency = 'USD', $type)
+    public static function getTotal($currency = null, $type)
     {
+        if ($currency === null) {
+            $currency = config('shop.price.default_currency');
+        }
+
         $total = 0;
 
         self::$cart = static::identifyCart();
@@ -194,10 +194,10 @@ class Cart extends Model
      * Get the cart's raw total price.
      * The total represented by the "raw total" does not include discounts or taxes.
      *
-     * @param string $currency
+     * @param string|null $currency
      * @return float|int
      */
-    public static function getRawTotal($currency = 'USD')
+    public static function getRawTotal($currency = null)
     {
         return static::getTotal($currency, static::TOTAL_RAW);
     }
@@ -206,10 +206,10 @@ class Cart extends Model
      * Get the cart's sub total price.
      * The total represented by the "sub total" only includes discounts, but not taxes.
      *
-     * @param string $currency
+     * @param string|null $currency
      * @return float|int
      */
-    public static function getSubTotal($currency = 'USD')
+    public static function getSubTotal($currency = null)
     {
         return static::getTotal($currency, static::TOTAL_SUB);
     }
@@ -218,10 +218,10 @@ class Cart extends Model
      * Get the cart's final total price.
      * The total represented by the "grand total" also includes discounts and taxes.
      *
-     * @param string $currency
+     * @param string|null $currency
      * @return float|int
      */
-    public static function getGrandTotal($currency = 'USD')
+    public static function getGrandTotal($currency = null)
     {
         return static::getTotal($currency, static::TOTAL_GRAND);
     }
@@ -382,6 +382,43 @@ class Cart extends Model
         } catch (Exception $e) {
             throw new CartException(
                 'Could not remove the products from cart!'
+            );
+        }
+    }
+
+    /**
+     * Attempt to clean old shopping carts.
+     *
+     * A cart qualifies as being old if:
+     * "created_at" field is smaller than the current date minus the number of days set in the
+     * "cart.delete_records_older_than" key of config/shop.php file.
+     *
+     * @return bool|void
+     * @throws CartException
+     */
+    public static function cleanOld()
+    {
+        set_time_limit(0);
+
+        $days = (int)config('shop.cart.delete_records_older_than');
+
+        if (!($days > 0)) {
+            return;
+        }
+
+        try {
+            DB::transaction(function () use ($days) {
+                $date = Carbon::now()->subDays($days)->format('Y-m-d H:i:s');
+
+                foreach (static::where('created_at', '<', $date)->get() as $cart) {
+                    $cart->delete();
+                }
+            });
+
+            return true;
+        } catch (Exception $e) {
+            throw new CartException(
+                'Could not clean up the old carts! Please try again.', $e->getCode(), $e
             );
         }
     }

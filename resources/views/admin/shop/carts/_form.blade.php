@@ -25,12 +25,11 @@
         <tbody>
         @if($items->count())
             @foreach($items as $_item)
-                @php($product = $_item->product)
                 <tr>
-                    <td>{{ $product->name ?: 'N/A' }}</td>
+                    <td>{{ $_item->product && $_item->product->exists ? $_item->product->name : 'N/A' }}</td>
                     <td>{{ $_item->quantity ?: 'N/A' }}</td>
                     <td>
-                        <a href="{{ route('admin.products.edit', $product) }}" class="assign-view btn yellow no-margin-top no-margin-bottom no-margin-left" target="_blank">
+                        <a href="{{ route('admin.products.edit', $_item->product) }}" class="assign-view btn yellow no-margin-top no-margin-bottom no-margin-left" target="_blank">
                             <i class="fa fa-eye"></i>&nbsp; View
                         </a>
                     </td>
@@ -48,7 +47,3 @@
 </div>
 
 {!! form_admin()->close() !!}
-
-@section('bottom_scripts')
-    {!! JsValidator::formRequest(App\Http\Requests\CartRequest::class, '.form') !!}
-@append

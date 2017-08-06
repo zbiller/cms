@@ -30,7 +30,17 @@ class CartsController extends Controller
     public function index(Request $request, CartFilter $filter, CartSort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
+
+            $query = Cart::query();
+
+            vd($query->toSql(), $query->getBindings());
+
+            foreach ($query->get() as $item) {
+                dd($item, $item->total);
+            }
+
             $this->items = Cart::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+
             $this->title = 'Carts';
             $this->view = view('admin.shop.carts.index');
         });
@@ -75,7 +85,7 @@ class CartsController extends Controller
     public function clean()
     {
         try {
-            Activity::clean();
+            Cart::cleanOld();
 
             flash()->success('The records were successfully cleaned up!');
         } catch (Exception $e) {

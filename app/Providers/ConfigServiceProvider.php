@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Configs\UploadConfig;
 use App\Configs\CacheConfig;
+use App\Configs\ShopConfig;
 use App\Configs\ActivityConfig;
 use Illuminate\Support\ServiceProvider;
 
@@ -19,6 +20,7 @@ class ConfigServiceProvider extends ServiceProvider
         if (!app()->runningInConsole()) {
             $this->checkUploadConfig();
             $this->checkCacheConfig();
+            $this->checkShopConfig();
             $this->checkActivityConfig();
         }
     }
@@ -51,6 +53,16 @@ class ConfigServiceProvider extends ServiceProvider
     protected function checkCacheConfig()
     {
         CacheConfig::check();
+    }
+
+    /**
+     * Check if the config/cache.php is properly and fully configured.
+     *
+     * @return void
+     */
+    protected function checkShopConfig()
+    {
+        ShopConfig::check();
     }
 
     /**

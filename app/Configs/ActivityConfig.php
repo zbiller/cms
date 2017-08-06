@@ -18,10 +18,10 @@ class ActivityConfig
      *
      * @var string
      */
-    public static $path = 'config/activity-log.php';
+    public static $path = 'config/activity.php';
 
     /**
-     * Check if all the config options from config/activity-log.php are properly set.
+     * Check if all the config options from config/activity.php are properly set.
      *
      * @throws ConfigException
      */
@@ -33,7 +33,7 @@ class ActivityConfig
     }
 
     /**
-     * Check if all the config options from config/cache.php are properly set.
+     * Check if all the config options from config/activity.php are properly set.
      *
      * @return void
      */
