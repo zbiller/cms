@@ -20,7 +20,7 @@
     <script type="text/javascript">
         var country = $('select[name="country_id"]');
         var getStates = function (_this) {
-            var url = '{{ route('admin.cities.get_states') }}' + '/' + country.val();
+            var url = '{{ route('admin.states.get') }}' + '/' + country.val();
             var select = $('select[name="state_id"]');
 
             $.ajax({
@@ -30,8 +30,8 @@
                     if (data.status === true) {
                         select.empty();
 
-                        $.each(data.states, function (id, name) {
-                            select.append('<option value="' + id + '">' + name + '</option>');
+                        $.each(data.states, function (index, state) {
+                            select.append('<option value="' + state.id + '">' + state.name + '</option>');
                         });
 
                         select.trigger("chosen:updated");

@@ -111,4 +111,42 @@ class StatesController extends Controller
             $this->item->delete();
         });
     }
+
+    /**
+     * @param Country|null $country
+     * @return array
+     */
+    public function get(Country $country = null)
+    {
+        $query = State::alphabetically();
+
+        if ($country && $country->exists) {
+            $query->where('country_id', $country->id);
+        }
+
+        $states = $cities = [];
+
+        foreach ($query->get() as $index => $state) {
+            $states[] = [
+                'id' => $state->id,
+                'name' => $state->name,
+                'code' => $state->code,
+            ];
+
+            if ($index == 0) {
+                foreach ($state->cities as $city) {
+                    $cities[] = [
+                        'id' => $city->id,
+                        'name' => $city->name,
+                    ];
+                }
+            }
+        }
+
+        return [
+            'status' => true,
+            'states' => $states,
+            'cities' => $cities,
+        ];
+    }
 }

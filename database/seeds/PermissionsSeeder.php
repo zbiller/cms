@@ -766,6 +766,32 @@ class PermissionsSeeder extends Seeder
                 'name' => 'cities-delete',
             ],
         ],
+        'Addresses' => [
+            'List' => [
+                'group' => 'Addresses',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'addresses-list',
+            ],
+            'Add' => [
+                'group' => 'Addresses',
+                'label' => 'Add',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'addresses-add',
+            ],
+            'Edit' => [
+                'group' => 'Addresses',
+                'label' => 'Edit',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'addresses-edit',
+            ],
+            'Delete' => [
+                'group' => 'Addresses',
+                'label' => 'Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'addresses-delete',
+            ],
+        ],
         'Settings' => [
             'General' => [
                 'group' => 'Settings',

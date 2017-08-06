@@ -544,6 +544,20 @@ Route::group([
                 Route::put('update/{user}', ['as' => 'admin.users.update', 'uses' => 'UsersController@update', 'permissions' => 'users-edit']);
                 Route::delete('destroy/{user}', ['as' => 'admin.users.destroy', 'uses' => 'UsersController@destroy', 'permissions' => 'users-delete']);
                 Route::post('impersonate/{user}', ['as' => 'admin.users.impersonate', 'uses' => 'UsersController@impersonate', 'permissions' => 'users-impersonate']);
+
+                /**
+                 * CRUD Attributes.
+                 */
+                Route::group([
+                    'prefix' => 'edit/{user}/addresses',
+                ], function () {
+                    Route::get('/', ['as' => 'admin.addresses.index', 'uses' => 'AddressesController@index', 'permissions' => 'addresses-list']);
+                    Route::get('create', ['as' => 'admin.addresses.create', 'uses' => 'AddressesController@create', 'permissions' => 'addresses-add']);
+                    Route::get('edit/{address}', ['as' => 'admin.addresses.edit', 'uses' => 'AddressesController@edit', 'permissions' => 'addresses-edit']);
+                    Route::post('store', ['as' => 'admin.addresses.store', 'uses' => 'AddressesController@store', 'permissions' => 'addresses-add']);
+                    Route::put('update/{address}', ['as' => 'admin.addresses.update', 'uses' => 'AddressesController@update', 'permissions' => 'addresses-edit']);
+                    Route::delete('destroy/{address}', ['as' => 'admin.addresses.destroy', 'uses' => 'AddressesController@destroy', 'permissions' => 'addresses-delete']);
+                });
             });
 
             /**
@@ -619,6 +633,11 @@ Route::group([
                 Route::post('store', ['as' => 'admin.states.store', 'uses' => 'StatesController@store', 'permissions' => 'states-add']);
                 Route::put('update/{state}', ['as' => 'admin.states.update', 'uses' => 'StatesController@update', 'permissions' => 'states-edit']);
                 Route::delete('destroy/{state}', ['as' => 'admin.states.destroy', 'uses' => 'StatesController@destroy', 'permissions' => 'states-delete']);
+
+                /**
+                 * Get endpoint.
+                 */
+                Route::get('get/{country?}', ['as' => 'admin.states.get', 'uses' => 'StatesController@get']);
             });
 
             /**
@@ -633,7 +652,11 @@ Route::group([
                 Route::post('store', ['as' => 'admin.cities.store', 'uses' => 'CitiesController@store', 'permissions' => 'cities-add']);
                 Route::put('update/{city}', ['as' => 'admin.cities.update', 'uses' => 'CitiesController@update', 'permissions' => 'cities-edit']);
                 Route::delete('destroy/{city}', ['as' => 'admin.cities.destroy', 'uses' => 'CitiesController@destroy', 'permissions' => 'cities-delete']);
-                Route::get('get-states/{country?}', ['as' => 'admin.cities.get_states', 'uses' => 'CitiesController@getStates']);
+
+                /**
+                 * Get endpoint.
+                 */
+                Route::get('get/{country?}/{state?}', ['as' => 'admin.cities.get', 'uses' => 'CitiesController@get']);
             });
         });
 

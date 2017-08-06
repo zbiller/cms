@@ -30,4 +30,16 @@ class CityRequest extends Request
             ],
         ];
     }
+
+    /**
+     * Get the pretty name of attributes.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'country_id' => 'country',
+        ];
+    }
 }

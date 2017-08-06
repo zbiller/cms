@@ -2,9 +2,13 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Auth\User;
+use App\Models\Location\Country;
+use App\Models\Location\State;
+use App\Models\Location\City;
 use Illuminate\Validation\Rule;
 
-class StateRequest extends Request
+class AddressRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,18 +28,26 @@ class StateRequest extends Request
     public function rules()
     {
         return [
+            'user_id' => [
+                'required',
+                'numeric',
+                Rule::in(User::type(User::TYPE_FRONT)->get()->pluck('id')->toArray()),
+            ],
             'country_id' => [
                 'required',
+                'numeric',
+                Rule::in(Country::all()->pluck('id')->toArray()),
             ],
-            'name' => [
-                'required',
-                Rule::unique('states', 'name')
-                    ->ignore($this->route('state') ? $this->route('state')->id : null)
+            'state_id' => [
+                'nullable',
+                'numeric',
             ],
-            'code' => [
+            'city_id' => [
+                'nullable',
+                'numeric',
+            ],
+            'address' => [
                 'required',
-                Rule::unique('states', 'code')
-                    ->ignore($this->route('state') ? $this->route('state')->id : null)
             ],
         ];
     }
@@ -49,6 +61,8 @@ class StateRequest extends Request
     {
         return [
             'country_id' => 'country',
+            'state_id' => 'state',
+            'city_id' => 'city',
         ];
     }
 }

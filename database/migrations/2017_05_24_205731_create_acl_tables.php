@@ -43,6 +43,24 @@ class CreateAclTables extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
         });
 
+        Schema::create('addresses', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('user_id')->unsigned()->index();
+            $table->integer('country_id')->unsigned()->index()->nullable();
+            $table->integer('state_id')->unsigned()->index()->nullable();
+            $table->integer('city_id')->unsigned()->index()->nullable();
+
+            $table->text('address')->nullable();
+            $table->integer('ord')->default(0);
+
+            $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('country_id')->references('id')->on('countries')->onDelete('set null');
+            $table->foreign('state_id')->references('id')->on('states')->onDelete('set null');
+            $table->foreign('city_id')->references('id')->on('cities')->onDelete('set null');
+        });
+
         Schema::create('roles', function (Blueprint $table) {
             $table->increments('id');
 

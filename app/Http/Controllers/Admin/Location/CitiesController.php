@@ -115,16 +115,34 @@ class CitiesController extends Controller
     }
 
     /**
-     * @param int|null $country
+     * @param Country|null $country
+     * @param State|null $state
      * @return array
      */
-    public function getStates($country = null)
+    public function get(Country $country = null, State $state = null)
     {
-        $states = State::where('country_id', $country)->get();
+        $query = City::alphabetically();
+
+        if ($country && $country->exists) {
+            $query->where('country_id', $country->id);
+        }
+
+        if ($country && $country->exists) {
+            $query->where('state_id', $state->id);
+        }
+
+        $cities = [];
+
+        foreach ($query->get() as $index => $city) {
+            $cities[] = [
+                'id' => $city->id,
+                'name' => $city->name,
+            ];
+        }
 
         return [
             'status' => true,
-            'states' => $states->pluck('name', 'id'),
+            'cities' => $cities,
         ];
     }
 }

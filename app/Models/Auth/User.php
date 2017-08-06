@@ -113,6 +113,16 @@ class User extends Authenticatable
     }
 
     /**
+     * User has many addresses.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function addresses()
+    {
+        return $this->hasMany(Address::class, 'user_id');
+    }
+
+    /**
      * User has many activity logs.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

@@ -603,6 +603,34 @@ Breadcrumbs::register('admin.admins.edit', function($breadcrumbs, $admin) {
 
 /**
 | ---------------------------------------------------------------------------------------------------------------------
+| Addresses
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+/* Home > Addresses */
+Breadcrumbs::register('admin.addresses.index', function($breadcrumbs, $user) {
+    $breadcrumbs->parent('admin.users.edit', $user);
+    $breadcrumbs->push('Addresses', route('admin.addresses.index', $user));
+});
+
+/* Home > Addresses > Add */
+Breadcrumbs::register('admin.addresses.create', function($breadcrumbs, $user) {
+    $breadcrumbs->parent('admin.addresses.index', $user);
+    $breadcrumbs->push('Add', route('admin.addresses.create', $user));
+});
+
+/* Home > Addresses > Edit */
+Breadcrumbs::register('admin.addresses.edit', function($breadcrumbs, $user, $address) {
+    $breadcrumbs->parent('admin.addresses.index', $user);
+    $breadcrumbs->push('Edit', route('admin.addresses.edit', ['user' => $user, 'address' => $address]));
+});
+/**
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+
+
+
+/**
+| ---------------------------------------------------------------------------------------------------------------------
 | Roles
 | ---------------------------------------------------------------------------------------------------------------------
  */
