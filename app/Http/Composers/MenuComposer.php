@@ -86,6 +86,10 @@ class MenuComposer
                 $menu->child($shop, function (MenuItem $item) {
                     $item->name('Taxes')->url(route('admin.taxes.index'))->permissions('taxes-list')->active('admin/taxes/*');
                 });
+
+                $menu->child($shop, function (MenuItem $item) {
+                    $item->name('Currencies')->url(route('admin.currencies.index'))->permissions('currencies-list')->active('admin/currencies/*');
+                });
             });
 
             $menu->add(function ($item) use ($menu) {

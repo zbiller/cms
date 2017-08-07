@@ -584,6 +584,38 @@ class PermissionsSeeder extends Seeder
                 'name' => 'taxes-delete',
             ],
         ],
+        'Currencies' => [
+            'List' => [
+                'group' => 'Currencies',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'currencies-list',
+            ],
+            'Add' => [
+                'group' => 'Currencies',
+                'label' => 'Add',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'currencies-add',
+            ],
+            'Edit' => [
+                'group' => 'Currencies',
+                'label' => 'Edit',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'currencies-edit',
+            ],
+            'Delete' => [
+                'group' => 'Currencies',
+                'label' => 'Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'currencies-delete',
+            ],
+            'Update' => [
+                'group' => 'Currencies',
+                'label' => 'Exchange',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'currencies-exchange',
+            ],
+        ],
         'Users' => [
             'List' => [
                 'group' => 'Users',

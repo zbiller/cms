@@ -523,6 +523,21 @@ Route::group([
                 Route::put('update/{tax}', ['as' => 'admin.taxes.update', 'uses' => 'TaxesController@update', 'permissions' => 'taxes-edit']);
                 Route::delete('destroy/{tax}', ['as' => 'admin.taxes.destroy', 'uses' => 'TaxesController@destroy', 'permissions' => 'taxes-delete']);
             });
+
+            /**
+             * CRUD Taxes.
+             */
+            Route::group([
+                'prefix' => 'currencies',
+            ], function () {
+                Route::get('/', ['as' => 'admin.currencies.index', 'uses' => 'CurrenciesController@index', 'permissions' => 'currencies-list']);
+                Route::get('create', ['as' => 'admin.currencies.create', 'uses' => 'CurrenciesController@create', 'permissions' => 'currencies-add']);
+                Route::get('edit/{currency}', ['as' => 'admin.currencies.edit', 'uses' => 'CurrenciesController@edit', 'permissions' => 'currencies-edit']);
+                Route::post('store', ['as' => 'admin.currencies.store', 'uses' => 'CurrenciesController@store', 'permissions' => 'currencies-add']);
+                Route::put('update/{currency}', ['as' => 'admin.currencies.update', 'uses' => 'CurrenciesController@update', 'permissions' => 'currencies-edit']);
+                Route::put('exchange', ['as' => 'admin.currencies.exchange', 'uses' => 'CurrenciesController@exchange', 'permissions' => 'currencies-exchange']);
+                Route::delete('destroy/{currency}', ['as' => 'admin.currencies.destroy', 'uses' => 'CurrenciesController@destroy', 'permissions' => 'currencies-delete']);
+            });
         });
 
         /**

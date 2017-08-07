@@ -547,6 +547,34 @@ Breadcrumbs::register('admin.taxes.edit', function($breadcrumbs, $tax) {
 
 /**
 | ---------------------------------------------------------------------------------------------------------------------
+| Currencies
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+/* Home > Currencies */
+Breadcrumbs::register('admin.currencies.index', function($breadcrumbs) {
+    $breadcrumbs->parent('admin');
+    $breadcrumbs->push('Currencies', route('admin.currencies.index'));
+});
+
+/* Home > Currencies > Add */
+Breadcrumbs::register('admin.currencies.create', function($breadcrumbs) {
+    $breadcrumbs->parent('admin.currencies.index');
+    $breadcrumbs->push('Add', route('admin.currencies.create'));
+});
+
+/* Home > Currencies > Edit */
+Breadcrumbs::register('admin.currencies.edit', function($breadcrumbs, $currency) {
+    $breadcrumbs->parent('admin.currencies.index');
+    $breadcrumbs->push('Edit', route('admin.currencies.edit', $currency));
+});
+/**
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+
+
+
+/**
+| ---------------------------------------------------------------------------------------------------------------------
 | Users
 | ---------------------------------------------------------------------------------------------------------------------
  */
