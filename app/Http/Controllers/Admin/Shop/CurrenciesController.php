@@ -111,7 +111,7 @@ class CurrenciesController extends Controller
         try {
             Currency::updateExchangeRates();
 
-            flash()->success('The exchange rates for all of the currencies have been successfully sent!');
+            flash()->success('The exchange rates for all of the currencies have been successfully updated!');
         } catch (Exception $e) {
             flash()->error('Could not update the exchange rates! Please try again.');
         }

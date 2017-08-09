@@ -173,11 +173,11 @@ trait HasRevisions
 
                 if (isset($revision->metadata->relations)) {
                     foreach ($revision->metadata->relations as $relation => $attributes) {
-                        if (Relation::isDirect($attributes->type)) {
+                        if (relation()->isDirect($attributes->type)) {
                             $this->rollbackDirectRelationToRevision($relation, $attributes);
                         }
 
-                        if (Relation::isPivoted($attributes->type)) {
+                        if (relation()->isPivoted($attributes->type)) {
                             $this->rollbackPivotedRelationToRevision($relation, $attributes);
                         }
                     }
@@ -267,11 +267,11 @@ trait HasRevisions
         $data = $this->buildRevisionDataFromModel();
 
         foreach ($this->getRelationsForRevision() as $relation => $attributes) {
-            if (Relation::isDirect($attributes['type'])) {
+            if (relation()->isDirect($attributes['type'])) {
                 $data['relations'][$relation] = $this->buildRevisionDataFromDirectRelation($relation, $attributes);
             }
 
-            if (Relation::isPivoted($attributes['type'])) {
+            if (relation()->isPivoted($attributes['type'])) {
                 $data['relations'][$relation] = $this->buildRevisionDataFromPivotedRelation($relation, $attributes);
             }
         }

@@ -8,10 +8,10 @@
 
 <div id="tab-1" class="tab">
     {!! form_admin()->select('user_id', 'User', [null => 'Guest'] + $users->pluck('full_name', 'id')->toArray(), null, ['disabled' => 'disabled']) !!}
-    {!! form_admin()->text('total', 'Cart Total', number_format($item->total, 2), ['disabled' => 'disabled']) !!}
+    {!! form_admin()->text('total', 'Raw Total', number_format($item->raw_total, 2), ['disabled' => 'disabled']) !!}
+    {!! form_admin()->text('total', 'Sub Total', number_format($item->sub_total, 2), ['disabled' => 'disabled']) !!}
+    {!! form_admin()->text('total', 'Grand Total', number_format($item->grand_total, 2), ['disabled' => 'disabled']) !!}
     {!! form_admin()->text('count', 'Items Count', $item->count, ['disabled' => 'disabled']) !!}
-    {!! form_admin()->text('identifier', 'Identifier', null, ['disabled' => 'disabled']) !!}
-    {!! form_admin()->text('token', 'Token', null, ['disabled' => 'disabled']) !!}
 </div>
 <div id="tab-2" class="tab">
     <table cellspacing="0" cellpadding="0" border="0">

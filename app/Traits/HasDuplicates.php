@@ -78,11 +78,11 @@ trait HasDuplicates
                 }
 
                 foreach ($this->getRelationsForDuplication() as $relation => $attributes) {
-                    if (Relation::isDirect($attributes['type'])) {
+                    if (relation()->isDirect($attributes['type'])) {
                         $this->duplicateDirectRelation($model, $relation);
                     }
 
-                    if (Relation::isPivoted($attributes['type'])) {
+                    if (relation()->isPivoted($attributes['type'])) {
                         $this->duplicatePivotedRelation($model, $relation);
                     }
                 }

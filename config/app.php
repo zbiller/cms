@@ -261,7 +261,6 @@ return [
         'Uploader' => App\Facades\UploaderFacade::class,
         'FormAdmin' => App\Facades\FormAdminFacade::class,
         'Meta' => App\Facades\MetaFacade::class,
-        'Relation' => App\Facades\RelationFacade::class,
     ],
 
 ];

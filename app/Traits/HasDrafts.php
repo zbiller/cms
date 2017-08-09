@@ -329,11 +329,11 @@ trait HasDrafts
 
         if (isset($draft->metadata->relations)) {
             foreach ($draft->metadata->relations as $relation => $attributes) {
-                if (Relation::isDirect($attributes->type)) {
+                if (relation()->isDirect($attributes->type)) {
                     $this->publishDirectRelationFromDraft($relation, $attributes);
                 }
 
-                if (Relation::isPivoted($attributes->type)) {
+                if (relation()->isPivoted($attributes->type)) {
                     $this->publishPivotedRelationFromDraft($relation, $attributes);
                 }
             }
@@ -385,11 +385,11 @@ trait HasDrafts
                 continue;
             }
 
-            if (Relation::isDirect($attributes['type'])) {
+            if (relation()->isDirect($attributes['type'])) {
                 $data['relations'][$relation] = $this->buildDraftDataFromDirectRelation($params, $relation, $attributes);
             }
 
-            if (Relation::isPivoted($attributes['type'])) {
+            if (relation()->isPivoted($attributes['type'])) {
                 $data['relations'][$relation] = $this->buildDraftDataFromPivotedRelation($params, $relation, $attributes, $draft);
             }
         }
@@ -591,9 +591,9 @@ trait HasDrafts
      */
     protected function publishDirectRelationFromDraft($relation, $attributes)
     {
-        if (Relation::isParent($attributes->type)) {
+        if (relation()->isParent($attributes->type)) {
             $this->publishDirectParentRelationFromDraft($relation, $attributes);
-        } elseif (Relation::isChild($attributes->type)) {
+        } elseif (relation()->isChild($attributes->type)) {
             $this->publishDirectChildRelationFromDraft($relation, $attributes);
         }
     }

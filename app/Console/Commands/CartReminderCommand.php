@@ -48,7 +48,6 @@ class CartReminderCommand extends Command
             $count++;
         }
 
-
         $this->info("{$count} users have been reminded of their ongoing shopping carts via email.");
     }
 }

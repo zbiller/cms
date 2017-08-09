@@ -55,13 +55,8 @@ class AppServiceProvider extends ServiceProvider
             return new MetaHelper($app);
         });
 
-        $this->app->singleton('Relation', function ($app) {
-            return new RelationHelper($app);
-        });
-
         $this->app->alias('uploader', UploaderHelper::class);
         $this->app->alias('form_admin', FormAdminHelper::class);
         $this->app->alias('meta', MetaHelper::class);
-        $this->app->alias('relation', RelationHelper::class);
     }
 }
