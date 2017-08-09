@@ -22,6 +22,8 @@ use App\Traits\HasUrl;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
+use App\Traits\SavesDiscounts;
+use App\Traits\SavesTaxes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -39,6 +41,8 @@ class Category extends Model
     use IsCacheable;
     use IsFilterable;
     use IsSortable;
+    use SavesDiscounts;
+    use SavesTaxes;
     use SoftDeletes;
 
     /**
@@ -138,6 +142,30 @@ class Category extends Model
     }
 
     /**
+     * Product has and belongs to many discounts.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function discounts()
+    {
+        return $this->belongsToMany(Discount::class, 'category_discount', 'category_id', 'discount_id')->withPivot([
+            'id', 'ord'
+        ])->withTimestamps()->orderBy('category_discount.ord', 'asc');
+    }
+
+    /**
+     * Product has and belongs to many taxes.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function taxes()
+    {
+        return $this->belongsToMany(Tax::class, 'category_tax', 'category_id', 'tax_id')->withPivot([
+            'id', 'ord'
+        ])->withTimestamps()->orderBy('category_tax.ord', 'asc');
+    }
+
+    /**
      * Sort the query with newest records first.
      *
      * @param Builder $query
@@ -228,7 +256,7 @@ class Category extends Model
     public static function getDraftOptions()
     {
         return DraftOptions::instance()
-            ->relationsToDraft('blocks');
+            ->relationsToDraft('blocks', 'discounts', 'taxes');
     }
 
     /**
@@ -238,7 +266,7 @@ class Category extends Model
     {
         return RevisionOptions::instance()
             ->limitRevisionsTo(100)
-            ->relationsToRevision('blocks');
+            ->relationsToRevision('blocks', 'discounts', 'taxes');
     }
 
     /**

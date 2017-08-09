@@ -21,7 +21,7 @@
     {!! auth()->user()->isDeveloper() ? form_admin()->text('identifier') : '' !!}
 </div>
 <div id="tab-2" class="tab">
-    <div class="box notification" style="margin-bottom: 20px;">
+    <div class="box warning" style="margin-bottom: 20px;">
         <span>
             Please note that in order for the email to work properly, you need to include the defined variables into the "Message" section.<br />
             The variables can be found on the "Variables" tab and should be typed into the message editor with the following syntax --- [variable_name]<br />

@@ -15,7 +15,7 @@
     {!! form_admin()->select('active', 'Active', $actives) !!}
 </div>
 <div id="tab-2" class="tab">
-    <div class="box notification" style="margin-bottom: 20px;">
+    <div class="box warning" style="margin-bottom: 20px;">
         <span>
             This tax will be applied only in the date interval selected
         </span>
@@ -24,7 +24,7 @@
     {!! form_admin()->calendar('end_date') !!}
 </div>
 <div id="tab-3" class="tab">
-    <div class="box notification" style="margin-bottom: 20px;">
+    <div class="box warning" style="margin-bottom: 20px;">
         <span>
             This tax will be applied only before the maximum value is met.<br />
             The "maximum value" represents either the product's price or the order's total, depending on your discount applicability.

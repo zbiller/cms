@@ -24,6 +24,9 @@ use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsOrderable;
 use App\Traits\IsSortable;
+use App\Traits\SavesAttributes;
+use App\Traits\SavesDiscounts;
+use App\Traits\SavesTaxes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -41,6 +44,9 @@ class Product extends Model
     use IsFilterable;
     use IsSortable;
     use IsOrderable;
+    use SavesAttributes;
+    use SavesDiscounts;
+    use SavesTaxes;
     use SoftDeletes;
 
     /**
@@ -67,6 +73,8 @@ class Product extends Model
         'views',
         'sales',
         'active',
+        'inherit_discounts',
+        'inherit_taxes',
         'metadata',
     ];
 
@@ -80,7 +88,7 @@ class Product extends Model
     ];
 
     /**
-     * The constants defining the category visibility.
+     * The constants defining the product visibility.
      *
      * @const
      */
@@ -88,7 +96,15 @@ class Product extends Model
     const ACTIVE_NO = 2;
 
     /**
-     * The property defining the category visibilities.
+     * The constants defining the category discounts / taxes inheritance.
+     *
+     * @const
+     */
+    const INHERIT_YES = 1;
+    const INHERIT_NO = 2;
+
+    /**
+     * The property defining the product visibilities.
      *
      * @var array
      */
@@ -98,29 +114,14 @@ class Product extends Model
     ];
 
     /**
-     * Boot the model.
+     * The property defining the category discounts / taxes inheritance.
      *
-     * Save assigned discounts for the product.
-     * Save assigned taxes for the product.
+     * @var array
      */
-    public static function boot()
-    {
-        parent::boot();
-
-        static::saved(function (Product $product) {
-            if (request()->has('touch_attributes')) {
-                $product->touchAttributes();
-            }
-
-            if (request()->has('touch_discounts')) {
-                $product->touchDiscounts();
-            }
-
-            if (request()->has('touch_taxes')) {
-                $product->touchTaxes();
-            }
-        });
-    }
+    public static $inherits = [
+        self::INHERIT_YES => 'Yes',
+        self::INHERIT_NO => 'No',
+    ];
 
     /**
      * Product belongs to category.
@@ -196,6 +197,152 @@ class Product extends Model
     }
 
     /**
+     * Get the product's final price with discounts and taxes applied.
+     * First, the discounts are applied to the price and then the taxes.
+     * The discounts and taxes are applied in cascade.
+     *
+     * @return mixed
+     */
+    public function getFinalPriceAttribute()
+    {
+        return $this->attributes['price'] - $this->discount_value + $this->tax_value;
+    }
+
+    /**
+     * Get the product's price with discounts applied.
+     * Discounts are applied in cascade.
+     *
+     * @return float
+     */
+    public function getPriceWithDiscountsAttribute()
+    {
+        return $this->attributes['price'] - $this->discount_value;
+    }
+
+    /**
+     * Get the product's price with taxes applied.
+     * Taxes are applied in cascade.
+     *
+     * @return float
+     */
+    public function getPriceWithTaxesAttribute()
+    {
+        return $this->attributes['price'] + $this->tax_value;
+    }
+
+    /**
+     * Get only the value of discounts for a product.
+     * Discounts are applied in cascade.
+     *
+     * @return mixed
+     */
+    public function getDiscountValueAttribute()
+    {
+        $price = $this->attributes['price'];
+        $discounts = $this->nested_discounts;
+
+        foreach ($discounts as $discount) {
+            if (!$discount->canBeApplied()) {
+                continue;
+            }
+
+            switch ($discount->type) {
+                case Discount::TYPE_FIXED:
+                    $price -= $discount->rate;
+                    break;
+                case Discount::TYPE_PERCENT:
+                    $price -= ($discount->rate / 100) * $price;
+                    break;
+            }
+        }
+
+        return $this->attributes['price'] - $price;
+    }
+
+    /**
+     * Get only the value of taxes for a product.
+     * Taxes are applied in cascade.
+     *
+     * @return float
+     */
+    public function getTaxValueAttribute()
+    {
+        $price = $this->attributes['price'];
+        $taxes = $this->nested_taxes;
+
+        foreach ($taxes as $tax) {
+            if (!$tax->canBeApplied()) {
+                continue;
+            }
+
+            switch ($tax->type) {
+                case Tax::TYPE_FIXED:
+                    $price += $tax->rate;
+                    break;
+                case Tax::TYPE_PERCENT:
+                    $price += ($tax->rate / 100) * $price;
+                    break;
+            }
+        }
+
+        return $price - $this->attributes['price'];
+    }
+
+    /**
+     * Get the product's direct or inherited subsequent discounts.
+     *
+     * @return \Illuminate\Support\Collection|mixed
+     */
+    public function getNestedDiscountsAttribute()
+    {
+        $discounts = collect();
+
+        if ($this->discounts->count() > 0) {
+            $discounts = $this->discounts;
+        } elseif ($this->inherit_discounts == self::INHERIT_YES) {
+            if ($this->category->discounts->count() > 0) {
+                $discounts = $this->category->discounts;
+            }
+
+            foreach ($this->category->ancestors as $parent) {
+                if ($parent->discounts->count() > 0) {
+                    $discounts = $parent->discounts;
+                    break;
+                }
+            }
+        }
+
+        return $discounts;
+    }
+
+    /**
+     * Get the product's direct or inherited subsequent taxes.
+     *
+     * @return \Illuminate\Support\Collection|mixed
+     */
+    public function getNestedTaxesAttribute()
+    {
+        $taxes = collect();
+
+        if ($this->taxes->count() > 0) {
+            $taxes = $this->taxes;
+        } elseif ($this->inherit_taxes == self::INHERIT_YES) {
+            if ($this->category->taxes->count() > 0) {
+                $taxes = $this->category->taxes;
+            }
+
+            foreach ($this->category->ancestors as $parent) {
+                if ($parent->taxes->count() > 0) {
+                    $taxes = $parent->taxes;
+                    break;
+                }
+            }
+        }
+
+        return $taxes;
+    }
+
+    /**
      * Get all images of a product as a collection.
      *
      * @return \Illuminate\Support\Collection
@@ -245,96 +392,6 @@ class Product extends Model
         $image = array_last($images);
 
         return isset($image['image']) ? $image['image'] : null;
-    }
-
-    /**
-     * Get the product's final price with discounts and taxes applied.
-     * First, the discounts are applied to the price and then the taxes.
-     * The discounts and taxes are applied in cascade.
-     *
-     * @return mixed
-     */
-    public function getFinalPriceAttribute()
-    {
-        return $this->attributes['price'] - $this->discount_value + $this->tax_value;
-    }
-
-    /**
-     * Get the product's price with discounts applied.
-     * Discounts are applied in cascade.
-     *
-     * @return float
-     */
-    public function getPriceWithDiscountsAttribute()
-    {
-        return $this->attributes['price'] - $this->discount_value;
-    }
-
-    /**
-     * Get the product's price with taxes applied.
-     * Taxes are applied in cascade.
-     *
-     * @return float
-     */
-    public function getPriceWithTaxesAttribute()
-    {
-        return $this->attributes['price'] + $this->tax_value;
-    }
-
-    /**
-     * Get only the value of discounts for a product.
-     * Discounts are applied in cascade.
-     *
-     * @return mixed
-     */
-    public function getDiscountValueAttribute()
-    {
-        $price = $this->attributes['price'];
-
-        foreach ($this->discounts as $discount) {
-            if (!$discount->canBeApplied()) {
-                continue;
-            }
-
-            switch ($discount->type) {
-                case Discount::TYPE_FIXED:
-                    $price -= $discount->rate;
-                    break;
-                case Discount::TYPE_PERCENT:
-                    $price -= ($discount->rate / 100) * $price;
-                    break;
-            }
-        }
-
-        return $this->attributes['price'] - $price;
-    }
-
-    /**
-     * Get only the value of taxes for a product.
-     * Taxes are applied in cascade.
-     *
-     * @return float
-     */
-    public function getTaxValueAttribute()
-    {
-        $price = $this->attributes['price'];
-
-        foreach ($this->taxes as $tax) {
-            if (!$tax->canBeApplied()) {
-                continue;
-            }
-
-            switch ($tax->type) {
-                case Tax::TYPE_FIXED:
-                    $price += $tax->rate;
-                    break;
-                case Tax::TYPE_PERCENT:
-                    $price += ($tax->rate / 100) * $price;
-                    break;
-            }
-        }
-
-        return $price - $this->attributes['price'];
     }
 
     /**
@@ -472,6 +529,52 @@ class Product extends Model
     }
 
     /**
+     * Establish if the product inherits discounts from it's main category.
+     * Or from it's main category's ancestors (parents until the root).
+     *
+     * @return bool
+     */
+    public function getInheritedDiscounts()
+    {
+        $category = $this->category;
+
+        if ($category->discounts->count() > 0) {
+            return $category->discounts;
+        }
+
+        foreach ($category->ancestors()->get() as $parent) {
+            if ($parent->discounts->count() > 0) {
+                return $parent->discounts;
+            }
+        }
+
+        return collect();
+    }
+
+    /**
+     * Establish if the product inherits taxes from it's main category.
+     * Or from it's main category's ancestors (parents until the root).
+     *
+     * @return bool
+     */
+    public function getInheritedTaxes()
+    {
+        $category = $this->category;
+
+        if ($category->taxes->count() > 0) {
+            return $category->taxes;
+        }
+
+        foreach ($category->ancestors()->get() as $parent) {
+            if ($parent->taxes->count() > 0) {
+                return $parent->taxes;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Set the options for the HasBlocks trait.
      *
      * @return BlockOptions
@@ -583,77 +686,5 @@ class Product extends Model
                 ]
             ]
         ];
-    }
-
-    /**
-     * Update the attributes many to many relation.
-     *
-     * @return void
-     */
-    private function touchAttributes()
-    {
-        $attributes = request()->get('attributes');
-
-        $this->attributes()->detach();
-
-        if ($attributes && is_array($attributes) && !empty($attributes)) {
-            ksort($attributes);
-
-            foreach ($attributes as $data) {
-                foreach ($data as $id => $attr) {
-                    if ($id && ($attribute = Attribute::find($id))) {
-                        $this->attributes()->save($attribute, $attr);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Update the discounts many to many relation.
-     *
-     * @return void
-     */
-    private function touchDiscounts()
-    {
-        $discounts = request()->get('discounts');
-
-        $this->discounts()->detach();
-
-        if ($discounts && is_array($discounts) && !empty($discounts)) {
-            ksort($discounts);
-
-            foreach ($discounts as $data) {
-                foreach ($data as $id => $attributes) {
-                    if ($id && ($discount = Discount::find($id))) {
-                        $this->discounts()->save($discount, $attributes);
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Update the taxes many to many relation.
-     *
-     * @return void
-     */
-    private function touchTaxes()
-    {
-        $taxes = request()->get('taxes');
-
-        $this->taxes()->detach();
-
-        if ($taxes && is_array($taxes) && !empty($taxes)) {
-            ksort($taxes);
-
-            foreach ($taxes as $data) {
-                foreach ($data as $id => $attributes) {
-                    if ($id && ($tax = Tax::find($id))) {
-                        $this->taxes()->save($tax, $attributes);
-                    }
-                }
-            }
-        }
     }
 }

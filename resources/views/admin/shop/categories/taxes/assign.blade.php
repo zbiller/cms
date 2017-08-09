@@ -1,31 +1,30 @@
-@php($productTaxes = $item->taxes()->get())
-@php($inheritedTaxes = $item->getInheritedTaxes())
+@php($categoryTaxes = $item->taxes()->get())
 
 {!! form()->hidden('touch_taxes', true) !!}
 
+<div class="box danger" style="margin-bottom: 20px;">
+    <span>
+        Please note that the applied taxes from a category are inherited by default by every product belonging to that category.
+    </span>
+</div>
 <div class="box warning" style="margin-bottom: 20px;">
     <span>
         Please note that when applying multiple taxes, the product's final price will increase progressively, applying the taxes in cascade in the order they are assigned.
     </span>
 </div>
-
-<div style="width: 100%; float: left; margin-bottom: 15px;">
-    {!! form_admin()->select('inherit_taxes', 'Inherit Taxes', $inherits) !!}
-</div>
-
 <div class="taxes-container">
     <table class="assign-table taxes-table" cellspacing="0" cellpadding="0" border="0">
         <thead>
-        <tr class="even nodrag nodrop">
-            <td>Name</td>
-            <td>Rate</td>
-            <td>Type</td>
-            <td class="actions-assign">Actions</td>
-        </tr>
+            <tr class="even nodrag nodrop">
+                <td>Name</td>
+                <td>Rate</td>
+                <td>Type</td>
+                <td class="actions-assign">Actions</td>
+            </tr>
         </thead>
         <tbody>
-        @if($productTaxes->count())
-            @foreach($productTaxes as $tax)
+        @if($categoryTaxes->count())
+            @foreach($categoryTaxes as $tax)
                 <tr id="{{ $tax->pivot->id }}" data-tax-id="{{ $tax->id }}" data-index="{{ $tax->pivot->id }}" class="{!! $disabled === true ? 'nodrag nodrop' : '' !!}">
                     <td>{{ $tax->name ?: 'N/A' }}</td>
                     <td>{{ $tax->rate ?: 'N/A' }}</td>
@@ -43,15 +42,7 @@
         @else
             <tr class="no-taxes-assigned no-assignments nodrag nodrop">
                 <td colspan="10">
-                    @if($item->inherit_taxes == \App\Models\Shop\Product::INHERIT_YES && $inheritedTaxes && $inheritedTaxes->count() > 0)
-                        <div class="block-inheritance">
-                            <span>This product inherits the following taxes from it's main category tree: </span>
-                            <em>{{ $inheritedTaxes->implode('name', ', ') }}.</em>
-                            <span>Assigning taxes here, will overwrite the inherited taxes.</span>
-                        </div>
-                    @else
-                        There are no taxes assigned to this product
-                    @endif
+                    There are no taxes assigned to this category
                 </td>
             </tr>
         @endif
@@ -77,10 +68,10 @@
     @endif
 
     <div class="taxes-request">
-        @if($productTaxes->count() > 0)
-            @foreach($productTaxes as $index => $tax)
+        @if($categoryTaxes->count() > 0)
+            @foreach($categoryTaxes as $index => $tax)
                 @php($pivot = $tax->pivot)
-                {!! form()->hidden('taxes[' . $pivot->id . '][' . $tax->id . ']', $pivot->product_id, ['class' => 'tax-input', 'data-index' => $pivot->id]) !!}
+                {!! form()->hidden('taxes[' . $pivot->id . '][' . $tax->id . ']', $pivot->category_id, ['class' => 'tax-input', 'data-index' => $pivot->id]) !!}
                 {!! form()->hidden('taxes[' . $pivot->id . '][' . $tax->id . '][ord]', $pivot->ord, ['class' => 'tax-input', 'data-index' => $pivot->id]) !!}
             @endforeach
         @endif
@@ -105,31 +96,9 @@
 <script type="x-template" id="no-taxes-template">
     <tr class="no-taxes-assigned nodrag nodrop">
         <td colspan="10">
-            @if($item->inherit_taxes == \App\Models\Shop\Product::INHERIT_YES && $inheritedTaxes && $inheritedTaxes->count() > 0)
-                <div class="block-inheritance">
-                    <span>This product inherits the following taxes from it's main category tree: </span>
-                    <em>{{ $inheritedTaxes->implode('name', ', ') }}.</em>
-                    <span>Assigning taxes here, will overwrite the inherited taxes.</span>
-                </div>
-            @else
-                There are no taxes assigned to this product
-            @endif
+            There are no taxes assigned to this category
         </td>
     </tr>
-</script>
-<script type="x-template" id="inherited-taxes-template">
-    @if($inheritedTaxes && $inheritedTaxes->count() > 0)
-        <div class="block-inheritance">
-            <span>This product inherits the following taxes from it's main category tree: </span>
-            <em>{{ $inheritedTaxes->implode('name', ', ') }}.</em>
-            <span>Assigning taxes here, will overwrite the inherited taxes.</span>
-        </div>
-    @else
-        There are no taxes assigned to this product
-    @endif
-</script>
-<script type="x-template" id="no-inherited-taxes-template">
-    There are no taxes assigned to this product
 </script>
 <script type="x-template" id="tax-request-template">
     {!! form()->hidden('taxes[#index#][#tax_id#]', '#tax_id#', ['class' => 'tax-input', 'data-index' => '#index#']) !!}
@@ -152,7 +121,7 @@
             if (select.val()) {
                 $.ajax({
                     type : 'POST',
-                    url: '{{ route('admin.products.load_tax') }}',
+                    url: '{{ route('admin.categories.load_tax') }}',
                     data: {
                         _token: token,
                         tax_id: select.val()
@@ -236,16 +205,6 @@
                     });
                 }
             });
-        }, inheritTaxes = function (_this) {
-            if (_this.val() == '{{ \App\Models\Shop\Product::INHERIT_YES }}') {
-                $('table.taxes-table').find('tr.no-taxes-assigned').find('td').html(
-                    $('#inherited-taxes-template').html()
-                );
-            } else {
-                $('table.taxes-table').find('tr.no-taxes-assigned').find('td').html(
-                    $('#no-inherited-taxes-template').html()
-                );
-            }
         }, getLastTaxIndex = function () {
             var inputs = $('div.taxes-request').find('input.tax-input');
             var max = 0;
@@ -278,10 +237,6 @@
                 e.preventDefault();
 
                 removeTax($(this));
-            });
-
-            $(document).on('change', 'select[name="inherit_taxes"]', function () {
-                inheritTaxes($(this));
             });
         });
     </script>

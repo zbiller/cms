@@ -19,6 +19,9 @@
             <td class="sortable" data-sort="price">
                 <i class="fa fa-sort"></i>&nbsp; Price
             </td>
+            <td class="sortable" data-sort="price">
+                <i class="fa fa-sort"></i>&nbsp; Total
+            </td>
             <td class="sortable" data-sort="quantity">
                 <i class="fa fa-sort"></i>&nbsp; Quantity
             </td>
@@ -36,6 +39,7 @@
                     <td>{{ $item->name ?: 'N/A' }}</td>
                     <td>{{ $item->category ? $item->category->name : 'N/A' }}</td>
                     <td>{{ $item->price ? number_format($item->price) . ' ' . $item->currency->code : 'N/A' }}</td>
+                    <td>{{ $item->final_price ? number_format($item->final_price) . ' ' . $item->currency->code : 'N/A' }}</td>
                     <td>{{ $item->quantity ?: 'N/A' }}</td>
                     <td>{{ isset($actives[$item->active]) ? $actives[$item->active] : 'N/A' }}</td>
                     <td>

@@ -7,6 +7,8 @@ use App\Http\Filters\Shop\CategoryFilter;
 use App\Http\Requests\Shop\CategoryRequest;
 use App\Http\Sorts\Shop\CategorySort;
 use App\Models\Shop\Category;
+use App\Models\Shop\Discount;
+use App\Models\Shop\Tax;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
 use App\Traits\CanCrud;
@@ -93,6 +95,10 @@ class CategoriesController extends Controller
             $this->view = view('admin.shop.categories.edit');
             $this->vars = [
                 'actives' => Category::$actives,
+                'discounts' => Discount::alphabetically()->active()->forProduct()->get(),
+                'taxes' => Tax::alphabetically()->active()->forProduct()->get(),
+                'discountTypes' => Discount::$types,
+                'taxTypes' => Tax::$types,
             ];
         });
     }
@@ -239,6 +245,10 @@ class CategoriesController extends Controller
             $this->view = view('admin.shop.categories.draft');
             $this->vars = [
                 'actives' => Category::$actives,
+                'discounts' => Discount::alphabetically()->active()->forProduct()->get(),
+                'taxes' => Tax::alphabetically()->active()->forProduct()->get(),
+                'discountTypes' => Discount::$types,
+                'taxTypes' => Tax::$types,
             ];
         }, $draft);
     }
@@ -255,6 +265,10 @@ class CategoriesController extends Controller
             $this->view = view('admin.shop.categories.limbo');
             $this->vars = [
                 'actives' => Category::$actives,
+                'discounts' => Discount::alphabetically()->active()->forProduct()->get(),
+                'taxes' => Tax::alphabetically()->active()->forProduct()->get(),
+                'discountTypes' => Discount::$types,
+                'taxTypes' => Tax::$types,
             ];
         }, function () use ($request) {
             $this->item->saveAsDraft($request->all());
@@ -276,7 +290,85 @@ class CategoriesController extends Controller
             $this->view = view('admin.shop.categories.revision');
             $this->vars = [
                 'actives' => Category::$actives,
+                'discounts' => Discount::alphabetically()->active()->forProduct()->get(),
+                'taxes' => Tax::alphabetically()->active()->forProduct()->get(),
+                'discountTypes' => Discount::$types,
+                'taxTypes' => Tax::$types,
             ];
         }, $revision);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function loadDiscount(Request $request)
+    {
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'Bad request'
+            ], 400);
+        }
+
+        $this->validate($request, [
+            'discount_id' => 'required|numeric',
+        ]);
+
+        try {
+            $discount = Discount::findOrFail($request->get('discount_id'));
+
+            return response()->json([
+                'status' => true,
+                'data' => [
+                    'id' => $discount->id,
+                    'name' => $discount->name ?: 'N/A',
+                    'rate' => $discount->rate ?: 'N/A',
+                    'type' => isset(Discount::$types[$discount->type]) ? Discount::$types[$discount->type] : 'N/A',
+                    'url' => route('admin.discounts.edit', $discount->id),
+                ],
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function loadTax(Request $request)
+    {
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'Bad request'
+            ], 400);
+        }
+
+        $this->validate($request, [
+            'tax_id' => 'required|numeric',
+        ]);
+
+        try {
+            $tax = Tax::findOrFail($request->get('tax_id'));
+
+            return response()->json([
+                'status' => true,
+                'data' => [
+                    'id' => $tax->id,
+                    'name' => $tax->name ?: 'N/A',
+                    'rate' => $tax->rate ?: 'N/A',
+                    'type' => isset(Tax::$types[$tax->type]) ? Tax::$types[$tax->type] : 'N/A',
+                    'url' => route('admin.taxes.edit', $tax->id),
+                ],
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
 }

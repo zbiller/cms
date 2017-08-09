@@ -60,6 +60,8 @@ class CreateShopTables extends Migration
 
             $table->text('metadata')->nullable()->nullable();
             $table->tinyInteger('active')->default(1);
+            $table->tinyInteger('inherit_discounts')->default(1);
+            $table->tinyInteger('inherit_taxes')->default(1);
             $table->integer('ord')->default(0);
 
             $table->timestamps();
@@ -220,6 +222,32 @@ class CreateShopTables extends Migration
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('tax_id')->references('id')->on('taxes')->onDelete('cascade')->onUpdate('cascade');
         });
+
+        Schema::create('category_discount', function (Blueprint $table) {
+            $table->increments('id');
+
+            $table->integer('category_id')->unsigned()->index();
+            $table->integer('discount_id')->unsigned()->index();
+            $table->integer('ord')->default(0);
+
+            $table->timestamps();
+
+            $table->foreign('category_id')->references('id')->on('product_categories')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('discount_id')->references('id')->on('discounts')->onDelete('cascade')->onUpdate('cascade');
+        });
+
+        Schema::create('category_tax', function (Blueprint $table) {
+            $table->increments('id');
+
+            $table->integer('category_id')->unsigned()->index();
+            $table->integer('tax_id')->unsigned()->index();
+            $table->integer('ord')->default(0);
+
+            $table->timestamps();
+
+            $table->foreign('category_id')->references('id')->on('product_categories')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('tax_id')->references('id')->on('taxes')->onDelete('cascade')->onUpdate('cascade');
+        });
     }
 
     /**
@@ -231,6 +259,8 @@ class CreateShopTables extends Migration
     {
         Schema::disableForeignKeyConstraints();
 
+        Schema::dropIfExists('category_tax');
+        Schema::dropIfExists('category_discount');
         Schema::dropIfExists('product_tax');
         Schema::dropIfExists('product_discount');
         Schema::dropIfExists('product_attribute');

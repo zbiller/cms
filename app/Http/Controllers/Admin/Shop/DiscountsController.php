@@ -117,4 +117,41 @@ class DiscountsController extends Controller
             $this->item->delete();
         });
     }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function load(Request $request)
+    {
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'Bad request'
+            ], 400);
+        }
+
+        $this->validate($request, [
+            'discount_id' => 'required|numeric',
+        ]);
+
+        try {
+            $discount = Discount::findOrFail($request->get('discount_id'));
+
+            return response()->json([
+                'status' => true,
+                'data' => [
+                    'id' => $discount->id,
+                    'name' => $discount->name ?: 'N/A',
+                    'rate' => $discount->rate ?: 'N/A',
+                    'type' => isset(Discount::$types[$discount->type]) ? Discount::$types[$discount->type] : 'N/A',
+                    'url' => route('admin.discounts.edit', $discount->id),
+                ],
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
 }

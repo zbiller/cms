@@ -77,13 +77,43 @@ p {
     border: 1px solid $colorGallery;
     text-align: center;
 
-    &.notification {
+    &.success {
+        @include calc(width, '100% - 2px');
+
+        margin: 5px 0;
+        padding: 15px;
+        border: 1px solid $colorEmerald;
+        background: lighten($colorEmerald, 37%);
+        text-align: left;
+    }
+
+    &.danger {
+        @include calc(width, '100% - 2px');
+
+        margin: 5px 0;
+        padding: 15px;
+        border: 1px solid $colorJaponica;
+        background: lighten($colorJaponica, 33%);
+        text-align: left;
+    }
+
+    &.warning {
         @include calc(width, '100% - 2px');
 
         margin: 5px 0;
         padding: 15px;
         border: 1px solid $colorGoldenTainoi;
         background: lighten($colorGoldenTainoi, 30%);
+        text-align: left;
+    }
+
+    &.info {
+        @include calc(width, '100% - 2px');
+
+        margin: 5px 0;
+        padding: 15px;
+        border: 1px solid $colorPictonBlue;
+        background: lighten($colorPictonBlue, 38%);
         text-align: left;
     }
 

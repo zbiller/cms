@@ -133,6 +133,7 @@ class ProductsController extends Controller
                 'taxes' => $taxes,
                 'currencies' => $currencies,
                 'actives' => Product::$actives,
+                'inherits' => Product::$inherits,
                 'discountTypes' => Discount::$types,
                 'taxTypes' => Tax::$types,
             ];

@@ -420,6 +420,12 @@ Route::group([
                 Route::match(['post', 'put'], 'preview/{category?}', ['as' => 'admin.product_categories.preview', 'uses' => 'CategoriesController@preview', 'permissions' => 'product-categories-preview']);
 
                 /**
+                 * Assignment Actions.
+                 */
+                Route::post('load-discount', ['as' => 'admin.categories.load_discount', 'uses' => 'CategoriesController@loadDiscount', 'permissions' => 'categories-edit']);
+                Route::post('load-tax', ['as' => 'admin.categories.load_tax', 'uses' => 'CategoriesController@loadTax', 'permissions' => 'categories-edit']);
+
+                /**
                  * Tree Actions.
                  */
                 Route::group([

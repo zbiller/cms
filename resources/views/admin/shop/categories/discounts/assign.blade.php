@@ -1,31 +1,30 @@
-@php($productDiscounts = $item->discounts()->get())
-@php($inheritedDiscounts = $item->getInheritedDiscounts())
+@php($categoryDiscounts = $item->discounts()->get())
 
 {!! form()->hidden('touch_discounts', true) !!}
 
+<div class="box danger" style="margin-bottom: 20px;">
+    <span>
+        Please note that the applied discounts from a category are inherited by default by every product belonging to that category.
+    </span>
+</div>
 <div class="box warning" style="margin-bottom: 20px;">
     <span>
         Please note that when applying multiple discounts, the product's final price will lower progressively, applying the discounts in cascade in the order they are assigned.
     </span>
 </div>
-
-<div style="width: 100%; float: left; margin-bottom: 15px;">
-    {!! form_admin()->select('inherit_discounts', 'Inherit Discounts', $inherits) !!}
-</div>
-
 <div class="discounts-container">
     <table class="assign-table discounts-table" cellspacing="0" cellpadding="0" border="0">
         <thead>
-        <tr class="even nodrag nodrop">
-            <td>Name</td>
-            <td>Rate</td>
-            <td>Type</td>
-            <td class="actions-assign">Actions</td>
-        </tr>
+            <tr class="even nodrag nodrop">
+                <td>Name</td>
+                <td>Rate</td>
+                <td>Type</td>
+                <td class="actions-assign">Actions</td>
+            </tr>
         </thead>
         <tbody>
-        @if($productDiscounts->count())
-            @foreach($productDiscounts as $discount)
+        @if($categoryDiscounts->count())
+            @foreach($categoryDiscounts as $discount)
                 <tr id="{{ $discount->pivot->id }}" data-discount-id="{{ $discount->id }}" data-index="{{ $discount->pivot->id }}" class="{!! $disabled === true ? 'nodrag nodrop' : '' !!}">
                     <td>{{ $discount->name ?: 'N/A' }}</td>
                     <td>{{ $discount->rate ?: 'N/A' }}</td>
@@ -43,15 +42,7 @@
         @else
             <tr class="no-discounts-assigned no-assignments nodrag nodrop">
                 <td colspan="10">
-                    @if($item->inherit_discounts == \App\Models\Shop\Product::INHERIT_YES && $inheritedDiscounts && $inheritedDiscounts->count() > 0)
-                        <div class="block-inheritance">
-                            <span>This product inherits the following discounts from it's main category tree: </span>
-                            <em>{{ $inheritedDiscounts->implode('name', ', ') }}.</em>
-                            <span>Assigning discounts here, will overwrite the inherited discounts.</span>
-                        </div>
-                    @else
-                        There are no discounts assigned to this product
-                    @endif
+                    There are no discounts assigned to this category
                 </td>
             </tr>
         @endif
@@ -77,10 +68,10 @@
     @endif
 
     <div class="discounts-request">
-        @if($productDiscounts->count() > 0)
-            @foreach($productDiscounts as $index => $discount)
+        @if($categoryDiscounts->count() > 0)
+            @foreach($categoryDiscounts as $index => $discount)
                 @php($pivot = $discount->pivot)
-                {!! form()->hidden('discounts[' . $pivot->id . '][' . $discount->id . ']', $pivot->product_id, ['class' => 'discount-input', 'data-index' => $pivot->id]) !!}
+                {!! form()->hidden('discounts[' . $pivot->id . '][' . $discount->id . ']', $pivot->category_id, ['class' => 'discount-input', 'data-index' => $pivot->id]) !!}
                 {!! form()->hidden('discounts[' . $pivot->id . '][' . $discount->id . '][ord]', $pivot->ord, ['class' => 'discount-input', 'data-index' => $pivot->id]) !!}
             @endforeach
         @endif
@@ -105,31 +96,9 @@
 <script type="x-template" id="no-discounts-template">
     <tr class="no-discounts-assigned nodrag nodrop">
         <td colspan="10">
-            @if($item->inherit_discounts == \App\Models\Shop\Product::INHERIT_YES && $inheritedDiscounts && $inheritedDiscounts->count() > 0)
-                <div class="block-inheritance">
-                    <span>This product inherits the following discounts from it's main category tree: </span>
-                    <em>{{ $inheritedDiscounts->implode('name', ', ') }}.</em>
-                    <span>Assigning discounts here, will overwrite the inherited discounts.</span>
-                </div>
-            @else
-                There are no discounts assigned to this product
-            @endif
+            There are no discounts assigned to this category
         </td>
     </tr>
-</script>
-<script type="x-template" id="inherited-discounts-template">
-    @if($inheritedDiscounts && $inheritedDiscounts->count() > 0)
-        <div class="block-inheritance">
-            <span>This product inherits the following discounts from it's main category tree: </span>
-            <em>{{ $inheritedDiscounts->implode('name', ', ') }}.</em>
-            <span>Assigning discounts here, will overwrite the inherited discounts.</span>
-        </div>
-    @else
-        There are no discounts assigned to this product
-    @endif
-</script>
-<script type="x-template" id="no-inherited-discounts-template">
-    There are no discounts assigned to this product
 </script>
 <script type="x-template" id="discount-request-template">
     {!! form()->hidden('discounts[#index#][#discount_id#]', '#discount_id#', ['class' => 'discount-input', 'data-index' => '#index#']) !!}
@@ -152,7 +121,7 @@
             if (select.val()) {
                 $.ajax({
                     type : 'POST',
-                    url: '{{ route('admin.products.load_discount') }}',
+                    url: '{{ route('admin.categories.load_discount') }}',
                     data: {
                         _token: token,
                         discount_id: select.val()
@@ -228,7 +197,7 @@
             }, 250);
         }, orderDiscounts = function () {
             $("table.discounts-table").tableDnD({
-                onDrop: function (table, row) {
+                onDrop: function(table, row){
                     var rows = table.tBodies[0].rows;
 
                     $(rows).each(function (index, selector) {
@@ -236,16 +205,6 @@
                     });
                 }
             });
-        }, inheritDiscounts = function (_this) {
-            if (_this.val() == '{{ \App\Models\Shop\Product::INHERIT_YES }}') {
-                $('table.discounts-table').find('tr.no-discounts-assigned').find('td').html(
-                    $('#inherited-discounts-template').html()
-                );
-            } else {
-                $('table.discounts-table').find('tr.no-discounts-assigned').find('td').html(
-                    $('#no-inherited-discounts-template').html()
-                );
-            }
         }, getLastDiscountIndex = function () {
             var inputs = $('div.discounts-request').find('input.discount-input');
             var max = 0;
@@ -278,10 +237,6 @@
                 e.preventDefault();
 
                 removeDiscount($(this));
-            });
-
-            $(document).on('change', 'select[name="inherit_discounts"]', function () {
-                inheritDiscounts($(this));
             });
         });
     </script>
