@@ -3,8 +3,8 @@
 namespace App\Traits;
 
 use App\Models\Auth\Permission;
-use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\QueryException;
 
 trait HasPermissions
 {

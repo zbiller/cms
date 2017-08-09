@@ -1,10 +1,9 @@
 <?php
 
-use Carbon\Carbon;
-use App\Models\Cms\Page;
 use App\Models\Cms\Layout;
-use Illuminate\Database\Seeder;
+use App\Models\Cms\Page;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Seeder;
 
 class PagesSeeder extends Seeder
 {

@@ -3,12 +3,12 @@
 namespace App\Models\Upload;
 
 use App\Models\Model;
+use App\Options\ActivityOptions;
 use App\Services\UploadService;
 use App\Traits\HasActivity;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
-use App\Options\ActivityOptions;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Schema\Blueprint;
 

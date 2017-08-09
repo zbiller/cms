@@ -11,7 +11,7 @@
 {!! validation('admin')->errors() !!}
 
 {!! form()->hidden('_class', \App\Models\Shop\Product::class) !!}
-{!! form()->hidden('_request', \App\Http\Requests\ProductRequest::class) !!}
+{!! form()->hidden('_request', \App\Http\Requests\Shop\ProductRequest::class) !!}
 {!! form()->hidden('_id', $item->exists ? $item->id : null) !!}
 {!! form()->hidden('_back', route('admin.products.drafts')) !!}
 
@@ -108,7 +108,7 @@
 
 @section('bottom_scripts')
     @if(!isset($on_draft) && !isset($on_limbo_draft) && !isset($on_revision))
-        {!! JsValidator::formRequest(App\Http\Requests\ProductRequest::class, '.form') !!}
+        {!! JsValidator::formRequest(App\Http\Requests\Shop\ProductRequest::class, '.form') !!}
     @endif
 
     <script type="text/javascript">

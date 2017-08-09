@@ -2,15 +2,15 @@
 
 namespace App\Mail;
 
+use App\Exceptions\EmailException;
 use App\Models\Cms\Email;
 use App\Models\Shop\Cart;
 use App\Models\Shop\Currency;
-use App\Exceptions\EmailException;
-use Illuminate\Mail\Mailable;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
 
 class UserCartReminder extends Mailable implements ShouldQueue
 {

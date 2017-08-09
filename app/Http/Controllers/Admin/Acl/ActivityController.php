@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin\Acl;
 
-use Exception;
 use App\Http\Controllers\Controller;
+use App\Http\Filters\Auth\ActivityFilter;
+use App\Http\Sorts\Auth\ActivitySort;
 use App\Models\Auth\Activity;
 use App\Models\Auth\User;
 use App\Traits\CanCrud;
-use App\Http\Filters\ActivityFilter;
-use App\Http\Sorts\ActivitySort;
+use Exception;
 use Illuminate\Http\Request;
 
 class ActivityController extends Controller

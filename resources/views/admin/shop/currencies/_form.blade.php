@@ -17,5 +17,5 @@
 {!! form_admin()->close() !!}
 
 @section('bottom_scripts')
-    {!! JsValidator::formRequest(App\Http\Requests\CurrencyRequest::class, '.form') !!}
+    {!! JsValidator::formRequest(App\Http\Requests\Shop\CurrencyRequest::class, '.form') !!}
 @append

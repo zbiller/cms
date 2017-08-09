@@ -1,0 +1,76 @@
+<?php
+
+namespace App\Http\Requests\Shop;
+
+use App\Http\Requests\Request;
+use App\Models\Shop\Tax;
+use Illuminate\Validation\Rule;
+
+class TaxRequest extends Request
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        return [
+            'name' => [
+                'required',
+                Rule::unique('taxes', 'name')
+                    ->ignore($this->route('tax') ? $this->route('tax')->id : null)
+            ],
+            'rate' => [
+                'required',
+                'numeric',
+            ],
+            'type' => [
+                'required',
+                Rule::in(array_keys(Tax::$types))
+            ],
+            'for' => [
+                'required',
+                Rule::in(array_keys(Tax::$for))
+            ],
+            'active' => [
+                'required',
+                Rule::in(array_keys(Tax::$actives))
+            ],
+            'uses' => [
+                'nullable',
+                'numeric',
+            ],
+            'start_date' => [
+                'nullable',
+                'before:end_date',
+            ],
+            'max_val' => [
+                'nullable',
+                'numeric',
+            ]
+        ];
+    }
+
+    /**
+     * Get the pretty name of attributes.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'min_val' => 'minimum value',
+        ];
+    }
+}

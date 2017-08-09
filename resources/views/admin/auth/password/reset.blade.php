@@ -20,5 +20,5 @@
 @endsection
 
 @section('bottom_scripts')
-    {!! JsValidator::formRequest(App\Http\Requests\ResetPasswordRequest::class) !!}
+    {!! JsValidator::formRequest(App\Http\Requests\Auth\PasswordResetRequest::class) !!}
 @append

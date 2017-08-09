@@ -3,11 +3,11 @@
 namespace App\Models\Location;
 
 use App\Models\Model;
+use App\Options\ActivityOptions;
 use App\Traits\HasActivity;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
-use App\Options\ActivityOptions;
 use Illuminate\Database\Eloquent\Builder;
 
 class State extends Model

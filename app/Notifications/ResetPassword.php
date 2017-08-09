@@ -3,10 +3,10 @@
 namespace App\Notifications;
 
 use App\Mail\PasswordRecovery;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Notifications\Notification;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Notifications\Notification;
 
 class ResetPassword extends Notification implements ShouldQueue
 {

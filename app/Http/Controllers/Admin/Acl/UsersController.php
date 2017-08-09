@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin\Acl;
 
 use App\Http\Controllers\Controller;
+use App\Http\Filters\Auth\UserFilter;
+use App\Http\Requests\Auth\UserRequest;
+use App\Http\Sorts\Auth\UserSort;
 use App\Models\Auth\User;
 use App\Traits\CanCrud;
-use App\Http\Requests\UserRequest;
-use App\Http\Filters\UserFilter;
-use App\Http\Sorts\UserSort;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller

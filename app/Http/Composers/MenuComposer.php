@@ -61,14 +61,14 @@ class MenuComposer
             });
 
             $menu->add(function ($item) use ($menu) {
-                $shop = $item->name('Shop Panel')->data('icon', 'fa-shopping-cart')->active('admin/products/*', 'admin/categories/*', 'admin/carts/*', 'admin/sets/*', 'admin/attributes/*', 'admin/discounts/*', 'admin/taxes/*');
+                $shop = $item->name('Shop Panel')->data('icon', 'fa-shopping-cart')->active('admin/products/*', 'admin/product-categories/*', 'admin/carts/*', 'admin/sets/*', 'admin/attributes/*', 'admin/discounts/*', 'admin/taxes/*');
 
                 $menu->child($shop, function (MenuItem $item) {
                     $item->name('Products')->url(route('admin.products.index'))->permissions('products-list')->active('admin/products/*');
                 });
 
                 $menu->child($shop, function (MenuItem $item) {
-                    $item->name('Categories')->url(route('admin.categories.index'))->permissions('categories-list')->active('admin/categories/*');
+                    $item->name('Categories')->url(route('admin.product_categories.index'))->permissions('product-categories-list')->active('admin/product-categories/*');
                 });
 
                 $menu->child($shop, function (MenuItem $item) {
@@ -76,7 +76,7 @@ class MenuComposer
                 });
 
                 $menu->child($shop, function (MenuItem $item) {
-                    $item->name('Attributes')->url(route('admin.sets.index'))->permissions('sets-list')->active('admin/sets/*', 'admin/attributes/*');
+                    $item->name('Attributes')->url(route('admin.attribute_sets.index'))->permissions('attributes-list')->active('admin/sets/*');
                 });
 
                 $menu->child($shop, function (MenuItem $item) {

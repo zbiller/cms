@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Front\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Auth\LoginRequest;
 use App\Models\Auth\User;
-use App\Http\Requests\LoginRequest;
-use App\Traits\CanAuthenticate;
 use App\Options\AuthenticateOptions;
+use App\Traits\CanAuthenticate;
 use Illuminate\Http\Request;
 
 class LoginController extends Controller

@@ -2,10 +2,10 @@
 
 namespace App\Sniffers;
 
-use SplFileObject;
-use ReflectionMethod;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use ReflectionMethod;
+use SplFileObject;
 
 class ModelSniffer
 {

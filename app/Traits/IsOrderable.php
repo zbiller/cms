@@ -2,12 +2,12 @@
 
 namespace App\Traits;
 
-use Exception;
-use ReflectionMethod;
-use InvalidArgumentException;
 use App\Models\Model;
 use App\Options\OrderOptions;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use InvalidArgumentException;
+use ReflectionMethod;
 
 trait IsOrderable
 {

@@ -6,7 +6,7 @@
     </section>
 
     <section class="view">
-        @include('admin.shop.categories._form', ['url' => route('admin.categories.store', ['parent' => $parent ?: null])])
+        @include('admin.shop.categories._form', ['url' => route('admin.product_categories.store', ['parent' => $parent ?: null])])
     </section>
 @endsection
 

@@ -2,10 +2,13 @@
 
 namespace App\Providers;
 
-use Gate, Cache, Log, Exception;
 use App\Models\Auth\Permission;
-use Illuminate\View\Compilers\BladeCompiler;
+use Cache;
+use Exception;
+use Gate;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\View\Compilers\BladeCompiler;
+use Log;
 
 class AclServiceProvider extends ServiceProvider
 {

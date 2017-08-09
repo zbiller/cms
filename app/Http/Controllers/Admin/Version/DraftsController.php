@@ -2,20 +2,19 @@
 
 namespace App\Http\Controllers\Admin\Version;
 
-use DB;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Validation\ValidationException;
-use InvalidArgumentException;
-use Validator;
-use Exception;
-use Throwable;
+use App\Exceptions\DraftException;
 use App\Http\Controllers\Controller;
 use App\Models\Model;
 use App\Models\Version\Draft;
-use App\Exceptions\DraftException;
-use Illuminate\Http\Request;
+use DB;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+use InvalidArgumentException;
+use Throwable;
+use Validator;
 
 class DraftsController extends Controller
 {
@@ -69,21 +68,27 @@ class DraftsController extends Controller
      */
     public function getDrafts(Request $request)
     {
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'Bad request'
+            ], 400);
+        }
+
         $this->validateDraftableAjaxData($request);
 
         try {
             $this->drafts = $this->getDraftRecords($request);
             $this->route = $request->get('route');
 
-            return [
+            return response()->json([
                 'status' => true,
                 'html' => $this->buildTableHtml(),
-            ];
+            ]);
 
         } catch (Exception $e) {
-            return [
+            return response()->json([
                 'status' => false,
-            ];
+            ]);
         }
     }
 

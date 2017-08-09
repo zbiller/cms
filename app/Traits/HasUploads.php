@@ -2,13 +2,13 @@
 
 namespace App\Traits;
 
-use Storage;
-use App\Services\UploadService;
-use App\Helpers\UploadedHelper;
-use App\Exceptions\UploadException;
 use App\Exceptions\CrudException;
+use App\Exceptions\UploadException;
+use App\Helpers\UploadedHelper;
+use App\Services\UploadService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
+use Storage;
 
 trait HasUploads
 {

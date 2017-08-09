@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin\Version;
 
-use DB;
-use Exception;
-use Throwable;
 use App\Http\Controllers\Controller;
 use App\Models\Version\Revision;
-use Illuminate\Http\Request;
+use DB;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
+use Throwable;
 
 class RevisionsController extends Controller
 {
@@ -34,21 +34,27 @@ class RevisionsController extends Controller
      */
     public function getRevisions(Request $request)
     {
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'Bad request'
+            ], 400);
+        }
+
         $this->validateRevisionableAjaxData($request);
 
         try {
             $this->revisions = $this->getRevisionRecords($request);
             $this->route = $request->get('route');
 
-            return [
+            return response()->json([
                 'status' => true,
                 'html' => $this->buildTableHtml(),
-            ];
+            ]);
 
         } catch (Exception $e) {
-            return [
+            return response()->json([
                 'status' => false,
-            ];
+            ]);
         }
     }
 

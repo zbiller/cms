@@ -3,8 +3,8 @@
 namespace App\Database;
 
 use App\Services\CacheService;
-use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\ConnectionInterface;
+use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Database\Query\Grammars\Grammar;
 use Illuminate\Database\Query\Processors\Processor;
 

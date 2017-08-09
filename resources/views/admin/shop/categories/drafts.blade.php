@@ -30,7 +30,7 @@
                         <td>{{ isset($actives[$item->active]) ? $actives[$item->active] : 'N/A' }}</td>
                         <td>
                             {!! button()->publishLimboDraft(route('admin.drafts.publish_limbo'), $item) !!}
-                            {!! button()->editRecord(route('admin.categories.limbo', $item->id)) !!}
+                            {!! button()->editRecord(route('admin.product_categories.limbo', $item->id)) !!}
                             {!! button()->deleteLimboDraft(route('admin.drafts.delete_limbo'), $item) !!}
                         </td>
                     </tr>
@@ -49,6 +49,6 @@
     {!! pagination('admin')->render($items) !!}
 
     <section class="actions">
-        {!! button()->goBack(route('admin.categories.index')) !!}
+        {!! button()->goBack(route('admin.product_categories.index')) !!}
     </section>
 @endsection

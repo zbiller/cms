@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands;
 
-use Mail;
-use Carbon\Carbon;
-use App\Models\Shop\Cart;
 use App\Mail\UserCartReminder;
+use App\Models\Shop\Cart;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Mail;
 
 class CartReminderCommand extends Command
 {

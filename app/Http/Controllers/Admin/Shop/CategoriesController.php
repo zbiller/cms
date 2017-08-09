@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers\Admin\Shop;
 
-use Exception;
+use App\Http\Controllers\Controller;
+use App\Http\Filters\Shop\CategoryFilter;
+use App\Http\Requests\Shop\CategoryRequest;
+use App\Http\Sorts\Shop\CategorySort;
 use App\Models\Shop\Category;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
-use App\Http\Controllers\Controller;
 use App\Traits\CanCrud;
-use App\Http\Requests\CategoryRequest;
-use App\Http\Filters\CategoryFilter;
-use App\Http\Sorts\CategorySort;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class CategoriesController extends Controller
 {
@@ -78,7 +77,7 @@ class CategoriesController extends Controller
     {
         return $this->_store(function () use ($request, $parent) {
             $this->item = Category::create($request->all(), $parent->exists ? $parent : null);
-            $this->redirect = redirect()->route('admin.categories.index');
+            $this->redirect = redirect()->route('admin.product_categories.index');
         }, $request);
     }
 
@@ -108,7 +107,7 @@ class CategoriesController extends Controller
     {
         return $this->_update(function () use ($category, $request) {
             $this->item = $category;
-            $this->redirect = redirect()->route('admin.categories.index');
+            $this->redirect = redirect()->route('admin.product_categories.index');
 
             $this->item->update($request->all());
         }, $request);
@@ -123,7 +122,7 @@ class CategoriesController extends Controller
     {
         return $this->_destroy(function () use ($category) {
             $this->item = $category;
-            $this->redirect = redirect()->route('admin.categories.index');
+            $this->redirect = redirect()->route('admin.product_categories.index');
 
             $this->item->delete();
         });
@@ -156,7 +155,7 @@ class CategoriesController extends Controller
     {
         return $this->_restore(function () use ($id) {
             $this->item = Category::onlyTrashed()->findOrFail($id);
-            $this->redirect = redirect()->route('admin.categories.deleted');
+            $this->redirect = redirect()->route('admin.product_categories.deleted');
 
             $this->item->doNotGenerateUrl()->doNotSaveBlocks()->restore();
         });
@@ -171,7 +170,7 @@ class CategoriesController extends Controller
     {
         return $this->_delete(function () use ($id) {
             $this->item = Category::onlyTrashed()->findOrFail($id);
-            $this->redirect = redirect()->route('admin.categories.deleted');
+            $this->redirect = redirect()->route('admin.product_categories.deleted');
 
             $this->item->forceDelete();
         });
@@ -186,7 +185,7 @@ class CategoriesController extends Controller
     {
         return $this->_duplicate(function () use ($category) {
             $this->item = $category->saveAsDuplicate();
-            $this->redirect = redirect()->route('admin.categories.edit', $this->item->id);
+            $this->redirect = redirect()->route('admin.product_categories.edit', $this->item->id);
         });
     }
 
@@ -259,7 +258,7 @@ class CategoriesController extends Controller
             ];
         }, function () use ($request) {
             $this->item->saveAsDraft($request->all());
-            $this->redirect = redirect()->route('admin.categories.drafts');
+            $this->redirect = redirect()->route('admin.product_categories.drafts');
         }, $id, $request, new CategoryRequest());
     }
 
@@ -279,166 +278,5 @@ class CategoriesController extends Controller
                 'actives' => Category::$actives,
             ];
         }, $revision);
-    }
-
-    /**
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function fixTree()
-    {
-        app(Category::class)->doNotGenerateUrl()->doNotSaveBlocks()->fixTree();
-
-        return back();
-    }
-
-    /**
-     * @param int|null $parent
-     * @return array
-     * @throws \Exception
-     */
-    public function loadTreeNodes($parent = null)
-    {
-        $data = [];
-
-        if ($parent) {
-            $items = Category::whereDescendantOf($parent)->defaultOrder()->get()->toTree();
-        } elseif (cache()->has('first_tree_load')) {
-            $items = Category::whereIsRoot()->defaultOrder()->get();
-            cache()->forget('first_tree_load');
-        } else {
-            cache()->forever('first_tree_load', true);
-
-            $data[] = [
-                'id' => 'root_id',
-                'text' => 'Categories',
-                'children' => true,
-                'type' => 'root',
-                'icon' => 'jstree-folder'
-            ];
-        }
-
-        if (isset($items)) {
-            foreach ($items as $item) {
-                $data[] = [
-                    'id' => $item->id,
-                    'text' => $item->name,
-                    'children' => $item->children->count() > 0 ? true : false,
-                    'type' => 'child',
-                    'icon' => 'jstree-folder'
-                ];
-            }
-        }
-
-        return $data;
-    }
-
-    /**
-     * @param Request $request
-     * @param CategoryFilter $filter
-     * @param CategorySort $sort
-     * @param int|null $parent
-     * @return \Illuminate\View\View
-     */
-    public function listTreeItems(Request $request, CategoryFilter $filter, CategorySort $sort, $parent = null)
-    {
-        $query = Category::filtered($request, $filter);
-
-        if ($request->has('sort')) {
-            $query->sorted($request, $sort);
-        } else {
-            $query->defaultOrder();
-        }
-
-        try {
-            $parent = Category::findOrFail($parent);
-
-            $query->whereParent($parent->id);
-        } catch (ModelNotFoundException $e) {
-            $query->whereIsRoot();
-        }
-
-        $items = $query->get();
-
-        return view('admin.shop.categories._table')->with([
-            'items' => $items,
-            'parent' => $parent,
-            'actives' => Category::$actives,
-        ]);
-    }
-
-    /**
-     * @param Request $request
-     * @return mixed
-     */
-    public function sortTreeItems(Request $request)
-    {
-        $tree = [];
-        $branch = head($request->input('tree'))['children'];
-
-        $this->rebuildTreeBranch($branch, $tree);
-
-        return app(Category::class)->doNotGenerateUrl()->doNotSaveBlocks()->rebuildTree($tree);
-    }
-
-    /**
-     * @param Request $request
-     * @return void
-     */
-    public function refreshTreeItemsUrls(Request $request)
-    {
-        $data = $request->input('data');
-
-        if ((int)$data['parent'] != (int)$data['old_parent']) {
-            $parent = Category::find($data['parent']);
-            $category = Category::find($data['node']);
-
-            $category->url()->update([
-                'url' => trim(($parent ? $parent->url->url . '/' : page()->find('shop')->url->url . '/') . $category->slug, '/')
-            ]);
-
-            $this->rebuildChildrenUrls($category->fresh(['url']));
-        }
-    }
-
-    /**
-     * @param array $items
-     * @param array $array
-     * @return void
-     */
-    private function rebuildTreeBranch(array $items, array &$array)
-    {
-        foreach ($items as $item) {
-            if (!is_numeric($item['id'])) {
-                continue;
-            }
-
-            $_item = [
-                'id' => $item['id'],
-                'name' => $item['text'],
-            ];
-
-            if (isset($item['children']) && is_array($item['children'])) {
-                $_item['children'] = [];
-
-                $this->rebuildTreeBranch($item['children'], $_item['children']);
-            }
-
-            $array[] = $_item;
-        }
-    }
-
-    /**
-     * @param Category $parent
-     * @return void
-     */
-    private function rebuildChildrenUrls(Category $parent)
-    {
-        foreach ($parent->children as $child) {
-            $child->url()->update([
-                'url' => trim(($parent ? $parent->url->url . '/' : '') . $child->slug, '/')
-            ]);
-
-            $this->rebuildChildrenUrls($child);
-        }
     }
 }

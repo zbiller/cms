@@ -2,16 +2,16 @@
 
 namespace App\Models\Cms;
 
-use Exception;
+use App\Exceptions\CrudException;
 use App\Models\Model;
-use App\Traits\HasNodes;
+use App\Options\ActivityOptions;
 use App\Traits\HasActivity;
 use App\Traits\HasMetadata;
+use App\Traits\HasNodes;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
-use App\Options\ActivityOptions;
-use App\Exceptions\CrudException;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 
 class Menu extends Model

@@ -36,5 +36,5 @@
 {!! form_admin()->close() !!}
 
 @section('bottom_scripts')
-    {!! JsValidator::formRequest(App\Http\Requests\TaxRequest::class, '.form') !!}
+    {!! JsValidator::formRequest(App\Http\Requests\Shop\TaxRequest::class, '.form') !!}
 @append

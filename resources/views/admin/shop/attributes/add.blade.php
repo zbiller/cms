@@ -2,7 +2,7 @@
 
 @section('content')
     <section class="tabs">
-        <a href="{{ route('admin.sets.edit', $set) }}" class="real-tab">Back To Set</a>
+        <a href="{{ route('admin.attribute_sets.edit', $set) }}" class="real-tab">Back To Set</a>
     </section>
 
     <section class="tabs">

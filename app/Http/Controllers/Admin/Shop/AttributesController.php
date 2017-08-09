@@ -2,19 +2,14 @@
 
 namespace App\Http\Controllers\Admin\Shop;
 
-use DB;
-use Exception;
 use App\Http\Controllers\Controller;
-use App\Models\Shop\Product;
-use App\Models\Shop\Set;
+use App\Http\Filters\Shop\AttributeFilter;
+use App\Http\Requests\Shop\AttributeRequest;
+use App\Http\Sorts\Shop\AttributeSort;
 use App\Models\Shop\Attribute;
-use App\Models\Version\Draft;
-use App\Models\Version\Revision;
+use App\Models\Shop\Attribute\Set;
 use App\Traits\CanCrud;
 use App\Traits\CanOrder;
-use App\Http\Requests\AttributeRequest;
-use App\Http\Filters\AttributeFilter;
-use App\Http\Sorts\AttributeSort;
 use Illuminate\Http\Request;
 
 class AttributesController extends Controller

@@ -2,17 +2,17 @@
 
 namespace App\Traits;
 
-use DB;
-use Relation;
-use Closure;
-use Exception;
-use ReflectionMethod;
+use App\Exceptions\RevisionException;
 use App\Models\Model;
 use App\Models\Version\Revision;
-use App\Sniffers\ModelSniffer;
 use App\Options\RevisionOptions;
-use App\Exceptions\RevisionException;
+use App\Sniffers\ModelSniffer;
+use Closure;
+use DB;
+use Exception;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use ReflectionMethod;
+use Relation;
 
 trait HasRevisions
 {

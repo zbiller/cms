@@ -2,18 +2,18 @@
 
 namespace App\Models\Shop;
 
+use App\Exceptions\CartException;
 use App\Mail\UserCartReminder;
-use DB;
-use Exception;
-use Carbon\Carbon;
-use App\Models\Model;
 use App\Models\Auth\User;
+use App\Models\Model;
 use App\Models\Shop\Cart\Item;
+use App\Scopes\WithCartTotalAndCountScope;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
-use App\Scopes\WithCartTotalAndCountScope;
-use App\Exceptions\CartException;
+use Carbon\Carbon;
+use DB;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Mail;
 

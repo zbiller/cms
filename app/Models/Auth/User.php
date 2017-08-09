@@ -2,19 +2,20 @@
 
 namespace App\Models\Auth;
 
-use App\Traits\HasRoles;
-use App\Traits\HasActivity;
-use App\Traits\IsCacheable;
-use App\Traits\IsVerifiable;
-use App\Traits\IsFilterable;
-use App\Traits\IsSortable;
-use App\Scopes\WithUserPersonScope;
+use App\Models\Auth\User\Address;
+use App\Notifications\ResetPassword;
 use App\Options\ActivityOptions;
 use App\Options\VerifyOptions;
+use App\Scopes\WithUserPersonScope;
+use App\Traits\HasActivity;
+use App\Traits\HasRoles;
+use App\Traits\IsCacheable;
+use App\Traits\IsFilterable;
+use App\Traits\IsSortable;
+use App\Traits\IsVerifiable;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Notifications\Notifiable;
-use App\Notifications\ResetPassword;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {

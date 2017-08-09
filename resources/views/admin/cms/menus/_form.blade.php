@@ -24,5 +24,5 @@
 {!! form_admin()->close() !!}
 
 @section('bottom_scripts')
-    {!! JsValidator::formRequest(App\Http\Requests\MenuRequest::class, '.form') !!}
+    {!! JsValidator::formRequest(App\Http\Requests\Cms\MenuRequest::class, '.form') !!}
 @append

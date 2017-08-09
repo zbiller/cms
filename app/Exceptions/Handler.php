@@ -3,9 +3,9 @@
 namespace App\Exceptions;
 
 use Exception;
+use GrahamCampbell\Exceptions\NewExceptionHandler as ExceptionHandler;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Http\Exceptions\MaintenanceModeException;
-use GrahamCampbell\Exceptions\NewExceptionHandler as ExceptionHandler;
 
 class Handler extends ExceptionHandler
 {

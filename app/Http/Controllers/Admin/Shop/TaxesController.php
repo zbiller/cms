@@ -2,17 +2,13 @@
 
 namespace App\Http\Controllers\Admin\Shop;
 
-use DB;
-use Exception;
 use App\Http\Controllers\Controller;
-use App\Models\Shop\Product;
+use App\Http\Filters\Shop\TaxFilter;
+use App\Http\Requests\Shop\TaxRequest;
+use App\Http\Sorts\Shop\TaxSort;
 use App\Models\Shop\Tax;
-use App\Models\Version\Draft;
-use App\Models\Version\Revision;
 use App\Traits\CanCrud;
-use App\Http\Requests\TaxRequest;
-use App\Http\Filters\TaxFilter;
-use App\Http\Sorts\TaxSort;
+use Exception;
 use Illuminate\Http\Request;
 
 class TaxesController extends Controller

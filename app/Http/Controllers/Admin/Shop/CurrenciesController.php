@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin\Shop;
 
-use Exception;
 use App\Http\Controllers\Controller;
+use App\Http\Filters\Shop\CurrencyFilter;
+use App\Http\Requests\Shop\CurrencyRequest;
+use App\Http\Sorts\Shop\CurrencySort;
 use App\Models\Shop\Currency;
 use App\Traits\CanCrud;
-use App\Http\Requests\CurrencyRequest;
-use App\Http\Filters\CurrencyFilter;
-use App\Http\Sorts\CurrencySort;
+use Exception;
 use Illuminate\Http\Request;
 
 class CurrenciesController extends Controller

@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Admin\Location;
 
 use App\Http\Controllers\Controller;
+use App\Http\Filters\Location\CityFilter;
+use App\Http\Requests\Location\CityRequest;
+use App\Http\Sorts\Location\CitySort;
 use App\Models\Location\City;
 use App\Models\Location\Country;
 use App\Models\Location\State;
 use App\Traits\CanCrud;
-use App\Http\Requests\CityRequest;
-use App\Http\Filters\CityFilter;
-use App\Http\Sorts\CitySort;
 use Illuminate\Http\Request;
 
 class CitiesController extends Controller
@@ -115,12 +115,19 @@ class CitiesController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param Country|null $country
      * @param State|null $state
      * @return array
      */
-    public function get(Country $country = null, State $state = null)
+    public function get(Request $request, Country $country = null, State $state = null)
     {
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'Bad request'
+            ], 400);
+        }
+
         $query = City::alphabetically();
 
         if ($country && $country->exists) {
@@ -140,9 +147,9 @@ class CitiesController extends Controller
             ];
         }
 
-        return [
+        return response()->json([
             'status' => true,
             'cities' => $cities,
-        ];
+        ]);
     }
 }

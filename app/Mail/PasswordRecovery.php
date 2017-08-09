@@ -2,13 +2,13 @@
 
 namespace App\Mail;
 
-use App\Models\Cms\Email;
 use App\Exceptions\EmailException;
+use App\Models\Cms\Email;
 use Illuminate\Bus\Queueable;
-use Illuminate\Mail\Mailable;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
 
 class PasswordRecovery extends Mailable implements ShouldQueue
 {

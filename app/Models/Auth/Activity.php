@@ -2,13 +2,13 @@
 
 namespace App\Models\Auth;
 
-use Exception;
-use Carbon\Carbon;
+use App\Exceptions\ActivityException;
 use App\Models\Model;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
-use App\Exceptions\ActivityException;
+use Carbon\Carbon;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 
 class Activity extends Model

@@ -29,8 +29,8 @@
                         <td>{{ $item->url ? $item->url->url : 'N/A' }}</td>
                         <td>{{ isset($actives[$item->active]) ? $actives[$item->active] : 'N/A' }}</td>
                         <td>
-                            {!! button()->restoreRecord(route('admin.categories.restore', $item->id)) !!}
-                            {!! button()->deleteRecord(route('admin.categories.delete', $item->id)) !!}
+                            {!! button()->restoreRecord(route('admin.product_categories.restore', $item->id)) !!}
+                            {!! button()->deleteRecord(route('admin.product_categories.delete', $item->id)) !!}
                         </td>
                     </tr>
                 @endforeach
@@ -48,6 +48,6 @@
     {!! pagination('admin')->render($items) !!}
 
     <section class="actions">
-        {!! button()->goBack(route('admin.categories.index')) !!}
+        {!! button()->goBack(route('admin.product_categories.index')) !!}
     </section>
 @endsection

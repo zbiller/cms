@@ -2,13 +2,13 @@
 
 namespace App\Models\Shop;
 
-use Carbon\Carbon;
 use App\Models\Model;
+use App\Options\ActivityOptions;
 use App\Traits\HasActivity;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
-use App\Options\ActivityOptions;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 
 class Tax extends Model

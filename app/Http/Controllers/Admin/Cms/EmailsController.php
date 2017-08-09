@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin\Cms;
 
-use DB;
-use Exception;
 use App\Http\Controllers\Controller;
+use App\Http\Filters\Cms\EmailFilter;
+use App\Http\Requests\Cms\EmailRequest;
+use App\Http\Sorts\Cms\EmailSort;
 use App\Models\Cms\Email;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
 use App\Traits\CanCrud;
-use App\Http\Filters\EmailFilter;
-use App\Http\Sorts\EmailSort;
-use App\Http\Requests\EmailRequest;
+use DB;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Mail\Markdown;
 

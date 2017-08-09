@@ -3,15 +3,17 @@
 namespace App\Models\Shop;
 
 use App\Models\Model;
-use App\Traits\HasSlug;
-use App\Traits\HasActivity;
-use App\Traits\IsCacheable;
-use App\Traits\IsFilterable;
-use App\Traits\IsSortable;
-use App\Traits\IsOrderable;
-use App\Options\SlugOptions;
+use App\Models\Shop\Attribute\Set;
+use App\Models\Shop\Attribute\Value;
 use App\Options\ActivityOptions;
 use App\Options\OrderOptions;
+use App\Options\SlugOptions;
+use App\Traits\HasActivity;
+use App\Traits\HasSlug;
+use App\Traits\IsCacheable;
+use App\Traits\IsFilterable;
+use App\Traits\IsOrderable;
+use App\Traits\IsSortable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 

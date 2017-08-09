@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use Exception;
-use App\Traits\IsCacheable;
 use App\Sniffers\ModelSniffer;
+use App\Traits\IsCacheable;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 
 class CacheService

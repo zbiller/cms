@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin\Location;
 
 use App\Http\Controllers\Controller;
+use App\Http\Filters\Location\CountryFilter;
+use App\Http\Requests\Location\CountryRequest;
+use App\Http\Sorts\Location\CountrySort;
 use App\Models\Location\Country;
 use App\Traits\CanCrud;
-use App\Http\Requests\CountryRequest;
-use App\Http\Filters\CountryFilter;
-use App\Http\Sorts\CountrySort;
 use Illuminate\Http\Request;
 
 class CountriesController extends Controller

@@ -19,5 +19,5 @@
 {!! form_admin()->close() !!}
 
 @section('bottom_scripts')
-    {!! JsValidator::formRequest(App\Http\Requests\LayoutRequest::class, '.form') !!}
+    {!! JsValidator::formRequest(App\Http\Requests\Cms\LayoutRequest::class, '.form') !!}
 @append

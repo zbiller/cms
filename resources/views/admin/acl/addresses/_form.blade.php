@@ -17,7 +17,7 @@
 {!! form_admin()->close() !!}
 
 @section('bottom_scripts')
-    {!! JsValidator::formRequest(App\Http\Requests\AddressRequest::class, '.form') !!}
+    {!! JsValidator::formRequest(App\Http\Requests\Auth\AddressRequest::class, '.form') !!}
 
     <script type="text/javascript">
         var countrySelect = $('select[name="country_id"]');

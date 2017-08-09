@@ -11,7 +11,7 @@
 {!! validation('admin')->errors() !!}
 
 {!! form()->hidden('_class', \App\Models\Cms\Page::class) !!}
-{!! form()->hidden('_request', \App\Http\Requests\PageRequest::class) !!}
+{!! form()->hidden('_request', \App\Http\Requests\Cms\PageRequest::class) !!}
 {!! form()->hidden('_id', $item->exists ? $item->id : null) !!}
 {!! form()->hidden('_back', route('admin.pages.drafts')) !!}
 
@@ -51,7 +51,7 @@
     <script type="text/javascript">
         var type = $('select[name="type"]');
         var getLayouts = function (_this) {
-            var url = '{{ route('admin.pages.get_layouts') }}' + '/' + type.val();
+            var url = '{{ route('admin.pages.layouts') }}' + '/' + type.val();
             var select = $('select[name="layout_id"]');
 
             $.ajax({
@@ -61,8 +61,8 @@
                     if (data.status === true) {
                         select.empty();
 
-                        $.each(data.layouts, function (id, name) {
-                            select.append('<option value="' + id + '">' + name + '</option>');
+                        $.each(data.items, function (index, item) {
+                            select.append('<option value="' + item.id + '">' + item.name + '</option>');
                         });
 
                         select.trigger("chosen:updated");
@@ -87,6 +87,6 @@
 
 @if(!isset($on_draft) && !isset($on_limbo_draft) && !isset($on_revision))
     @section('bottom_scripts')
-        {!! JsValidator::formRequest(App\Http\Requests\PageRequest::class, '.form') !!}
+        {!! JsValidator::formRequest(App\Http\Requests\Cms\PageRequest::class, '.form') !!}
     @append
 @endif

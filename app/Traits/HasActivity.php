@@ -3,12 +3,12 @@
 namespace App\Traits;
 
 use App\Exceptions\ActivityException;
-use Exception;
-use ReflectionMethod;
 use App\Models\Auth\Activity;
 use App\Options\ActivityOptions;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use ReflectionMethod;
 
 trait HasActivity
 {

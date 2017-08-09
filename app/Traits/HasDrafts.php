@@ -2,19 +2,19 @@
 
 namespace App\Traits;
 
-use DB;
-use Relation;
-use Closure;
-use Exception;
-use ReflectionMethod;
-use BadMethodCallException;
+use App\Exceptions\DraftException;
 use App\Models\Model;
 use App\Models\Version\Draft;
-use App\Scopes\DraftingScope;
 use App\Options\DraftOptions;
+use App\Scopes\DraftingScope;
 use App\Sniffers\ModelSniffer;
-use App\Exceptions\DraftException;
+use BadMethodCallException;
+use Closure;
+use DB;
+use Exception;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use ReflectionMethod;
+use Relation;
 
 trait HasDrafts
 {

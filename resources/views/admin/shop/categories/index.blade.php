@@ -17,8 +17,8 @@
 @section('footer')
     <section class="actions">
         {!! button()->updatePage() !!}
-        {!! button()->deletedRecords(route('admin.categories.deleted')) !!}
-        {!! button()->draftedRecords(route('admin.categories.drafts')) !!}
-        {!! button()->addRecord(route('admin.categories.create')) !!}
+        {!! button()->deletedRecords(route('admin.product_categories.deleted')) !!}
+        {!! button()->draftedRecords(route('admin.product_categories.drafts')) !!}
+        {!! button()->addRecord(route('admin.product_categories.create')) !!}
     </section>
 @endsection

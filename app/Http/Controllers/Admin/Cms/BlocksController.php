@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers\Admin\Cms;
 
-use DB;
-use Exception;
 use App\Http\Controllers\Controller;
+use App\Http\Filters\Cms\BlockFilter;
+use App\Http\Requests\Cms\BlockRequest;
+use App\Http\Sorts\Cms\BlockSort;
 use App\Models\Cms\Block;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
 use App\Traits\CanCrud;
-use App\Http\Requests\BlockRequest;
-use App\Http\Filters\BlockFilter;
-use App\Http\Sorts\BlockSort;
+use DB;
+use Exception;
 use Illuminate\Http\Request;
 
 class BlocksController extends Controller
@@ -252,6 +252,12 @@ class BlocksController extends Controller
      */
     public function get(Request $request)
     {
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'Bad request'
+            ], 400);
+        }
+
         $this->validate($request, [
             'blockable_id' => 'required|numeric',
             'blockable_type' => 'required',
@@ -276,7 +282,7 @@ class BlocksController extends Controller
                 $model->rollbackToRevision($revision);
             }
 
-            return [
+            return response()->json([
                 'status' => true,
                 'html' => view('helpers::block.partials.blocks')->with([
                     'model' => $model,
@@ -286,12 +292,12 @@ class BlocksController extends Controller
                     'revision' => isset($revision) ? $revision : null,
                     'disabled' => $request->get('disabled') ? true : false,
                 ])->render(),
-            ];
+            ]);
         } catch (Exception $e) {
-            return [
+            return response()->json([
                 'status' => false,
                 'message' => $e->getMessage(),
-            ];
+            ]);
         }
     }
 
@@ -301,6 +307,12 @@ class BlocksController extends Controller
      */
     public function row(Request $request)
     {
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'Bad request'
+            ], 400);
+        }
+
         $this->validate($request, [
             'block_id' => 'required|numeric',
         ]);
@@ -308,7 +320,7 @@ class BlocksController extends Controller
         try {
             $block = Block::findOrFail($request->get('block_id'));
 
-            return [
+            return response()->json([
                 'status' => true,
                 'data' => [
                     'id' => $block->id,
@@ -316,12 +328,12 @@ class BlocksController extends Controller
                     'type' => $block->type ?: 'N/A',
                     'url' => route('admin.blocks.edit', $block->id),
                 ],
-            ];
+            ]);
         } catch (Exception $e) {
-            return [
+            return response()->json([
                 'status' => false,
                 'message' => $e->getMessage(),
-            ];
+            ]);
         }
     }
 }

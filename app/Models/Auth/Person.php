@@ -14,7 +14,7 @@ class Person extends Model
      *
      * @var string
      */
-    protected $table = 'persons';
+    protected $table = 'people';
 
     /**
      * The attributes that are mass assignable.

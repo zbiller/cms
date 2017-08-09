@@ -21,8 +21,8 @@
                 <td>{{ $item->url ? $item->url->url : 'N/A' }}</td>
                 <td>{{ isset($actives[$item->active]) ? $actives[$item->active] : 'N/A' }}</td>
                 <td>
-                    {!! button()->editRecord(route('admin.categories.edit', $item->id)) !!}
-                    {!! button()->deleteRecord(route('admin.categories.destroy', $item->id)) !!}
+                    {!! button()->editRecord(route('admin.product_categories.edit', $item->id)) !!}
+                    {!! button()->deleteRecord(route('admin.product_categories.destroy', $item->id)) !!}
                 </td>
             </tr>
         @endforeach

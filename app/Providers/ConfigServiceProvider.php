@@ -2,10 +2,10 @@
 
 namespace App\Providers;
 
-use App\Configs\UploadConfig;
+use App\Configs\ActivityConfig;
 use App\Configs\CacheConfig;
 use App\Configs\ShopConfig;
-use App\Configs\ActivityConfig;
+use App\Configs\UploadConfig;
 use Illuminate\Support\ServiceProvider;
 
 class ConfigServiceProvider extends ServiceProvider

@@ -2,9 +2,9 @@
 
 namespace App\Console\Commands;
 
-use DB;
-use Carbon\Carbon;
 use App\Models\Shop\Cart;
+use Carbon\Carbon;
+use DB;
 use Illuminate\Console\Command;
 
 class CartCleanCommand extends Command

@@ -1,4 +1,4 @@
-@extends('layouts::' . $page->layout->blade)
+@extends('layouts::default.default')
 
 @section('content')
 <!--========== PAGE LAYOUT ==========-->

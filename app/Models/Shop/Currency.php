@@ -2,17 +2,17 @@
 
 namespace App\Models\Shop;
 
-use Swap;
-use Exception;
+use App\Exceptions\CurrencyException;
 use App\Models\Model;
+use App\Options\ActivityOptions;
 use App\Traits\HasActivity;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
-use App\Options\ActivityOptions;
-use App\Exceptions\CurrencyException;
-use Illuminate\Database\Eloquent\Builder;
+use Exception;
 use Exchanger\Exception\ChainException;
+use Illuminate\Database\Eloquent\Builder;
+use Swap;
 
 class Currency extends Model
 {

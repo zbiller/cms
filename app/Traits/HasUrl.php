@@ -2,15 +2,15 @@
 
 namespace App\Traits;
 
+use App\Exceptions\UrlException;
+use App\Models\Cms\Url;
+use App\Models\Model;
+use App\Options\SlugOptions;
+use App\Options\UrlOptions;
 use DB;
 use Exception;
-use ReflectionMethod;
-use App\Models\Model;
-use App\Models\Cms\Url;
-use App\Options\UrlOptions;
-use App\Options\SlugOptions;
-use App\Exceptions\UrlException;
 use Illuminate\Database\Eloquent\Builder;
+use ReflectionMethod;
 
 trait HasUrl
 {

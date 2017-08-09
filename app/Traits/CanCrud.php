@@ -2,30 +2,30 @@
 
 namespace App\Traits;
 
-use DB;
-use Route;
-use Closure;
-use Exception;
+use App\Exceptions\CrudException;
+use App\Exceptions\DraftException;
+use App\Exceptions\DuplicateException;
+use App\Exceptions\RevisionException;
+use App\Exceptions\UrlException;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
 use App\Services\CacheService;
-use App\Exceptions\CrudException;
-use App\Exceptions\DuplicateException;
-use App\Exceptions\UrlException;
-use App\Exceptions\DraftException;
-use App\Exceptions\RevisionException;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
-use Illuminate\Http\RedirectResponse;
+use Closure;
+use DB;
+use Exception;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Routing\ControllerDispatcher;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Symfony\Component\HttpFoundation\File\Exception\UploadException;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Routing\ControllerDispatcher;
 use Illuminate\Routing\Route as Router;
+use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
+use Route;
+use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 
 trait CanCrud
 {

@@ -2,27 +2,28 @@
 
 namespace App\Models\Shop;
 
+use App\Exceptions\CartException;
 use App\Models\Model;
-use App\Traits\HasUploads;
-use App\Traits\HasBlocks;
-use App\Traits\HasUrl;
-use App\Traits\HasDrafts;
-use App\Traits\HasRevisions;
-use App\Traits\HasDuplicates;
+use App\Models\Shop\Attribute\Value;
+use App\Options\ActivityOptions;
+use App\Options\BlockOptions;
+use App\Options\DraftOptions;
+use App\Options\DuplicateOptions;
+use App\Options\OrderOptions;
+use App\Options\RevisionOptions;
+use App\Options\UrlOptions;
 use App\Traits\HasActivity;
+use App\Traits\HasBlocks;
+use App\Traits\HasDrafts;
+use App\Traits\HasDuplicates;
 use App\Traits\HasMetadata;
+use App\Traits\HasRevisions;
+use App\Traits\HasUploads;
+use App\Traits\HasUrl;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
-use App\Traits\IsSortable;
 use App\Traits\IsOrderable;
-use App\Options\BlockOptions;
-use App\Options\UrlOptions;
-use App\Options\DraftOptions;
-use App\Options\RevisionOptions;
-use App\Options\DuplicateOptions;
-use App\Options\ActivityOptions;
-use App\Options\OrderOptions;
-use App\Exceptions\CartException;
+use App\Traits\IsSortable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -360,8 +361,8 @@ class Product extends Model
         $specifications = [];
 
         $attributes = $this->attributes(false)->with('set')
-            ->join('sets', 'sets.id', '=', 'attributes.set_id')
-            ->orderBy('sets.ord')->orderBy('product_attribute.ord');
+            ->join('attribute_sets', 'attribute_sets.id', '=', 'attributes.set_id')
+            ->orderBy('attribute_sets.ord')->orderBy('product_attribute.ord');
 
         foreach ($attributes->get() as $attribute) {
             $set = $attribute->set;

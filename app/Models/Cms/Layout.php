@@ -3,13 +3,13 @@
 namespace App\Models\Cms;
 
 use App\Models\Model;
-use App\Traits\HasBlocks;
+use App\Options\ActivityOptions;
+use App\Options\BlockOptions;
 use App\Traits\HasActivity;
+use App\Traits\HasBlocks;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
-use App\Options\BlockOptions;
-use App\Options\ActivityOptions;
 use Illuminate\Database\Eloquent\Builder;
 
 class Layout extends Model

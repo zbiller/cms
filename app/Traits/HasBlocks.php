@@ -2,15 +2,14 @@
 
 namespace App\Traits;
 
-use App\Models\Cms\Layout;
+use App\Exceptions\BlockException;
+use App\Models\Cms\Block;
+use App\Models\Model;
+use App\Options\BlockOptions;
 use DB;
 use Exception;
-use ReflectionMethod;
-use App\Models\Model;
-use App\Models\Cms\Block;
-use App\Options\BlockOptions;
-use App\Exceptions\BlockException;
 use Illuminate\Http\Request;
+use ReflectionMethod;
 
 trait HasBlocks
 {

@@ -116,7 +116,7 @@
             if (select.val()) {
                 $.ajax({
                     type : 'POST',
-                    url: '{{ route('admin.products.load_one_tax') }}',
+                    url: '{{ route('admin.products.load_tax') }}',
                     data: {
                         _token: token,
                         tax_id: select.val()

@@ -8,12 +8,12 @@
 
 namespace App\Traits;
 
-use Exception;
-use Illuminate\Foundation\Http\FormRequest;
-use ReflectionMethod;
 use App\Options\AuthenticateOptions;
-use Illuminate\Http\Request;
+use Exception;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
+use ReflectionMethod;
 
 trait CanAuthenticate
 {

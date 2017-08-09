@@ -16,5 +16,5 @@
 @endsection
 
 @section('bottom_scripts')
-    {!! JsValidator::formRequest(App\Http\Requests\LoginRequest::class) !!}
+    {!! JsValidator::formRequest(App\Http\Requests\Auth\LoginRequest::class) !!}
 @append

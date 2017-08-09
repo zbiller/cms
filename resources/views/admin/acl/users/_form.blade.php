@@ -22,5 +22,5 @@
 {!! form_admin()->close() !!}
 
 @section('bottom_scripts')
-    {!! JsValidator::formRequest(App\Http\Requests\UserRequest::class, '.form') !!}
+    {!! JsValidator::formRequest(App\Http\Requests\Auth\UserRequest::class, '.form') !!}
 @append

@@ -1,14 +1,14 @@
 <?php
 
 use App\Models\Shop\Attribute;
+use App\Models\Shop\Attribute\Set;
+use App\Models\Shop\Attribute\Value;
+use App\Models\Shop\Category as ProductCategory;
 use App\Models\Shop\Currency;
 use App\Models\Shop\Discount;
 use App\Models\Shop\Product;
-use App\Models\Shop\Set;
 use App\Models\Shop\Tax;
-use App\Models\Shop\Value;
 use Illuminate\Database\Seeder;
-use App\Models\Shop\Category as ProductCategory;
 
 class ShopSeeder extends Seeder
 {
@@ -19,11 +19,11 @@ class ShopSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('categories')->delete();
+        DB::table('product_categories')->delete();
         DB::table('products')->delete();
         DB::table('discounts')->delete();
         DB::table('taxes')->delete();
-        DB::table('sets')->delete();
+        DB::table('attribute_sets')->delete();
         DB::table('attributes')->delete();
 
         DB::table('urls')->whereNotIn('url', [

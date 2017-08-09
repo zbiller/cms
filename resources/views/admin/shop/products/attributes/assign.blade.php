@@ -13,7 +13,7 @@
             @if($attributes->count())
                 @foreach($attributes as $attribute)
                     @php($pivot = $attribute->pivot)
-                    @php($value = \App\Models\Shop\Value::find($pivot->value_id))
+                    @php($value = \App\Models\Shop\Attribute\Value::find($pivot->value_id))
                     <tr id="{{ $pivot->id }}" data-attribute-id="{{ $attribute->id }}" data-value-id="{{ $pivot->value_id }}" data-index="{{ $pivot->id }}" class="{!! $disabled === true ? 'nodrag nodrop' : '' !!}">
                         <td>{{ $attribute->name ?: 'N/A' }}</td>
                         <td>{!! form()->textarea('', $pivot->value ?: ($value && $value->exists ? $value->value : ''), ['class' => 'assign-attribute-value-update assign-textarea-update']) !!}</td>
@@ -182,7 +182,7 @@
             if (set_id && attribute_id && value_id) {
                 $.ajax({
                     type : 'POST',
-                    url: '{{ route('admin.products.load_one_attribute') }}',
+                    url: '{{ route('admin.products.load_attribute') }}',
                     data: {
                         _token: token,
                         set_id: set_id,

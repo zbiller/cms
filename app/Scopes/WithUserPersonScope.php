@@ -19,12 +19,12 @@ class WithUserPersonScope implements Scope
     {
         $builder
             ->select('users.*')
-            ->join('persons', 'users.id', '=', 'persons.user_id')
+            ->join('people', 'users.id', '=', 'people.user_id')
             ->addSelect([
-                'persons.first_name as first_name',
-                'persons.last_name as last_name',
-                'persons.email as email',
-                'persons.phone as phone',
+                'people.first_name as first_name',
+                'people.last_name as last_name',
+                'people.email as email',
+                'people.phone as phone',
             ]);
     }
 }

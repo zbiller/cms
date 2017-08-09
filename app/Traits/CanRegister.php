@@ -8,20 +8,20 @@
 
 namespace App\Traits;
 
-use DB;
-use Crypt;
-use Exception;
-use ReflectionMethod;
+use App\Exceptions\VerificationException;
 use App\Models\Auth\User;
 use App\Options\RegisterOptions;
-use App\Exceptions\VerificationException;
-use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Foundation\Auth\RegistersUsers;
+use Crypt;
+use DB;
+use Exception;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use ReflectionMethod;
 
 trait CanRegister
 {

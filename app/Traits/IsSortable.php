@@ -2,12 +2,12 @@
 
 namespace App\Traits;
 
-use App\Http\Sorts\Sort;
 use App\Exceptions\SortException;
-use Illuminate\Http\Request;
+use App\Http\Sorts\Sort;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Http\Request;
 
 trait IsSortable
 {

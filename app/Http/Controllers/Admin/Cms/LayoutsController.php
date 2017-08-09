@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Admin\Cms;
 
 use App\Http\Controllers\Controller;
-use App\Models\Cms\Layout;
+use App\Http\Filters\Cms\LayoutFilter;
+use App\Http\Requests\Cms\LayoutRequest;
+use App\Http\Sorts\Cms\LayoutSort;
 use App\Models\Cms\Block;
-use App\Http\Filters\LayoutFilter;
-use App\Http\Requests\LayoutRequest;
-use App\Http\Sorts\LayoutSort;
+use App\Models\Cms\Layout;
 use App\Traits\CanCrud;
 use Illuminate\Http\Request;
 

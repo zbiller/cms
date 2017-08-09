@@ -12,7 +12,7 @@
 
 @section('footer')
     <section class="actions left">
-        {!! button()->cancelAction(route('admin.categories.drafts')) !!}
+        {!! button()->cancelAction(route('admin.product_categories.drafts')) !!}
     </section>
     <section class="actions">
         {!! button()->saveRecord(['style' => 'margin-right: 5px;']) !!}

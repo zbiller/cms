@@ -2,12 +2,12 @@
 
 namespace App\Traits;
 
+use App\Exceptions\SlugException;
+use App\Models\Model;
+use App\Options\SlugOptions;
 use Closure;
 use Exception;
 use ReflectionMethod;
-use App\Models\Model;
-use App\Options\SlugOptions;
-use App\Exceptions\SlugException;
 
 trait HasSlug
 {

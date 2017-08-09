@@ -2,22 +2,22 @@
 
 namespace App\Services;
 
-use DB;
-use Storage;
-use Image;
-use FFMpeg;
-use Validator;
-use Closure;
-use Exception;
+use App\Exceptions\UploadException;
+use App\Http\Requests\Upload\UploadRequest;
 use App\Models\Model;
 use App\Models\Upload\Upload;
-use App\Http\Requests\UploadRequest;
-use App\Exceptions\UploadException;
+use Closure;
+use DB;
+use Exception;
+use FFMpeg;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Validation\ValidationException;
+use Image;
+use Storage;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeExtensionGuesser;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;
+use Validator;
 
 class UploadService
 {

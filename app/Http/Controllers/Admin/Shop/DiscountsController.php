@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Admin\Shop;
 
-use Exception;
 use App\Http\Controllers\Controller;
+use App\Http\Filters\Shop\DiscountFilter;
+use App\Http\Requests\Shop\DiscountRequest;
+use App\Http\Sorts\Shop\DiscountSort;
 use App\Models\Shop\Discount;
 use App\Traits\CanCrud;
-use App\Http\Requests\DiscountRequest;
-use App\Http\Filters\DiscountFilter;
-use App\Http\Sorts\DiscountSort;
+use Exception;
 use Illuminate\Http\Request;
 
 class DiscountsController extends Controller

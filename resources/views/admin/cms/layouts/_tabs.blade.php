@@ -1,4 +1,4 @@
-<a href="#tab-1">Primary Information</a>
+<a href="#tab-1">Basic</a>
 
 @if($item->exists)
     {!! block()->tab($item) !!}

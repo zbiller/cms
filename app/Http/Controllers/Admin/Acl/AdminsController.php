@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin\Acl;
 
 use App\Http\Controllers\Controller;
-use App\Models\Auth\User;
+use App\Http\Filters\Auth\AdminFilter;
+use App\Http\Requests\Auth\AdminRequest;
+use App\Http\Sorts\Auth\AdminSort;
 use App\Models\Auth\Role;
+use App\Models\Auth\User;
 use App\Traits\CanCrud;
-use App\Http\Requests\AdminRequest;
-use App\Http\Filters\AdminFilter;
-use App\Http\Sorts\AdminSort;
 use Illuminate\Http\Request;
 
 class AdminsController extends Controller

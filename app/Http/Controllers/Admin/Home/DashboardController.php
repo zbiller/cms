@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\Admin\Home;
 
-use File;
 use Analytics;
-use Carbon\Carbon;
 use App\Http\Controllers\Controller;
+use Carbon\Carbon;
+use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Spatie\Analytics\Period;

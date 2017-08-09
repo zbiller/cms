@@ -2,26 +2,26 @@
 
 namespace App\Http\Controllers\Admin\Shop;
 
-use DB;
-use Exception;
+use App\Exceptions\UploadException;
 use App\Http\Controllers\Controller;
-use App\Models\Shop\Category;
-use App\Models\Shop\Product;
-use App\Models\Shop\Set;
+use App\Http\Filters\Shop\ProductFilter;
+use App\Http\Requests\Shop\ProductRequest;
+use App\Http\Sorts\Shop\ProductSort;
 use App\Models\Shop\Attribute;
-use App\Models\Shop\Value;
-use App\Models\Shop\Discount;
-use App\Models\Shop\Tax;
+use App\Models\Shop\Attribute\Set;
+use App\Models\Shop\Attribute\Value;
+use App\Models\Shop\Category;
 use App\Models\Shop\Currency;
+use App\Models\Shop\Discount;
+use App\Models\Shop\Product;
+use App\Models\Shop\Tax;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
 use App\Services\UploadService;
 use App\Traits\CanCrud;
 use App\Traits\CanOrder;
-use App\Http\Requests\ProductRequest;
-use App\Http\Filters\ProductFilter;
-use App\Http\Sorts\ProductSort;
-use App\Exceptions\UploadException;
+use DB;
+use Exception;
 use Illuminate\Http\Request;
 
 class ProductsController extends Controller
@@ -35,11 +35,6 @@ class ProductsController extends Controller
     protected $model = Product::class;
 
     /**
-     * @var bool
-     */
-    protected $orderable = true;
-
-    /**
      * @param Request $request
      * @param ProductFilter $filter
      * @param ProductSort $sort
@@ -48,11 +43,24 @@ class ProductsController extends Controller
     public function index(Request $request, ProductFilter $filter, ProductSort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
-            $this->isOrderableOrNot($request);
+            $orderable = true;
+
+            foreach ($request->except('category') as $input => $value) {
+                $value = is_array($value) ? array_filter($value) : $value;
+
+                if ($request->has('category') && !is_null($value) && !empty($value) && $value != '') {
+                    $orderable = false;
+                    break;
+                }
+            }
+
+            if (!$request->get('category')) {
+                $orderable = false;
+            }
 
             $query = Product::with('category');
 
-            if ($this->orderable) {
+            if ($orderable) {
                 $this->items = $query->whereCategory($request->get('category'))->ordered()->get();
             } else {
                 $this->items = $query->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
@@ -64,7 +72,7 @@ class ProductsController extends Controller
                 'categories' => Category::withDepth()->defaultOrder()->get(),
                 'currencies' => Currency::alphabeticallyByCode()->get(),
                 'actives' => Product::$actives,
-                'orderable' => $this->orderable,
+                'orderable' => $orderable,
             ];
         });
     }
@@ -397,29 +405,123 @@ class ProductsController extends Controller
 
     /**
      * @param Request $request
-     * @return void
+     * @return \Illuminate\Http\JsonResponse
      */
-    private function isOrderableOrNot(Request $request)
+    public function loadAttribute(Request $request)
     {
-        $this->orderable = true;
-
-        foreach ($request->except('category') as $input => $value) {
-            $value = is_array($value) ? array_filter($value) : $value;
-
-            if ($request->has('category') && !is_null($value) && !empty($value) && $value != '') {
-                $this->orderable = false;
-                break;
-            }
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'Bad request'
+            ], 400);
         }
 
-        if (!$request->get('category')) {
-            $this->orderable = false;
+        $this->validate($request, [
+            'set_id' => 'required|numeric',
+            'attribute_id' => 'required|numeric',
+            'value_id' => 'nullable|numeric',
+        ]);
+
+        try {
+            $set = Set::findOrFail($request->get('set_id'));
+            $attribute = Attribute::findOrFail($request->get('attribute_id'));
+            $value = Value::findOrFail($request->get('value_id'));
+
+            return response()->json([
+                'status' => true,
+                'data' => [
+                    'attribute_id' => $attribute->id,
+                    'attribute_name' => $attribute->name,
+                    'attribute_value' => $request->get('value') ?: $value->value,
+                    'value_id' => $value->id,
+                    'value' => $request->get('value') ?: '',
+                    'url' => route('admin.attributes.edit', [$set, $attribute]),
+                ],
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage(),
+            ]);
         }
     }
 
     /**
      * @param Request $request
-     * @return array
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function loadDiscount(Request $request)
+    {
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'Bad request'
+            ], 400);
+        }
+
+        $this->validate($request, [
+            'discount_id' => 'required|numeric',
+        ]);
+
+        try {
+            $discount = Discount::findOrFail($request->get('discount_id'));
+
+            return response()->json([
+                'status' => true,
+                'data' => [
+                    'id' => $discount->id,
+                    'name' => $discount->name ?: 'N/A',
+                    'rate' => $discount->rate ?: 'N/A',
+                    'type' => isset(Discount::$types[$discount->type]) ? Discount::$types[$discount->type] : 'N/A',
+                    'url' => route('admin.discounts.edit', $discount->id),
+                ],
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function loadTax(Request $request)
+    {
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'Bad request'
+            ], 400);
+        }
+
+        $this->validate($request, [
+            'tax_id' => 'required|numeric',
+        ]);
+
+        try {
+            $tax = Tax::findOrFail($request->get('tax_id'));
+
+            return response()->json([
+                'status' => true,
+                'data' => [
+                    'id' => $tax->id,
+                    'name' => $tax->name ?: 'N/A',
+                    'rate' => $tax->rate ?: 'N/A',
+                    'type' => isset(Tax::$types[$tax->type]) ? Tax::$types[$tax->type] : 'N/A',
+                    'url' => route('admin.taxes.edit', $tax->id),
+                ],
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function saveCustomAttributeValue(Request $request)
     {
@@ -443,130 +545,14 @@ class ProductsController extends Controller
                     $request->get('value') : null
             ]);
 
-            return [
+            return response()->json([
                 'status' => true
-            ];
+            ]);
         } catch (Exception $e) {
-            return [
-                'status' => false,
-                'message' => $e->getMessage(),
-            ];
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function loadOneAttribute(Request $request)
-    {
-        if (!$request->ajax()) {
             return response()->json([
-                'error' => 'Bad request'
-            ], 400);
-        }
-
-        $this->validate($request, [
-            'set_id' => 'required|numeric',
-            'attribute_id' => 'required|numeric',
-            'value_id' => 'nullable|numeric',
-        ]);
-
-        try {
-            $set = Set::findOrFail($request->get('set_id'));
-            $attribute = Attribute::findOrFail($request->get('attribute_id'));
-            $value = Value::findOrFail($request->get('value_id'));
-
-            return [
-                'status' => true,
-                'data' => [
-                    'attribute_id' => $attribute->id,
-                    'attribute_name' => $attribute->name,
-                    'attribute_value' => $request->get('value') ?: $value->value,
-                    'value_id' => $value->id,
-                    'value' => $request->get('value') ?: '',
-                    'url' => route('admin.attributes.edit', [$set, $attribute]),
-                ],
-            ];
-        } catch (Exception $e) {
-            return [
                 'status' => false,
                 'message' => $e->getMessage(),
-            ];
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function loadOneDiscount(Request $request)
-    {
-        if (!$request->ajax()) {
-            return response()->json([
-                'error' => 'Bad request'
-            ], 400);
-        }
-
-        $this->validate($request, [
-            'discount_id' => 'required|numeric',
-        ]);
-
-        try {
-            $discount = Discount::findOrFail($request->get('discount_id'));
-
-            return [
-                'status' => true,
-                'data' => [
-                    'id' => $discount->id,
-                    'name' => $discount->name ?: 'N/A',
-                    'rate' => $discount->rate ?: 'N/A',
-                    'type' => isset(Discount::$types[$discount->type]) ? Discount::$types[$discount->type] : 'N/A',
-                    'url' => route('admin.discounts.edit', $discount->id),
-                ],
-            ];
-        } catch (Exception $e) {
-            return [
-                'status' => false,
-                'message' => $e->getMessage(),
-            ];
-        }
-    }
-
-    /**
-     * @param Request $request
-     * @return array
-     */
-    public function loadOneTax(Request $request)
-    {
-        if (!$request->ajax()) {
-            return response()->json([
-                'error' => 'Bad request'
-            ], 400);
-        }
-
-        $this->validate($request, [
-            'tax_id' => 'required|numeric',
-        ]);
-
-        try {
-            $tax = Tax::findOrFail($request->get('tax_id'));
-
-            return [
-                'status' => true,
-                'data' => [
-                    'id' => $tax->id,
-                    'name' => $tax->name ?: 'N/A',
-                    'rate' => $tax->rate ?: 'N/A',
-                    'type' => isset(Tax::$types[$tax->type]) ? Tax::$types[$tax->type] : 'N/A',
-                    'url' => route('admin.taxes.edit', $tax->id),
-                ],
-            ];
-        } catch (Exception $e) {
-            return [
-                'status' => false,
-                'message' => $e->getMessage(),
-            ];
+            ]);
         }
     }
 }

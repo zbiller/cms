@@ -2,15 +2,15 @@
 
 namespace App\Models\Auth;
 
-use App\Models\Model;
-use App\Traits\HasActivity;
-use App\Traits\HasAclCache;
-use App\Traits\IsCacheable;
-use App\Options\ActivityOptions;
 use App\Contracts\PermissionContract;
-use Illuminate\Support\Collection;
+use App\Models\Model;
+use App\Options\ActivityOptions;
+use App\Traits\HasAclCache;
+use App\Traits\HasActivity;
+use App\Traits\IsCacheable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Support\Collection;
 
 class Permission extends Model implements PermissionContract
 {

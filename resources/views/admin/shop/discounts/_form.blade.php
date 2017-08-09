@@ -36,5 +36,5 @@
 {!! form_admin()->close() !!}
 
 @section('bottom_scripts')
-    {!! JsValidator::formRequest(App\Http\Requests\DiscountRequest::class, '.form') !!}
+    {!! JsValidator::formRequest(App\Http\Requests\Shop\DiscountRequest::class, '.form') !!}
 @append

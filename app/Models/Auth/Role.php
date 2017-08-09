@@ -2,17 +2,17 @@
 
 namespace App\Models\Auth;
 
+use App\Contracts\RoleContract;
 use App\Models\Model;
-use App\Traits\HasPermissions;
-use App\Traits\HasActivity;
+use App\Options\ActivityOptions;
 use App\Traits\HasAclCache;
+use App\Traits\HasActivity;
+use App\Traits\HasPermissions;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
-use App\Contracts\RoleContract;
-use App\Options\ActivityOptions;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Database\Query\Builder;
 
 class Role extends Model implements RoleContract
 {

@@ -3,13 +3,12 @@
 namespace App\Http\Controllers\Admin\Acl;
 
 use App\Http\Controllers\Controller;
-use App\Models\Auth\Role;
+use App\Http\Filters\Auth\RoleFilter;
+use App\Http\Requests\Auth\RoleRequest;
+use App\Http\Sorts\Auth\RoleSort;
 use App\Models\Auth\Permission;
+use App\Models\Auth\Role;
 use App\Traits\CanCrud;
-use App\Options\CrudOptions;
-use App\Http\Requests\RoleRequest;
-use App\Http\Filters\RoleFilter;
-use App\Http\Sorts\RoleSort;
 use Illuminate\Http\Request;
 
 class RolesController extends Controller

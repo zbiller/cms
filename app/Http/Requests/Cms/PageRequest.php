@@ -1,0 +1,75 @@
+<?php
+
+namespace App\Http\Requests\Cms;
+
+use App\Http\Requests\Request;
+use App\Models\Cms\Page;
+use Illuminate\Validation\Rule;
+
+class PageRequest extends Request
+{
+    /**
+     * Determine if the user is authorized to make this request.
+     *
+     * @return bool
+     */
+    public function authorize()
+    {
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules()
+    {
+        $model = null;
+
+        if ($this->route('page')) {
+            $model = $this->route('page');
+        } elseif ($this->route('id')) {
+            $model = Page::withDrafts()->withTrashed()->find($this->route('id'));
+        }
+
+        return [
+            'layout_id' => [
+                'required',
+                'numeric',
+                Rule::exists('layouts', 'id'),
+            ],
+            'type' => [
+                'required',
+                'numeric',
+                Rule::in(array_keys(Page::$types)),
+            ],
+            'name' => [
+                'required',
+                'min:3',
+            ],
+            'slug' => [
+                'required',
+                Rule::unique('pages', 'slug')
+                    ->ignore($model && $model->exists ? $model->id : null)
+            ],
+            'identifier' => [
+                'nullable',
+                Rule::unique('pages', 'identifier')
+                    ->ignore($model && $model->exists ? $model->id : null),
+            ],
+        ];
+    }
+
+    /**
+     * Get the pretty name of attributes.
+     *
+     * @return array
+     */
+    public function attributes()
+    {
+        return [
+            'layout_id' => 'layout',
+        ];
+    }
+}

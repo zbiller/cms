@@ -2,15 +2,15 @@
 
 namespace App\Traits;
 
-use DB;
-use Relation;
-use Closure;
-use Exception;
-use ReflectionMethod;
-use App\Sniffers\ModelSniffer;
-use App\Options\DuplicateOptions;
 use App\Exceptions\DuplicateException;
+use App\Options\DuplicateOptions;
+use App\Sniffers\ModelSniffer;
+use Closure;
+use DB;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
+use ReflectionMethod;
+use Relation;
 
 trait HasDuplicates
 {

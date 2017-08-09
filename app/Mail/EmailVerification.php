@@ -2,14 +2,14 @@
 
 namespace App\Mail;
 
-use Crypt;
-use App\Models\Cms\Email;
 use App\Exceptions\EmailException;
-use Illuminate\Mail\Mailable;
+use App\Models\Cms\Email;
+use Crypt;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
 
 class EmailVerification extends Mailable implements ShouldQueue
 {

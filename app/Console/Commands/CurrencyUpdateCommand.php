@@ -2,10 +2,10 @@
 
 namespace App\Console\Commands;
 
-use Swap;
 use App\Models\Shop\Currency;
-use Illuminate\Console\Command;
 use Exchanger\Exception\ChainException;
+use Illuminate\Console\Command;
+use Swap;
 
 class CurrencyUpdateCommand extends Command
 {

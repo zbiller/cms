@@ -2,14 +2,14 @@
 
 namespace App\Traits;
 
-use Mail;
-use Schema;
-use Exception;
-use ReflectionMethod;
-use App\Options\VerifyOptions;
-use App\Mail\EmailVerification;
 use App\Exceptions\VerificationException;
+use App\Mail\EmailVerification;
+use App\Options\VerifyOptions;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
+use Mail;
+use ReflectionMethod;
+use Schema;
 
 trait IsVerifiable
 {

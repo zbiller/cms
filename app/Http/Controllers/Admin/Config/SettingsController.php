@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Admin\Config;
 
-use DB;
-use Validator;
-use Exception;
 use App\Http\Controllers\Controller;
 use App\Models\Config\Setting;
+use DB;
+use Exception;
 use Illuminate\Http\Request;
+use Validator;
 
 class SettingsController extends Controller
 {

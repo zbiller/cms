@@ -2,26 +2,26 @@
 
 namespace App\Models\Shop;
 
+use App\Exceptions\CrudException;
 use App\Models\Model;
+use App\Options\ActivityOptions;
 use App\Options\BlockOptions;
 use App\Options\DraftOptions;
 use App\Options\DuplicateOptions;
 use App\Options\RevisionOptions;
+use App\Options\UrlOptions;
+use App\Traits\HasActivity;
 use App\Traits\HasBlocks;
 use App\Traits\HasDrafts;
 use App\Traits\HasDuplicates;
+use App\Traits\HasMetadata;
+use App\Traits\HasNodes;
 use App\Traits\HasRevisions;
 use App\Traits\HasUploads;
 use App\Traits\HasUrl;
-use App\Traits\HasNodes;
-use App\Traits\HasActivity;
-use App\Traits\HasMetadata;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
-use App\Options\UrlOptions;
-use App\Options\ActivityOptions;
-use App\Exceptions\CrudException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -46,7 +46,7 @@ class Category extends Model
      *
      * @var string
      */
-    protected $table = 'categories';
+    protected $table = 'product_categories';
 
     /**
      * The attributes that mass assignable.

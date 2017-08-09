@@ -2,21 +2,21 @@
 
 namespace App\Models\Cms;
 
-use DB;
 use App\Models\Model;
-use App\Traits\HasUploads;
-use App\Traits\HasDrafts;
-use App\Traits\HasRevisions;
-use App\Traits\HasDuplicates;
+use App\Options\ActivityOptions;
+use App\Options\DraftOptions;
+use App\Options\DuplicateOptions;
+use App\Options\RevisionOptions;
 use App\Traits\HasActivity;
+use App\Traits\HasDrafts;
+use App\Traits\HasDuplicates;
 use App\Traits\HasMetadata;
+use App\Traits\HasRevisions;
+use App\Traits\HasUploads;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
-use App\Options\DraftOptions;
-use App\Options\RevisionOptions;
-use App\Options\DuplicateOptions;
-use App\Options\ActivityOptions;
+use DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 

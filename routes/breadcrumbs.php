@@ -331,51 +331,51 @@ Breadcrumbs::register('admin.products.limbo', function($breadcrumbs, $draft) {
 | ---------------------------------------------------------------------------------------------------------------------
  */
 /* Home > Categories */
-Breadcrumbs::register('admin.categories.index', function($breadcrumbs) {
+Breadcrumbs::register('admin.product_categories.index', function($breadcrumbs) {
     $breadcrumbs->parent('admin');
-    $breadcrumbs->push('Categories', route('admin.categories.index'));
+    $breadcrumbs->push('Categories', route('admin.product_categories.index'));
 });
 
 /* Home > Categories > Add */
-Breadcrumbs::register('admin.categories.create', function($breadcrumbs) {
-    $breadcrumbs->parent('admin.categories.index');
-    $breadcrumbs->push('Add', route('admin.categories.create'));
+Breadcrumbs::register('admin.product_categories.create', function($breadcrumbs) {
+    $breadcrumbs->parent('admin.product_categories.index');
+    $breadcrumbs->push('Add', route('admin.product_categories.create'));
 });
 
 /* Home > Categories > Edit */
-Breadcrumbs::register('admin.categories.edit', function($breadcrumbs, $category) {
-    $breadcrumbs->parent('admin.categories.index');
-    $breadcrumbs->push('Edit', route('admin.categories.edit', $category));
+Breadcrumbs::register('admin.product_categories.edit', function($breadcrumbs, $category) {
+    $breadcrumbs->parent('admin.product_categories.index');
+    $breadcrumbs->push('Edit', route('admin.product_categories.edit', $category));
 });
 
 /* Home > Categories > Edit > Draft */
-Breadcrumbs::register('admin.categories.draft', function($breadcrumbs, $draft) {
-    $breadcrumbs->parent('admin.categories.edit', $draft->draftable);
-    $breadcrumbs->push('Draft', route('admin.categories.draft', $draft));
+Breadcrumbs::register('admin.product_categories.draft', function($breadcrumbs, $draft) {
+    $breadcrumbs->parent('admin.product_categories.edit', $draft->draftable);
+    $breadcrumbs->push('Draft', route('admin.product_categories.draft', $draft));
 });
 
 /* Home > Categories > Edit > Revision */
-Breadcrumbs::register('admin.categories.revision', function($breadcrumbs, $revision) {
-    $breadcrumbs->parent('admin.categories.edit', $revision->revisionable);
-    $breadcrumbs->push('Revision', route('admin.categories.revision', $revision));
+Breadcrumbs::register('admin.product_categories.revision', function($breadcrumbs, $revision) {
+    $breadcrumbs->parent('admin.product_categories.edit', $revision->revisionable);
+    $breadcrumbs->push('Revision', route('admin.product_categories.revision', $revision));
 });
 
 /* Home > Categories > Deleted */
-Breadcrumbs::register('admin.categories.deleted', function($breadcrumbs) {
-    $breadcrumbs->parent('admin.categories.index');
-    $breadcrumbs->push('Deleted', route('admin.categories.deleted'));
+Breadcrumbs::register('admin.product_categories.deleted', function($breadcrumbs) {
+    $breadcrumbs->parent('admin.product_categories.index');
+    $breadcrumbs->push('Deleted', route('admin.product_categories.deleted'));
 });
 
 /* Home > Categories > Drafts */
-Breadcrumbs::register('admin.categories.drafts', function($breadcrumbs) {
-    $breadcrumbs->parent('admin.categories.index');
-    $breadcrumbs->push('Drafts', route('admin.categories.drafts'));
+Breadcrumbs::register('admin.product_categories.drafts', function($breadcrumbs) {
+    $breadcrumbs->parent('admin.product_categories.index');
+    $breadcrumbs->push('Drafts', route('admin.product_categories.drafts'));
 });
 
 /* Home > Categories > Drafts > Draft */
-Breadcrumbs::register('admin.categories.limbo', function($breadcrumbs, $draft) {
-    $breadcrumbs->parent('admin.categories.drafts');
-    $breadcrumbs->push('Draft', route('admin.categories.draft', $draft));
+Breadcrumbs::register('admin.product_categories.limbo', function($breadcrumbs, $draft) {
+    $breadcrumbs->parent('admin.product_categories.drafts');
+    $breadcrumbs->push('Draft', route('admin.product_categories.draft', $draft));
 });
 /**
 | ---------------------------------------------------------------------------------------------------------------------
@@ -411,21 +411,21 @@ Breadcrumbs::register('admin.carts.view', function($breadcrumbs, $cart) {
 | ---------------------------------------------------------------------------------------------------------------------
  */
 /* Home > Sets */
-Breadcrumbs::register('admin.sets.index', function($breadcrumbs) {
+Breadcrumbs::register('admin.attribute_sets.index', function($breadcrumbs) {
     $breadcrumbs->parent('admin');
-    $breadcrumbs->push('Sets', route('admin.sets.index'));
+    $breadcrumbs->push('Sets', route('admin.attribute_sets.index'));
 });
 
 /* Home > Sets > Add */
-Breadcrumbs::register('admin.sets.create', function($breadcrumbs) {
-    $breadcrumbs->parent('admin.sets.index');
-    $breadcrumbs->push('Add', route('admin.sets.create'));
+Breadcrumbs::register('admin.attribute_sets.create', function($breadcrumbs) {
+    $breadcrumbs->parent('admin.attribute_sets.index');
+    $breadcrumbs->push('Add', route('admin.attribute_sets.create'));
 });
 
 /* Home > Sets > Edit */
-Breadcrumbs::register('admin.sets.edit', function($breadcrumbs, $set) {
-    $breadcrumbs->parent('admin.sets.index');
-    $breadcrumbs->push('Edit', route('admin.sets.edit', $set));
+Breadcrumbs::register('admin.attribute_sets.edit', function($breadcrumbs, $set) {
+    $breadcrumbs->parent('admin.attribute_sets.index');
+    $breadcrumbs->push('Edit', route('admin.attribute_sets.edit', $set));
 });
 /**
 | ---------------------------------------------------------------------------------------------------------------------
@@ -440,7 +440,7 @@ Breadcrumbs::register('admin.sets.edit', function($breadcrumbs, $set) {
  */
 /* Home > Attributes */
 Breadcrumbs::register('admin.attributes.index', function($breadcrumbs, $set) {
-    $breadcrumbs->parent('admin.sets.edit', $set);
+    $breadcrumbs->parent('admin.attribute_sets.edit', $set);
     $breadcrumbs->push('Attributes', route('admin.attributes.index', $set));
 });
 

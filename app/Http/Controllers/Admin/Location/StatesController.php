@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin\Location;
 
 use App\Http\Controllers\Controller;
+use App\Http\Filters\Location\StateFilter;
+use App\Http\Requests\Location\StateRequest;
+use App\Http\Sorts\Location\StateSort;
 use App\Models\Location\Country;
 use App\Models\Location\State;
 use App\Traits\CanCrud;
-use App\Http\Requests\StateRequest;
-use App\Http\Filters\StateFilter;
-use App\Http\Sorts\StateSort;
 use Illuminate\Http\Request;
 
 class StatesController extends Controller
@@ -113,11 +113,18 @@ class StatesController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param Country|null $country
      * @return array
      */
-    public function get(Country $country = null)
+    public function get(Request $request, Country $country = null)
     {
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'Bad request'
+            ], 400);
+        }
+
         $query = State::alphabetically();
 
         if ($country && $country->exists) {
@@ -143,10 +150,10 @@ class StatesController extends Controller
             }
         }
 
-        return [
+        return response()->json([
             'status' => true,
             'states' => $states,
             'cities' => $cities,
-        ];
+        ]);
     }
 }

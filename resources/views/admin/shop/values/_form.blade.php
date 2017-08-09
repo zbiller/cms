@@ -14,5 +14,5 @@
 {!! form_admin()->close() !!}
 
 @section('bottom_scripts')
-    {!! JsValidator::formRequest(App\Http\Requests\ValueRequest::class, '.form') !!}
+    {!! JsValidator::formRequest(App\Http\Requests\Shop\AttributeValueRequest::class, '.form') !!}
 @append

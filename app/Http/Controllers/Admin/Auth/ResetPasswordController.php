@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\ResetPasswordRequest;
-use App\Traits\CanResetPassword;
+use App\Http\Requests\Auth\PasswordResetRequest;
 use App\Options\ResetPasswordOptions;
+use App\Traits\CanResetPassword;
 use Illuminate\Http\Request;
 
 class ResetPasswordController extends Controller
@@ -36,7 +36,7 @@ class ResetPasswordController extends Controller
     {
         return ResetPasswordOptions::instance()
             ->setAuthGuard('admin')
-            ->setValidator(new ResetPasswordRequest)
+            ->setValidator(new PasswordResetRequest)
             ->setIdentifier('username')
             ->setRedirect(route('admin'));
     }

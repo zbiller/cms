@@ -2,12 +2,12 @@
     cellspacing="0" cellpadding="0" border="0"
     data-orderable="{{ empty(request()->all()) ? 'true' : 'false' }}"
     data-order-url="{{ route('admin.values.order', ['set' => $set, 'attribute' => $attribute]) }}"
-    data-order-model="{{ \App\Models\Shop\Value::class }}"
+    data-order-model="{{ \App\Models\Shop\Attribute\Value::class }}"
     data-order-token="{{ csrf_token() }}"
 >
     <thead>
         <tr class="nodrag nodrop">
-            <td class="sortable" data-sort="name">
+            <td class="sortable" data-sort="value">
                 <i class="fa fa-sort"></i>&nbsp; Value
             </td>
             <td>Actions</td>

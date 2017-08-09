@@ -11,9 +11,9 @@
 {!! validation('admin')->errors() !!}
 
 {!! form()->hidden('_class', \App\Models\Shop\Category::class) !!}
-{!! form()->hidden('_request', \App\Http\Requests\CategoryRequest::class) !!}
+{!! form()->hidden('_request', \App\Http\Requests\Shop\CategoryRequest::class) !!}
 {!! form()->hidden('_id', $item->exists ? $item->id : null) !!}
-{!! form()->hidden('_back', route('admin.categories.drafts')) !!}
+{!! form()->hidden('_back', route('admin.product_categories.drafts')) !!}
 
 <div id="tab-1" class="tab">
     {!! form_admin()->text('name', 'Name', null, $item->exists ? [] : ['id' => 'slug-from']) !!}
@@ -40,6 +40,6 @@
 
 @if(!isset($on_draft) && !isset($on_limbo_draft) && !isset($on_revision))
     @section('bottom_scripts')
-        {!! JsValidator::formRequest(App\Http\Requests\CategoryRequest::class, '.form') !!}
+        {!! JsValidator::formRequest(App\Http\Requests\Shop\CategoryRequest::class, '.form') !!}
     @append
 @endif

@@ -11,7 +11,7 @@
 {!! validation('admin')->errors() !!}
 
 {!! form()->hidden('_class', \App\Models\Cms\Email::class) !!}
-{!! form()->hidden('_request', \App\Http\Requests\EmailRequest::class) !!}
+{!! form()->hidden('_request', \App\Http\Requests\Cms\EmailRequest::class) !!}
 {!! form()->hidden('_id', $item->exists ? $item->id : null) !!}
 {!! form()->hidden('_back', route('admin.emails.drafts')) !!}
 
@@ -54,6 +54,6 @@
 
 @if(!isset($on_draft) && !isset($on_limbo_draft) && !isset($on_revision))
     @section('bottom_scripts')
-        {!! JsValidator::formRequest(App\Http\Requests\BlockRequest::class, '.form') !!}
+        {!! JsValidator::formRequest(App\Http\Requests\Cms\BlockRequest::class, '.form') !!}
     @append
 @endif

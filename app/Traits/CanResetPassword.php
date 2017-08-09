@@ -8,14 +8,14 @@
 
 namespace App\Traits;
 
-use Exception;
-use ReflectionMethod;
 use App\Options\ResetPasswordOptions;
-use Illuminate\Http\Request;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+use Exception;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use ReflectionMethod;
 
 trait CanResetPassword
 {

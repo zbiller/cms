@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Front\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\Auth\User;
+use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\Auth\Person;
-use App\Http\Requests\RegisterRequest;
-use App\Traits\CanRegister;
+use App\Models\Auth\User;
 use App\Options\RegisterOptions;
+use App\Traits\CanRegister;
 use Illuminate\Http\Request;
 
 class RegisterController extends Controller

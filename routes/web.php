@@ -53,6 +53,31 @@ Route::group([
         });
 
         /**
+         * Upload.
+         */
+        Route::group([
+            'namespace' => 'Upload',
+        ], function () {
+            /**
+             * CRUD Uploads.
+             */
+            Route::group([
+                'prefix' => 'uploads',
+            ], function () {
+                Route::get('/', ['as' => 'admin.uploads.index', 'uses' => 'UploadsController@index', 'permissions' => 'uploads-list']);
+                Route::get('show/{upload}', ['as' => 'admin.uploads.show', 'uses' => 'UploadsController@show', 'permissions' => 'uploads-list']);
+                Route::get('download/{upload}', ['as' => 'admin.uploads.download', 'uses' => 'UploadsController@download', 'permissions' => 'uploads-download']);
+                Route::get('get/{type?}', ['as' => 'admin.uploads.get', 'uses' => 'UploadsController@get', 'permissions' => 'uploads-list']);
+                Route::get('crop', ['as' => 'admin.uploads.crop', 'uses' => 'UploadsController@crop', 'permissions' => 'uploads-crop']);
+                Route::post('store', ['as' => 'admin.uploads.store', 'uses' => 'UploadsController@store', 'permissions' => 'uploads-upload']);
+                Route::post('upload', ['as' => 'admin.uploads.upload', 'uses' => 'UploadsController@upload', 'permissions' => 'uploads-upload']);
+                Route::post('set', ['as' => 'admin.uploads.set', 'uses' => 'UploadsController@set', 'permissions' => 'uploads-select']);
+                Route::post('cut', ['as' => 'admin.uploads.cut', 'uses' => 'UploadsController@cut', 'permissions' => 'uploads-crop']);
+                Route::delete('destroy/{upload}', ['as' => 'admin.uploads.destroy', 'uses' => 'UploadsController@destroy', 'permissions' => 'uploads-delete']);
+            });
+        });
+
+        /**
          * Version.
          */
         Route::group([
@@ -93,24 +118,6 @@ Route::group([
             'namespace' => 'Cms',
         ], function () {
             /**
-             * CRUD Uploads.
-             */
-            Route::group([
-                'prefix' => 'uploads',
-            ], function () {
-                Route::get('/', ['as' => 'admin.uploads.index', 'uses' => 'UploadsController@index', 'permissions' => 'uploads-list']);
-                Route::get('show/{upload}', ['as' => 'admin.uploads.show', 'uses' => 'UploadsController@show', 'permissions' => 'uploads-list']);
-                Route::get('download/{upload}', ['as' => 'admin.uploads.download', 'uses' => 'UploadsController@download', 'permissions' => 'uploads-download']);
-                Route::get('get/{type?}', ['as' => 'admin.uploads.get', 'uses' => 'UploadsController@get', 'permissions' => 'uploads-list']);
-                Route::get('crop', ['as' => 'admin.uploads.crop', 'uses' => 'UploadsController@crop', 'permissions' => 'uploads-crop']);
-                Route::post('store', ['as' => 'admin.uploads.store', 'uses' => 'UploadsController@store', 'permissions' => 'uploads-upload']);
-                Route::post('upload', ['as' => 'admin.uploads.upload', 'uses' => 'UploadsController@upload', 'permissions' => 'uploads-upload']);
-                Route::post('set', ['as' => 'admin.uploads.set', 'uses' => 'UploadsController@set', 'permissions' => 'uploads-select']);
-                Route::post('cut', ['as' => 'admin.uploads.cut', 'uses' => 'UploadsController@cut', 'permissions' => 'uploads-crop']);
-                Route::delete('destroy/{upload}', ['as' => 'admin.uploads.destroy', 'uses' => 'UploadsController@destroy', 'permissions' => 'uploads-delete']);
-            });
-
-            /**
              * CRUD Pages.
              */
             Route::group([
@@ -131,16 +138,6 @@ Route::group([
                 Route::delete('delete/{id}', ['as' => 'admin.pages.delete', 'uses' => 'PagesController@delete', 'permissions' => 'pages-force-delete']);
 
                 /**
-                 * Duplicate Actions.
-                 */
-                Route::post('duplicate/{page}', ['as' => 'admin.pages.duplicate', 'uses' => 'PagesController@duplicate', 'permissions' => 'pages-duplicate']);
-
-                /**
-                 * Preview Actions.
-                 */
-                Route::match(['post', 'put'], 'preview/{page?}', ['as' => 'admin.pages.preview', 'uses' => 'PagesController@preview', 'permissions' => 'pages-preview']);
-
-                /**
                  * Draft Actions.
                  */
                 Route::get('drafts', ['as' => 'admin.pages.drafts', 'uses' => 'PagesController@drafts', 'permissions' => 'drafts-list']);
@@ -153,21 +150,32 @@ Route::group([
                 Route::get('revision/{revision}', ['as' => 'admin.pages.revision', 'uses' => 'PagesController@revision', 'permissions' => 'revisions-rollback']);
 
                 /**
+                 * Duplicate Actions.
+                 */
+                Route::post('duplicate/{page}', ['as' => 'admin.pages.duplicate', 'uses' => 'PagesController@duplicate', 'permissions' => 'pages-duplicate']);
+
+                /**
+                 * Preview Actions.
+                 */
+                Route::match(['post', 'put'], 'preview/{page?}', ['as' => 'admin.pages.preview', 'uses' => 'PagesController@preview', 'permissions' => 'pages-preview']);
+
+                /**
                  * Ajax Actions.
                  */
-                Route::get('get-layouts/{type?}', ['as' => 'admin.pages.get_layouts', 'uses' => 'PagesController@getLayouts']);
+                Route::get('layouts/{type?}', ['as' => 'admin.pages.layouts', 'uses' => 'PagesController@layouts']);
 
                 /**
                  * Tree Actions.
                  */
                 Route::group([
+                    'namespace' => 'Pages',
                     'prefix' => 'tree'
                 ], function () {
-                    Route::get('fix', ['as' => 'admin.pages.tree.fix', 'uses' => 'PagesController@fixTree', 'acl' => 'pages-list']);
-                    Route::get('load/{parent?}', ['as' => 'admin.pages.tree.load', 'uses' => 'PagesController@loadTreeNodes', 'acl' => 'pages-list']);
-                    Route::get('list/{parent?}', ['as' => 'admin.pages.tree.list', 'uses' => 'PagesController@listTreeItems', 'acl' => 'pages-list']);
-                    Route::post('sort', ['as' => 'admin.pages.tree.sort', 'uses' => 'PagesController@sortTreeItems', 'acl' => 'pages-list']);
-                    Route::post('url', ['as' => 'admin.pages.tree.url', 'uses' => 'PagesController@refreshTreeItemsUrls', 'acl' => 'pages-list']);
+                    Route::get('fix', ['as' => 'admin.pages.tree.fix', 'uses' => 'TreeController@fix', 'permissions' => 'pages-list']);
+                    Route::get('load/{parent?}', ['as' => 'admin.pages.tree.load', 'uses' => 'TreeController@loadNodes', 'permissions' => 'pages-list']);
+                    Route::get('list/{parent?}', ['as' => 'admin.pages.tree.list', 'uses' => 'TreeController@listItems', 'permissions' => 'pages-list']);
+                    Route::post('sort', ['as' => 'admin.pages.tree.sort', 'uses' => 'TreeController@sortItems', 'permissions' => 'pages-list']);
+                    Route::post('url', ['as' => 'admin.pages.tree.url', 'uses' => 'TreeController@refreshUrls', 'permissions' => 'pages-list']);
                 });
             });
 
@@ -178,24 +186,25 @@ Route::group([
                 'prefix' => 'menus',
             ], function () {
                 Route::get('locations', ['as' => 'admin.menus.locations', 'uses' => 'MenusController@locations', 'permissions' => 'menus-list']);
+                Route::get('entity/{type?}', ['as' => 'admin.menus.entity', 'uses' => 'MenusController@entity', 'permissions' => 'menus-list']);
                 Route::get('{location}', ['as' => 'admin.menus.index', 'uses' => 'MenusController@index', 'permissions' => 'menus-list']);
                 Route::get('{location}/create/{parent?}', ['as' => 'admin.menus.create', 'uses' => 'MenusController@create', 'permissions' => 'menus-add']);
                 Route::get('{location}/edit/{menu}', ['as' => 'admin.menus.edit', 'uses' => 'MenusController@edit', 'permissions' => 'menus-edit']);
                 Route::post('{location}/store/{parent?}', ['as' => 'admin.menus.store', 'uses' => 'MenusController@store', 'permissions' => 'menus-add']);
                 Route::put('{location}/update/{menu}', ['as' => 'admin.menus.update', 'uses' => 'MenusController@update', 'permissions' => 'menus-edit']);
                 Route::delete('{location}/destroy/{menu}', ['as' => 'admin.menus.destroy', 'uses' => 'MenusController@destroy', 'permissions' => 'menus-delete']);
-                Route::get('entity/{type?}', ['as' => 'admin.menus.entity', 'uses' => 'MenusController@entity', 'permissions' => 'menus-list']);
 
                 /**
                  * Tree Actions.
                  */
                 Route::group([
+                    'namespace' => 'Menus',
                     'prefix' => 'tree'
                 ], function () {
-                    Route::get('fix', ['as' => 'admin.menus.tree.fix', 'uses' => 'MenusController@fixTree', 'acl' => 'menus-list']);
-                    Route::get('{location}/load/{parent?}', ['as' => 'admin.menus.tree.load', 'uses' => 'MenusController@loadTreeNodes', 'acl' => 'menus-list']);
-                    Route::get('{location}/list/{parent?}', ['as' => 'admin.menus.tree.list', 'uses' => 'MenusController@listTreeItems', 'acl' => 'menus-list']);
-                    Route::post('sort', ['as' => 'admin.menus.tree.sort', 'uses' => 'MenusController@sortTreeItems', 'acl' => 'menus-list']);
+                    Route::get('fix', ['as' => 'admin.menus.tree.fix', 'uses' => 'TreeController@fix', 'permissions' => 'menus-list']);
+                    Route::get('{location}/load/{parent?}', ['as' => 'admin.menus.tree.load', 'uses' => 'TreeController@loadNodes', 'permissions' => 'menus-list']);
+                    Route::get('{location}/list/{parent?}', ['as' => 'admin.menus.tree.list', 'uses' => 'TreeController@listItems', 'permissions' => 'menus-list']);
+                    Route::post('sort', ['as' => 'admin.menus.tree.sort', 'uses' => 'TreeController@sortItems', 'permissions' => 'menus-list']);
                 });
             });
 
@@ -206,10 +215,8 @@ Route::group([
                 'prefix' => 'blocks',
             ], function () {
                 Route::get('/', ['as' => 'admin.blocks.index', 'uses' => 'BlocksController@index', 'permissions' => 'blocks-list']);
-                Route::get('get', ['as' => 'admin.blocks.get', 'uses' => 'BlocksController@get', 'permissions' => 'blocks-list']);
                 Route::get('create/{type?}', ['as' => 'admin.blocks.create', 'uses' => 'BlocksController@create', 'permissions' => 'blocks-add']);
                 Route::get('edit/{block}', ['as' => 'admin.blocks.edit', 'uses' => 'BlocksController@edit', 'permissions' => 'blocks-edit']);
-                Route::post('row', ['as' => 'admin.blocks.row', 'uses' => 'BlocksController@row', 'permissions' => 'blocks-list']);
                 Route::post('store', ['as' => 'admin.blocks.store', 'uses' => 'BlocksController@store', 'permissions' => 'blocks-add']);
                 Route::put('update/{block}', ['as' => 'admin.blocks.update', 'uses' => 'BlocksController@update', 'permissions' => 'blocks-edit']);
                 Route::delete('destroy/{block}', ['as' => 'admin.blocks.destroy', 'uses' => 'BlocksController@destroy', 'permissions' => 'blocks-soft-delete']);
@@ -222,11 +229,6 @@ Route::group([
                 Route::delete('delete/{id}', ['as' => 'admin.blocks.delete', 'uses' => 'BlocksController@delete', 'permissions' => 'blocks-force-delete']);
 
                 /**
-                 * Duplicate Actions.
-                 */
-                Route::post('duplicate/{block}', ['as' => 'admin.blocks.duplicate', 'uses' => 'BlocksController@duplicate', 'permissions' => 'blocks-duplicate']);
-
-                /**
                  * Draft Actions.
                  */
                 Route::get('drafts', ['as' => 'admin.blocks.drafts', 'uses' => 'BlocksController@drafts', 'permissions' => 'drafts-list']);
@@ -237,20 +239,17 @@ Route::group([
                  * Revision Actions.
                  */
                 Route::get('revision/{revision}', ['as' => 'admin.blocks.revision', 'uses' => 'BlocksController@revision', 'permissions' => 'revisions-rollback']);
-            });
 
-            /**
-             * CRUD Layouts.
-             */
-            Route::group([
-                'prefix' => 'layouts',
-            ], function () {
-                Route::get('/', ['as' => 'admin.layouts.index', 'uses' => 'LayoutsController@index', 'permissions' => 'layouts-list']);
-                Route::get('create', ['as' => 'admin.layouts.create', 'uses' => 'LayoutsController@create', 'permissions' => 'layouts-add']);
-                Route::get('edit/{layout}', ['as' => 'admin.layouts.edit', 'uses' => 'LayoutsController@edit', 'permissions' => 'layouts-edit']);
-                Route::post('store', ['as' => 'admin.layouts.store', 'uses' => 'LayoutsController@store', 'permissions' => 'layouts-add']);
-                Route::put('update/{layout}', ['as' => 'admin.layouts.update', 'uses' => 'LayoutsController@update', 'permissions' => 'layouts-edit']);
-                Route::delete('destroy/{layout}', ['as' => 'admin.layouts.destroy', 'uses' => 'LayoutsController@destroy', 'permissions' => 'layouts-delete']);
+                /**
+                 * Duplicate Actions.
+                 */
+                Route::post('duplicate/{block}', ['as' => 'admin.blocks.duplicate', 'uses' => 'BlocksController@duplicate', 'permissions' => 'blocks-duplicate']);
+
+                /**
+                 * Ajax Actions.
+                 */
+                Route::get('get', ['as' => 'admin.blocks.get', 'uses' => 'BlocksController@get', 'permissions' => 'blocks-list']);
+                Route::post('row', ['as' => 'admin.blocks.row', 'uses' => 'BlocksController@row', 'permissions' => 'blocks-list']);
             });
 
             /**
@@ -274,16 +273,6 @@ Route::group([
                 Route::delete('delete/{id}', ['as' => 'admin.emails.delete', 'uses' => 'EmailsController@delete', 'permissions' => 'emails-force-delete']);
 
                 /**
-                 * Duplicate Actions.
-                 */
-                Route::post('duplicate/{email}', ['as' => 'admin.emails.duplicate', 'uses' => 'EmailsController@duplicate', 'permissions' => 'emails-duplicate']);
-
-                /**
-                 * Preview Actions.
-                 */
-                Route::match(['post', 'put'], 'preview/{email?}', ['as' => 'admin.emails.preview', 'uses' => 'EmailsController@preview', 'permissions' => 'emails-preview']);
-
-                /**
                  * Draft Actions.
                  */
                 Route::get('drafts', ['as' => 'admin.emails.drafts', 'uses' => 'EmailsController@drafts', 'permissions' => 'drafts-list']);
@@ -294,6 +283,30 @@ Route::group([
                  * Revision Actions.
                  */
                 Route::get('revision/{revision}', ['as' => 'admin.emails.revision', 'uses' => 'EmailsController@revision', 'permissions' => 'revisions-rollback']);
+
+                /**
+                 * Duplicate Actions.
+                 */
+                Route::post('duplicate/{email}', ['as' => 'admin.emails.duplicate', 'uses' => 'EmailsController@duplicate', 'permissions' => 'emails-duplicate']);
+
+                /**
+                 * Preview Actions.
+                 */
+                Route::match(['post', 'put'], 'preview/{email?}', ['as' => 'admin.emails.preview', 'uses' => 'EmailsController@preview', 'permissions' => 'emails-preview']);
+            });
+
+            /**
+             * CRUD Layouts.
+             */
+            Route::group([
+                'prefix' => 'layouts',
+            ], function () {
+                Route::get('/', ['as' => 'admin.layouts.index', 'uses' => 'LayoutsController@index', 'permissions' => 'layouts-list']);
+                Route::get('create', ['as' => 'admin.layouts.create', 'uses' => 'LayoutsController@create', 'permissions' => 'layouts-add']);
+                Route::get('edit/{layout}', ['as' => 'admin.layouts.edit', 'uses' => 'LayoutsController@edit', 'permissions' => 'layouts-edit']);
+                Route::post('store', ['as' => 'admin.layouts.store', 'uses' => 'LayoutsController@store', 'permissions' => 'layouts-add']);
+                Route::put('update/{layout}', ['as' => 'admin.layouts.update', 'uses' => 'LayoutsController@update', 'permissions' => 'layouts-edit']);
+                Route::delete('destroy/{layout}', ['as' => 'admin.layouts.destroy', 'uses' => 'LayoutsController@destroy', 'permissions' => 'layouts-delete']);
             });
         });
 
@@ -329,21 +342,6 @@ Route::group([
                 Route::delete('delete/{id}', ['as' => 'admin.products.delete', 'uses' => 'ProductsController@delete', 'permissions' => 'products-force-delete']);
 
                 /**
-                 * Duplicate Actions.
-                 */
-                Route::post('duplicate/{product}', ['as' => 'admin.products.duplicate', 'uses' => 'ProductsController@duplicate', 'permissions' => 'products-duplicate']);
-
-                /**
-                 * Preview Actions.
-                 */
-                Route::match(['post', 'put'], 'preview/{product?}', ['as' => 'admin.products.preview', 'uses' => 'ProductsController@preview', 'permissions' => 'products-preview']);
-
-                /**
-                 * Order Actions.
-                 */
-                Route::patch('order', ['as' => 'admin.products.order', 'uses' => 'ProductsController@order']);
-
-                /**
                  * Draft Actions.
                  */
                 Route::get('drafts', ['as' => 'admin.products.drafts', 'uses' => 'ProductsController@drafts', 'permissions' => 'drafts-list']);
@@ -356,67 +354,83 @@ Route::group([
                 Route::get('revision/{revision}', ['as' => 'admin.products.revision', 'uses' => 'ProductsController@revision', 'permissions' => 'revisions-rollback']);
 
                 /**
+                 * Duplicate Actions.
+                 */
+                Route::post('duplicate/{product}', ['as' => 'admin.products.duplicate', 'uses' => 'ProductsController@duplicate', 'permissions' => 'products-duplicate']);
+
+                /**
+                 * Preview Actions.
+                 */
+                Route::match(['post', 'put'], 'preview/{product?}', ['as' => 'admin.products.preview', 'uses' => 'ProductsController@preview', 'permissions' => 'products-preview']);
+
+                /**
+                 * Order Actions.
+                 */
+                Route::patch('order', ['as' => 'admin.products.order', 'uses' => 'ProductsController@order', 'permissions' => 'products-list']);
+
+                /**
                  * Assignment Actions.
                  */
+                Route::post('load-attribute', ['as' => 'admin.products.load_attribute', 'uses' => 'ProductsController@loadAttribute', 'permissions' => 'products-edit']);
+                Route::post('load-discount', ['as' => 'admin.products.load_discount', 'uses' => 'ProductsController@loadDiscount', 'permissions' => 'products-edit']);
+                Route::post('load-tax', ['as' => 'admin.products.load_tax', 'uses' => 'ProductsController@loadTax', 'permissions' => 'products-edit']);
                 Route::post('save-custom-attribute-value', ['as' => 'admin.products.save_custom_attribute_value', 'uses' => 'ProductsController@saveCustomAttributeValue', 'permissions' => 'products-edit']);
-                Route::post('load-one-attribute', ['as' => 'admin.products.load_one_attribute', 'uses' => 'ProductsController@loadOneAttribute', 'permissions' => 'products-edit']);
-                Route::post('load-one-discount', ['as' => 'admin.products.load_one_discount', 'uses' => 'ProductsController@loadOneDiscount', 'permissions' => 'products-edit']);
-                Route::post('load-one-tax', ['as' => 'admin.products.load_one_tax', 'uses' => 'ProductsController@loadOneTax', 'permissions' => 'products-edit']);
             });
 
             /**
              * CRUD Categories.
              */
             Route::group([
-                'prefix' => 'categories',
+                'prefix' => 'product-categories',
             ], function () {
-                Route::get('/', ['as' => 'admin.categories.index', 'uses' => 'CategoriesController@index', 'permissions' => 'categories-list']);
-                Route::get('create/{parent?}', ['as' => 'admin.categories.create', 'uses' => 'CategoriesController@create', 'permissions' => 'categories-add']);
-                Route::get('edit/{category}', ['as' => 'admin.categories.edit', 'uses' => 'CategoriesController@edit', 'permissions' => 'categories-edit']);
-                Route::post('store/{parent?}', ['as' => 'admin.categories.store', 'uses' => 'CategoriesController@store', 'permissions' => 'categories-add']);
-                Route::put('update/{category}', ['as' => 'admin.categories.update', 'uses' => 'CategoriesController@update', 'permissions' => 'categories-edit']);
-                Route::delete('destroy/{category}', ['as' => 'admin.categories.destroy', 'uses' => 'CategoriesController@destroy', 'permissions' => 'categories-delete']);
+                Route::get('/', ['as' => 'admin.product_categories.index', 'uses' => 'CategoriesController@index', 'permissions' => 'product-categories-list']);
+                Route::get('create/{parent?}', ['as' => 'admin.product_categories.create', 'uses' => 'CategoriesController@create', 'permissions' => 'product-categories-add']);
+                Route::get('edit/{category}', ['as' => 'admin.product_categories.edit', 'uses' => 'CategoriesController@edit', 'permissions' => 'product-categories-edit']);
+                Route::post('store/{parent?}', ['as' => 'admin.product_categories.store', 'uses' => 'CategoriesController@store', 'permissions' => 'product-categories-add']);
+                Route::put('update/{category}', ['as' => 'admin.product_categories.update', 'uses' => 'CategoriesController@update', 'permissions' => 'product-categories-edit']);
+                Route::delete('destroy/{category}', ['as' => 'admin.product_categories.destroy', 'uses' => 'CategoriesController@destroy', 'permissions' => 'product-categories-delete']);
 
                 /**
                  * Soft Delete Actions.
                  */
-                Route::get('deleted', ['as' => 'admin.categories.deleted', 'uses' => 'CategoriesController@deleted', 'permissions' => 'categories-deleted']);
-                Route::put('restore/{id}', ['as' => 'admin.categories.restore', 'uses' => 'CategoriesController@restore', 'permissions' => 'categories-restore']);
-                Route::delete('delete/{id}', ['as' => 'admin.categories.delete', 'uses' => 'CategoriesController@delete', 'permissions' => 'categories-force-delete']);
-
-                /**
-                 * Duplicate Actions.
-                 */
-                Route::post('duplicate/{category}', ['as' => 'admin.categories.duplicate', 'uses' => 'CategoriesController@duplicate', 'permissions' => 'categories-duplicate']);
-
-                /**
-                 * Preview Actions.
-                 */
-                Route::match(['post', 'put'], 'preview/{category?}', ['as' => 'admin.categories.preview', 'uses' => 'CategoriesController@preview', 'permissions' => 'categories-preview']);
+                Route::get('deleted', ['as' => 'admin.product_categories.deleted', 'uses' => 'CategoriesController@deleted', 'permissions' => 'product-categories-deleted']);
+                Route::put('restore/{id}', ['as' => 'admin.product_categories.restore', 'uses' => 'CategoriesController@restore', 'permissions' => 'product-categories-restore']);
+                Route::delete('delete/{id}', ['as' => 'admin.product_categories.delete', 'uses' => 'CategoriesController@delete', 'permissions' => 'product-categories-force-delete']);
 
                 /**
                  * Draft Actions.
                  */
-                Route::get('drafts', ['as' => 'admin.categories.drafts', 'uses' => 'CategoriesController@drafts', 'permissions' => 'drafts-list']);
-                Route::get('draft/{draft}', ['as' => 'admin.categories.draft', 'uses' => 'CategoriesController@draft', 'permissions' => 'drafts-publish']);
-                Route::match(['get', 'put'], 'limbo/{id}', ['as' => 'admin.categories.limbo', 'uses' => 'CategoriesController@limbo', 'permissions' => 'drafts-save']);
+                Route::get('drafts', ['as' => 'admin.product_categories.drafts', 'uses' => 'CategoriesController@drafts', 'permissions' => 'drafts-list']);
+                Route::get('draft/{draft}', ['as' => 'admin.product_categories.draft', 'uses' => 'CategoriesController@draft', 'permissions' => 'drafts-publish']);
+                Route::match(['get', 'put'], 'limbo/{id}', ['as' => 'admin.product_categories.limbo', 'uses' => 'CategoriesController@limbo', 'permissions' => 'drafts-save']);
 
                 /**
                  * Revision Actions.
                  */
-                Route::get('revision/{revision}', ['as' => 'admin.categories.revision', 'uses' => 'CategoriesController@revision', 'permissions' => 'revisions-rollback']);
+                Route::get('revision/{revision}', ['as' => 'admin.product_categories.revision', 'uses' => 'CategoriesController@revision', 'permissions' => 'revisions-rollback']);
+
+                /**
+                 * Duplicate Actions.
+                 */
+                Route::post('duplicate/{category}', ['as' => 'admin.product_categories.duplicate', 'uses' => 'CategoriesController@duplicate', 'permissions' => 'product-categories-duplicate']);
+
+                /**
+                 * Preview Actions.
+                 */
+                Route::match(['post', 'put'], 'preview/{category?}', ['as' => 'admin.product_categories.preview', 'uses' => 'CategoriesController@preview', 'permissions' => 'product-categories-preview']);
 
                 /**
                  * Tree Actions.
                  */
                 Route::group([
+                    'namespace' => 'Categories',
                     'prefix' => 'tree'
                 ], function () {
-                    Route::get('fix', ['as' => 'admin.categories.tree.fix', 'uses' => 'CategoriesController@fixTree', 'acl' => 'pages-list']);
-                    Route::get('load/{parent?}', ['as' => 'admin.categories.tree.load', 'uses' => 'CategoriesController@loadTreeNodes', 'acl' => 'pages-list']);
-                    Route::get('list/{parent?}', ['as' => 'admin.categories.tree.list', 'uses' => 'CategoriesController@listTreeItems', 'acl' => 'pages-list']);
-                    Route::post('sort', ['as' => 'admin.categories.tree.sort', 'uses' => 'CategoriesController@sortTreeItems', 'acl' => 'pages-list']);
-                    Route::post('url', ['as' => 'admin.categories.tree.url', 'uses' => 'CategoriesController@refreshTreeItemsUrls', 'acl' => 'pages-list']);
+                    Route::get('fix', ['as' => 'admin.product_categories.tree.fix', 'uses' => 'TreeController@fix', 'permissions' => 'product-categories-list']);
+                    Route::get('load/{parent?}', ['as' => 'admin.product_categories.tree.load', 'uses' => 'TreeController@loadNodes', 'permissions' => 'product-categories-list']);
+                    Route::get('list/{parent?}', ['as' => 'admin.product_categories.tree.list', 'uses' => 'TreeController@listItems', 'permissions' => 'product-categories-list']);
+                    Route::post('sort', ['as' => 'admin.product_categories.tree.sort', 'uses' => 'TreeController@sortItems', 'permissions' => 'product-categories-list']);
+                    Route::post('url', ['as' => 'admin.product_categories.tree.url', 'uses' => 'TreeController@refreshUrls', 'permissions' => 'product-categories-list']);
                 });
             });
 
@@ -434,65 +448,67 @@ Route::group([
             });
 
             /**
-             * CRUD Sets.
+             * CRUD Attribute Sets.
              */
             Route::group([
+                'namespace' => 'Attributes',
                 'prefix' => 'sets',
             ], function () {
-                Route::get('/', ['as' => 'admin.sets.index', 'uses' => 'SetsController@index', 'permissions' => 'sets-list']);
-                Route::get('create', ['as' => 'admin.sets.create', 'uses' => 'SetsController@create', 'permissions' => 'sets-add']);
-                Route::get('edit/{set}', ['as' => 'admin.sets.edit', 'uses' => 'SetsController@edit', 'permissions' => 'sets-edit']);
-                Route::post('store', ['as' => 'admin.sets.store', 'uses' => 'SetsController@store', 'permissions' => 'sets-add']);
-                Route::put('update/{set}', ['as' => 'admin.sets.update', 'uses' => 'SetsController@update', 'permissions' => 'sets-edit']);
-                Route::delete('destroy/{set}', ['as' => 'admin.sets.destroy', 'uses' => 'SetsController@destroy', 'permissions' => 'sets-delete']);
+                Route::get('/', ['as' => 'admin.attribute_sets.index', 'uses' => 'SetsController@index', 'permissions' => 'attributes-list']);
+                Route::get('create', ['as' => 'admin.attribute_sets.create', 'uses' => 'SetsController@create', 'permissions' => 'attributes-add']);
+                Route::get('edit/{set}', ['as' => 'admin.attribute_sets.edit', 'uses' => 'SetsController@edit', 'permissions' => 'attributes-edit']);
+                Route::post('store', ['as' => 'admin.attribute_sets.store', 'uses' => 'SetsController@store', 'permissions' => 'attributes-add']);
+                Route::put('update/{set}', ['as' => 'admin.attribute_sets.update', 'uses' => 'SetsController@update', 'permissions' => 'attributes-edit']);
+                Route::delete('destroy/{set}', ['as' => 'admin.attribute_sets.destroy', 'uses' => 'SetsController@destroy', 'permissions' => 'attributes-delete']);
 
                 /**
                  * Order Actions.
                  */
-                Route::patch('order', ['as' => 'admin.sets.order', 'uses' => 'SetsController@order']);
+                Route::patch('order', ['as' => 'admin.attribute_sets.order', 'uses' => 'SetsController@order', 'permissions' => 'attributes-list']);
 
                 /**
                  * Fetch attributes & values endpoints.
                  */
                 Route::get('attributes/get/{set?}', ['as' => 'admin.attributes.get', 'uses' => 'AttributesController@get', 'permissions' => 'attributes-list']);
-                Route::get('values/get/{set?}/{attribute?}', ['as' => 'admin.values.get', 'uses' => 'ValuesController@get', 'permissions' => 'values-edit']);
+                Route::get('values/get/{set?}/{attribute?}', ['as' => 'admin.values.get', 'uses' => 'ValuesController@get', 'permissions' => 'attributes-edit']);
+            });
+
+            /**
+             * CRUD Attributes.
+             */
+            Route::group([
+                'prefix' => 'sets/{set}/attributes',
+            ], function () {
+                Route::get('/', ['as' => 'admin.attributes.index', 'uses' => 'AttributesController@index', 'permissions' => 'attributes-list']);
+                Route::get('create', ['as' => 'admin.attributes.create', 'uses' => 'AttributesController@create', 'permissions' => 'attributes-add']);
+                Route::get('edit/{attribute}', ['as' => 'admin.attributes.edit', 'uses' => 'AttributesController@edit', 'permissions' => 'attributes-edit']);
+                Route::post('store', ['as' => 'admin.attributes.store', 'uses' => 'AttributesController@store', 'permissions' => 'attributes-add']);
+                Route::put('update/{attribute}', ['as' => 'admin.attributes.update', 'uses' => 'AttributesController@update', 'permissions' => 'attributes-edit']);
+                Route::delete('destroy/{attribute}', ['as' => 'admin.attributes.destroy', 'uses' => 'AttributesController@destroy', 'permissions' => 'attributes-delete']);
 
                 /**
-                 * CRUD Attributes.
+                 * Order Actions.
+                 */
+                Route::patch('order', ['as' => 'admin.attributes.order', 'uses' => 'AttributesController@order', 'permissions' => 'attributes-list']);
+
+                /**
+                 * CRUD Attribute Values.
                  */
                 Route::group([
-                    'prefix' => 'edit/{set}/attributes',
+                    'namespace' => 'Attributes',
+                    'prefix' => '{attribute}/values',
                 ], function () {
-                    Route::get('/', ['as' => 'admin.attributes.index', 'uses' => 'AttributesController@index', 'permissions' => 'attributes-list']);
-                    Route::get('create', ['as' => 'admin.attributes.create', 'uses' => 'AttributesController@create', 'permissions' => 'attributes-add']);
-                    Route::get('edit/{attribute}', ['as' => 'admin.attributes.edit', 'uses' => 'AttributesController@edit', 'permissions' => 'attributes-edit']);
-                    Route::post('store', ['as' => 'admin.attributes.store', 'uses' => 'AttributesController@store', 'permissions' => 'attributes-add']);
-                    Route::put('update/{attribute}', ['as' => 'admin.attributes.update', 'uses' => 'AttributesController@update', 'permissions' => 'attributes-edit']);
-                    Route::delete('destroy/{attribute}', ['as' => 'admin.attributes.destroy', 'uses' => 'AttributesController@destroy', 'permissions' => 'attributes-delete']);
+                    Route::get('/', ['as' => 'admin.values.index', 'uses' => 'ValuesController@index', 'permissions' => 'attributes-edit']);
+                    Route::get('create', ['as' => 'admin.values.create', 'uses' => 'ValuesController@create', 'permissions' => 'attributes-edit']);
+                    Route::get('edit/{value}', ['as' => 'admin.values.edit', 'uses' => 'ValuesController@edit', 'permissions' => 'attributes-edit']);
+                    Route::post('store', ['as' => 'admin.values.store', 'uses' => 'ValuesController@store', 'permissions' => 'attributes-edit']);
+                    Route::put('update/{value}', ['as' => 'admin.values.update', 'uses' => 'ValuesController@update', 'permissions' => 'attributes-edit']);
+                    Route::delete('destroy/{value}', ['as' => 'admin.values.destroy', 'uses' => 'ValuesController@destroy', 'permissions' => 'attributes-edit']);
 
                     /**
                      * Order Actions.
                      */
-                    Route::patch('order', ['as' => 'admin.attributes.order', 'uses' => 'AttributesController@order']);
-
-                    /**
-                     * CRUD Values.
-                     */
-                    Route::group([
-                        'prefix' => 'edit/{attribute}/values',
-                    ], function () {
-                        Route::get('/', ['as' => 'admin.values.index', 'uses' => 'ValuesController@index', 'permissions' => 'attributes-edit']);
-                        Route::get('create', ['as' => 'admin.values.create', 'uses' => 'ValuesController@create', 'permissions' => 'attributes-edit']);
-                        Route::get('edit/{value}', ['as' => 'admin.values.edit', 'uses' => 'ValuesController@edit', 'permissions' => 'attributes-edit']);
-                        Route::post('store', ['as' => 'admin.values.store', 'uses' => 'ValuesController@store', 'permissions' => 'attributes-edit']);
-                        Route::put('update/{value}', ['as' => 'admin.values.update', 'uses' => 'ValuesController@update', 'permissions' => 'attributes-edit']);
-                        Route::delete('destroy/{value}', ['as' => 'admin.values.destroy', 'uses' => 'ValuesController@destroy', 'permissions' => 'attributes-edit']);
-
-                        /**
-                         * Order Actions.
-                         */
-                        Route::patch('order', ['as' => 'admin.values.order', 'uses' => 'ValuesController@order']);
-                    });
+                    Route::patch('order', ['as' => 'admin.values.order', 'uses' => 'ValuesController@order', 'permissions' => 'attributes-list']);
                 });
             });
 
@@ -525,7 +541,7 @@ Route::group([
             });
 
             /**
-             * CRUD Taxes.
+             * CRUD Currencies.
              */
             Route::group([
                 'prefix' => 'currencies',
@@ -561,10 +577,11 @@ Route::group([
                 Route::post('impersonate/{user}', ['as' => 'admin.users.impersonate', 'uses' => 'UsersController@impersonate', 'permissions' => 'users-impersonate']);
 
                 /**
-                 * CRUD Attributes.
+                 * CRUD Addresses.
                  */
                 Route::group([
-                    'prefix' => 'edit/{user}/addresses',
+                    'namespace' => 'Users',
+                    'prefix' => '{user}/addresses',
                 ], function () {
                     Route::get('/', ['as' => 'admin.addresses.index', 'uses' => 'AddressesController@index', 'permissions' => 'addresses-list']);
                     Route::get('create', ['as' => 'admin.addresses.create', 'uses' => 'AddressesController@create', 'permissions' => 'addresses-add']);
@@ -650,7 +667,7 @@ Route::group([
                 Route::delete('destroy/{state}', ['as' => 'admin.states.destroy', 'uses' => 'StatesController@destroy', 'permissions' => 'states-delete']);
 
                 /**
-                 * Get endpoint.
+                 * Ajax Actions.
                  */
                 Route::get('get/{country?}', ['as' => 'admin.states.get', 'uses' => 'StatesController@get']);
             });
@@ -669,14 +686,14 @@ Route::group([
                 Route::delete('destroy/{city}', ['as' => 'admin.cities.destroy', 'uses' => 'CitiesController@destroy', 'permissions' => 'cities-delete']);
 
                 /**
-                 * Get endpoint.
+                 * Ajax Actions.
                  */
                 Route::get('get/{country?}/{state?}', ['as' => 'admin.cities.get', 'uses' => 'CitiesController@get']);
             });
         });
 
         /**
-         * CRUD Test (Cars)
+         * Crud Settings.
          */
         Route::group([
             'namespace' => 'Config',
@@ -684,23 +701,6 @@ Route::group([
         ], function () {
             Route::match(['get', 'post'], 'general', ['as' => 'admin.settings.general', 'uses' => 'SettingsController@general', 'permissions' => 'settings-general']);
             Route::match(['get', 'post'], 'analytics', ['as' => 'admin.settings.analytics', 'uses' => 'SettingsController@analytics', 'permissions' => 'settings-analytics']);
-        });
-
-        /**
-         * CRUD Test (Cars)
-         */
-        Route::group([
-            'namespace' => 'Test',
-            'prefix' => 'cars',
-        ], function () {
-            Route::get('/', ['as' => 'admin.cars.index', 'uses' => 'CarsController@index']);
-            Route::get('create', ['as' => 'admin.cars.create', 'uses' => 'CarsController@create']);
-            Route::get('edit/{id}', ['as' => 'admin.cars.edit', 'uses' => 'CarsController@edit']);
-            Route::get('draft/{draft}', ['as' => 'admin.cars.draft', 'uses' => 'CarsController@draft', 'pages-edit']);
-            Route::post('store', ['as' => 'admin.cars.store', 'uses' => 'CarsController@store']);
-            Route::put('update/{id}', ['as' => 'admin.cars.update', 'uses' => 'CarsController@update']);
-            Route::delete('destroy/{id}', ['as' => 'admin.cars.destroy', 'uses' => 'CarsController@destroy']);
-            Route::get('revision/{revision}', ['as' => 'admin.cars.revision', 'uses' => 'CarsController@revision']);
         });
     });
 });

@@ -3,8 +3,8 @@
 namespace App\Helpers;
 
 use App\Models\Auth\Activity;
-use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class ActivityHelper
 {

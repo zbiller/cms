@@ -2,12 +2,12 @@
 
 namespace App\Traits;
 
-use Closure;
-use BadMethodCallException;
-use App\Http\Filters\Filter;
 use App\Exceptions\FilterException;
-use Illuminate\Http\Request;
+use App\Http\Filters\Filter;
+use BadMethodCallException;
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 trait IsFilterable
 {

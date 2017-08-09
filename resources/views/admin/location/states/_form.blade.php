@@ -15,5 +15,5 @@
 {!! form_admin()->close() !!}
 
 @section('bottom_scripts')
-    {!! JsValidator::formRequest(App\Http\Requests\CityRequest::class, '.form') !!}
+    {!! JsValidator::formRequest(App\Http\Requests\Location\CityRequest::class, '.form') !!}
 @append

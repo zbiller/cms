@@ -2,13 +2,13 @@
 
 namespace App\Providers;
 
-use DB;
-use Schema;
-use App\Helpers\UploaderHelper;
 use App\Helpers\FormAdminHelper;
 use App\Helpers\MetaHelper;
 use App\Helpers\RelationHelper;
+use App\Helpers\UploaderHelper;
+use DB;
 use Illuminate\Support\ServiceProvider;
+use Schema;
 
 class AppServiceProvider extends ServiceProvider
 {

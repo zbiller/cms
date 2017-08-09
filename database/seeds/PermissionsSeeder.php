@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\Auth\Permission;
-use Illuminate\Database\Seeder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Seeder;
 
 class PermissionsSeeder extends Seeder
 {
@@ -26,6 +26,44 @@ class PermissionsSeeder extends Seeder
      * @var array
      */
     private $adminMap = [
+        'Uploads' => [
+            'List' => [
+                'group' => 'Uploads',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'uploads-list',
+            ],
+            'Upload' => [
+                'group' => 'Uploads',
+                'label' => 'Upload',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'uploads-upload',
+            ],
+            'Select' => [
+                'group' => 'Uploads',
+                'label' => 'Select',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'uploads-select',
+            ],
+            'Download' => [
+                'group' => 'Uploads',
+                'label' => 'Download',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'uploads-download',
+            ],
+            'Crop' => [
+                'group' => 'Uploads',
+                'label' => 'Crop',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'uploads-crop',
+            ],
+            'Delete' => [
+                'group' => 'Uploads',
+                'label' => 'Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'uploads-delete',
+            ],
+        ],
         'Drafts' => [
             'List' => [
                 'group' => 'Drafts',
@@ -70,44 +108,6 @@ class PermissionsSeeder extends Seeder
                 'label' => 'Delete',
                 'type' => Permission::TYPE_ADMIN,
                 'name' => 'revisions-delete',
-            ],
-        ],
-        'Uploads' => [
-            'List' => [
-                'group' => 'Uploads',
-                'label' => 'List',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'uploads-list',
-            ],
-            'Upload' => [
-                'group' => 'Uploads',
-                'label' => 'Upload',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'uploads-upload',
-            ],
-            'Select' => [
-                'group' => 'Uploads',
-                'label' => 'Select',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'uploads-select',
-            ],
-            'Download' => [
-                'group' => 'Uploads',
-                'label' => 'Download',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'uploads-download',
-            ],
-            'Crop' => [
-                'group' => 'Uploads',
-                'label' => 'Crop',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'uploads-crop',
-            ],
-            'Delete' => [
-                'group' => 'Uploads',
-                'label' => 'Delete',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'uploads-delete',
             ],
         ],
         'Pages' => [
@@ -392,6 +392,62 @@ class PermissionsSeeder extends Seeder
                 'name' => 'products-force-delete',
             ],
         ],
+        'Product Categories' => [
+            'List' => [
+                'group' => 'Product Categories',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'product-categories-list',
+            ],
+            'Add' => [
+                'group' => 'Product Categories',
+                'label' => 'Add',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'product-categories-add',
+            ],
+            'Edit' => [
+                'group' => 'Product Categories',
+                'label' => 'Edit',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'product-categories-edit',
+            ],
+            'Duplicate' => [
+                'group' => 'Product Categories',
+                'label' => 'Duplicate',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'product-categories-duplicate',
+            ],
+            'Preview' => [
+                'group' => 'Product Categories',
+                'label' => 'Preview',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'product-categories-preview',
+            ],
+            'Deleted' => [
+                'group' => 'Product Categories',
+                'label' => 'Deleted',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'product-categories-deleted',
+            ],
+            'Restore' => [
+                'group' => 'Product Categories',
+                'label' => 'Restore',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'product-categories-restore',
+            ],
+            'Soft Delete' => [
+                'group' => 'Product Categories',
+                'label' => 'Soft Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'product-categories-soft-delete',
+            ],
+            'Force Delete' => [
+                'group' => 'Product Categories',
+                'label' => 'Force Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'product-categories-force-delete',
+            ],
+        ],
         'Carts' => [
             'List' => [
                 'group' => 'Carts',
@@ -422,88 +478,6 @@ class PermissionsSeeder extends Seeder
                 'label' => 'Remind',
                 'type' => Permission::TYPE_ADMIN,
                 'name' => 'carts-remind',
-            ],
-        ],
-        'Categories' => [
-            'List' => [
-                'group' => 'Categories',
-                'label' => 'List',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'categories-list',
-            ],
-            'Add' => [
-                'group' => 'Categories',
-                'label' => 'Add',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'categories-add',
-            ],
-            'Edit' => [
-                'group' => 'Categories',
-                'label' => 'Edit',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'categories-edit',
-            ],
-            'Duplicate' => [
-                'group' => 'Categories',
-                'label' => 'Duplicate',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'categories-duplicate',
-            ],
-            'Preview' => [
-                'group' => 'Categories',
-                'label' => 'Preview',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'categories-preview',
-            ],
-            'Deleted' => [
-                'group' => 'Categories',
-                'label' => 'Deleted',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'categories-deleted',
-            ],
-            'Restore' => [
-                'group' => 'Categories',
-                'label' => 'Restore',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'categories-restore',
-            ],
-            'Soft Delete' => [
-                'group' => 'Categories',
-                'label' => 'Soft Delete',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'categories-soft-delete',
-            ],
-            'Force Delete' => [
-                'group' => 'Categories',
-                'label' => 'Force Delete',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'categories-force-delete',
-            ],
-        ],
-        'Sets' => [
-            'List' => [
-                'group' => 'Sets',
-                'label' => 'List',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'sets-list',
-            ],
-            'Add' => [
-                'group' => 'Sets',
-                'label' => 'Add',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'sets-add',
-            ],
-            'Edit' => [
-                'group' => 'Sets',
-                'label' => 'Edit',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'sets-edit',
-            ],
-            'Delete' => [
-                'group' => 'Sets',
-                'label' => 'Delete',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'sets-delete',
             ],
         ],
         'Attributes' => [

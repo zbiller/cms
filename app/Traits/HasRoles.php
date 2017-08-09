@@ -2,11 +2,11 @@
 
 namespace App\Traits;
 
-use App\Models\Auth\Role;
 use App\Models\Auth\Permission;
+use App\Models\Auth\Role;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
-use Illuminate\Database\Eloquent\Collection;
 
 trait HasRoles
 {
