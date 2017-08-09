@@ -4,8 +4,8 @@ namespace App\Providers;
 
 use App\Helpers\FormAdminHelper;
 use App\Helpers\MetaHelper;
-use App\Helpers\RelationHelper;
 use App\Helpers\UploaderHelper;
+use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use DB;
 use Illuminate\Support\ServiceProvider;
 use Schema;
@@ -21,8 +21,12 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
 
-        if (env('APP_ENV', 'development') != 'development') {
+        if ($this->app->environment() != 'development') {
             DB::connection()->disableQueryLog();
+        }
+
+        if ($this->app->environment() !== 'production') {
+            $this->app->register(IdeHelperServiceProvider::class);
         }
     }
 

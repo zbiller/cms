@@ -3,6 +3,7 @@
 namespace App\Models\Auth;
 
 use App\Models\Auth\User\Address;
+use App\Models\Shop\Cart;
 use App\Notifications\ResetPassword;
 use App\Options\ActivityOptions;
 use App\Options\VerifyOptions;
@@ -111,6 +112,16 @@ class User extends Authenticatable
     public function person()
     {
         return $this->hasOne(Person::class, 'user_id');
+    }
+
+    /**
+     * User has one person.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
+    public function cart()
+    {
+        return $this->hasOne(Cart::class, 'user_id');
     }
 
     /**

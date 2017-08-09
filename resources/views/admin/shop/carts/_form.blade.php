@@ -11,7 +11,6 @@
     {!! form_admin()->text('total', 'Raw Total', number_format($item->raw_total, 2), ['disabled' => 'disabled']) !!}
     {!! form_admin()->text('total', 'Sub Total', number_format($item->sub_total, 2), ['disabled' => 'disabled']) !!}
     {!! form_admin()->text('total', 'Grand Total', number_format($item->grand_total, 2), ['disabled' => 'disabled']) !!}
-    {!! form_admin()->text('count', 'Items Count', $item->count, ['disabled' => 'disabled']) !!}
 </div>
 <div id="tab-2" class="tab">
     <table cellspacing="0" cellpadding="0" border="0">
@@ -19,6 +18,7 @@
         <tr class="even nodrag nodrop">
             <td>Name</td>
             <td>Quantity</td>
+            <td>Total</td>
             <td class="actions-view">Actions</td>
         </tr>
         </thead>
@@ -28,6 +28,7 @@
                 <tr>
                     <td>{{ $_item->product && $_item->product->exists ? $_item->product->name : 'N/A' }}</td>
                     <td>{{ $_item->quantity ?: 'N/A' }}</td>
+                    <td>{{ number_format($_item->quantity * $_item->product->final_price, 2) . ' ' . config('shop.price.default_currency') }}</td>
                     <td>
                         <a href="{{ route('admin.products.edit', $_item->product) }}" class="assign-view btn yellow no-margin-top no-margin-bottom no-margin-left" target="_blank">
                             <i class="fa fa-eye"></i>&nbsp; View

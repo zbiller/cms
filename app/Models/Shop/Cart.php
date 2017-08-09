@@ -160,60 +160,6 @@ class Cart extends Model
     }
 
     /**
-     * Get the raw total of a given cart instance.
-     *
-     * @return float
-     */
-    public function getRawTotalAttribute()
-    {
-        $total = 0;
-
-        foreach ($this->items()->get() as $item) {
-            $total += $item->quantity * Currency::convert(
-                $item->product->price, $item->product->currency->code, config('shop.price.default_currency')
-            );
-        }
-
-        return $total;
-    }
-
-    /**
-     * Get the grand total of a given cart instance.
-     *
-     * @return float
-     */
-    public function getSubTotalAttribute()
-    {
-        $total = 0;
-
-        foreach ($this->items()->get() as $item) {
-            $total += $item->quantity * Currency::convert(
-                $item->product->price_with_discounts, $item->product->currency->code, config('shop.price.default_currency')
-            );
-        }
-
-        return $total;
-    }
-
-    /**
-     * Get the grand total of a given cart instance.
-     *
-     * @return float
-     */
-    public function getGrandTotalAttribute()
-    {
-        $total = 0;
-
-        foreach ($this->items()->get() as $item) {
-            $total += $item->quantity * Currency::convert(
-                $item->product->final_price, $item->product->currency->code, config('shop.price.default_currency')
-            );
-        }
-
-        return $total;
-    }
-
-    /**
      * Override route model binding default column value.
      * This is done because the cart is joined with items, products and currencies by the global scope.
      * Otherwise, the model binding will throw an "ambiguous column" error.
@@ -223,6 +169,46 @@ class Cart extends Model
     public function getRouteKeyName()
     {
         return $this->getTable() . '.' . $this->getKeyName();
+    }
+
+    /**
+     * Get the raw total of a given cart instance.
+     *
+     * @return float
+     */
+    public function getTotalAttribute()
+    {
+        return static::getTotal(null, static::TOTAL_RAW, $this);
+    }
+
+    /**
+     * Get the raw total of a given cart instance.
+     *
+     * @return float
+     */
+    public function getRawTotalAttribute()
+    {
+        return static::getTotal(null, static::TOTAL_RAW, $this);
+    }
+
+    /**
+     * Get the grand total of a given cart instance.
+     *
+     * @return float
+     */
+    public function getSubTotalAttribute()
+    {
+        return static::getTotal(null, static::TOTAL_SUB, $this);
+    }
+
+    /**
+     * Get the grand total of a given cart instance.
+     *
+     * @return float
+     */
+    public function getGrandTotalAttribute()
+    {
+        return static::getTotal(null, static::TOTAL_GRAND, $this);
     }
 
     /**
@@ -258,15 +244,20 @@ class Cart extends Model
      *
      * @param string|null $currency
      * @param int $type
+     * @param Cart $cart
      * @return float|int
      */
-    public static function getTotal($currency = null, $type)
+    public static function getTotal($currency = null, $type, Cart $cart = null)
     {
         if ($currency === null) {
             $currency = config('shop.price.default_currency');
         }
 
         $total = 0;
+
+        if ($cart && $cart->exists) {
+            self::$cart = $cart;
+        }
 
         if (!self::$cart) {
             self::$cart = static::getCart();
@@ -283,7 +274,7 @@ class Cart extends Model
                     $price = $product->price_with_discounts;
                     break;
                 default:
-                    $price = $product->price_with_discounts;
+                    $price = $product->price;
                     break;
             }
 
@@ -476,7 +467,7 @@ class Cart extends Model
      * @return bool
      * @throws CartException
      */
-    public static function removeAllProducts()
+    public static function emptyCart()
     {
         try {
             if (!self::$cart) {
