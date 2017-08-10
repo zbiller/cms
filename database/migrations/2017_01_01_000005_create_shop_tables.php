@@ -34,7 +34,7 @@ class CreateShopTables extends Migration
             $table->string('name')->unique();
             $table->string('slug')->unique();
 
-            $table->text('metadata')->nullable();
+            $table->longText('metadata')->nullable();
             $table->tinyInteger('active')->default(1);
 
             $table->timestamps();
@@ -50,7 +50,7 @@ class CreateShopTables extends Migration
             $table->string('sku')->unique();
             $table->string('name')->unique();
             $table->string('slug')->unique();
-            $table->text('content')->nullable();
+            $table->longText('content')->nullable();
 
             $table->float('price')->default(0);
             $table->integer('quantity')->default(0);
@@ -58,7 +58,7 @@ class CreateShopTables extends Migration
             $table->integer('views')->default(0);
             $table->integer('sales')->default(0);
 
-            $table->text('metadata')->nullable()->nullable();
+            $table->longText('metadata')->nullable();
             $table->tinyInteger('active')->default(1);
             $table->tinyInteger('inherit_discounts')->default(1);
             $table->tinyInteger('inherit_taxes')->default(1);
@@ -101,7 +101,7 @@ class CreateShopTables extends Migration
             $table->increments('id');
 
             $table->string('name')->unique();
-            $table->string('slug')->unique();
+            $table->string('slug')->unique()->nullable();
             $table->integer('ord')->default(0);
 
             $table->timestamps();
@@ -112,7 +112,9 @@ class CreateShopTables extends Migration
             $table->integer('set_id')->unsigned()->index();
 
             $table->string('name');
-            $table->string('slug');
+            $table->string('slug')->nullable();
+
+            $table->tinyInteger('filterable')->default(0);
             $table->integer('ord')->default(0);
 
             $table->timestamps();
@@ -125,7 +127,7 @@ class CreateShopTables extends Migration
             $table->integer('attribute_id')->unsigned()->index();
 
             $table->text('value');
-            $table->string('slug');
+            $table->string('slug')->nullable();
             $table->integer('ord')->default(0);
 
             $table->timestamps();
@@ -137,7 +139,7 @@ class CreateShopTables extends Migration
             $table->increments('id');
 
             $table->string('name')->unique();
-            $table->float('rate');
+            $table->float('rate')->default(0);
 
             $table->integer('uses')->nullable();
             $table->tinyInteger('type')->default(1);
@@ -155,7 +157,7 @@ class CreateShopTables extends Migration
             $table->increments('id');
 
             $table->string('name')->unique();
-            $table->float('rate');
+            $table->float('rate')->default(0);
 
             $table->integer('uses')->nullable();
             $table->tinyInteger('type')->default(1);
@@ -221,6 +223,18 @@ class CreateShopTables extends Migration
 
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('tax_id')->references('id')->on('taxes')->onDelete('cascade')->onUpdate('cascade');
+        });
+
+        Schema::create('category_attribute', function (Blueprint $table) {
+            $table->increments('id');
+
+            $table->integer('category_id')->unsigned()->index();
+            $table->integer('attribute_id')->unsigned()->index();
+
+            $table->timestamps();
+
+            $table->foreign('category_id')->references('id')->on('product_categories')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('attribute_id')->references('id')->on('attributes')->onDelete('cascade')->onUpdate('cascade');
         });
 
         Schema::create('category_discount', function (Blueprint $table) {

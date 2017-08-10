@@ -43,6 +43,25 @@ class Attribute extends Model
         'name',
         'slug',
         'value',
+        'filterable',
+    ];
+
+    /**
+     * The constants defining the attribute's filtering capabilities.
+     *
+     * @const
+     */
+    const FILTERABLE_NO = 0;
+    const FILTERABLE_YES = 1;
+
+    /**
+     * The property defining the attribute's filtering capabilities.
+     *
+     * @var array
+     */
+    public static $filters = [
+        self::FILTERABLE_NO => 'No',
+        self::FILTERABLE_YES => 'Yes',
     ];
 
     /**
@@ -93,6 +112,16 @@ class Attribute extends Model
         return $this->belongsToMany(Product::class, 'product_attribute', 'attribute_id', 'product_id')->withPivot([
             'id', 'ord', 'val'
         ])->withTimestamps()->orderBy('product_attribute.ord', 'asc');
+    }
+
+    /**
+     * Attribute has and belongs to many categories.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class, 'category_attribute', 'attribute_id', 'category_id')->withTimestamps();
     }
 
     /**

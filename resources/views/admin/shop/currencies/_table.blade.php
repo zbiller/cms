@@ -4,13 +4,13 @@
             <td class="sortable" data-sort="name">
                 <i class="fa fa-sort"></i>&nbsp; Name
             </td>
-            <td class="sortable" data-sort="rate">
+            <td class="sortable" data-sort="code">
                 <i class="fa fa-sort"></i>&nbsp; Code
             </td>
             <td class="sortable" data-sort="symbol">
                 <i class="fa fa-sort"></i>&nbsp; Symbol
             </td>
-            <td class="sortable" data-sort="type">
+            <td class="sortable" data-sort="exchange_rate">
                 <i class="fa fa-sort"></i>&nbsp; Exchange Rate
             </td>
             <td>Actions</td>

@@ -397,20 +397,6 @@ class Product extends Model
     /**
      * Get the product's specifications mapped into an array.
      *
-     * Array format:
-     *
-     * [
-     *     set_name =>
-     *     [
-     *         [
-     *             "name" => attribute_name,
-     *             "value" => attribute_value,
-     *         ],
-     *         ...
-     *     ],
-     *     ...
-     * ]
-     *
      * @return array
      */
     public function getSpecificationsAttribute()
@@ -426,6 +412,7 @@ class Product extends Model
             $pivot = $attribute->pivot;
 
             $specifications[$set->name][] = [
+                'id' => $attribute->id,
                 'name' => $attribute->name,
                 'value' => $pivot->value ?: (
                     ($value = Value::find($pivot->value_id)) ? $value->value : 'N/A'

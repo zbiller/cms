@@ -49,7 +49,7 @@ class CreateCmsTables extends Migration
             $table->string('slug')->unique();
             $table->string('identifier')->unique()->nullable();
 
-            $table->longText('metadata');
+            $table->longText('metadata')->nullable();
             $table->string('canonical')->nullable();
 
             $table->tinyInteger('active')->default(1);
@@ -66,9 +66,9 @@ class CreateCmsTables extends Migration
             $table->increments('id');
 
             $table->string('name')->unique();
-            $table->string('type');
+            $table->string('type')->nullable();
             $table->string('anchor')->nullable();
-            $table->longText('metadata');
+            $table->longText('metadata')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
@@ -82,9 +82,9 @@ class CreateCmsTables extends Migration
 
             $table->string('name');
             $table->string('url')->nullable();
-            $table->string('type');
-            $table->string('location');
-            $table->longText('metadata');
+            $table->string('type')->nullable();
+            $table->string('location')->nullable();
+            $table->longText('metadata')->nullable();
             $table->tinyInteger('active')->default(1);
 
             $table->timestamps();
@@ -96,7 +96,7 @@ class CreateCmsTables extends Migration
             $table->string('name')->unique();
             $table->string('identifier')->unique()->nullable();
             $table->tinyInteger('type')->default(1);
-            $table->longText('metadata');
+            $table->longText('metadata')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
@@ -115,8 +115,8 @@ class CreateCmsTables extends Migration
             $table->increments('id');
             $table->integer('block_id')->unsigned()->index();
             $table->morphs('blockable');
-            $table->string('location');
-            $table->integer('ord');
+            $table->string('location')->nullable();
+            $table->integer('ord')->default(0);
 
             $table->timestamps();
 

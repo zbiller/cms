@@ -8,6 +8,7 @@ use App\Http\Requests\Shop\AttributeRequest;
 use App\Http\Sorts\Shop\AttributeSort;
 use App\Models\Shop\Attribute;
 use App\Models\Shop\Attribute\Set;
+use App\Models\Shop\Category;
 use App\Traits\CanCrud;
 use App\Traits\CanOrder;
 use Illuminate\Http\Request;
@@ -44,6 +45,7 @@ class AttributesController extends Controller
             $this->view = view('admin.shop.attributes.index');
             $this->vars = [
                 'set' => $set,
+                'filters' => Attribute::$filters,
             ];
         });
     }
@@ -59,6 +61,8 @@ class AttributesController extends Controller
             $this->view = view('admin.shop.attributes.add');
             $this->vars = [
                 'set' => $set,
+                'categories' => Category::withDepth()->defaultOrder()->get(),
+                'filters' => Attribute::$filters,
             ];
         });
     }
@@ -73,6 +77,8 @@ class AttributesController extends Controller
         return $this->_store(function () use ($request, $set) {
             $this->item = Attribute::create($request->all());
             $this->redirect = redirect()->route('admin.attributes.index', $set);
+
+            $this->item->categories()->attach($request->get('categories'));
         }, $request);
     }
 
@@ -89,6 +95,8 @@ class AttributesController extends Controller
             $this->view = view('admin.shop.attributes.edit');
             $this->vars = [
                 'set' => $set,
+                'categories' => Category::withDepth()->defaultOrder()->get(),
+                'filters' => Attribute::$filters,
             ];
         });
     }
@@ -106,6 +114,7 @@ class AttributesController extends Controller
             $this->redirect = redirect()->route('admin.attributes.index', $set);
 
             $this->item->update($request->all());
+            $this->item->categories()->sync($request->get('categories'));
         }, $request);
     }
 

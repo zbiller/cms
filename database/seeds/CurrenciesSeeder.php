@@ -950,5 +950,7 @@ class CurrenciesSeeder extends Seeder
                 'exchange_rate' => $attributes['exchange_rate'],
             ]);
         }
+
+        Currency::updateExchangeRates();
     }
 }

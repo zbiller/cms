@@ -481,7 +481,7 @@ Route::group([
                  * Fetch attributes & values endpoints.
                  */
                 Route::get('attributes/get/{set?}', ['as' => 'admin.attributes.get', 'uses' => 'AttributesController@get', 'permissions' => 'attributes-list']);
-                Route::get('values/get/{set?}/{attribute?}', ['as' => 'admin.values.get', 'uses' => 'ValuesController@get', 'permissions' => 'attributes-edit']);
+                Route::get('values/get/{set?}/{attribute?}', ['as' => 'admin.values.get', 'uses' => 'Attributes\ValuesController@get', 'permissions' => 'attributes-edit']);
 
                 Route::group([
                     'prefix' => 'sets/{set}/attributes',

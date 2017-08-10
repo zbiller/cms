@@ -61,10 +61,10 @@ class MenuComposer
             });
 
             $menu->add(function ($item) use ($menu) {
-                $shop = $item->name('Shop Panel')->data('icon', 'fa-shopping-cart')->active('admin/products/*', 'admin/product-categories/*', 'admin/carts/*', 'admin/sets/*', 'admin/attributes/*', 'admin/discounts/*', 'admin/taxes/*', 'admin/currencies/*');
+                $shop = $item->name('Shop Panel')->data('icon', 'fa-shopping-cart')->active('admin/products/*', 'admin/product-categories/*', 'admin/carts/*', 'admin/sets/*', 'admin/attributes/*', 'admin/discounts/*', 'admin/taxes/*');
 
                 $menu->child($shop, function (MenuItem $item) {
-                    $item->name('Products')->url(route('admin.products.index'))->permissions('products-list')->active('admin/products/*');
+                    $item->name('Carts')->url(route('admin.carts.index'))->permissions('carts-list')->active('admin/carts/*');
                 });
 
                 $menu->child($shop, function (MenuItem $item) {
@@ -72,7 +72,7 @@ class MenuComposer
                 });
 
                 $menu->child($shop, function (MenuItem $item) {
-                    $item->name('Carts')->url(route('admin.carts.index'))->permissions('carts-list')->active('admin/carts/*');
+                    $item->name('Products')->url(route('admin.products.index'))->permissions('products-list')->active('admin/products/*');
                 });
 
                 $menu->child($shop, function (MenuItem $item) {
@@ -85,10 +85,6 @@ class MenuComposer
 
                 $menu->child($shop, function (MenuItem $item) {
                     $item->name('Taxes')->url(route('admin.taxes.index'))->permissions('taxes-list')->active('admin/taxes/*');
-                });
-
-                $menu->child($shop, function (MenuItem $item) {
-                    $item->name('Currencies')->url(route('admin.currencies.index'))->permissions('currencies-list')->active('admin/currencies/*');
                 });
             });
 
@@ -113,17 +109,21 @@ class MenuComposer
             });
 
             $menu->add(function ($item) use ($menu) {
-                $access = $item->name('Geo Location')->data('icon', 'fa-globe')->active('admin/countries/*', 'admin/states/*', 'admin/cities/*');
+                $localisation = $item->name('Localisation')->data('icon', 'fa-globe')->active('admin/currencies/*', 'admin/countries/*', 'admin/states/*', 'admin/cities/*');
 
-                $menu->child($access, function (MenuItem $item) {
+                $menu->child($localisation, function (MenuItem $item) {
+                    $item->name('Currencies')->url(route('admin.currencies.index'))->permissions('currencies-list')->active('admin/currencies/*');
+                });
+
+                $menu->child($localisation, function (MenuItem $item) {
                     $item->name('Countries')->url(route('admin.countries.index'))->permissions('countries-list')->active('admin/countries/*');
                 });
 
-                $menu->child($access, function (MenuItem $item) {
+                $menu->child($localisation, function (MenuItem $item) {
                     $item->name('States')->url(route('admin.states.index'))->permissions('states-list')->active('admin/states/*');
                 });
 
-                $menu->child($access, function (MenuItem $item) {
+                $menu->child($localisation, function (MenuItem $item) {
                     $item->name('Cities')->url(route('admin.cities.index'))->permissions('cities-list')->active('admin/cities/*');
                 });
             });

@@ -142,6 +142,16 @@ class Category extends Model
     }
 
     /**
+     * Product has and belongs to many attributes.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function attributes()
+    {
+        return $this->belongsToMany(Attribute::class, 'category_attribute', 'category_id', 'attribute_id')->withTimestamps();
+    }
+
+    /**
      * Product has and belongs to many discounts.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -163,6 +173,51 @@ class Category extends Model
         return $this->belongsToMany(Tax::class, 'category_tax', 'category_id', 'tax_id')->withPivot([
             'id', 'ord'
         ])->withTimestamps()->orderBy('category_tax.ord', 'asc');
+    }
+
+    /**
+     * Get all the attributes in the filterable format.
+     * This array can be used when building a "filters" visual component.
+     *
+     * @return array
+     */
+    public function getFiltersAttribute()
+    {
+        $filters = [];
+        $attributes = Attribute::with('values')
+            ->select([
+                'attributes.id',
+                'attributes.name',
+                'attributes.slug',
+                'attribute_sets.name as set_name'
+            ])
+            ->leftJoin('attribute_sets', 'attributes.set_id', '=', 'attribute_sets.id')
+            ->leftJoin('category_attribute', 'attributes.id', '=', 'category_attribute.attribute_id')
+            ->where(function ($q) {
+                $q->where('attributes.filterable', Attribute::FILTERABLE_YES)
+                    ->orWhere('category_attribute.category_id', $this->id);
+            })
+            ->orderBy('attribute_sets.ord', 'asc')
+            ->orderBy('attributes.ord', 'asc')
+            ->get();
+
+        foreach ($attributes as $index => $attribute) {
+            $filters[$attribute->set_name][$index] = [
+                'id' => $attribute->id,
+                'name' => $attribute->name,
+                'slug' => $attribute->slug,
+            ];
+
+            foreach ($attribute->values as $value) {
+                $filters[$attribute->set_name][$index]['values'][] = [
+                    'id' => $value->id,
+                    'value' => $value->value,
+                    'slug' => $value->slug,
+                ];
+            }
+        }
+
+        return $filters;
     }
 
     /**

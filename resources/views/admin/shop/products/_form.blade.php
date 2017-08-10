@@ -18,7 +18,7 @@
 <div id="tab-1" class="tab">
     <fieldset>
         <label>Main Category</label>
-        <select class="select-input" name="category_id">
+        <select name="category_id" class="select-input">
             @foreach($categories as $category)
                 <option value="{{ $category->id }}" style="padding-left: {{ 6 + ($category->depth * 20) }}px" {{ $item->exists && $category->id == $item->category_id ? 'selected="selected"' : '' }}>
                     {{ $category->name }}
@@ -29,7 +29,7 @@
     <fieldset>
         <label>Other Categories</label>
         @php($selectedCategories = $item->categories()->pluck('category_id')->toArray())
-        <select class="select-input" name="categories[]" multiple="multiple">
+        <select name="categories[]" class="select-input" multiple="multiple">
             @foreach($categories as $category)
                 <option value="{{ $category->id }}" style="padding-left: {{ 6 + ($category->depth * 20) }}px" {{ in_array($category->id, $selectedCategories) ? 'selected="selected"' : '' }}>
                     {{ $category->name }}
