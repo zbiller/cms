@@ -127,6 +127,13 @@ class TreeController extends CategoriesController
                 'url' => trim(($parent ? $parent->url->url . '/' : page()->find('shop')->url->url . '/') . $category->slug, '/')
             ]);
 
+            $category = $category->fresh();
+            $category->products->each(function ($product) use ($category) {
+                $product->url()->update([
+                    'url' => trim($category->url->url . '/' . $product->slug, '/')
+                ]);
+            });
+
             $this->rebuildChildrenUrls($category->fresh(['url']));
         }
     }

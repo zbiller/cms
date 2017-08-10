@@ -74,7 +74,7 @@ trait HasUrl
     /**
      * Get the model's url.
      *
-     * @return mixed
+     * @return \Illuminate\Database\Eloquent\Relations\MorphOne
      */
     public function url()
     {

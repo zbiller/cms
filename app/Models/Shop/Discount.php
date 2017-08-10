@@ -203,13 +203,15 @@ class Discount extends Model
      * Verify if a discount can be applied.
      * Check the discount conditions.
      *
+     * @param int|null $value
      * @return bool
      */
-    public function canBeApplied()
+    public function canBeApplied($value = null)
     {
         if (
-            ($this->start_date && Carbon::now() < $this->start_date) ||
-            ($this->end_date && Carbon::now() > $this->end_date)
+            $this->start_date && Carbon::now() < $this->start_date ||
+            $this->end_date && Carbon::now() > $this->end_date ||
+            !($this->min_val && $value && $this->min_val < $value)
         ) {
             return false;
         }

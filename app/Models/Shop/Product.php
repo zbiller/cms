@@ -239,10 +239,10 @@ class Product extends Model
     public function getDiscountValueAttribute()
     {
         $price = $this->attributes['price'];
-        $discounts = $this->nested_discounts;
+        $discounts = $this->getNestedDiscounts();
 
         foreach ($discounts as $discount) {
-            if (!$discount->canBeApplied()) {
+            if (!$discount->canBeApplied($this->price)) {
                 continue;
             }
 
@@ -268,10 +268,10 @@ class Product extends Model
     public function getTaxValueAttribute()
     {
         $price = $this->attributes['price'];
-        $taxes = $this->nested_taxes;
+        $taxes = $this->getNestedTaxes();
 
         foreach ($taxes as $tax) {
-            if (!$tax->canBeApplied()) {
+            if (!$tax->canBeApplied($this->price)) {
                 continue;
             }
 
@@ -286,60 +286,6 @@ class Product extends Model
         }
 
         return $price - $this->attributes['price'];
-    }
-
-    /**
-     * Get the product's direct or inherited subsequent discounts.
-     *
-     * @return \Illuminate\Support\Collection|mixed
-     */
-    public function getNestedDiscountsAttribute()
-    {
-        $discounts = collect();
-
-        if ($this->discounts->count() > 0) {
-            $discounts = $this->discounts;
-        } elseif ($this->inherit_discounts == self::INHERIT_YES) {
-            if ($this->category->discounts->count() > 0) {
-                $discounts = $this->category->discounts;
-            }
-
-            foreach ($this->category->ancestors as $parent) {
-                if ($parent->discounts->count() > 0) {
-                    $discounts = $parent->discounts;
-                    break;
-                }
-            }
-        }
-
-        return $discounts;
-    }
-
-    /**
-     * Get the product's direct or inherited subsequent taxes.
-     *
-     * @return \Illuminate\Support\Collection|mixed
-     */
-    public function getNestedTaxesAttribute()
-    {
-        $taxes = collect();
-
-        if ($this->taxes->count() > 0) {
-            $taxes = $this->taxes;
-        } elseif ($this->inherit_taxes == self::INHERIT_YES) {
-            if ($this->category->taxes->count() > 0) {
-                $taxes = $this->category->taxes;
-            }
-
-            foreach ($this->category->ancestors as $parent) {
-                if ($parent->taxes->count() > 0) {
-                    $taxes = $parent->taxes;
-                    break;
-                }
-            }
-        }
-
-        return $taxes;
     }
 
     /**
@@ -562,6 +508,60 @@ class Product extends Model
     }
 
     /**
+     * Get the product's direct or inherited subsequent discounts.
+     *
+     * @return \Illuminate\Support\Collection|mixed
+     */
+    public function getNestedDiscounts()
+    {
+        $discounts = collect();
+
+        if ($this->discounts->count() > 0) {
+            $discounts = $this->discounts;
+        } elseif ($this->inherit_discounts == self::INHERIT_YES) {
+            if ($this->category->discounts->count() > 0) {
+                $discounts = $this->category->discounts;
+            }
+
+            foreach ($this->category->ancestors as $parent) {
+                if ($parent->discounts->count() > 0) {
+                    $discounts = $parent->discounts;
+                    break;
+                }
+            }
+        }
+
+        return $discounts;
+    }
+
+    /**
+     * Get the product's direct or inherited subsequent taxes.
+     *
+     * @return \Illuminate\Support\Collection|mixed
+     */
+    public function getNestedTaxes()
+    {
+        $taxes = collect();
+
+        if ($this->taxes->count() > 0) {
+            $taxes = $this->taxes;
+        } elseif ($this->inherit_taxes == self::INHERIT_YES) {
+            if ($this->category->taxes->count() > 0) {
+                $taxes = $this->category->taxes;
+            }
+
+            foreach ($this->category->ancestors as $parent) {
+                if ($parent->taxes->count() > 0) {
+                    $taxes = $parent->taxes;
+                    break;
+                }
+            }
+        }
+
+        return $taxes;
+    }
+
+    /**
      * Set the options for the HasBlocks trait.
      *
      * @return BlockOptions
@@ -659,14 +659,19 @@ class Product extends Model
                 ],
                 'styles' => [
                     'metadata[images][*][image]' => [
-                        'portrait' => [
-                            'width' => '200',
+                        'thumb' => [
+                            'width' => '100',
+                            'height' => '100',
+                            'ratio' => true,
+                        ],
+                        'small' => [
+                            'width' => '400',
                             'height' => '400',
                             'ratio' => true,
                         ],
-                        'landscape' => [
-                            'width' => '600',
-                            'height' => '250',
+                        'big' => [
+                            'width' => '800',
+                            'height' => '600',
                             'ratio' => true,
                         ],
                     ],

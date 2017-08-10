@@ -275,6 +275,7 @@ class CreateShopTables extends Migration
 
         Schema::dropIfExists('category_tax');
         Schema::dropIfExists('category_discount');
+        Schema::dropIfExists('category_attribute');
         Schema::dropIfExists('product_tax');
         Schema::dropIfExists('product_discount');
         Schema::dropIfExists('product_attribute');

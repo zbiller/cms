@@ -203,13 +203,15 @@ class Tax extends Model
      * Verify if a tax  can be applied.
      * Check the tax conditions.
      *
+     * @param int|null $value
      * @return bool
      */
-    public function canBeApplied()
+    public function canBeApplied($value = null)
     {
         if (
             ($this->start_date && Carbon::now() < $this->start_date) ||
-            ($this->end_date && Carbon::now() > $this->end_date)
+            ($this->end_date && Carbon::now() > $this->end_date) ||
+            !($this->max_val && $value && $this->max_val > $value)
         ) {
             return false;
         }
