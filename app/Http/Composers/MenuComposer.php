@@ -61,7 +61,11 @@ class MenuComposer
             });
 
             $menu->add(function ($item) use ($menu) {
-                $shop = $item->name('Shop Panel')->data('icon', 'fa-shopping-cart')->active('admin/products/*', 'admin/product-categories/*', 'admin/carts/*', 'admin/sets/*', 'admin/attributes/*', 'admin/discounts/*', 'admin/taxes/*');
+                $shop = $item->name('Shop Panel')->data('icon', 'fa-shopping-cart')->active('admin/orders/*', 'admin/carts/*', 'admin/product-categories/*', 'admin/products/*', 'admin/sets/*', 'admin/attributes/*', 'admin/discounts/*', 'admin/taxes/*');
+
+                $menu->child($shop, function (MenuItem $item) {
+                    $item->name('Orders')->url(route('admin.orders.index'))->permissions('orders-list')->active('admin/orders/*');
+                });
 
                 $menu->child($shop, function (MenuItem $item) {
                     $item->name('Carts')->url(route('admin.carts.index'))->permissions('carts-list')->active('admin/carts/*');

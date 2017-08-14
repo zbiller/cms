@@ -33,7 +33,6 @@ class Tax extends Model
     protected $fillable = [
         'name',
         'rate',
-        'uses',
         'type',
         'for',
         'active',
@@ -208,11 +207,19 @@ class Tax extends Model
      */
     public function canBeApplied($value = null)
     {
-        if (
-            ($this->start_date && Carbon::now() < $this->start_date) ||
-            ($this->end_date && Carbon::now() > $this->end_date) ||
-            !($this->max_val && $value && $this->max_val > $value)
-        ) {
+        if ($this->active == self::ACTIVE_NO) {
+            return false;
+        }
+
+        if ($this->start_date && Carbon::now() < $this->start_date) {
+            return false;
+        }
+
+        if ($this->end_date && Carbon::now() > $this->end_date) {
+            return false;
+        }
+
+        if ($this->max_val && $this->max_val < $value) {
             return false;
         }
 

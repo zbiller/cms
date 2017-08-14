@@ -22,8 +22,8 @@ use App\Traits\HasUrl;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
-use App\Traits\SavesDiscounts;
-use App\Traits\SavesTaxes;
+use App\Traits\TouchesDiscounts;
+use App\Traits\TouchesTaxes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -41,8 +41,8 @@ class Category extends Model
     use IsCacheable;
     use IsFilterable;
     use IsSortable;
-    use SavesDiscounts;
-    use SavesTaxes;
+    use TouchesDiscounts;
+    use TouchesTaxes;
     use SoftDeletes;
 
     /**

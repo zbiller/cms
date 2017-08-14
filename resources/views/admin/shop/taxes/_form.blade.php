@@ -11,7 +11,6 @@
     {!! form_admin()->text('name') !!}
     {!! form_admin()->text('rate') !!}
     {!! form_admin()->select('type', 'Type', $types) !!}
-    {!! form_admin()->text('uses', 'Uses') !!}
     {!! form_admin()->select('active', 'Active', $actives) !!}
 </div>
 <div id="tab-2" class="tab">

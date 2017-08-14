@@ -317,6 +317,63 @@ Route::group([
             'namespace' => 'Shop',
         ], function () {
             /**
+             * CRUD Orders.
+             */
+            Route::group([
+                'prefix' => 'orders',
+            ], function () {
+                Route::get('/', ['as' => 'admin.orders.index', 'uses' => 'OrdersController@index', 'permissions' => 'orders-list']);
+                Route::get('create', ['as' => 'admin.orders.create', 'uses' => 'OrdersController@create', 'permissions' => 'orders-add']);
+                Route::get('edit/{order}', ['as' => 'admin.orders.edit', 'uses' => 'OrdersController@edit', 'permissions' => 'orders-edit']);
+                Route::get('view/{order}', ['as' => 'admin.orders.view', 'uses' => 'OrdersController@view', 'permissions' => 'orders-view']);
+                Route::post('store', ['as' => 'admin.orders.store', 'uses' => 'OrdersController@store', 'permissions' => 'orders-add']);
+                Route::put('update/{order}', ['as' => 'admin.orders.update', 'uses' => 'OrdersController@update', 'permissions' => 'orders-edit']);
+                Route::delete('destroy/{order}', ['as' => 'admin.orders.destroy', 'uses' => 'OrdersController@destroy', 'permissions' => 'orders-soft-delete']);
+
+                /**
+                 * Soft Delete Actions.
+                 */
+                Route::get('deleted', ['as' => 'admin.orders.deleted', 'uses' => 'OrdersController@deleted', 'permissions' => 'orders-deleted']);
+                Route::put('restore/{id}', ['as' => 'admin.orders.restore', 'uses' => 'OrdersController@restore', 'permissions' => 'orders-restore']);
+                Route::delete('delete/{id}', ['as' => 'admin.orders.delete', 'uses' => 'OrdersController@delete', 'permissions' => 'orders-force-delete']);
+
+                /**
+                 * Draft Actions.
+                 */
+                Route::get('drafts', ['as' => 'admin.orders.drafts', 'uses' => 'OrdersController@drafts', 'permissions' => 'drafts-list']);
+                Route::get('draft/{draft}', ['as' => 'admin.orders.draft', 'uses' => 'OrdersController@draft', 'permissions' => 'drafts-publish']);
+                Route::match(['get', 'put'], 'limbo/{id}', ['as' => 'admin.orders.limbo', 'uses' => 'OrdersController@limbo', 'permissions' => 'drafts-save']);
+
+                /**
+                 * Revision Actions.
+                 */
+                Route::get('revision/{revision}', ['as' => 'admin.orders.revision', 'uses' => 'OrdersController@revision', 'permissions' => 'revisions-rollback']);
+
+                /**
+                 * Duplicate Actions.
+                 */
+                Route::post('duplicate/{order}', ['as' => 'admin.orders.duplicate', 'uses' => 'OrdersController@duplicate', 'permissions' => 'orders-duplicate']);
+
+                /**
+                 * Assignment Actions
+                 */
+                Route::post('load-item', ['as' => 'admin.orders.load_item', 'uses' => 'OrdersController@loadItem', 'permissions' => 'orders-edit']);
+            });
+
+            /**
+             * CRUD Carts.
+             */
+            Route::group([
+                'prefix' => 'carts',
+            ], function () {
+                Route::get('/', ['as' => 'admin.carts.index', 'uses' => 'CartsController@index', 'permissions' => 'carts-list']);
+                Route::get('view/{cart}', ['as' => 'admin.carts.view', 'uses' => 'CartsController@view', 'permissions' => 'carts-view']);
+                Route::post('remind', ['as' => 'admin.carts.remind', 'uses' => 'CartsController@remind', 'permissions' => 'carts-remind']);
+                Route::delete('destroy/{cart}', ['as' => 'admin.carts.destroy', 'uses' => 'CartsController@destroy', 'permissions' => 'carts-delete']);
+                Route::delete('clean', ['as' => 'admin.carts.clean', 'uses' => 'CartsController@clean', 'permissions' => 'carts-clean']);
+            });
+
+            /**
              * CRUD Product.
              */
             Route::group([
@@ -367,6 +424,11 @@ Route::group([
                  * Order Actions.
                  */
                 Route::patch('order', ['as' => 'admin.products.order', 'uses' => 'ProductsController@order', 'permissions' => 'products-list']);
+
+                /**
+                 * Ajax Actions.
+                 */
+                Route::get('search', ['as' => 'admin.products.search', 'uses' => 'ProductsController@searchChosen', 'permissions' => 'products-list']);
 
                 /**
                  * Assignment Actions.
@@ -438,19 +500,6 @@ Route::group([
                     Route::post('sort', ['as' => 'admin.product_categories.tree.sort', 'uses' => 'TreeController@sortItems', 'permissions' => 'product-categories-list']);
                     Route::post('url', ['as' => 'admin.product_categories.tree.url', 'uses' => 'TreeController@refreshUrls', 'permissions' => 'product-categories-list']);
                 });
-            });
-
-            /**
-             * CRUD Carts.
-             */
-            Route::group([
-                'prefix' => 'carts',
-            ], function () {
-                Route::get('/', ['as' => 'admin.carts.index', 'uses' => 'CartsController@index', 'permissions' => 'carts-list']);
-                Route::get('view/{cart}', ['as' => 'admin.carts.view', 'uses' => 'CartsController@view', 'permissions' => 'carts-view']);
-                Route::post('remind', ['as' => 'admin.carts.remind', 'uses' => 'CartsController@remind', 'permissions' => 'carts-remind']);
-                Route::delete('destroy/{cart}', ['as' => 'admin.carts.destroy', 'uses' => 'CartsController@destroy', 'permissions' => 'carts-delete']);
-                Route::delete('clean', ['as' => 'admin.carts.clean', 'uses' => 'CartsController@clean', 'permissions' => 'carts-clean']);
             });
 
             /**

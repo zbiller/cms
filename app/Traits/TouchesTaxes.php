@@ -5,12 +5,12 @@ namespace App\Traits;
 use App\Models\Model;
 use App\Models\Shop\Tax;
 
-trait SavesTaxes
+trait TouchesTaxes
 {
     /**
      * Boot the trait.
      */
-    public static function bootSavesTaxes()
+    public static function bootTouchesTaxes()
     {
         static::saved(function (Model $model) {
             if (request()->has('touch_taxes')) {

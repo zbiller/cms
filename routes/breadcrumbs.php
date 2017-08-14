@@ -269,6 +269,68 @@ Breadcrumbs::register('admin.emails.limbo', function($breadcrumbs, $draft) {
 
 /**
 | ---------------------------------------------------------------------------------------------------------------------
+| Orders
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+/* Home > Orders */
+Breadcrumbs::register('admin.orders.index', function($breadcrumbs) {
+    $breadcrumbs->parent('admin');
+    $breadcrumbs->push('Orders', route('admin.orders.index'));
+});
+
+/* Home > Orders > Add */
+Breadcrumbs::register('admin.orders.create', function($breadcrumbs) {
+    $breadcrumbs->parent('admin.orders.index');
+    $breadcrumbs->push('Add', route('admin.orders.create'));
+});
+
+/* Home > Orders > Edit */
+Breadcrumbs::register('admin.orders.edit', function($breadcrumbs, $order) {
+    $breadcrumbs->parent('admin.orders.index');
+    $breadcrumbs->push('Edit', route('admin.orders.edit', $order));
+});
+
+/* Home > Orders > View */
+Breadcrumbs::register('admin.orders.view', function($breadcrumbs, $order) {
+    $breadcrumbs->parent('admin.orders.index');
+    $breadcrumbs->push('View', route('admin.orders.view', $order));
+});
+
+/* Home > Orders > Deleted */
+Breadcrumbs::register('admin.orders.deleted', function($breadcrumbs) {
+    $breadcrumbs->parent('admin.orders.index');
+    $breadcrumbs->push('Deleted', route('admin.orders.deleted'));
+});
+/**
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+
+
+
+/**
+| ---------------------------------------------------------------------------------------------------------------------
+| Carts
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+/* Home > Carts */
+Breadcrumbs::register('admin.carts.index', function($breadcrumbs) {
+    $breadcrumbs->parent('admin');
+    $breadcrumbs->push('Carts', route('admin.carts.index'));
+});
+
+/* Home > Carts > View */
+Breadcrumbs::register('admin.carts.view', function($breadcrumbs, $cart) {
+    $breadcrumbs->parent('admin.carts.index');
+    $breadcrumbs->push('View', route('admin.carts.view', $cart));
+});
+/**
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+
+
+
+/**
+| ---------------------------------------------------------------------------------------------------------------------
 | Products
 | ---------------------------------------------------------------------------------------------------------------------
  */
@@ -376,28 +438,6 @@ Breadcrumbs::register('admin.product_categories.drafts', function($breadcrumbs) 
 Breadcrumbs::register('admin.product_categories.limbo', function($breadcrumbs, $draft) {
     $breadcrumbs->parent('admin.product_categories.drafts');
     $breadcrumbs->push('Draft', route('admin.product_categories.draft', $draft));
-});
-/**
-| ---------------------------------------------------------------------------------------------------------------------
- */
-
-
-
-/**
-| ---------------------------------------------------------------------------------------------------------------------
-| Carts
-| ---------------------------------------------------------------------------------------------------------------------
- */
-/* Home > Carts */
-Breadcrumbs::register('admin.carts.index', function($breadcrumbs) {
-    $breadcrumbs->parent('admin');
-    $breadcrumbs->push('Carts', route('admin.carts.index'));
-});
-
-/* Home > Carts > View */
-Breadcrumbs::register('admin.carts.view', function($breadcrumbs, $cart) {
-    $breadcrumbs->parent('admin.carts.index');
-    $breadcrumbs->push('View', route('admin.carts.view', $cart));
 });
 /**
 | ---------------------------------------------------------------------------------------------------------------------

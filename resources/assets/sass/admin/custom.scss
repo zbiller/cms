@@ -362,13 +362,16 @@ td .upload-aligned-image {
         }
     }
 
-    .assign-textarea {
+    .assign-input, .assign-textarea {
         float: left !important;
         width: 100% !important;
         border: 1px solid $colorGallery !important;
         padding: 5px 8px !important;
-        height: 120px !important;
         margin-bottom: 15px !important;
+    }
+
+    .asign.textarea {
+        height: 120px !important;
     }
 }
 
@@ -401,5 +404,14 @@ td .upload-aligned-image {
 
     @include media-query('tablet') {
         width: 75px !important;
+    }
+}
+
+/* Orders Styles */
+.actions-orders {
+    width: 233px !important;
+
+    @include media-query('tablet') {
+        width: 116px !important;
     }
 }

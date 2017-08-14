@@ -5,12 +5,12 @@ namespace App\Traits;
 use App\Models\Model;
 use App\Models\Shop\Attribute;
 
-trait SavesAttributes
+trait TouchesAttributes
 {
     /**
      * Boot the trait.
      */
-    public static function bootSavesAttributes()
+    public static function bootTouchesAttributes()
     {
         static::saved(function (Model $model) {
             if (request()->has('touch_attributes')) {

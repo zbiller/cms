@@ -72,6 +72,51 @@ class CreateShopTables extends Migration
             $table->foreign('currency_id')->references('id')->on('currencies')->onDelete('set null')->onUpdate('set null');
         });
 
+        Schema::create('orders', function (Blueprint $table) {
+            $table->increments('id');
+
+            $table->string('identifier')->unique();
+            $table->string('currency');
+
+            $table->float('raw_total')->default(0);
+            $table->float('sub_total')->default(0);
+            $table->float('grand_total')->default(0);
+
+            $table->longText('customer')->nullable();
+            $table->longText('addresses')->nullable();
+
+            $table->tinyInteger('payment')->default(1);
+            $table->tinyInteger('shipping')->default(1);
+            $table->tinyInteger('status')->default(1);
+            $table->tinyInteger('viewed')->default(0);
+
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
+        Schema::create('order_items', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('order_id')->unsigned()->index();
+            $table->integer('product_id')->unsigned()->index()->nullable();
+
+            $table->string('name');
+            $table->string('currency');
+            $table->integer('quantity');
+
+            $table->float('raw_price');
+            $table->float('sub_price');
+            $table->float('grand_price');
+
+            $table->float('raw_total');
+            $table->float('sub_total');
+            $table->float('grand_total');
+
+            $table->timestamps();
+
+            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('set null');
+        });
+
         Schema::create('carts', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id')->unsigned()->index()->nullable();
@@ -141,7 +186,6 @@ class CreateShopTables extends Migration
             $table->string('name')->unique();
             $table->float('rate')->default(0);
 
-            $table->integer('uses')->nullable();
             $table->tinyInteger('type')->default(1);
             $table->tinyInteger('for')->default(1);
             $table->tinyInteger('active')->default(1);
@@ -159,7 +203,6 @@ class CreateShopTables extends Migration
             $table->string('name')->unique();
             $table->float('rate')->default(0);
 
-            $table->integer('uses')->nullable();
             $table->tinyInteger('type')->default(1);
             $table->tinyInteger('for')->default(1);
             $table->tinyInteger('active')->default(1);
@@ -287,6 +330,8 @@ class CreateShopTables extends Migration
         Schema::dropIfExists('attribute_sets');
         Schema::dropIfExists('cart_items');
         Schema::dropIfExists('carts');
+        Schema::dropIfExists('order_items');
+        Schema::dropIfExists('orders');
         Schema::dropIfExists('products');
         Schema::dropIfExists('product_categories');
         Schema::dropIfExists('currencies');

@@ -47,10 +47,6 @@ class TaxRequest extends Request
                 'required',
                 Rule::in(array_keys(Tax::$actives))
             ],
-            'uses' => [
-                'nullable',
-                'numeric',
-            ],
             'start_date' => [
                 'nullable',
                 'before:end_date',

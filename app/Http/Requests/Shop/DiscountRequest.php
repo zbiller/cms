@@ -47,10 +47,6 @@ class DiscountRequest extends Request
                 'required',
                 Rule::in(array_keys(Discount::$actives)),
             ],
-            'uses' => [
-                'nullable',
-                'numeric',
-            ],
             'start_date' => [
                 'nullable',
                 'before:end_date',

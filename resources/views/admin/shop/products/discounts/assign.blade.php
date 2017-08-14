@@ -141,8 +141,6 @@
 @section('bottom_scripts')
     <script type="text/javascript">
         var token = '{{ csrf_token() }}';
-        var discountsTab = $('div.tab-discounts');
-        var discountsContainer = $('div.discounts-container');
 
         var assignDiscount = function (_this) {
             var container = _this.closest('div.discounts-container');

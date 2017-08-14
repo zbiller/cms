@@ -330,6 +330,7 @@ class ProductsController extends Controller
                 'taxes' => $taxes,
                 'currencies' => $currencies,
                 'actives' => Product::$actives,
+                'inherits' => Product::$inherits,
                 'discountTypes' => Discount::$types,
                 'taxTypes' => Tax::$types,
             ];
@@ -362,6 +363,7 @@ class ProductsController extends Controller
                 'taxes' => $taxes,
                 'currencies' => $currencies,
                 'actives' => Product::$actives,
+                'inherits' => Product::$inherits,
                 'discountTypes' => Discount::$types,
                 'taxTypes' => Tax::$types,
             ];
@@ -398,10 +400,49 @@ class ProductsController extends Controller
                 'taxes' => $taxes,
                 'currencies' => $currencies,
                 'actives' => Product::$actives,
+                'inherits' => Product::$inherits,
                 'discountTypes' => Discount::$types,
                 'taxTypes' => Tax::$types,
             ];
         }, $revision);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function searchChosen(Request $request)
+    {
+        if (!$request->ajax()) {
+            return response()->json([
+                'error' => 'Bad request'
+            ], 400);
+        }
+
+        $this->validate($request, [
+            'query' => 'required',
+        ]);
+
+        $products = Product::alphabetically()->where('name', 'like', '%' . $request->get('query') . '%')->get();
+        $results = [];
+
+        if ($products->count() == 0) {
+            $results[] = [
+                'id' => '',
+                'name' => 'No results match "' . $request->get('query') . '"',
+                'disabled' => true,
+            ];
+        }
+
+        foreach ($products as $product) {
+            $results[] = [
+                'id' => $product->id,
+                'name' => $product->name,
+                'disabled' => false,
+            ];
+        }
+
+        return response()->json($results);
     }
 
     /**

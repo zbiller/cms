@@ -336,6 +336,94 @@ class PermissionsSeeder extends Seeder
                 'name' => 'layouts-delete',
             ],
         ],
+        'Orders' => [
+            'List' => [
+                'group' => 'Orders',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'orders-list',
+            ],
+            'View' => [
+                'group' => 'Orders',
+                'label' => 'View',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'orders-view',
+            ],
+            'Add' => [
+                'group' => 'Orders',
+                'label' => 'Add',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'orders-add',
+            ],
+            'Edit' => [
+                'group' => 'Orders',
+                'label' => 'Edit',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'orders-edit',
+            ],
+            'Duplicate' => [
+                'group' => 'Orders',
+                'label' => 'Duplicate',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'orders-duplicate',
+            ],
+            'Deleted' => [
+                'group' => 'Orders',
+                'label' => 'Deleted',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'orders-deleted',
+            ],
+            'Restore' => [
+                'group' => 'Orders',
+                'label' => 'Restore',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'orders-restore',
+            ],
+            'Soft Delete' => [
+                'group' => 'Orders',
+                'label' => 'Soft Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'orders-soft-delete',
+            ],
+            'Force Delete' => [
+                'group' => 'Orders',
+                'label' => 'Force Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'orders-force-delete',
+            ],
+        ],
+        'Carts' => [
+            'List' => [
+                'group' => 'Carts',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'carts-list',
+            ],
+            'View' => [
+                'group' => 'Carts',
+                'label' => 'View',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'carts-view',
+            ],
+            'Delete' => [
+                'group' => 'Carts',
+                'label' => 'Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'carts-delete',
+            ],
+            'Clean' => [
+                'group' => 'Carts',
+                'label' => 'Clean',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'carts-clean',
+            ],
+            'Remind' => [
+                'group' => 'Carts',
+                'label' => 'Remind',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'carts-remind',
+            ],
+        ],
         'Products' => [
             'List' => [
                 'group' => 'Products',
@@ -446,38 +534,6 @@ class PermissionsSeeder extends Seeder
                 'label' => 'Force Delete',
                 'type' => Permission::TYPE_ADMIN,
                 'name' => 'product-categories-force-delete',
-            ],
-        ],
-        'Carts' => [
-            'List' => [
-                'group' => 'Carts',
-                'label' => 'List',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'carts-list',
-            ],
-            'View' => [
-                'group' => 'Carts',
-                'label' => 'View',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'carts-view',
-            ],
-            'Delete' => [
-                'group' => 'Carts',
-                'label' => 'Delete',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'carts-delete',
-            ],
-            'Clean' => [
-                'group' => 'Carts',
-                'label' => 'Clean',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'carts-clean',
-            ],
-            'Remind' => [
-                'group' => 'Carts',
-                'label' => 'Remind',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'carts-remind',
             ],
         ],
         'Attributes' => [

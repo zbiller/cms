@@ -149,7 +149,6 @@ trait HasDrafts
                 return $model;
             });
 
-
             return $model;
         } catch (Exception $e) {
             throw new DraftException(
@@ -472,6 +471,12 @@ trait HasDrafts
                     foreach ($values as $field => $value) {
                         $data['records']['items'][$index][$field] = $value;
                     }
+                }
+            }
+
+            foreach ($data['records']['items'] as $index => $item) {
+                if (!isset($item[$data['records']['foreign_key']])) {
+                    $data['records']['items'][$index][$data['records']['foreign_key']] = $this->getKey();
                 }
             }
         }

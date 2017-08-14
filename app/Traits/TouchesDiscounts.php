@@ -5,12 +5,12 @@ namespace App\Traits;
 use App\Models\Model;
 use App\Models\Shop\Discount;
 
-trait SavesDiscounts
+trait TouchesDiscounts
 {
     /**
      * Boot the trait.
      */
-    public static function bootSavesDiscounts()
+    public static function bootTouchesDiscounts()
     {
         static::saved(function (Model $model) {
             if (request()->has('touch_discounts')) {

@@ -113,8 +113,6 @@
     <script type="text/javascript">
         var timer;
         var token = '{{ csrf_token() }}';
-        var attributesTab = $('div.tab-attributes');
-        var attributesContainer = $('div.attributes-container');
 
         var loadAttributes = function (_this) {
             var set_id = _this.val();

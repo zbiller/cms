@@ -1,6 +1,8 @@
 @import 'init';
 
 section.list {
+    @include clear-padding();
+
     padding: 10px 0 0 0;
     border-bottom: none;
 
@@ -59,6 +61,8 @@ section.list {
     }
 
     table {
+        @include clear-padding();
+
         width: 100%;
         color: $colorOsloGray;
 

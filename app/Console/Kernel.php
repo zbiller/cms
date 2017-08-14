@@ -35,8 +35,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command(CurrencyUpdateCommand::class)->daily()
-            ->withoutOverlapping()->emailOutputTo('example@mail.com');
+        /*$schedule->command(CurrencyUpdateCommand::class)->daily()
+            ->withoutOverlapping()->emailOutputTo('example@mail.com');*/
     }
 
     /**

@@ -40,8 +40,90 @@ main {
     }
 }
 
+section.content {
+    @include font-size(13px);
+
+    padding: 15px;
+    font-family: "Open Sans", sans-serif;
+    color: $colorOsloGray;
+
+    &.content-half {
+        width: 50%;
+        display: inline-block;
+
+        &.left {
+            @include calc(width, '50% - 10px');
+
+            float: left;
+            text-align: left;
+            margin-right: 10px;
+            border-right: 1px solid $colorGallery;
+            border-bottom: 1px solid $colorGallery;
+        }
+
+        &.right {
+            @include calc(width, '50% - 10px');
+
+            float: right;
+            text-align: left;
+            margin-left: 10px;
+            border-left: 1px solid $colorGallery;
+            border-bottom: 1px solid $colorGallery;
+        }
+    }
+
+    &.content-third {
+        width: 33.3%;
+        display: inline-block;
+
+        &.left {
+            float: left;
+            text-align: left;
+            border-right: 1px solid $colorGallery;
+            border-bottom: 1px solid $colorGallery;
+        }
+
+        &.center {
+            @include calc(width, '33.3% - 40px');
+
+            float: none;
+            margin: 0 20px;
+            text-align: left;
+            border-left: 1px solid $colorGallery;
+            border-right: 1px solid $colorGallery;
+            border-bottom: 1px solid $colorGallery;
+        }
+
+        &.right {
+            float: right;
+            text-align: left;
+            border-left: 1px solid $colorGallery;
+            border-bottom: 1px solid $colorGallery;
+        }
+    }
+
+    article.split {
+        width: 100%;
+        float: left;
+        padding: 0 0 7px 0;
+        margin: 0 0 7px 0;
+        border-bottom: 1px solid $colorGallery;
+
+        &:last-of-type {
+            padding: 0;
+            margin: 0;
+            border: none;
+        }
+    }
+
+    em {
+        font-family: 'Open Sans Semibold';
+    }
+}
+
 span.title {
     @include font-size(12px);
+    @include clear-padding();
 
     display: block;
     float: left;
@@ -135,6 +217,35 @@ p {
 
         font-family: 'Open Sans Bold', sans-serif;
         color: $colorOsloGray;
+    }
+}
+
+.flag {
+    @include clear-padding();
+    @include font-size(10px);
+
+    display: inline-block;
+    margin: 5px;
+    padding: 3px 7px;
+    background: $colorFiord;
+    color: $colorWhite;
+    font-family: 'Open Sans Bold';
+    text-transform: uppercase;
+
+    &.blue {
+        background: $colorPictonBlue;
+    }
+
+    &.green {
+        background: $colorEmerald;
+    }
+
+    &.red {
+        background: $colorJaponica;
+    }
+
+    &.yellow {
+        background: $colorGoldenTainoi;
     }
 }
 
