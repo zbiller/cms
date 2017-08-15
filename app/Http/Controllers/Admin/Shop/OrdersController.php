@@ -30,7 +30,15 @@ class OrdersController extends Controller
     public function index(Request $request, OrderFilter $filter, OrderSort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
-            $this->items = Order::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $query = Order::filtered($request, $filter);
+
+            if ($request->has('sort')) {
+                $query->sorted($request, $sort);
+            } else {
+                $query->latest();
+            }
+
+            $this->items = $query->paginate(10);
             $this->title = 'Orders';
             $this->view = view('admin.shop.orders.index');
             $this->vars = [

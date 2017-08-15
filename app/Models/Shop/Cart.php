@@ -120,7 +120,7 @@ class Cart extends Model
     }
 
     /**
-     * A cart has many cart items.
+     * A cart has many items.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -198,7 +198,10 @@ class Cart extends Model
      */
     public function getSubTotalAttribute()
     {
-        return static::getTotal(null, static::TOTAL_SUB, $this);
+        $total = static::getTotal(null, static::TOTAL_SUB, $this);
+        $discounts = static::getDiscountValue(null, $this);
+
+        return $total - $discounts;
     }
 
     /**
@@ -208,7 +211,11 @@ class Cart extends Model
      */
     public function getGrandTotalAttribute()
     {
-        return static::getTotal(null, static::TOTAL_GRAND, $this);
+        $total = static::getTotal(null, static::TOTAL_GRAND, $this);
+        $discounts = static::getDiscountValue(null, $this);
+        $taxes = static::getTaxValue(null, $this);
+
+        return $total - $discounts + $taxes;
     }
 
     /**
@@ -239,6 +246,49 @@ class Cart extends Model
     }
 
     /**
+     * Get the cart's raw total price.
+     * The total represented by the "raw total" does not include discounts or taxes.
+     *
+     * @param string|null $currency
+     * @return float|int
+     */
+    public static function getRawTotal($currency = null)
+    {
+        return static::getTotal($currency, static::TOTAL_RAW);
+    }
+
+    /**
+     * Get the cart's sub total price.
+     * The total represented by the "sub total" only includes discounts, but not taxes.
+     *
+     * @param string|null $currency
+     * @return float|int
+     */
+    public static function getSubTotal($currency = null)
+    {
+        $total = static::getTotal($currency, static::TOTAL_SUB);
+        $discounts = static::getDiscountValue($currency);
+
+        return $total - $discounts;
+    }
+
+    /**
+     * Get the cart's final total price.
+     * The total represented by the "grand total" also includes discounts and taxes.
+     *
+     * @param string|null $currency
+     * @return float|int
+     */
+    public static function getGrandTotal($currency = null)
+    {
+        $total = static::getTotal($currency, static::TOTAL_GRAND);
+        $discounts = static::getDiscountValue($currency);
+        $taxes = static::getTaxValue($currency);
+
+        return $total - $discounts + $taxes;
+    }
+
+    /**
      * Get the cart's total price (raw | sub | grand).
      * Depending on the type specified, the "raw total", "sub total" or "grand_total" will be returned.
      *
@@ -264,62 +314,92 @@ class Cart extends Model
         }
 
         foreach (self::$cart->items()->get() as $item) {
-            $product = $item->product;
-
             switch ($type) {
                 case static::TOTAL_GRAND;
-                    $price = $product->final_price;
+                    $price = $item->product->final_price;
                     break;
                 case static::TOTAL_SUB;
-                    $price = $product->price_with_discounts;
+                    $price = $item->product->price_with_discounts;
                     break;
                 default:
-                    $price = $product->price;
+                    $price = $item->product->price;
                     break;
             }
 
             $total += Currency::convert(
-                $price, $product->currency->code, $currency
-            ) * $item->quantity;
+                    $price, $item->product->currency->code, $currency
+                ) * $item->quantity;
         }
 
         return $total;
     }
 
     /**
-     * Get the cart's raw total price.
-     * The total represented by the "raw total" does not include discounts or taxes.
+     * Get the cart's discount value based on discounts applicable on order only.
      *
-     * @param string|null $currency
-     * @return float|int
+     * @param string null $currency
+     * @param Cart $cart
+     * @return float|int|null
      */
-    public static function getRawTotal($currency = null)
+    public static function getDiscountValue($currency = null, Cart $cart = null)
     {
-        return static::getTotal($currency, static::TOTAL_RAW);
+        if ($currency === null) {
+            $currency = config('shop.price.default_currency');
+        }
+
+        $total = static::getTotal($currency, static::TOTAL_GRAND, $cart);
+        $price = $total;
+
+        foreach (Discount::forOrder()->active()->get() as $discount) {
+            if (!$discount->canBeApplied($total)) {
+                continue;
+            }
+
+            switch ($discount->type) {
+                case Discount::TYPE_FIXED:
+                    $price -= $discount->rate;
+                    break;
+                case Discount::TYPE_PERCENT:
+                    $price -= ($discount->rate / 100) * $price;
+                    break;
+            }
+        }
+
+        return $total - $price;
     }
 
     /**
-     * Get the cart's sub total price.
-     * The total represented by the "sub total" only includes discounts, but not taxes.
+     * Get the cart's tax value based on taxes applicable on order only.
      *
-     * @param string|null $currency
-     * @return float|int
+     * @param string null $currency
+     * @param Cart $cart
+     * @return float|int|null
      */
-    public static function getSubTotal($currency = null)
+    public static function getTaxValue($currency = null, Cart $cart = null)
     {
-        return static::getTotal($currency, static::TOTAL_SUB);
-    }
+        if ($currency === null) {
+            $currency = config('shop.price.default_currency');
+        }
 
-    /**
-     * Get the cart's final total price.
-     * The total represented by the "grand total" also includes discounts and taxes.
-     *
-     * @param string|null $currency
-     * @return float|int
-     */
-    public static function getGrandTotal($currency = null)
-    {
-        return static::getTotal($currency, static::TOTAL_GRAND);
+        $total = static::getTotal($currency, static::TOTAL_GRAND, $cart);
+        $price = $total;
+
+        foreach (Tax::forOrder()->active()->get() as $tax) {
+            if (!$tax->canBeApplied($total)) {
+                continue;
+            }
+
+            switch ($tax->type) {
+                case Tax::TYPE_FIXED:
+                    $price += $tax->rate;
+                    break;
+                case Tax::TYPE_PERCENT:
+                    $price += ($tax->rate / 100) * $price;
+                    break;
+            }
+        }
+
+        return $price - $total;
     }
 
     /**

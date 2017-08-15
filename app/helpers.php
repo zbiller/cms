@@ -208,6 +208,23 @@ if (!function_exists('force_redirect')) {
     }
 }
 
+if (!function_exists('is_json_format')) {
+    /**
+     * @param $string
+     * @return bool
+     */
+    function is_json_format($string)
+    {
+        if (!is_string($string)) {
+            return false;
+        }
+
+        json_decode($string);
+
+        return (json_last_error() == JSON_ERROR_NONE);
+    }
+}
+
 if (!function_exists('array_search_key_recursive')) {
     /**
      * @param string|int $needle

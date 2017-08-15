@@ -22,7 +22,7 @@ trait HasMetadata
     public function setMetadataAttribute($value)
     {
         $this->attributes['metadata'] = $value ? (
-            $this->isJsonFormat($value) ? $value : json_encode($value)
+            is_json_format($value) ? $value : json_encode($value)
         ) : null;
     }
 
@@ -45,22 +45,5 @@ trait HasMetadata
         $field = str_replace('][', '.', trim(str_replace('metadata', '', $raw), '.[]'));
 
         return array_get($metadata, $field);
-    }
-
-    /**
-     * Verify if the given string is of json format.
-     *
-     * @param array|string $string
-     * @return bool
-     */
-    protected function isJsonFormat($string)
-    {
-        if (!is_string($string)) {
-            return false;
-        }
-
-        json_decode($string);
-
-        return (json_last_error() == JSON_ERROR_NONE);
     }
 }

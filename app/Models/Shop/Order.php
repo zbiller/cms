@@ -8,7 +8,6 @@ use App\Models\Model;
 use App\Models\Shop\Order\Item;
 use App\Options\ActivityOptions;
 use App\Traits\HasActivity;
-use App\Traits\HasMetadata;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
@@ -19,7 +18,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Order extends Model
 {
-    use HasMetadata;
     use HasActivity;
     use IsCacheable;
     use IsFilterable;
@@ -214,7 +212,7 @@ class Order extends Model
     protected static $items = [];
 
     /**
-     * An order has many order items.
+     * An order has many items.
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
@@ -231,7 +229,7 @@ class Order extends Model
     public function setCustomerAttribute($value)
     {
         $this->attributes['customer'] = $value ? (
-            $this->isJsonFormat($value) ? $value : json_encode($value)
+            is_json_format($value) ? $value : json_encode($value)
         ) : null;
     }
 
@@ -243,7 +241,7 @@ class Order extends Model
     public function setAddressesAttribute($value)
     {
         $this->attributes['addresses'] = $value ? (
-            $this->isJsonFormat($value) ? $value : json_encode($value)
+            is_json_format($value) ? $value : json_encode($value)
         ) : null;
     }
 
@@ -515,12 +513,74 @@ class Order extends Model
                 );
             }
 
+            $discount = static::getDiscountValue($order->grand_total);
+            $tax = static::getTaxValue($order->grand_total);
+
+            $order->sub_total = $order->sub_total - $discount;
+            $order->grand_total = $order->grand_total - $discount + $tax;
+
             $order->save();
         } catch (Exception $e) {
             throw new OrderException(
                 'Could not sync the order\'s totals.', $e->getCode(), $e
             );
         }
+    }
+
+    /**
+     * Get the order's discount value based on discounts applicable on order only.
+     *
+     * @param float $total
+     * @return float|int|null
+     */
+    public static function getDiscountValue($total)
+    {
+        $price = $total;
+
+        foreach (Discount::forOrder()->active()->get() as $discount) {
+            if (!$discount->canBeApplied($total)) {
+                continue;
+            }
+
+            switch ($discount->type) {
+                case Discount::TYPE_FIXED:
+                    $price -= $discount->rate;
+                    break;
+                case Discount::TYPE_PERCENT:
+                    $price -= ($discount->rate / 100) * $price;
+                    break;
+            }
+        }
+
+        return $total - $price;
+    }
+
+    /**
+     * Get the order's tax value based on taxes applicable on order only.
+     *
+     * @param $total
+     * @return float|int|null
+     */
+    public static function getTaxValue($total)
+    {
+        $price = $total;
+
+        foreach (Tax::forOrder()->active()->get() as $tax) {
+            if (!$tax->canBeApplied($total)) {
+                continue;
+            }
+
+            switch ($tax->type) {
+                case Tax::TYPE_FIXED:
+                    $price += $tax->rate;
+                    break;
+                case Tax::TYPE_PERCENT:
+                    $price += ($tax->rate / 100) * $price;
+                    break;
+            }
+        }
+
+        return $price - $total;
     }
 
     /**
