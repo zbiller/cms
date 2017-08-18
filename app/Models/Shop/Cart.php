@@ -2,8 +2,10 @@
 
 namespace App\Models\Shop;
 
+use App\Events\CartReminded;
 use App\Exceptions\CartException;
-use App\Mail\UserCartReminder;
+use App\Exceptions\OrderException;
+use App\Mail\CartReminder;
 use App\Models\Auth\User;
 use App\Models\Model;
 use App\Models\Shop\Cart\Item;
@@ -130,16 +132,6 @@ class Cart extends Model
     }
 
     /**
-     * Sort the query with newest records first.
-     *
-     * @param Builder $query
-     */
-    public function scopeNewest($query)
-    {
-        $query->orderBy('created_at', 'desc');
-    }
-
-    /**
      * Filter the query by existing users.
      *
      * @param Builder $query
@@ -199,7 +191,7 @@ class Cart extends Model
     public function getSubTotalAttribute()
     {
         $total = static::getTotal(null, static::TOTAL_SUB, $this);
-        $discounts = static::getDiscountValue(null, $this);
+        $discounts = static::getDiscountTotal(null, $this);
 
         return $total - $discounts;
     }
@@ -212,8 +204,8 @@ class Cart extends Model
     public function getGrandTotalAttribute()
     {
         $total = static::getTotal(null, static::TOTAL_GRAND, $this);
-        $discounts = static::getDiscountValue(null, $this);
-        $taxes = static::getTaxValue(null, $this);
+        $discounts = static::getDiscountTotal(null, $this);
+        $taxes = static::getTaxTotal(null, $this);
 
         return $total - $discounts + $taxes;
     }
@@ -226,6 +218,10 @@ class Cart extends Model
      */
     public static function getCart()
     {
+        if (self::$cart) {
+            return self::$cart;
+        }
+
         if (auth()->check()) {
             self::$user = auth()->user();
         } else {
@@ -243,49 +239,6 @@ class Cart extends Model
         }
 
         return self::$cart;
-    }
-
-    /**
-     * Get the cart's raw total price.
-     * The total represented by the "raw total" does not include discounts or taxes.
-     *
-     * @param string|null $currency
-     * @return float|int
-     */
-    public static function getRawTotal($currency = null)
-    {
-        return static::getTotal($currency, static::TOTAL_RAW);
-    }
-
-    /**
-     * Get the cart's sub total price.
-     * The total represented by the "sub total" only includes discounts, but not taxes.
-     *
-     * @param string|null $currency
-     * @return float|int
-     */
-    public static function getSubTotal($currency = null)
-    {
-        $total = static::getTotal($currency, static::TOTAL_SUB);
-        $discounts = static::getDiscountValue($currency);
-
-        return $total - $discounts;
-    }
-
-    /**
-     * Get the cart's final total price.
-     * The total represented by the "grand total" also includes discounts and taxes.
-     *
-     * @param string|null $currency
-     * @return float|int
-     */
-    public static function getGrandTotal($currency = null)
-    {
-        $total = static::getTotal($currency, static::TOTAL_GRAND);
-        $discounts = static::getDiscountValue($currency);
-        $taxes = static::getTaxValue($currency);
-
-        return $total - $discounts + $taxes;
     }
 
     /**
@@ -335,13 +288,56 @@ class Cart extends Model
     }
 
     /**
+     * Get the cart's raw total price.
+     * The total represented by the "raw total" does not include discounts or taxes.
+     *
+     * @param string|null $currency
+     * @return float|int
+     */
+    public static function getRawTotal($currency = null)
+    {
+        return static::getTotal($currency, static::TOTAL_RAW);
+    }
+
+    /**
+     * Get the cart's sub total price.
+     * The total represented by the "sub total" only includes discounts, but not taxes.
+     *
+     * @param string|null $currency
+     * @return float|int
+     */
+    public static function getSubTotal($currency = null)
+    {
+        $total = static::getTotal($currency, static::TOTAL_SUB);
+        $discounts = static::getDiscountTotal($currency);
+
+        return $total - $discounts;
+    }
+
+    /**
+     * Get the cart's final total price.
+     * The total represented by the "grand total" also includes discounts and taxes.
+     *
+     * @param string|null $currency
+     * @return float|int
+     */
+    public static function getGrandTotal($currency = null)
+    {
+        $total = static::getTotal($currency, static::TOTAL_GRAND);
+        $discounts = static::getDiscountTotal($currency);
+        $taxes = static::getTaxTotal($currency);
+
+        return $total - $discounts + $taxes;
+    }
+
+    /**
      * Get the cart's discount value based on discounts applicable on order only.
      *
      * @param string null $currency
      * @param Cart $cart
      * @return float|int|null
      */
-    public static function getDiscountValue($currency = null, Cart $cart = null)
+    public static function getDiscountTotal($currency = null, Cart $cart = null)
     {
         if ($currency === null) {
             $currency = config('shop.price.default_currency');
@@ -375,7 +371,7 @@ class Cart extends Model
      * @param Cart $cart
      * @return float|int|null
      */
-    public static function getTaxValue($currency = null, Cart $cart = null)
+    public static function getTaxTotal($currency = null, Cart $cart = null)
     {
         if ($currency === null) {
             $currency = config('shop.price.default_currency');
@@ -407,7 +403,7 @@ class Cart extends Model
      *
      * @return int
      */
-    public static function getProductsCount()
+    public static function getItemsCount()
     {
         if (!self::$cart) {
             self::$cart = static::getCart();
@@ -573,6 +569,72 @@ class Cart extends Model
     }
 
     /**
+     * Create a new order based on the current cart instance.
+     *
+     * The $data parameter should be an array containing:
+     * - identifier (optional)
+     * - currency (optional)
+     * - payment (optional)
+     * - shipping (optional)
+     * - status (optional)
+     *
+     * The $customer parameter should be an array containing:
+     * - first_name (required)
+     * - last_name (required)
+     * - email (required)
+     * - phone (required)
+     *
+     * The $addresses parameter should be an array containing:
+     * - shipping (required)
+     * ----- country (optional)
+     * ----- state (optional)
+     * ----- city (required)
+     * ----- address (required)
+     * - delivery (required)
+     * ----- country (optional)
+     * ----- state (optional)
+     * ----- city (required)
+     * ----- address (required)
+     *
+     * @param array $data
+     * @param array $customer
+     * @param array $addresses
+     * @return Order
+     * @throws \App\Exceptions\OrderException
+     */
+    public static function placeOrder(array $data, array $customer, array $addresses)
+    {
+        if (!self::$cart) {
+            self::$cart = static::getCart();
+        }
+
+        $items = [];
+
+        foreach (self::$cart->items as $item) {
+            $items[] = [
+                'product_id' => $item->product_id,
+                'quantity' => $item->quantity,
+            ];
+        }
+
+        try {
+            return DB::transaction(function () use ($data, $customer, $addresses, $items) {
+                $order = Order::createOrder($data, $customer, $addresses, $items);
+
+                self::$cart->delete();
+
+                return $order;
+            });
+        } catch (OrderException $e) {
+            throw $e;
+        } catch (Exception $e) {
+            throw new OrderException(
+                'Could not place the order!', $e->getCode(), $e
+            );
+        }
+    }
+
+    /**
      * Attempt to clean old shopping carts.
      *
      * A cart qualifies as being old if:
@@ -621,25 +683,7 @@ class Cart extends Model
      */
     public static function sendReminders()
     {
-        set_time_limit(0);
-
-        $days = (int)config('shop.cart.remind_only_older_than');
-
-        try {
-            $date = Carbon::now()->subDays($days)->format('Y-m-d H:i:s');
-
-            foreach (static::onlyUsers()->where('carts.created_at', '<', $date)->get() as $cart) {
-                Mail::to($cart->user)->queue(
-                    new UserCartReminder('cart-reminder', $cart->user, $cart)
-                );
-            }
-
-            return true;
-        } catch (Exception $e) {
-            throw new CartException(
-                'Could not send the reminders to every user! Please try again.', $e->getCode(), $e
-            );
-        }
+        event(new CartReminded);
     }
 
     /**

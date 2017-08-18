@@ -12,7 +12,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class UserCartReminder extends Mailable implements ShouldQueue
+class CartReminder extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -121,36 +121,8 @@ class UserCartReminder extends Mailable implements ShouldQueue
      */
     private function getCartContents()
     {
-        $html = [];
-
-        $html[] = '<table class="table" cellspacing="0" width="100%">';
-        $html[] = '<thead>';
-        $html[] = '<tr>';
-        $html[] = '<th class="header-cell" align="left"><strong>Product</strong></th>';
-        $html[] = '<th class="header-cell" align="center"><strong>Quantity</strong></th>';
-        $html[] = '<th class="header-cell" align="right"><strong>Price</strong></th>';
-        $html[] = '</tr>';
-        $html[] = '</thead>';
-        $html[] = '<tbody>';
-
-        foreach ($this->cart->items()->get() as $item) {
-            $html[] = '<tr>';
-            $html[] = '<td align="left" class="content-cell">' . $item->product->name . '</td>';
-            $html[] = '<td align="center" class="content-cell">' . $item->quantity . '</td>';
-            $html[] = '<td align="right" class="content-cell">' . number_format($item->quantity * Currency::convert($item->product->final_price, $item->product->currency->code, config('shop.price.default_currency')), 2) . ' ' . config('shop.price.default_currency') . '</td>';
-            $html[] = '</tr>';
-        }
-
-        $html[] = '</tbody>';
-        $html[] = '<tfoot>';
-        $html[] = '<tr>';
-        $html[] = '<td align="left" class="footer-cell"><strong>Total</strong></td>';
-        $html[] = '<td class="footer-cell"></td>';
-        $html[] = '<td align="right" class="footer-cell"><strong>' . number_format($this->cart->grand_total, 2) . ' ' . config('shop.price.default_currency') . '</strong></td>';
-        $html[] = '</tr>';
-        $html[] = '</tfoot>';
-        $html[] = '</table>';
-
-        return implode('', $html);
+        return view()->make('emails.variables.cart_contents')->with([
+            'cart' => $this->cart
+        ])->render();
     }
 }

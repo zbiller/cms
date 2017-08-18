@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Mail\UserCartReminder;
+use App\Mail\CartReminder;
 use App\Models\Shop\Cart;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -42,7 +42,7 @@ class CartReminderCommand extends Command
             $this->info("Sending ongoing shopping cart reminder to: {$cart->user->email}");
 
             Mail::to($cart->user)->queue(
-                new UserCartReminder('cart-reminder', $cart->user, $cart)
+                new CartReminder('cart-reminder', $cart->user, $cart)
             );
 
             $count++;

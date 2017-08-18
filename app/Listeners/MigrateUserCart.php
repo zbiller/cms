@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class MigrateCartFromGuestToUser implements ShouldQueue
+class MigrateUserCart implements ShouldQueue
 {
     use InteractsWithQueue;
 

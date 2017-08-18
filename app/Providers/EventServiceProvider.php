@@ -14,7 +14,22 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         'Illuminate\Auth\Events\Login' => [
-            'App\Listeners\MigrateCartFromGuestToUser',
+            'App\Listeners\MigrateUserCart',
+        ],
+        'App\Events\CartReminded' => [
+            'App\Listeners\SendCartReminders',
+        ],
+        'App\Events\OrderCreated' => [
+            'App\Listeners\NotifyOrderCreation',
+        ],
+        'App\Events\OrderCompleted' => [
+            'App\Listeners\NotifyOrderCompletion',
+        ],
+        'App\Events\OrderFailed' => [
+            'App\Listeners\NotifyOrderFailure',
+        ],
+        'App\Events\OrderCanceled' => [
+            'App\Listeners\NotifyOrderCancellation',
         ],
     ];
 

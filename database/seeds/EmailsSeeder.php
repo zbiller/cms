@@ -54,7 +54,7 @@ class EmailsSeeder extends Seeder
         Email::create([
             'name' => 'Cart Reminder',
             'identifier' => 'cart-reminder',
-            'type' => Email::TYPE_USER_CART_REMINDER,
+            'type' => Email::TYPE_CART_REMINDER,
             'metadata' => [
                 'from_name' => null,
                 'from_email' => null,

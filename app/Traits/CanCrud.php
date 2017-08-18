@@ -2,9 +2,11 @@
 
 namespace App\Traits;
 
+use App\Exceptions\CartException;
 use App\Exceptions\CrudException;
 use App\Exceptions\DraftException;
 use App\Exceptions\DuplicateException;
+use App\Exceptions\OrderException;
 use App\Exceptions\RevisionException;
 use App\Exceptions\UrlException;
 use App\Models\Version\Draft;
@@ -142,6 +144,8 @@ trait CanCrud
         RevisionException::class,
         UrlException::class,
         DuplicateException::class,
+        OrderException::class,
+        CartException::class,
     ];
 
     /**

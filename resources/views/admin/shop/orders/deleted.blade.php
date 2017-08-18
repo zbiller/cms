@@ -15,11 +15,14 @@
                 <td class="sortable" data-sort="grand_total">
                     <i class="fa fa-sort"></i>&nbsp; Total
                 </td>
-                <td class="sortable" data-sort="metadata">
+                <td class="sortable" data-sort="customer">
                     <i class="fa fa-sort"></i>&nbsp; Customer
                 </td>
                 <td class="sortable" data-sort="status">
                     <i class="fa fa-sort"></i>&nbsp; Status
+                </td>
+                <td class="sortable" data-sort="viewed">
+                    <i class="fa fa-sort"></i>&nbsp; Viewed
                 </td>
                 <td class="actions-deleted">Actions</td>
             </tr>
@@ -29,9 +32,14 @@
                 @foreach($items as $index => $item)
                     <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
                         <td>{{ $item->identifier ?: 'N/A' }}</td>
-                        <td>{{ $item->grand_total ? number_format($item->grand_total, 2) . ' ' . ($item->currency ?: config('shop.price.default_currency')) : 'N/A' }}</td>
+                        <td>{{ number_format($item->grand_total, 2) . ' ' . ($item->currency ?: config('shop.price.default_currency')) }}</td>
                         <td>{{ $item->full_name ?: 'N/A' }}</td>
-                        <td>{{ isset($status[$item->status]) ? $statuses[$item->status] : 'N/A' }}</td>
+                        <td>{{ isset($statuses[$item->status]) ? $statuses[$item->status] : 'N/A' }}</td>
+                        <td>
+                        <span class="flag {!! $item->viewed == \App\Models\Shop\Order::VIEWED_NO ? 'red' : 'green' !!}">
+                            {!! $item->viewed == \App\Models\Shop\Order::VIEWED_NO ? 'No' : 'Yes' !!}
+                        </span>
+                        </td>
                         <td>
                             {!! button()->restoreRecord(route('admin.orders.restore', $item->id)) !!}
                             {!! button()->deleteRecord(route('admin.orders.delete', $item->id)) !!}

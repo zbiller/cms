@@ -67,7 +67,11 @@ class Email extends Model
      */
     const TYPE_PASSWORD_RECOVERY = 1;
     const TYPE_EMAIL_VERIFICATION = 2;
-    const TYPE_USER_CART_REMINDER = 3;
+    const TYPE_CART_REMINDER = 3;
+    const TYPE_ORDER_CREATED = 4;
+    const TYPE_ORDER_COMPLETED = 5;
+    const TYPE_ORDER_FAILED = 6;
+    const TYPE_ORDER_CANCELED = 7;
 
     /**
      * The property defining the email types.
@@ -77,7 +81,11 @@ class Email extends Model
     public static $types = [
         self::TYPE_PASSWORD_RECOVERY => 'Password Recovery',
         self::TYPE_EMAIL_VERIFICATION => 'Email Verification',
-        self::TYPE_USER_CART_REMINDER => 'Cart Reminder',
+        self::TYPE_CART_REMINDER => 'Cart Reminder',
+        self::TYPE_ORDER_CREATED => 'Order Created',
+        self::TYPE_ORDER_COMPLETED => 'Order Completed',
+        self::TYPE_ORDER_FAILED => 'Order Failed',
+        self::TYPE_ORDER_CANCELED => 'Order Canceled',
     ];
 
     /**
@@ -128,16 +136,68 @@ class Email extends Model
                 'email_verification_url',
             ],
         ],
-        self::TYPE_USER_CART_REMINDER => [
-            'class' => 'App\Mail\UserCartReminder',
-            'view' => 'emails.user_cart_reminder',
-            'preview_image' => 'user_cart_reminder.jpg',
+        self::TYPE_CART_REMINDER => [
+            'class' => 'App\Mail\CartReminder',
+            'view' => 'emails.cart_reminder',
+            'preview_image' => 'cart_reminder.jpg',
             'variables' => [
                 'first_name',
                 'last_name',
                 'full_name',
                 'cart_contents',
                 'home_url',
+            ],
+        ],
+        self::TYPE_ORDER_CREATED => [
+            'class' => 'App\Mail\OrderCreated',
+            'view' => 'emails.order_created',
+            'preview_image' => 'order_created.jpg',
+            'variables' => [
+                'first_name',
+                'last_name',
+                'full_name',
+                'order_id',
+                'order_status',
+                'order_contents',
+            ],
+        ],
+        self::TYPE_ORDER_COMPLETED => [
+            'class' => 'App\Mail\OrderCompleted',
+            'view' => 'emails.order_completed',
+            'preview_image' => 'order_completed.jpg',
+            'variables' => [
+                'first_name',
+                'last_name',
+                'full_name',
+                'order_id',
+                'order_status',
+                'order_contents',
+            ],
+        ],
+        self::TYPE_ORDER_FAILED => [
+            'class' => 'App\Mail\OrderFailed',
+            'view' => 'emails.order_failed',
+            'preview_image' => 'order_failed.jpg',
+            'variables' => [
+                'first_name',
+                'last_name',
+                'full_name',
+                'order_id',
+                'order_status',
+                'order_contents',
+            ],
+        ],
+        self::TYPE_ORDER_CANCELED => [
+            'class' => 'App\Mail\OrderCanceled',
+            'view' => 'emails.order_canceled',
+            'preview_image' => 'order_canceled.jpg',
+            'variables' => [
+                'first_name',
+                'last_name',
+                'full_name',
+                'order_id',
+                'order_status',
+                'order_contents',
             ],
         ],
     ];
@@ -175,8 +235,23 @@ class Email extends Model
         ],
         'cart_contents' => [
             'name' => 'Cart Contents',
+            'label' => 'The contents of a user\'s order.',
+            'description' => 'This automatically generates the HTML for a table displaying the products and their quantities from inside the order',
+        ],
+        'order_contents' => [
+            'name' => 'Order Contents',
             'label' => 'The contents of a user\'s shopping cart.',
             'description' => 'This automatically generates the HTML for a table displaying the products and their quantities from inside a user\'s shopping cart',
+        ],
+        'order_id' => [
+            'name' => 'Order ID',
+            'label' => 'The identifier for an order.',
+            'description' => 'This represents the order\'s identifier by which the order will be referenced anywhere.',
+        ],
+        'order_status' => [
+            'name' => 'Order Status',
+            'label' => 'The current status of an order.',
+            'description' => 'This represents the order\'s status at the time the email was sent.',
         ],
         'home_url' => [
             'name' => 'Home URL',

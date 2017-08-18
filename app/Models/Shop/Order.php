@@ -2,6 +2,10 @@
 
 namespace App\Models\Shop;
 
+use App\Events\OrderCanceled;
+use App\Events\OrderCompleted;
+use App\Events\OrderCreated;
+use App\Events\OrderFailed;
 use App\Exceptions\OrderException;
 use App\Models\Auth\User;
 use App\Models\Model;
@@ -388,11 +392,13 @@ class Order extends Model
 
         try {
             $order = DB::transaction(function () {
-                $data = static::getFullOrderDataForCreation();
+                $data = static::getFullOrderData();
                 $order = Order::create($data);
 
                 static::syncOrderItems($order);
                 static::syncOrderTotals($order);
+
+                event(new OrderCreated($order));
 
                 return $order;
             });
@@ -468,16 +474,34 @@ class Order extends Model
 
         try {
             $order = DB::transaction(function () use ($order) {
-                $order->update(static::getFullOrderDataForCreation());
+                $data = static::getFullOrderData();
+                $original = $order->getOriginal();
+
+                $order->update($data);
 
                 static::syncOrderItems($order);
                 static::syncOrderTotals($order);
+
+                if (isset($data['status']) && (int)$data['status'] != $original['status']) {
+                    switch ((int)$data['status']) {
+                        case self::STATUS_COMPLETED:
+                            event(new OrderCompleted($order));
+                            break;
+                        case self::STATUS_FAILED:
+                            event(new OrderFailed($order));
+                            break;
+                        case self::STATUS_CANCELED:
+                            event(new OrderCanceled($order));
+                            break;
+                    }
+                }
 
                 return $order;
             });
 
             return $order;
         } catch (Exception $e) {
+            dd($e);
             throw new OrderException(
                 'Could not update the order!', $e->getCode(), $e
             );
@@ -525,62 +549,6 @@ class Order extends Model
                 'Could not sync the order\'s totals.', $e->getCode(), $e
             );
         }
-    }
-
-    /**
-     * Get the order's discount value based on discounts applicable on order only.
-     *
-     * @param float $total
-     * @return float|int|null
-     */
-    public static function getDiscountValue($total)
-    {
-        $price = $total;
-
-        foreach (Discount::forOrder()->active()->get() as $discount) {
-            if (!$discount->canBeApplied($total)) {
-                continue;
-            }
-
-            switch ($discount->type) {
-                case Discount::TYPE_FIXED:
-                    $price -= $discount->rate;
-                    break;
-                case Discount::TYPE_PERCENT:
-                    $price -= ($discount->rate / 100) * $price;
-                    break;
-            }
-        }
-
-        return $total - $price;
-    }
-
-    /**
-     * Get the order's tax value based on taxes applicable on order only.
-     *
-     * @param $total
-     * @return float|int|null
-     */
-    public static function getTaxValue($total)
-    {
-        $price = $total;
-
-        foreach (Tax::forOrder()->active()->get() as $tax) {
-            if (!$tax->canBeApplied($total)) {
-                continue;
-            }
-
-            switch ($tax->type) {
-                case Tax::TYPE_FIXED:
-                    $price += $tax->rate;
-                    break;
-                case Tax::TYPE_PERCENT:
-                    $price += ($tax->rate / 100) * $price;
-                    break;
-            }
-        }
-
-        return $price - $total;
     }
 
     /**
@@ -634,9 +602,65 @@ class Order extends Model
      *
      * @return array
      */
-    protected static function getFullOrderDataForCreation()
+    protected static function getFullOrderData()
     {
         return self::$data + ['customer' => self::$customer] + ['addresses' => self::$addresses];
+    }
+
+    /**
+     * Get the order's discount value based on discounts applicable on order only.
+     *
+     * @param float $total
+     * @return float|int|null
+     */
+    protected static function getDiscountValue($total)
+    {
+        $price = $total;
+
+        foreach (Discount::forOrder()->active()->get() as $discount) {
+            if (!$discount->canBeApplied($total)) {
+                continue;
+            }
+
+            switch ($discount->type) {
+                case Discount::TYPE_FIXED:
+                    $price -= $discount->rate;
+                    break;
+                case Discount::TYPE_PERCENT:
+                    $price -= ($discount->rate / 100) * $price;
+                    break;
+            }
+        }
+
+        return $total - $price;
+    }
+
+    /**
+     * Get the order's tax value based on taxes applicable on order only.
+     *
+     * @param $total
+     * @return float|int|null
+     */
+    protected static function getTaxValue($total)
+    {
+        $price = $total;
+
+        foreach (Tax::forOrder()->active()->get() as $tax) {
+            if (!$tax->canBeApplied($total)) {
+                continue;
+            }
+
+            switch ($tax->type) {
+                case Tax::TYPE_FIXED:
+                    $price += $tax->rate;
+                    break;
+                case Tax::TYPE_PERCENT:
+                    $price += ($tax->rate / 100) * $price;
+                    break;
+            }
+        }
+
+        return $price - $total;
     }
 
     /**
