@@ -843,6 +843,13 @@ Breadcrumbs::register('admin.settings.analytics', function($breadcrumbs) {
     $breadcrumbs->push('Settings');
     $breadcrumbs->push('Analytics', route('admin.settings.analytics'));
 });
+
+/* Home > Settings > Courier */
+Breadcrumbs::register('admin.settings.courier', function($breadcrumbs) {
+    $breadcrumbs->parent('admin');
+    $breadcrumbs->push('Settings');
+    $breadcrumbs->push('Courier', route('admin.settings.courier'));
+});
 /**
 | ---------------------------------------------------------------------------------------------------------------------
  */

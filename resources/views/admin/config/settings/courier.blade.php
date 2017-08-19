@@ -10,8 +10,8 @@
         {!! validation('admin')->errors() !!}
 
         <div id="tab-1" class="tab">
-            {!! form_admin()->text('company-name', 'Company Name', setting()->value('company-name')) !!}
-            {!! form_admin()->text('company-email', 'Company Email', setting()->value('company-email')) !!}
+            {!! form_admin()->number('transport-price', 'Transport Price (' . config('shop.price.default_currency') . ')', setting()->value('transport-price')) !!}
+            {!! form_admin()->number('transport-threshold', 'Transport Threshold (' . config('shop.price.default_currency') . ')', setting()->value('transport-threshold')) !!}
         </div>
         {!! form_admin()->close() !!}
     </section>
@@ -25,4 +25,3 @@
         {!! button()->saveRecord() !!}
     </section>
 @endsection
-

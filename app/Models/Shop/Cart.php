@@ -590,7 +590,7 @@ class Cart extends Model
      * ----- state (optional)
      * ----- city (required)
      * ----- address (required)
-     * - delivery (required)
+     * - billing (required)
      * ----- country (optional)
      * ----- state (optional)
      * ----- city (required)

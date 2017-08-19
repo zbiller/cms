@@ -44,8 +44,8 @@
     {!! form_admin()->select('currency_id', 'Currency', $currencies->pluck('code', 'id')) !!}
     {!! form_admin()->number('quantity') !!}
     {!! form_admin()->select('active', 'Active', $actives) !!}
-    {!! form_admin()->number('views', null, 'Views Count', ['disabled' => 'disabled']) !!}
-    {!! form_admin()->number('sales', null, 'Sales Count', ['disabled' => 'disabled']) !!}
+    {!! form_admin()->number('views', 'Views Count', null, ['disabled' => 'disabled']) !!}
+    {!! form_admin()->number('sales', 'Sales Count', null, ['disabled' => 'disabled']) !!}
 </div>
 <div id="tab-2" class="tab">
     {!! form_admin()->editor('content') !!}

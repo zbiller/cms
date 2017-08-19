@@ -2,7 +2,7 @@
 
 @section('content')
     <section class="tabs">
-        <a href="#tab-1">Primary Information</a>
+        <a href="#tab-1">Basic</a>
     </section>
 
     <section class="view">

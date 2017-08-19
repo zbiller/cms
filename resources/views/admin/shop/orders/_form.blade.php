@@ -46,10 +46,10 @@
     {!! form_admin()->textarea('addresses[shipping][address]', 'Address') !!}
 
     <span class="title">Delivery</span>
-    {!! form_admin()->text('addresses[delivery][country]', 'Country') !!}
-    {!! form_admin()->text('addresses[delivery][state]', 'State') !!}
-    {!! form_admin()->text('addresses[delivery][city]', 'City') !!}
-    {!! form_admin()->textarea('addresses[delivery][address]', 'Address') !!}
+    {!! form_admin()->text('addresses[billing][country]', 'Country') !!}
+    {!! form_admin()->text('addresses[billing][state]', 'State') !!}
+    {!! form_admin()->text('addresses[billing][city]', 'City') !!}
+    {!! form_admin()->textarea('addresses[billing][address]', 'Address') !!}
 </div>
 <div id="tab-4" class="tab">
     @include('admin.shop.orders.items.assign', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])

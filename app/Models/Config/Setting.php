@@ -48,7 +48,7 @@ class Setting extends Model
     }
 
     /**
-     * Filter the query to return only logs containing the specified subject type.
+     * Filter the query by key.
      *
      * @param Builder $query
      * @param string $key

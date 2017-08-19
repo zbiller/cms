@@ -16,7 +16,7 @@ class SettingsSeeder extends Seeder
         DB::table('settings')->delete();
 
         /**
-         * Create the basic settings the platform supports out of the box.
+         * Create the generic company settings.
          */
         Setting::create([
             'key' => 'company-name',
@@ -28,8 +28,24 @@ class SettingsSeeder extends Seeder
             'value' => 'example@mail.com'
         ]);
 
+        /**
+         * Create the setting for analytics integration.
+         */
         Setting::create([
             'key' => 'analytics-code',
+            'value' => null
+        ]);
+
+        /**
+         * Create the settings defining a order's transport cost.
+         */
+        Setting::create([
+            'key' => 'courier-price',
+            'value' => null
+        ]);
+
+        Setting::create([
+            'key' => 'courier-threshold',
             'value' => null
         ]);
     }

@@ -758,6 +758,7 @@ Route::group([
         ], function () {
             Route::match(['get', 'post'], 'general', ['as' => 'admin.settings.general', 'uses' => 'SettingsController@general', 'permissions' => 'settings-general']);
             Route::match(['get', 'post'], 'analytics', ['as' => 'admin.settings.analytics', 'uses' => 'SettingsController@analytics', 'permissions' => 'settings-analytics']);
+            Route::match(['get', 'post'], 'courier', ['as' => 'admin.settings.courier', 'uses' => 'SettingsController@courier', 'permissions' => 'settings-courier']);
         });
     });
 });

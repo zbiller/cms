@@ -248,7 +248,7 @@ class FormAdminHelper
      * @param array $options
      * @return string
      */
-    public function number($name, $value = null, $label = null, array $options = [])
+    public function number($name, $label = null, $value = null, array $options = [])
     {
         $options['data-value'] = $value;
 

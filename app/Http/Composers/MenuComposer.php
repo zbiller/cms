@@ -142,6 +142,10 @@ class MenuComposer
                 $menu->child($access, function (MenuItem $item) {
                     $item->name('Analytics')->url(route('admin.settings.analytics'))->permissions('settings-analytics')->active('admin/settings/analytics/*');
                 });
+
+                $menu->child($access, function (MenuItem $item) {
+                    $item->name('Courier')->url(route('admin.settings.courier'))->permissions('settings-courier')->active('admin/settings/courier/*');
+                });
             });
         })->filter(function (MenuItem $item) use ($user) {
             return $user->isSuper() || $user->hasAnyPermission($item->permissions());

@@ -167,7 +167,7 @@ class Order extends Model
     ];
 
     /**
-     * The array containing the order's shipping and delivery addresses:
+     * The array containing the order's shipping and billing addresses:
      * Should only contain these keys and their associated values:
      *
      * - shipping (required)
@@ -176,7 +176,7 @@ class Order extends Model
      * ----- city (required)
      * ----- address (required)
      *
-     * - delivery (required)
+     * - billing (required)
      * ----- country (optional)
      * ----- state (optional)
      * ----- city (required)
@@ -191,7 +191,7 @@ class Order extends Model
             'city' => null,
             'address' => null,
         ],
-        'delivery' => [
+        'billing' => [
             'country' => null,
             'state' => null,
             'city' => null,
@@ -330,13 +330,13 @@ class Order extends Model
     }
 
     /**
-     * Get the delivery address details.
+     * Get the billing address details.
      *
      * @return string|null
      */
-    public function getDeliveryAddressAttribute()
+    public function getBillingAddressAttribute()
     {
-        return isset($this->addresses->delivery) ? $this->addresses->delivery : null;
+        return isset($this->addresses->billing) ? $this->addresses->billing : null;
     }
 
     /**
@@ -361,7 +361,7 @@ class Order extends Model
      * ----- state (optional)
      * ----- city (required)
      * ----- address (required)
-     * - delivery (required)
+     * - billing (required)
      * ----- country (optional)
      * ----- state (optional)
      * ----- city (required)
@@ -435,7 +435,7 @@ class Order extends Model
      * ----- state (optional)
      * ----- city (optional)
      * ----- address (optional)
-     * - delivery (optional)
+     * - billing (optional)
      * ----- country (optional)
      * ----- state (optional)
      * ----- city (optional)
@@ -542,6 +542,10 @@ class Order extends Model
 
             $order->sub_total = $order->sub_total - $discount;
             $order->grand_total = $order->grand_total - $discount + $tax;
+
+            if (setting()->value('transport-threshold') === null || setting()->value('transport-threshold') > $order->grand_total) {
+                $order->grand_total = $order->grand_total + (int)setting()->value('transport-price');
+            }
 
             $order->save();
         } catch (Exception $e) {
@@ -770,7 +774,7 @@ class Order extends Model
     }
 
     /**
-     * Instantiate the order's addresses (shipping and delivery).
+     * Instantiate the order's addresses (shipping and billing).
      * The $addresses parameter should be an array containing:
      *
      * - shipping (required)
@@ -779,7 +783,7 @@ class Order extends Model
      * ----- city (required)
      * ----- address (required)
      *
-     * - delivery (required)
+     * - billing (required)
      * ----- country (optional)
      * ----- state (optional)
      * ----- city (required)
@@ -814,15 +818,15 @@ class Order extends Model
             throw OrderException::invalidShippingAddress();
         }
 
-        if (!isset($addresses['delivery']) || empty($addresses['delivery'])) {
+        if (!isset($addresses['billing']) || empty($addresses['billing'])) {
             throw OrderException::invalidDeliveryDetails();
         }
 
-        if (!isset($addresses['delivery']['city']) || empty($addresses['delivery']['city'])) {
+        if (!isset($addresses['billing']['city']) || empty($addresses['billing']['city'])) {
             throw OrderException::invalidDeliveryCity();
         }
 
-        if (!isset($addresses['delivery']['address']) || empty($addresses['delivery']['address'])) {
+        if (!isset($addresses['billing']['address']) || empty($addresses['billing']['address'])) {
             throw OrderException::invalidDeliveryAddress();
         }
 

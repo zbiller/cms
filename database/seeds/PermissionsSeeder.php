@@ -867,6 +867,12 @@ class PermissionsSeeder extends Seeder
                 'type' => Permission::TYPE_ADMIN,
                 'name' => 'settings-analytics',
             ],
+            'Courier' => [
+                'group' => 'Settings',
+                'label' => 'Courier',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'settings-courier',
+            ],
         ],
     ];
 

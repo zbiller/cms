@@ -50,11 +50,11 @@
             {!! $item->shipping_address->address && isset($item->shipping_address->address) ? '<br />' . nl2br($item->shipping_address->address) : '' !!}
         </section>
         <section class="content content-half right">
-            <span class="title">Delivery Address</span>
-            {{ $item->delivery_address && isset($item->delivery_address->country) ? $item->delivery_address->country . ', ' : '' }}
-            {{ $item->delivery_address && isset($item->delivery_address->state) ? $item->delivery_address->state . ', ' : '' }}
-            {{ $item->delivery_address && isset($item->delivery_address->city) ? $item->delivery_address->city : '' }}
-            {!! $item->delivery_address->address && isset($item->delivery_address->address) ? '<br />' . nl2br($item->delivery_address->address) : '' !!}
+            <span class="title">Billing Address</span>
+            {{ $item->billing_address && isset($item->billing_address->country) ? $item->billing_address->country . ', ' : '' }}
+            {{ $item->billing_address && isset($item->billing_address->state) ? $item->billing_address->state . ', ' : '' }}
+            {{ $item->billing_address && isset($item->billing_address->city) ? $item->billing_address->city : '' }}
+            {!! $item->billing_address->address && isset($item->billing_address->address) ? '<br />' . nl2br($item->billing_address->address) : '' !!}
         </section>
     </div>
 

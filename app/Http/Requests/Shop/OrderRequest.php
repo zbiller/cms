@@ -67,10 +67,10 @@ class OrderRequest extends Request
             'addresses.shipping.address' => [
                 'required',
             ],
-            'addresses.delivery.city' => [
+            'addresses.billing.city' => [
                 'required',
             ],
-            'addresses.delivery.address' => [
+            'addresses.billing.address' => [
                 'required',
             ],
             'payment' => [
@@ -108,8 +108,8 @@ class OrderRequest extends Request
             'customer.email' => 'email',
             'addresses.shipping.city' => 'shipping city',
             'addresses.shipping.address' => 'shipping address',
-            'addresses.delivery.city' => 'delivery city',
-            'addresses.delivery.address' => 'delivery address',
+            'addresses.billing.city' => 'billing city',
+            'addresses.billing.address' => 'billing address',
         ];
     }
 }
