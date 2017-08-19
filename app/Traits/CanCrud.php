@@ -635,6 +635,7 @@ trait CanCrud
                     break;
             }
         } catch (ModelNotFoundException $e) {
+            dd($e);
             flash()->error(__('crud.draft_not_found'));
             return $this->redirect ?: back();
         }

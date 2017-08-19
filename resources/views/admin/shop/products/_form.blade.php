@@ -84,18 +84,18 @@
         </div>
     </script>
 </div>
+<div id="tab-5" class="tab tab-attributes">
+    @include('admin.shop.products.attributes.assign', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
+</div>
+<div id="tab-6" class="tab tab-discounts">
+    @include('admin.shop.products.discounts.assign', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
+</div>
+<div id="tab-7" class="tab tab-taxes">
+    @include('admin.shop.products.taxes.assign', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
+</div>
+
 
 @if($item->exists)
-    <div id="tab-5" class="tab tab-attributes">
-        @include('admin.shop.products.attributes.assign', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
-    </div>
-    <div id="tab-6" class="tab tab-discounts">
-        @include('admin.shop.products.discounts.assign', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
-    </div>
-    <div id="tab-7" class="tab tab-taxes">
-        @include('admin.shop.products.taxes.assign', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
-    </div>
-
     {!! block()->container($item, isset($on_draft) ? $draft : null, isset($on_revision) ? $revision : null, isset($on_revision) ? true : false) !!}
 
     @if(!isset($on_draft) && !isset($on_limbo_draft) && !isset($on_revision))

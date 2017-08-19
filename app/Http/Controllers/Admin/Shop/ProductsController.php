@@ -83,12 +83,26 @@ class ProductsController extends Controller
     public function create()
     {
         return $this->_create(function () {
+            $categories = Category::withDepth()->defaultOrder()->get();
+            $sets = Set::ordered()->get();
+            $attributes = collect();
+            $discounts = Discount::alphabetically()->active()->forProduct()->get();
+            $taxes = Tax::alphabetically()->active()->forProduct()->get();
+            $currencies = Currency::alphabeticallyByCode()->get();
+
             $this->title = 'Add Product';
             $this->view = view('admin.shop.products.add');
             $this->vars = [
-                'categories' => Category::withDepth()->defaultOrder()->get(),
-                'currencies' => Currency::alphabeticallyByCode()->get(),
+                'categories' => $categories,
+                'sets' => $sets,
+                'attributes' => $attributes,
+                'discounts' => $discounts,
+                'taxes' => $taxes,
+                'currencies' => $currencies,
                 'actives' => Product::$actives,
+                'inherits' => Product::$inherits,
+                'discountTypes' => Discount::$types,
+                'taxTypes' => Tax::$types,
             ];
         });
     }
@@ -345,14 +359,13 @@ class ProductsController extends Controller
     public function limbo(Request $request, $id)
     {
         return $this->_limbo(function () use ($id) {
-            $product = Product::findOrFail($id);
+            $product = Product::onlyDrafts()->findOrFail($id);
             $categories = Category::withDepth()->defaultOrder()->get();
             $sets = Set::ordered()->get();
             $attributes = $product->attributes()->get();
             $discounts = Discount::alphabetically()->active()->forProduct()->get();
             $taxes = Tax::alphabetically()->active()->forProduct()->get();
             $currencies = Currency::alphabeticallyByCode()->get();
-
             $this->title = 'Product Draft';
             $this->view = view('admin.shop.products.limbo');
             $this->vars = [

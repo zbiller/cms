@@ -1,5 +1,5 @@
-@php($productTaxes = $item->taxes()->get())
-@php($inheritedTaxes = $item->getInheritedTaxes())
+@php($productTaxes = $item->exists ? $item->taxes()->get() : collect())
+@php($inheritedTaxes = $item->exists ? $item->getInheritedTaxes() : collect())
 
 {!! form()->hidden('touch_taxes', true) !!}
 

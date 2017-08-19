@@ -1,5 +1,5 @@
-@php($productDiscounts = $item->discounts()->get())
-@php($inheritedDiscounts = $item->getInheritedDiscounts())
+@php($productDiscounts = $item->exists ? $item->discounts()->get() : collect())
+@php($inheritedDiscounts = $item->exists ? $item->getInheritedDiscounts() : collect())
 
 {!! form()->hidden('touch_discounts', true) !!}
 
