@@ -25,7 +25,7 @@ class SettingsSeeder extends Seeder
 
         Setting::create([
             'key' => 'company-email',
-            'value' => 'example@company.com'
+            'value' => 'example@mail.com'
         ]);
 
         Setting::create([

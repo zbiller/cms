@@ -27,7 +27,7 @@ class PagesSeeder extends Seeder
         }
 
         /**
-         * Get the home or first layout.
+         * Get the default or first layout.
          */
         try {
             $defaultLayout = Layout::whereIdentifier('default')->firstOrFail();
