@@ -21,6 +21,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\OrderCreated' => [
             'App\Listeners\NotifyOrderCreation',
+            'App\Listeners\IncrementProductSales',
         ],
         'App\Events\OrderCompleted' => [
             'App\Listeners\NotifyOrderCompletion',
