@@ -378,10 +378,7 @@ class UploaderHelper
     private function checkModel()
     {
         if (!$this->model) {
-            throw new UploadException(
-                'You must specify a loaded or unloaded instance of App\Models\Model for the uploader.' . PHP_EOL .
-                'To do this, chain the model() method to the uploader() helper.'
-            );
+            throw UploadException::invalidUploaderModel();
         }
 
         return $this;
@@ -397,10 +394,7 @@ class UploaderHelper
     private function checkField()
     {
         if (!$this->field) {
-            throw new UploadException(
-                'You must specify a field for the uploader.' . PHP_EOL .
-                'To do this, chain the field() method to the uploader() helper.'
-            );
+            throw UploadException::invalidUploaderField();
         }
 
         return $this;

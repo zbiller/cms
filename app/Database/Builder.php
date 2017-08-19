@@ -20,7 +20,7 @@ class Builder extends QueryBuilder
 
     /**
      * The cache type value.
-     * Can have one of the values presented below by the TYPE_CACHE constants.
+     * Can have one of the values present in the CacheService class -> TYPE_CACHE constants.
      * The value comes from the App/Traits/IsCacheable.php file.
      *
      * @var string
@@ -65,15 +65,21 @@ class Builder extends QueryBuilder
     {
         switch ($this->cacheType) {
             case CacheService::TYPE_CACHE_QUERIES:
-                return cache()->store(CacheService::getQueryCacheStore())->tags($this->cacheTag)->rememberForever($this->getCacheKey(), function() {
-                    return parent::runSelect();
-                });
+                return cache()
+                    ->store(CacheService::getQueryCacheStore())
+                    ->tags($this->cacheTag)
+                    ->rememberForever($this->getCacheKey(), function() {
+                        return parent::runSelect();
+                    });
 
                 break;
             case CacheService::TYPE_CACHE_DUPLICATE_QUERIES:
-                return cache()->store(CacheService::getDuplicateQueryCacheStore())->tags($this->cacheTag)->remember($this->getCacheKey(), 1, function() {
-                    return parent::runSelect();
-                });
+                return cache()
+                    ->store(CacheService::getDuplicateQueryCacheStore())
+                    ->tags($this->cacheTag)
+                    ->remember($this->getCacheKey(), 1, function() {
+                        return parent::runSelect();
+                    });
 
                 break;
             default:

@@ -95,8 +95,8 @@ class CategoriesController extends Controller
             $this->view = view('admin.shop.categories.edit');
             $this->vars = [
                 'actives' => Category::$actives,
-                'discounts' => Discount::alphabetically()->active()->forProduct()->get(),
-                'taxes' => Tax::alphabetically()->active()->forProduct()->get(),
+                'discounts' => Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
+                'taxes' => Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
                 'discountTypes' => Discount::$types,
                 'taxTypes' => Tax::$types,
             ];
@@ -245,8 +245,8 @@ class CategoriesController extends Controller
             $this->view = view('admin.shop.categories.draft');
             $this->vars = [
                 'actives' => Category::$actives,
-                'discounts' => Discount::alphabetically()->active()->forProduct()->get(),
-                'taxes' => Tax::alphabetically()->active()->forProduct()->get(),
+                'discounts' => Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
+                'taxes' => Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
                 'discountTypes' => Discount::$types,
                 'taxTypes' => Tax::$types,
             ];
@@ -265,8 +265,8 @@ class CategoriesController extends Controller
             $this->view = view('admin.shop.categories.limbo');
             $this->vars = [
                 'actives' => Category::$actives,
-                'discounts' => Discount::alphabetically()->active()->forProduct()->get(),
-                'taxes' => Tax::alphabetically()->active()->forProduct()->get(),
+                'discounts' => Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
+                'taxes' => Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
                 'discountTypes' => Discount::$types,
                 'taxTypes' => Tax::$types,
             ];
@@ -290,8 +290,8 @@ class CategoriesController extends Controller
             $this->view = view('admin.shop.categories.revision');
             $this->vars = [
                 'actives' => Category::$actives,
-                'discounts' => Discount::alphabetically()->active()->forProduct()->get(),
-                'taxes' => Tax::alphabetically()->active()->forProduct()->get(),
+                'discounts' => Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
+                'taxes' => Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
                 'discountTypes' => Discount::$types,
                 'taxTypes' => Tax::$types,
             ];

@@ -14,7 +14,7 @@
     {!! pagination('admin')->render($items) !!}
 
     <section class="actions">
-        {!! button()->updatePage() !!}
+        {!! button()->updateAction() !!}
         {!! button()->deletedRecords(route('admin.blocks.deleted')) !!}
         {!! button()->draftedRecords(route('admin.blocks.drafts')) !!}
         {!! button()->addRecord(route('admin.blocks.create')) !!}

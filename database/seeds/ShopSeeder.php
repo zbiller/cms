@@ -27,7 +27,7 @@ class ShopSeeder extends Seeder
         DB::table('attributes')->delete();
 
         DB::table('urls')->whereNotIn('url', [
-            '/', 'shop'
+            '/', 'account', 'shop'
         ])->delete();
 
         /**

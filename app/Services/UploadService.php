@@ -550,9 +550,7 @@ class UploadService
         try {
             $this->original = $file instanceof Upload ? $file : Upload::whereFullPath($file)->firstOrFail();
         } catch (Exception $e) {
-            throw new UploadException(
-                'Original upload could not be found!'
-            );
+            throw UploadException::originalNotFound();
         }
     }
 
@@ -684,7 +682,7 @@ class UploadService
                 $this->removeUploadFromDisk();
             }
 
-            throw new UploadException($e->getMessage());
+            throw $e;
         }
     }
 
@@ -721,7 +719,7 @@ class UploadService
                 Storage::disk(config('upload.storage.disk'))->delete($file);
             }
         } catch (UploadException $e) {
-            throw new UploadException($e->getMessage());
+            throw $e;
         }
     }
 
@@ -741,7 +739,7 @@ class UploadService
                 Storage::disk($this->getDisk())->getDriver()->getAdapter()->applyPathPrefix($this->getOriginal()->full_path)
             );
         } catch (UploadException $e) {
-            throw new UploadException($e->getMessage());
+            throw $e;
         }
     }
 
@@ -761,7 +759,7 @@ class UploadService
                 Storage::disk($this->getDisk())->getDriver()->getAdapter()->applyPathPrefix($this->getOriginal()->full_path)
             );
         } catch (UploadException $e) {
-            throw new UploadException($e->getMessage());
+            throw $e;
         }
     }
 
@@ -888,9 +886,7 @@ class UploadService
             $upload = call_user_func($callback);
 
             if (!$upload) {
-                throw new UploadException(
-                    'Failed uploading file(s)! Please try again.'
-                );
+                throw UploadException::fileUploadFailed();
             }
         } catch (Exception $e) {
             throw new UploadException(
@@ -938,13 +934,9 @@ class UploadService
 
             Upload::create($data);
         } catch (ValidationException $e) {
-            throw new UploadException(
-                'Uploader did not pass the validation system! The uploaded file might be corrupted.'
-            );
+            throw UploadException::fileValidationFailed();
         } catch (Exception $e) {
-            throw new UploadException(
-                'Failed saving the uploaded file to the database! Please try again.'
-            );
+            throw UploadException::databaseSaveFailed();
         }
     }
 
@@ -1001,9 +993,7 @@ class UploadService
                 Storage::disk($this->getDisk())->delete($file);
             }
         } catch (Exception $e) {
-            throw new UploadException(
-                'Failed removing old uploads from disk and/or database! Please try again.'
-            );
+            throw UploadException::removeOldUploadsFailed();
         }
     }
 
@@ -1033,9 +1023,7 @@ class UploadService
         }
 
         if (!Storage::disk($this->getDisk())->exists($path)) {
-            throw new UploadException(
-                'Could not create image thumbnail because the image "' . $path . '" does not exist!'
-            );
+            throw UploadException::fileNotFound();
         }
 
         try {
@@ -1048,9 +1036,7 @@ class UploadService
                 Image::make($original)->fit($width, $height)->stream(null, (int)$this->getConfig('images.quality') ?: 90)->__toString()
             );
         } catch (Exception $e) {
-            throw new UploadException(
-                'Thumbnail generation for the uploaded image failed! Please try again.'
-            );
+            throw UploadException::generateImageThumbnailFailed();
         }
     }
 
@@ -1069,9 +1055,7 @@ class UploadService
         }
 
         if (!Storage::disk($this->getDisk())->exists($path)) {
-            throw new UploadException(
-                'Could not create image styles because the image "' . $path . '" does not exist!'
-            );
+            throw UploadException::fileNotFound();
         }
 
         try {
@@ -1094,9 +1078,7 @@ class UploadService
                 }
             }
         } catch (Exception $e) {
-            throw new UploadException(
-                'Styles generation for the uploaded image failed! Please try again.'
-            );
+            throw UploadException::generateImageStylesFailed();
         }
     }
 
@@ -1129,9 +1111,7 @@ class UploadService
                     ->export()->toDisk($this->getDisk())->save($thumbnail);
             }
         } catch (Exception $e) {
-            throw new UploadException(
-                'Thumbnail generation for the uploaded video failed! Please try again.'
-            );
+            throw UploadException::generateVideoThumbnailFailed();
         }
     }
 
@@ -1150,9 +1130,7 @@ class UploadService
         }
 
         if (!Storage::disk($this->getDisk())->exists($path)) {
-            throw new UploadException(
-                'Could not create video styles because the video "' . $path . '" does not exist!'
-            );
+            throw UploadException::fileNotFound();
         }
 
         try {
@@ -1174,9 +1152,7 @@ class UploadService
                 }
             }
         } catch (Exception $e) {
-            throw new UploadException(
-                'Styles generation for the uploaded video failed! Please try again.'
-            );
+            throw UploadException::generateVideoStylesFailed();
         }
     }
 
@@ -1197,9 +1173,7 @@ class UploadService
         }
 
         if ($size * pow(1024, 2) < $this->getSize()) {
-            throw new UploadException(
-                'The uploaded file size exceeds the maximum allowed for "' . $type . '" files. (' . $size . 'MB)'
-            );
+            throw UploadException::maxSizeExceeded($type, $size);
         }
     }
 
@@ -1222,9 +1196,7 @@ class UploadService
         $extensions = is_array($allowed) ? $allowed : explode(',', $allowed);
 
         if (!in_array($this->getExtension(), array_map('strtolower', $extensions))) {
-            throw new UploadException(
-                'The "' . $type . '" extension is not allowed! The extensions allowed are: ' . implode(', ', $extensions)
-            );
+            throw UploadException::extensionNotAllowed($type, implode(', ', $extensions));
         }
     }
 
@@ -1258,9 +1230,7 @@ class UploadService
         list($width, $height) = getimagesize($this->getFile());
 
         if ($width < $minWidth || $height < $minHeight) {
-            throw new UploadException(
-                'Please choose an image with the minimum size of: ' . $minWidth . 'x' . $minHeight . 'px.'
-            );
+            throw UploadException::minimumImageSizeRequired($minWidth, $minHeight);
         }
 
     }
@@ -1275,7 +1245,7 @@ class UploadService
     private function createFromObject($file)
     {
         if (!($file instanceof UploadedFile)) {
-            throw new UploadException('Invalid file!');
+            throw UploadException::invalidFile();
         }
 
         return $file;
@@ -1291,7 +1261,7 @@ class UploadService
     private function createFromArray(array $file = [])
     {
         if (!isset($file['name']) || !isset($file['tmp_name']) || !isset($file['type']) || !isset($file['size']) || !isset($file['error'])) {
-            throw new UploadException('Invalid file!');
+            throw UploadException::invalidFile();
         }
 
         return new UploadedFile(
@@ -1315,7 +1285,7 @@ class UploadService
                 return $this->createFromUrl($file);
             }
 
-            throw new UploadException('Invalid file!');
+            throw UploadException::invalidFile();
         }
     }
 
@@ -1341,7 +1311,7 @@ class UploadService
                 $this->getOriginal()->size
             );
         } catch (Exception $e) {
-            throw new UploadException('Invalid file!');
+            throw UploadException::invalidFile();
         }
     }
 
@@ -1389,7 +1359,7 @@ class UploadService
 
             return new UploadedFile($path, $name, $mime, $size);
         } catch (Exception $e) {
-            throw new UploadException('Invalid file!');
+            throw UploadException::invalidFile();
         }
     }
 }

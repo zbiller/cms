@@ -115,9 +115,7 @@ trait HasRevisions
 
             return $revision;
         } catch (Exception $e) {
-            throw new RevisionException(
-                'Could not create a revision for the record!', $e->getCode(), $e
-            );
+            throw RevisionException::saveFailed();
         }
     }
 
@@ -144,9 +142,7 @@ trait HasRevisions
 
             return $revision;
         } catch (Exception $e) {
-            throw new RevisionException(
-                'Could not save the revision for the record!', $e->getCode(), $e
-            );
+            throw RevisionException::saveFailed();
         }
     }
 
@@ -186,10 +182,7 @@ trait HasRevisions
 
             return true;
         } catch (Exception $e) {
-            dd($e);
-            throw new RevisionException(
-                'Could not rollback the record to the specified revision!', $e->getCode(), $e
-            );
+            throw RevisionException::rollbackFailed();
         }
     }
 
@@ -204,9 +197,7 @@ trait HasRevisions
         try {
             $this->revisions()->delete();
         } catch (Exception $e) {
-            throw new RevisionException(
-                'Could not delete the record\'s revisions!', $e->getCode(), $e
-            );
+            throw RevisionException::deleteFailed(true);
         }
     }
 

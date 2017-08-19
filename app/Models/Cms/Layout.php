@@ -105,26 +105,6 @@ class Layout extends Model
     }
 
     /**
-     * Sort the query with newest records first.
-     *
-     * @param Builder $query
-     */
-    public function scopeNewest($query)
-    {
-        $query->orderBy('created_at', 'desc');
-    }
-
-    /**
-     * Sort the query alphabetically by name.
-     *
-     * @param Builder $query
-     */
-    public function scopeAlphabetically($query)
-    {
-        $query->orderBy('name', 'asc');
-    }
-
-    /**
      * Filter the query by the given identifier.
      *
      * @param Builder $query
@@ -155,6 +135,16 @@ class Layout extends Model
     public function scopeWhereTypeIn($query, array $types = [])
     {
         $query->whereIn('type', $types);
+    }
+
+    /**
+     * Sort the query alphabetically by name.
+     *
+     * @param Builder $query
+     */
+    public function scopeInAlphabeticalOrder($query)
+    {
+        $query->orderBy('name', 'asc');
     }
 
     /**

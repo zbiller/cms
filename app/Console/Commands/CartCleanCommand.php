@@ -21,7 +21,7 @@ class CartCleanCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Clean up old shopping carts.';
+    protected $description = 'Clean up old shopping carts';
 
     /**
      * Execute the console command.
@@ -35,7 +35,7 @@ class CartCleanCommand extends Command
         $days = (int)config('shop.cart.delete_records_older_than');
 
         if (!($days > 0)) {
-            $this->info("Could not clean up shopping carts because the key 'cart.delete_records_older_than' is not set in the config/shop.php file.");
+            $this->info("Could not clean up shopping carts because the key \"cart.delete_records_older_than\" is not set in the config/shop.php file.");
             return;
         }
 

@@ -118,36 +118,6 @@ class Discount extends Model
     }
 
     /**
-     * Sort the query with newest records first.
-     *
-     * @param Builder $query
-     */
-    public function scopeNewest($query)
-    {
-        $query->orderBy('created_at', 'desc');
-    }
-
-    /**
-     * Sort the query with oldest records first.
-     *
-     * @param Builder $query
-     */
-    public function scopeOldest($query)
-    {
-        $query->orderBy('created_at', 'asc');
-    }
-
-    /**
-     * Sort the query alphabetically by name.
-     *
-     * @param Builder $query
-     */
-    public function scopeAlphabetically($query)
-    {
-        $query->orderBy('name', 'asc');
-    }
-
-    /**
      * Filter the query by type.
      *
      * @param Builder $query
@@ -183,7 +153,7 @@ class Discount extends Model
      *
      * @param Builder $query
      */
-    public function scopeActive($query)
+    public function scopeOnlyActive($query)
     {
         $query->where('active', self::ACTIVE_YES);
     }
@@ -193,9 +163,19 @@ class Discount extends Model
      *
      * @param Builder $query
      */
-    public function scopeInactive($query)
+    public function scopeOnlyInactive($query)
     {
         $query->where('active', self::ACTIVE_NO);
+    }
+
+    /**
+     * Sort the query alphabetically by name.
+     *
+     * @param Builder $query
+     */
+    public function scopeInAlphabeticalOrder($query)
+    {
+        $query->orderBy('name', 'asc');
     }
 
     /**

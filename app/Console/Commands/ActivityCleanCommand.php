@@ -32,7 +32,7 @@ class ActivityCleanCommand extends Command
         $days = (int)config('activity.delete_records_older_than');
 
         if (!($days > 0)) {
-            $this->info("Could not clean up the activity because the key 'delete_records_older_than' is not set in the config/activity.php file.");
+            $this->info("Could not clean up the activity because the key \"delete_records_older_than\" is not set in the config/activity.php file.");
             return;
         }
 

@@ -7,5 +7,9 @@
 
 {!! setting()->value('analytics-code') !!}
 
+@if($page && $page->exists)
+    {!! page()->canonical($page) !!}
+@endif
+
 @section('top_styles') @show
 @section('top_scripts') @show

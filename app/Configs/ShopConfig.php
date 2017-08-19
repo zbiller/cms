@@ -14,24 +14,11 @@ class ShopConfig
     public static $config;
 
     /**
-     * The path of the upload config file.
+     * The path of the shop config file.
      *
      * @var string
      */
     public static $path = 'config/shop.php';
-
-    /**
-     * Check if all the config options from config/shop.php are properly set.
-     *
-     * @throws ConfigException
-     */
-    public function __construct()
-    {
-        self::$config = config('activity');
-
-        self::checkIfPriceIsConfiguredProperly();
-        self::checkIfCartIsConfiguredProperly();
-    }
 
     /**
      * Check if all the config options from config/shop.php are properly set.
@@ -47,9 +34,7 @@ class ShopConfig
     }
 
     /**
-     * Make all the necessary checks to see if everything under 'storage' in config/upload.php is ok.
-     * Check if storage.disk is defined and if the specified disk is defined in config/filesystems.php also.
-     *
+     * Make all the necessary checks to see if everything in config/shop.php is ok.
      * If something is wrong, throw a config exception.
      *
      * @return bool
@@ -67,9 +52,7 @@ class ShopConfig
     }
 
     /**
-     * Make all the necessary checks to see if everything under 'storage' in config/upload.php is ok.
-     * Check if storage.disk is defined and if the specified disk is defined in config/filesystems.php also.
-     *
+     * Make all the necessary checks to see if everything in config/shop.php is ok.
      * If something is wrong, throw a config exception.
      *
      * @return bool

@@ -34,7 +34,7 @@ class CitiesController extends Controller
             $this->title = 'Cities';
             $this->view = view('admin.location.cities.index');
             $this->vars = [
-                'countries' => Country::alphabetically()->get(),
+                'countries' => Country::inAlphabeticalOrder()->get(),
             ];
         });
     }
@@ -48,7 +48,7 @@ class CitiesController extends Controller
             $this->title = 'Add City';
             $this->view = view('admin.location.cities.add');
             $this->vars = [
-                'countries' => Country::alphabetically()->get(),
+                'countries' => Country::inAlphabeticalOrder()->get(),
             ];
         });
     }
@@ -77,7 +77,7 @@ class CitiesController extends Controller
             $this->title = 'Edit City';
             $this->view = view('admin.location.cities.edit');
             $this->vars = [
-                'countries' => Country::alphabetically()->get(),
+                'countries' => Country::inAlphabeticalOrder()->get(),
                 'states' => State::where('country_id', $this->item->country_id)->get(),
             ];
         });
@@ -128,7 +128,7 @@ class CitiesController extends Controller
             ], 400);
         }
 
-        $query = City::alphabetically();
+        $query = City::inAlphabeticalOrder();
 
         if ($country && $country->exists) {
             $query->where('country_id', $country->id);

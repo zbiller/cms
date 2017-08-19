@@ -16,7 +16,7 @@
 
 @section('footer')
     <section class="actions">
-        {!! button()->updatePage() !!}
+        {!! button()->updateAction() !!}
         {!! button()->addRecord(route('admin.menus.create', $location)) !!}
     </section>
 @endsection

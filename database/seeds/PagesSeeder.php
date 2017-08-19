@@ -38,11 +38,23 @@ class PagesSeeder extends Seeder
         /**
          * Create the home page.
          */
-        Page::create([
+        $homePage = Page::create([
             'layout_id' => $homeLayout->id,
             'name' => 'Home',
             'slug' => '/',
             'identifier' => 'home',
+            'active' => Page::ACTIVE_YES,
+            'type' => Page::TYPE_HOME,
+        ]);
+
+        /**
+         * Create the account page.
+         */
+        $accountPage = Page::create([
+            'layout_id' => $defaultLayout->id,
+            'name' => 'Account',
+            'slug' => 'account',
+            'identifier' => 'account',
             'active' => Page::ACTIVE_YES,
             'type' => Page::TYPE_DEFAULT,
         ]);
@@ -50,7 +62,7 @@ class PagesSeeder extends Seeder
         /**
          * Create the shop page.
          */
-        Page::create([
+        $shopPage = Page::create([
             'layout_id' => $defaultLayout->id,
             'name' => 'Shop',
             'slug' => 'shop',

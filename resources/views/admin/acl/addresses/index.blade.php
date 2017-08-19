@@ -18,7 +18,7 @@
     {!! pagination('admin')->render($items) !!}
 
     <section class="actions">
-        {!! button()->updatePage() !!}
+        {!! button()->updateAction() !!}
         {!! button()->addRecord(route('admin.addresses.create', $user->id)) !!}
     </section>
 @endsection

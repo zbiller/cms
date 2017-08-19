@@ -31,7 +31,7 @@ class Permission extends Model implements PermissionContract
      * @var array
      */
     protected $guarded = [
-        'id'
+        'id',
     ];
 
     /**
@@ -73,26 +73,35 @@ class Permission extends Model implements PermissionContract
     }
 
     /**
-     * Filter query results to show permissions only of type.
-     * Param $type: single role type as constant (int).
+     * Filter the query by type.
      *
      * @param Builder $query
      * @param int $type
      */
-    public function scopeType($query, $type)
+    public function scopeWhereType($query, $type)
     {
         $query->where('type', $type);
     }
 
     /**
-     * Filter query results to exclude the given permissions.
+     * Filter query by name.
      *
      * @param Builder $query
      * @param ...$permissions
      */
-    public function scopeNot($query, ...$permissions)
+    public function scopeWhereName($query, $name)
     {
-        $query->whereNotIn('name', array_flatten($permissions));
+        $query->where('name', $name);
+    }
+
+    /**
+     * Sort the query alphabetically by name.
+     *
+     * @param Builder $query
+     */
+    public function scopeInAlphabeticalOrder($query)
+    {
+        $query->orderBy('name', 'asc');
     }
 
     /**
@@ -103,19 +112,19 @@ class Permission extends Model implements PermissionContract
      */
     public static function getGrouped($type)
     {
-        return self::type($type)->get()->groupBy('group');
+        return static::whereType($type)->get()->groupBy('group');
     }
 
     /**
-     * Return the permission by it's name.
+     * Get a permission by it's name.
      *
      * @param string $name
-     * @throws ModelNotFoundException
+     * @return \Illuminate\Database\Eloquent\Model|static
      */
     public static function findByName($name)
     {
         try {
-            return static::where('name', $name)->firstOrFail();
+            return static::whereName($name)->firstOrFail();
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Permission "' . $name . '" does not exist!');
         }

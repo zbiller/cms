@@ -30,7 +30,16 @@ class Activity extends Model
      * @var array
      */
     protected $guarded = [
-        'id'
+        'id',
+    ];
+
+    /**
+     * The relations that are eager-loaded.
+     *
+     * @var array
+     */
+    protected $with = [
+        'causer',
     ];
 
     /**
@@ -50,27 +59,7 @@ class Activity extends Model
      */
     public function subject()
     {
-        return $this->morphTo()->withTrashed()->withDrafts();
-    }
-
-    /**
-     * Sort the query with newest records first.
-     *
-     * @param Builder $query
-     */
-    public function scopeNewest($query)
-    {
-        $query->orderBy('created_at', 'desc');
-    }
-
-    /**
-     * Sort the query alphabetically by name.
-     *
-     * @param Builder $query
-     */
-    public function scopeAlphabetically($query)
-    {
-        $query->orderBy('name', 'asc');
+        return $this->morphTo();
     }
 
     /**
@@ -126,9 +115,19 @@ class Activity extends Model
      * @param string $search
      * @return mixed
      */
-    public function scopeLikeLog($query, $search)
+    public function scopeLikeName($query, $search)
     {
         return $query->where('name', 'like', '%' . $search . '%');
+    }
+
+    /**
+     * Sort the query alphabetically by name.
+     *
+     * @param Builder $query
+     */
+    public function scopeInAlphabeticalOrder($query)
+    {
+        $query->orderBy('name', 'asc');
     }
 
     /**
@@ -156,9 +155,7 @@ class Activity extends Model
 
             return true;
         } catch (Exception $e) {
-            throw new ActivityException(
-                'Could not clean up the activity! Please try again.', $e->getCode(), $e
-            );
+            throw ActivityException::cleanupFailed();
         }
     }
 }

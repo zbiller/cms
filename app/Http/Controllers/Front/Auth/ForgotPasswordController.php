@@ -19,7 +19,7 @@ class ForgotPasswordController extends Controller
     public function show()
     {
         return view('front.auth.password.forgot')->with([
-            'page' => page()->find('home')
+            'page' => page()->find('account')
         ]);
     }
 

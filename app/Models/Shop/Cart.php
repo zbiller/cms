@@ -5,7 +5,6 @@ namespace App\Models\Shop;
 use App\Events\CartReminded;
 use App\Exceptions\CartException;
 use App\Exceptions\OrderException;
-use App\Mail\CartReminder;
 use App\Models\Auth\User;
 use App\Models\Model;
 use App\Models\Shop\Cart\Item;
@@ -17,7 +16,6 @@ use Carbon\Carbon;
 use DB;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
-use Mail;
 
 class Cart extends Model
 {
@@ -50,6 +48,7 @@ class Cart extends Model
      */
     protected $with = [
         'user',
+        'items',
     ];
 
     /**
@@ -129,6 +128,28 @@ class Cart extends Model
     public function items()
     {
         return $this->hasMany(Item::class, 'cart_id');
+    }
+
+    /**
+     * Filter the query by identifier.
+     *
+     * @param Builder $query
+     * @param $identifier
+     */
+    public function scopeWhereIdentifier($query, $identifier)
+    {
+        $query->where('identifier', $identifier);
+    }
+
+    /**
+     * Filter the query by user.
+     *
+     * @param Builder $query
+     * @param $user
+     */
+    public function scopeWhereUser($query, $user)
+    {
+        $query->where('user_id', $user);
     }
 
     /**
@@ -230,7 +251,7 @@ class Cart extends Model
 
         self::$identifier = static::getIdentifier();
 
-        if (!(self::$cart = static::where('identifier', self::$identifier)->first())) {
+        if (!(self::$cart = static::whereIdentifier(self::$identifier)->first())) {
             self::$cart = static::create([
                 'user_id' => self::$user ? self::$user->id : null,
                 'user_token' => self::$token ?: null,
@@ -346,7 +367,7 @@ class Cart extends Model
         $total = static::getTotal($currency, static::TOTAL_GRAND, $cart);
         $price = $total;
 
-        foreach (Discount::forOrder()->active()->get() as $discount) {
+        foreach (Discount::forOrder()->onlyActive()->get() as $discount) {
             if (!$discount->canBeApplied($total)) {
                 continue;
             }
@@ -380,7 +401,7 @@ class Cart extends Model
         $total = static::getTotal($currency, static::TOTAL_GRAND, $cart);
         $price = $total;
 
-        foreach (Tax::forOrder()->active()->get() as $tax) {
+        foreach (Tax::forOrder()->onlyActive()->get() as $tax) {
             if (!$tax->canBeApplied($total)) {
                 continue;
             }
@@ -423,7 +444,7 @@ class Cart extends Model
     public static function addProduct(Product $product, $quantity = 1)
     {
         if (!$product->exists) {
-            throw CartException::invalidProductInstance();
+            throw CartException::invalidProduct();
         }
 
         if ($product->quantity < $quantity) {
@@ -453,9 +474,7 @@ class Cart extends Model
                 return true;
             });
         } catch (Exception $e) {
-            throw new CartException(
-                'Could not add the product to cart!'
-            );
+            throw CartException::productAddFailed();
         }
     }
 
@@ -470,7 +489,7 @@ class Cart extends Model
     public static function updateProduct(Product $product, $quantity)
     {
         if (!$product->exists) {
-            throw CartException::invalidProductInstance();
+            throw CartException::invalidProduct();
         }
 
         try {
@@ -496,9 +515,7 @@ class Cart extends Model
                 return true;
             });
         } catch (Exception $e) {
-            throw new CartException(
-                'Could not update the product from cart!'
-            );
+            throw CartException::productUpdateFailed();
         }
     }
 
@@ -512,7 +529,7 @@ class Cart extends Model
     public static function removeProduct(Product $product)
     {
         if (!$product->exists) {
-            throw CartException::invalidProductInstance();
+            throw CartException::invalidProduct();
         }
 
         try {
@@ -531,9 +548,7 @@ class Cart extends Model
                 return true;
             });
         } catch (Exception $e) {
-            throw new CartException(
-                'Could not remove the product from cart!'
-            );
+            throw CartException::productRemoveFailed();
         }
     }
 
@@ -562,9 +577,7 @@ class Cart extends Model
                 return true;
             });
         } catch (Exception $e) {
-            throw new CartException(
-                'Could not remove the products from cart!'
-            );
+            throw CartException::productRemoveFailed(true);
         }
     }
 
@@ -628,9 +641,7 @@ class Cart extends Model
         } catch (OrderException $e) {
             throw $e;
         } catch (Exception $e) {
-            throw new OrderException(
-                'Could not place the order!', $e->getCode(), $e
-            );
+            throw OrderException::createOrderFailed();
         }
     }
 
@@ -665,9 +676,7 @@ class Cart extends Model
 
             return true;
         } catch (Exception $e) {
-            throw new CartException(
-                'Could not clean up the old carts! Please try again.', $e->getCode(), $e
-            );
+            throw CartException::cleanupFailed();
         }
     }
 
@@ -706,7 +715,7 @@ class Cart extends Model
             return $cart->identifier;
         }
 
-        while (static::where('identifier', $identifier)->count() > 0) {
+        while (static::whereIdentifier($identifier)->count() > 0) {
             $identifier = str_random(20);
         }
 

@@ -20,7 +20,7 @@
     @endif
 
     <section class="actions">
-        {!! button()->updatePage() !!}
+        {!! button()->updateAction() !!}
         {!! button()->addRecord(route('admin.attributes.create', $set)) !!}
     </section>
 @endsection

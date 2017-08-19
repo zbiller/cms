@@ -12,7 +12,7 @@ class SettingHelper
     private static $settings = [];
 
     /**
-     * Get the Setting object based on a key.
+     * Get the Setting model based on a key.
      *
      * @param string $key
      * @return mixed
@@ -20,7 +20,7 @@ class SettingHelper
     public function find($key)
     {
         if (!isset(self::$settings[$key])) {
-            return self::$settings[$key] = Setting::key($key)->first();
+            return self::$settings[$key] = Setting::byKey($key)->first();
         }
 
         return self::$settings[$key];

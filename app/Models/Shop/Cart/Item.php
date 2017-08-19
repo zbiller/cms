@@ -35,6 +35,7 @@ class Item extends Model
      * @var array
      */
     protected $with = [
+        'cart',
         'product',
     ];
 

@@ -14,7 +14,7 @@
     {!! pagination('admin')->render($items) !!}
 
     <section class="actions">
-        {!! button()->updatePage() !!}
+        {!! button()->updateAction() !!}
 
         {!! form()->open(['url' => route('admin.currencies.exchange'), 'method' => 'PUT', 'class' => 'left']) !!}
         {!! form()->button('<i class="fa fa-money"></i>&nbsp; Update Exchange Rates', ['type' => 'submit', 'class' => 'btn green', 'onclick' => 'return confirm("Are you sure you want to update all currency exchange rates?")']) !!}

@@ -14,6 +14,7 @@ use App\Traits\IsFilterable;
 use App\Traits\IsOrderable;
 use App\Traits\IsSortable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Value extends Model
 {
@@ -52,13 +53,25 @@ class Value extends Model
     }
 
     /**
-     * Sort the query with newest records first.
+     * Filter the query by the given attribute id.
      *
      * @param Builder $query
+     * @param int $attribute
      */
-    public function scopeNewest($query)
+    public function scopeWhereAttribute($query, $attribute)
     {
-        $query->orderBy('created_at', 'desc');
+        $query->where('attribute_id', $attribute);
+    }
+
+    /**
+     * Filter the query by slug.
+     *
+     * @param Builder $query
+     * @param string $slug
+     */
+    public function scopeWhereSlug($query, $slug)
+    {
+        $query->where('slug', $slug);
     }
 
     /**
@@ -66,20 +79,24 @@ class Value extends Model
      *
      * @param Builder $query
      */
-    public function scopeAlphabetically($query)
+    public function scopeInAlphabeticalOrder($query)
     {
         $query->orderBy('name', 'asc');
     }
 
     /**
-     * Filter the query by the given attribute id.
+     * Get an attribute value by it's slug
      *
-     * @param Builder $query
-     * @param int $id
+     * @param string $slug
+     * @return mixed
      */
-    public function scopeWhereAttribute($query, $id)
+    public static function findBySlug($slug)
     {
-        $query->where('attribute_id', $id);
+        try {
+            return static::whereSlug($slug)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            throw new ModelNotFoundException('Attribute Value "' . $slug . '" does not exist!');
+        }
     }
 
     /**

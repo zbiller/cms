@@ -14,23 +14,11 @@ class ActivityConfig
     public static $config;
 
     /**
-     * The path of the upload config file.
+     * The path of the activity config file.
      *
      * @var string
      */
     public static $path = 'config/activity.php';
-
-    /**
-     * Check if all the config options from config/activity.php are properly set.
-     *
-     * @throws ConfigException
-     */
-    public function __construct()
-    {
-        self::$config = config('activity');
-
-        self::checkIfLoggingIsConfiguredProperly();
-    }
 
     /**
      * Check if all the config options from config/activity.php are properly set.
@@ -45,9 +33,7 @@ class ActivityConfig
     }
 
     /**
-     * Make all the necessary checks to see if everything under 'storage' in config/upload.php is ok.
-     * Check if storage.disk is defined and if the specified disk is defined in config/filesystems.php also.
-     *
+     * Make all the necessary checks to see if everything in config/activity.php is ok.
      * If something is wrong, throw a config exception.
      *
      * @return bool

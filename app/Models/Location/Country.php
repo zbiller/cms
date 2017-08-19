@@ -55,13 +55,14 @@ class Country extends Model
     }
 
     /**
-     * Sort the query with newest records first.
+     * Filter the query by code.
      *
      * @param Builder $query
+     * @param string $code
      */
-    public function scopeNewest($query)
+    public function scopeWhereCode($query, $code)
     {
-        $query->orderBy('created_at', 'desc');
+        $query->where('code', $code);
     }
 
     /**
@@ -69,7 +70,7 @@ class Country extends Model
      *
      * @param Builder $query
      */
-    public function scopeAlphabetically($query)
+    public function scopeInAlphabeticalOrder($query)
     {
         $query->orderBy('name', 'asc');
     }

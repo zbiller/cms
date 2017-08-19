@@ -279,7 +279,7 @@ class EmailsController extends Controller
         }, function () use ($request) {
             $this->item->saveAsDraft($request->all());
             $this->redirect = redirect()->route('admin.emails.drafts');
-        }, $id, $request, new EmailRequest());
+        }, $id, $request, new EmailRequest);
     }
 
     /**

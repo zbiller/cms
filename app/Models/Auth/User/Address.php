@@ -96,13 +96,47 @@ class Address extends Model
     }
 
     /**
-     * Sort the query with newest records first.
+     * Filter the query user.
      *
      * @param Builder $query
+     * @param int $user
      */
-    public function scopeNewest($query)
+    public function scopeWhereUser($query, $user)
     {
-        $query->orderBy('created_at', 'desc');
+        $query->orderBy('user_id', $user);
+    }
+
+    /**
+     * Filter the query country.
+     *
+     * @param Builder $query
+     * @param int $country
+     */
+    public function scopeWhereCountry($query, $country)
+    {
+        $query->orderBy('country_id', $country);
+    }
+
+    /**
+     * Filter the query state.
+     *
+     * @param Builder $query
+     * @param int $state
+     */
+    public function scopeWhereState($query, $state)
+    {
+        $query->orderBy('state_id', $state);
+    }
+
+    /**
+     * Filter the query city.
+     *
+     * @param Builder $query
+     * @param int $city
+     */
+    public function scopeWhereCity($query, $city)
+    {
+        $query->orderBy('city_id', $city);
     }
 
     /**
@@ -110,20 +144,9 @@ class Address extends Model
      *
      * @param Builder $query
      */
-    public function scopeAlphabetically($query)
+    public function scopeInAlphabeticalOrder($query)
     {
         $query->orderBy('address', 'asc');
-    }
-
-    /**
-     * Filter the query alphabetically by user.
-     *
-     * @param Builder $query
-     * @param int $id
-     */
-    public function scopeWhereUser($query, $id)
-    {
-        $query->orderBy('user_id', $id);
     }
 
     /**

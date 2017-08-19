@@ -56,13 +56,25 @@ class City extends Model
     }
 
     /**
-     * Sort the query with newest records first.
+     * Filter the query by country.
      *
      * @param Builder $query
+     * @param int $country
      */
-    public function scopeNewest($query)
+    public function scopeWhereCountry($query, $country)
     {
-        $query->orderBy('created_at', 'desc');
+        $query->where('country_id', $country);
+    }
+
+    /**
+     * Filter the query by state.
+     *
+     * @param Builder $query
+     * @param int $state
+     */
+    public function scopeWhereState($query, $state)
+    {
+        $query->where('state_id', $state);
     }
 
     /**
@@ -70,7 +82,7 @@ class City extends Model
      *
      * @param Builder $query
      */
-    public function scopeAlphabetically($query)
+    public function scopeInAlphabeticalOrder($query)
     {
         $query->orderBy('name', 'asc');
     }

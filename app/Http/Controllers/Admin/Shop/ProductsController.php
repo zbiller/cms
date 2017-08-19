@@ -70,7 +70,7 @@ class ProductsController extends Controller
             $this->view = view('admin.shop.products.index');
             $this->vars = [
                 'categories' => Category::withDepth()->defaultOrder()->get(),
-                'currencies' => Currency::alphabeticallyByCode()->get(),
+                'currencies' => Currency::InAlphabeticalOrderByCode()->get(),
                 'actives' => Product::$actives,
                 'orderable' => $orderable,
             ];
@@ -86,9 +86,9 @@ class ProductsController extends Controller
             $categories = Category::withDepth()->defaultOrder()->get();
             $sets = Set::ordered()->get();
             $attributes = collect();
-            $discounts = Discount::alphabetically()->active()->forProduct()->get();
-            $taxes = Tax::alphabetically()->active()->forProduct()->get();
-            $currencies = Currency::alphabeticallyByCode()->get();
+            $discounts = Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get();
+            $taxes = Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get();
+            $currencies = Currency::InAlphabeticalOrderByCode()->get();
 
             $this->title = 'Add Product';
             $this->view = view('admin.shop.products.add');
@@ -132,9 +132,9 @@ class ProductsController extends Controller
             $categories = Category::withDepth()->defaultOrder()->get();
             $sets = Set::ordered()->get();
             $attributes = $product->attributes()->get();
-            $discounts = Discount::alphabetically()->active()->forProduct()->get();
-            $taxes = Tax::alphabetically()->active()->forProduct()->get();
-            $currencies = Currency::alphabeticallyByCode()->get();
+            $discounts = Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get();
+            $taxes = Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get();
+            $currencies = Currency::InAlphabeticalOrderByCode()->get();
 
             $this->item = $product;
             $this->title = 'Edit Product';
@@ -230,7 +230,7 @@ class ProductsController extends Controller
             $this->view = view('admin.shop.products.deleted');
             $this->vars = [
                 'categories' => Category::withDepth()->defaultOrder()->get(),
-                'currencies' => Currency::alphabeticallyByCode()->get(),
+                'currencies' => Currency::InAlphabeticalOrderByCode()->get(),
                 'actives' => Product::$actives,
             ];
         });
@@ -311,7 +311,7 @@ class ProductsController extends Controller
             $this->view = view('admin.shop.products.drafts');
             $this->vars = [
                 'categories' => Category::withDepth()->defaultOrder()->get(),
-                'currencies' => Currency::alphabeticallyByCode()->get(),
+                'currencies' => Currency::InAlphabeticalOrderByCode()->get(),
                 'actives' => Product::$actives,
             ];
         });
@@ -330,9 +330,9 @@ class ProductsController extends Controller
             $categories = Category::withDepth()->defaultOrder()->get();
             $sets = Set::ordered()->get();
             $attributes = $this->item->attributes()->get();
-            $discounts = Discount::alphabetically()->active()->forProduct()->get();
-            $taxes = Tax::alphabetically()->active()->forProduct()->get();
-            $currencies = Currency::alphabeticallyByCode()->get();
+            $discounts = Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get();
+            $taxes = Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get();
+            $currencies = Currency::InAlphabeticalOrderByCode()->get();
 
             $this->title = 'Product Draft';
             $this->view = view('admin.shop.products.draft');
@@ -363,9 +363,9 @@ class ProductsController extends Controller
             $categories = Category::withDepth()->defaultOrder()->get();
             $sets = Set::ordered()->get();
             $attributes = $product->attributes()->get();
-            $discounts = Discount::alphabetically()->active()->forProduct()->get();
-            $taxes = Tax::alphabetically()->active()->forProduct()->get();
-            $currencies = Currency::alphabeticallyByCode()->get();
+            $discounts = Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get();
+            $taxes = Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get();
+            $currencies = Currency::InAlphabeticalOrderByCode()->get();
             $this->title = 'Product Draft';
             $this->view = view('admin.shop.products.limbo');
             $this->vars = [
@@ -399,9 +399,9 @@ class ProductsController extends Controller
             $categories = Category::withDepth()->defaultOrder()->get();
             $sets = Set::ordered()->get();
             $attributes = $this->item->attributes()->get();
-            $discounts = Discount::alphabetically()->active()->forProduct()->get();
-            $taxes = Tax::alphabetically()->active()->forProduct()->get();
-            $currencies = Currency::alphabeticallyByCode()->get();
+            $discounts = Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get();
+            $taxes = Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get();
+            $currencies = Currency::InAlphabeticalOrderByCode()->get();
 
             $this->title = 'Product Revision';
             $this->view = view('admin.shop.products.revision');
@@ -436,7 +436,7 @@ class ProductsController extends Controller
             'query' => 'required',
         ]);
 
-        $products = Product::alphabetically()->where('name', 'like', '%' . $request->get('query') . '%')->get();
+        $products = Product::inAlphabeticalOrder()->where('name', 'like', '%' . $request->get('query') . '%')->get();
         $results = [];
 
         if ($products->count() == 0) {

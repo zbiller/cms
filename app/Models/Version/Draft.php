@@ -41,16 +41,6 @@ class Draft extends Model
     public static $draftedAtColumn = 'drafted_at';
 
     /**
-     * Get all of the owning draftable models.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
-     */
-    public function draftable()
-    {
-        return $this->morphTo();
-    }
-
-    /**
      * Draft belongs to user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -61,23 +51,24 @@ class Draft extends Model
     }
 
     /**
-     * Sort the query with newest records first.
+     * Get all of the owning draftable models.
      *
-     * @param Builder $query
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-    public function scopeNewest($query)
+    public function draftable()
     {
-        $query->orderBy('created_at', 'desc');
+        return $this->morphTo();
     }
 
     /**
-     * Sort the query with oldest records first.
+     * Filter the query by the given user id.
      *
      * @param Builder $query
+     * @param int $id
      */
-    public function scopeOldest($query)
+    public function scopeWhereUser($query, $id)
     {
-        $query->orderBy('created_at', 'asc');
+        $query->where('user_id', $id);
     }
 
     /**
@@ -93,17 +84,6 @@ class Draft extends Model
             'draftable_id' => $id,
             'draftable_type' => $type,
         ]);
-    }
-
-    /**
-     * Filter the query by the given user id.
-     *
-     * @param Builder $query
-     * @param int $id
-     */
-    public function scopeWhereUser($query, $id)
-    {
-        $query->where('user_id', $id);
     }
 
     /**

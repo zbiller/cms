@@ -21,27 +21,6 @@ class UploadConfig
     public static $path = 'config/upload.php';
 
     /**
-     * Merge the config using:
-     * Contents of config/upload.php and the array provided in the getUploadConfig() method defined on the model class.
-     * Check if all the config options from config/upload.php are properly set.
-     *
-     * @param array $config
-     * @throws ConfigException
-     */
-    public function __construct(array $config = [])
-    {
-        self::$config = array_replace_recursive(config('upload'), $config);
-
-        $this->checkIfStorageIsConfiguredProperly();
-        $this->checkIfDatabaseIsConfiguredProperly();
-
-        $this->checkIfImagesAreConfiguredProperly();
-        $this->checkIfVideosAreConfiguredProperly();
-        $this->checkIfAudiosAreConfiguredProperly();
-        $this->checkIfFilesAreConfiguredProperly();
-    }
-
-    /**
      * Check if all the config options from config/upload.php are properly set.
      *
      * @return void

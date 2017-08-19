@@ -105,18 +105,13 @@ trait HasDrafts
                 return $model;
             });
 
-            if ($this->isLimboDraft()) {
-                $model->fireModelEvent('drafted', true);
-            } else {
+            $this->isLimboDraft() ?
+                $model->fireModelEvent('drafted', true) :
                 $this->fireModelEvent('drafted', true);
-            }
 
             return $model;
         } catch (Exception $e) {
-            dd($e);
-            throw new DraftException(
-                'Could not save the draft for the record!', $e->getCode(), $e
-            );
+            throw DraftException::saveFailed();
         }
     }
 
@@ -151,9 +146,7 @@ trait HasDrafts
 
             return $model;
         } catch (Exception $e) {
-            throw new DraftException(
-                'Could not publish the record!', $e->getCode(), $e
-            );
+            throw DraftException::publishFailed();
         }
     }
 
@@ -177,9 +170,7 @@ trait HasDrafts
 
             $this->deleteLimboDraft();
         } catch (Exception $e) {
-            throw new DraftException(
-                'Could not delete the draft!', $e->getCode, $e
-            );
+            throw DraftException::deleteFailed();
         }
     }
 
@@ -194,9 +185,7 @@ trait HasDrafts
         try {
             $this->drafts()->delete();
         } catch (Exception $e) {
-            throw new DraftException(
-                'Could not delete the record\'s drafts!', $e->getCode(), $e
-            );
+            throw DraftException::deleteFailed();
         }
     }
 

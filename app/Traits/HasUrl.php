@@ -135,9 +135,7 @@ trait HasUrl
                 'url' => $this->buildFullUrl()
             ]);
         } catch (Exception $e) {
-            throw new UrlException(
-                'Could not create the URL!', $e->getCode(), $e
-            );
+            throw UrlException::createFailed();
         }
     }
 
@@ -168,9 +166,7 @@ trait HasUrl
                 }
             });
         } catch (Exception $e) {
-            throw new UrlException(
-                'Could not update the URL!', $e->getCode(), $e
-            );
+            throw UrlException::updateFailed();
         }
     }
 
@@ -185,7 +181,7 @@ trait HasUrl
         try {
             $this->url()->delete();
         } catch (Exception $e) {
-            throw new UrlException('Could not delete the URL!', $e->getCode(), $e);
+            throw UrlException::deleteFailed();
         }
     }
 

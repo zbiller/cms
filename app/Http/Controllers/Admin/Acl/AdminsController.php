@@ -29,11 +29,11 @@ class AdminsController extends Controller
     public function index(Request $request, AdminFilter $filter, AdminSort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
-            $this->items = User::type(User::TYPE_ADMIN)->not('developer')->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = User::notDeveloper()->whereType(User::TYPE_ADMIN)->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
             $this->title = 'Admins';
             $this->view = view('admin.acl.admins.index');
             $this->vars = [
-                'roles' => Role::type(Role::TYPE_ADMIN)->get(),
+                'roles' => Role::whereType(Role::TYPE_ADMIN)->get(),
             ];
         });
     }
@@ -47,7 +47,7 @@ class AdminsController extends Controller
             $this->title = 'Add Admin';
             $this->view = view('admin.acl.admins.add');
             $this->vars = [
-                'roles' => Role::type(Role::TYPE_ADMIN)->get(),
+                'roles' => Role::whereType(Role::TYPE_ADMIN)->get(),
             ];
         });
     }
@@ -80,7 +80,7 @@ class AdminsController extends Controller
             $this->title = 'Edit Admin';
             $this->view = view('admin.acl.admins.edit');
             $this->vars = [
-                'roles' => Role::type(Role::TYPE_ADMIN)->get(),
+                'roles' => Role::whereType(Role::TYPE_ADMIN)->get(),
             ];
         });
     }

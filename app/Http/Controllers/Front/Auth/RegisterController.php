@@ -22,7 +22,7 @@ class RegisterController extends Controller
     public function show()
     {
         return view('front.auth.register')->with([
-            'page' => page()->find('home')
+            'page' => page()->find('account')
         ]);
     }
 

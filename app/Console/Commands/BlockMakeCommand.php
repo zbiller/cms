@@ -20,7 +20,7 @@ class BlockMakeCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Create the necessary files for a Block';
+    protected $description = 'Create the necessary files for a block';
 
     /**
      * The filesystem instance.
@@ -57,7 +57,7 @@ class BlockMakeCommand extends Command
         $frontViewFile = "{$path}/Views/front.blade.php";
 
         if ($this->alreadyExists($composerFile, $adminViewFile, $frontViewFile)) {
-            $this->error("There is already a block with the name of {$this->argument('name')}");
+            $this->error("There is already a block with the name of \"{$this->argument('name')}\"");
 
             return false;
         }
@@ -68,7 +68,7 @@ class BlockMakeCommand extends Command
         $this->files->put($adminViewFile, $this->buildAdminView());
         $this->files->put($frontViewFile, $this->buildFrontView());
 
-        $this->info("Block created successfully in 'App/Blocks/{$name}'");
+        $this->info("Block created successfully in \"App/Blocks/{$name}\"");
 
         return true;
     }

@@ -96,7 +96,7 @@ trait HasBlocks
     {
         $blocks = collect();
 
-        foreach (Block::alphabetically()->get() as $block) {
+        foreach (Block::inAlphabeticalOrder()->get() as $block) {
             if (
                 isset(Block::$blocks[$block->type]['composer_class']) &&
                 ($class = Block::$blocks[$block->type]['composer_class']) &&

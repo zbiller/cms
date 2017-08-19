@@ -71,7 +71,8 @@ class Page extends Model
      * @var array
      */
     protected $dates = [
-        'deleted_at'
+        'deleted_at',
+        'drafted_at',
     ];
 
     /**
@@ -88,7 +89,7 @@ class Page extends Model
      * @const
      */
     const TYPE_DEFAULT = 1;
-    const TYPE_CUSTOM = 2;
+    const TYPE_HOME = 2;
 
     /**
      * The property defining the page visibilities.
@@ -107,7 +108,7 @@ class Page extends Model
      */
     public static $types = [
         self::TYPE_DEFAULT => 'Default',
-        self::TYPE_CUSTOM => 'Custom',
+        self::TYPE_HOME => 'Home',
     ];
 
     /**
@@ -129,17 +130,17 @@ class Page extends Model
     public static $map = [
         self::TYPE_DEFAULT => [
             'action' => 'normal',
-            'view' => 'front.cms.page',
+            'view' => 'front.cms.pages.normal',
             'layouts' => [
                 Layout::TYPE_DEFAULT,
                 Layout::TYPE_HOME,
             ],
         ],
-        self::TYPE_CUSTOM => [
-            'action' => 'custom',
-            'view' => 'front.cms.page',
+        self::TYPE_HOME => [
+            'action' => 'home',
+            'view' => 'front.cms.pages.home',
             'layouts' => [
-                Layout::TYPE_DEFAULT,
+                Layout::TYPE_HOME,
             ],
         ],
     ];
@@ -161,10 +162,7 @@ class Page extends Model
                 try {
                     $layout = Layout::findOrFail($model->layout_id);
 
-                    if (
-                        !isset(static::$map[$model->type]['layouts']) ||
-                        !in_array($layout->type, static::$map[$model->type]['layouts'])
-                    ) {
+                    if (!isset(static::$map[$model->type]['layouts']) || !in_array($layout->type, static::$map[$model->type]['layouts'])) {
                         throw new Exception;
                     }
                 } catch (Exception $e) {
@@ -177,9 +175,7 @@ class Page extends Model
 
         static::deleting(function (Model $model) {
             if ($model->children()->count() > 0) {
-                throw new CrudException(
-                    'Could not delete the record because it has children!'
-                );
+                throw CrudException::deletionRestrictedDueToChildren();
             }
         });
     }
@@ -215,43 +211,43 @@ class Page extends Model
     }
 
     /**
-     * Sort the query with newest records first.
+     * Get the meta title value.
      *
-     * @param Builder $query
+     * @return string|null
      */
-    public function scopeNewest($query)
+    public function getMetaTitleAttribute()
     {
-        $query->orderBy('created_at', 'desc');
+        return isset($this->metadata->meta->title) ? $this->metadata->meta->title : null;
     }
 
     /**
-     * Sort the query alphabetically by name.
+     * Get the meta image value.
      *
-     * @param Builder $query
+     * @return string|null
      */
-    public function scopeAlphabetically($query)
+    public function getMetaImageAttribute()
     {
-        $query->orderBy('name', 'asc');
+        return isset($this->metadata->meta->image) ? $this->metadata->meta->image : null;
     }
 
     /**
-     * Filter the query to return only active results.
+     * Get the meta description value.
      *
-     * @param Builder $query
+     * @return string|null
      */
-    public function scopeActive($query)
+    public function getMetaDescriptionAttribute()
     {
-        $query->where('active', self::ACTIVE_YES);
+        return isset($this->metadata->meta->description) ? $this->metadata->meta->description : null;
     }
 
     /**
-     * Filter the query to return only inactive results.
+     * Get the meta keywords value.
      *
-     * @param Builder $query
+     * @return string|null
      */
-    public function scopeInactive($query)
+    public function getMetaKeywordsAttribute()
     {
-        $query->where('active', self::ACTIVE_NO);
+        return isset($this->metadata->meta->keywords) ? $this->metadata->meta->keywords : null;
     }
 
     /**
@@ -274,6 +270,58 @@ class Page extends Model
     public function scopeWhereIdentifier($query, $identifier)
     {
         $query->where('identifier', $identifier);
+    }
+
+    /**
+     * Filter the query by the given type.
+     *
+     * @param Builder $query
+     * @param string $type
+     */
+    public function scopeWhereType($query, $type)
+    {
+        $query->where('type', $type);
+    }
+
+    /**
+     * Filter the query by the given slug.
+     *
+     * @param Builder $query
+     * @param string $slug
+     */
+    public function scopeWhereSlug($query, $slug)
+    {
+        $query->where('type', $slug);
+    }
+
+    /**
+     * Filter the query to return only active results.
+     *
+     * @param Builder $query
+     */
+    public function scopeOnlyActive($query)
+    {
+        $query->where('active', self::ACTIVE_YES);
+    }
+
+    /**
+     * Filter the query to return only inactive results.
+     *
+     * @param Builder $query
+     */
+    public function scopeOnlyInactive($query)
+    {
+        $query->where('active', self::ACTIVE_NO);
+    }
+
+    /**
+     * Sort the query alphabetically by name.
+     *
+     * @param Builder $query
+     */
+    public function scopeInAlphabeticalOrder($query)
+    {
+        $query->orderBy('name', 'asc');
     }
 
     /**
@@ -315,7 +363,7 @@ class Page extends Model
     public static function getUrlOptions()
     {
         return UrlOptions::instance()
-            ->routeUrlTo('App\Http\Controllers\Front\Cms\PagesController', 'show')
+            ->routeUrlTo('App\Http\Controllers\Front\Cms\PagesController', 'view')
             ->generateUrlSlugFrom('slug')
             ->saveUrlSlugTo('slug')
             ->prefixUrlWith(function ($prefix, $model) {
@@ -342,7 +390,7 @@ class Page extends Model
     public static function getRevisionOptions()
     {
         return RevisionOptions::instance()
-            ->limitRevisionsTo(500)
+            ->limitRevisionsTo(100)
             ->relationsToRevision('blocks');
     }
 

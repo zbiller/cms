@@ -62,7 +62,7 @@ class UploadsController extends Controller
      */
     public function get(Request $request, $type = null)
     {
-        $uploads = Upload::newest()->onlyTypes($type)->onlyExtensions($request->get('accept'))->like([
+        $uploads = Upload::latest()->onlyTypes($type)->onlyExtensions($request->get('accept'))->like([
             'original_name' => $request->get('keyword'),
         ])->paginate(28);
 

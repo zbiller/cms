@@ -51,23 +51,22 @@ class Currency extends Model
     ];
 
     /**
-     * Sort the query alphabetically by name.
-     *
-     * @param Builder $query
+     * @param mixed $value
      */
-    public function scopeAlphabeticallyByName($query)
+    public function setExchangeRateAttribute($value)
     {
-        $query->orderBy('name', 'asc');
+        $this->attributes['exchange_rate'] = $value ?: 0.0000;
     }
 
     /**
-     * Sort the query alphabetically by code.
+     * Filter the query by name.
      *
      * @param Builder $query
+     * @param string $name
      */
-    public function scopeAlphabeticallyByCode($query)
+    public function scopeWhereName($query, $name)
     {
-        $query->orderBy('code', 'asc');
+        $query->where('name', $name);
     }
 
     /**
@@ -82,11 +81,23 @@ class Currency extends Model
     }
 
     /**
-     * @param mixed $value
+     * Sort the query alphabetically by name.
+     *
+     * @param Builder $query
      */
-    public function setExchangeRateAttribute($value)
+    public function scopeAlphabeticallyByName($query)
     {
-        $this->attributes['exchange_rate'] = $value ?: 0.0000;
+        $query->orderBy('name', 'asc');
+    }
+
+    /**
+     * Sort the query alphabetically by code.
+     *
+     * @param Builder $query
+     */
+    public function scopeInAlphabeticalOrderByCode($query)
+    {
+        $query->orderBy('code', 'asc');
     }
 
     /**
@@ -120,13 +131,9 @@ class Currency extends Model
                 $item->exchange_rate = Swap::latest("{$item->code}/{$default}")->getValue();
                 $item->save();
             } catch (ChainException $e) {
-                throw new CurrencyException(
-                    "{$item->code}/{$default} currency exchange rate update failed. The {$item->code} is obsolete.", 422, $e
-                );
+                throw CurrencyException::invalidCurrency($item->code, $default);
             } catch (Exception $e) {
-                throw new CurrencyException(
-                    $e->getMessage(), $e->getCode(), $e
-                );
+                throw $e;
             }
         });
 

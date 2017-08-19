@@ -44,12 +44,15 @@ class ActivityHelper
     protected $causer;
 
     /**
-     * The properties to be saved in a activity log.
+     * The properties to be saved in the activity log.
      *
      * @var Collection
      */
     protected $properties;
 
+    /**
+     * Initialize class properties.
+     */
     public function __construct()
     {
         $this->logEnabled = config('activity.enabled');
@@ -93,11 +96,7 @@ class ActivityHelper
      */
     public function log($text)
     {
-        if (app()->runningInConsole()) {
-            return;
-        }
-
-        if (!$this->logEnabled) {
+        if (app()->runningInConsole() || !$this->logEnabled) {
             return;
         }
 

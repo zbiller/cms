@@ -13,6 +13,7 @@ class NotAuthenticated
      * @var array
      */
     protected $except = [
+        'logout',
         'admin/logout',
     ];
 

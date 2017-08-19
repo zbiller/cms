@@ -29,6 +29,7 @@ use App\Traits\TouchesDiscounts;
 use App\Traits\TouchesTaxes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 
 class Product extends Model
 {
@@ -76,6 +77,16 @@ class Product extends Model
         'inherit_discounts',
         'inherit_taxes',
         'metadata',
+    ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'deleted_at',
+        'drafted_at',
     ];
 
     /**
@@ -370,27 +381,47 @@ class Product extends Model
     }
 
     /**
-     * Sort the query with newest records first.
+     * Get the meta title value.
      *
-     * @param Builder $query
+     * @return string|null
      */
-    public function scopeNewest($query)
+    public function getMetaTitleAttribute()
     {
-        $query->orderBy('created_at', 'desc');
+        return isset($this->metadata->meta->title) ? $this->metadata->meta->title : null;
     }
 
     /**
-     * Sort the query alphabetically by name.
+     * Get the meta image value.
      *
-     * @param Builder $query
+     * @return string|null
      */
-    public function scopeAlphabetically($query)
+    public function getMetaImageAttribute()
     {
-        $query->orderBy('name', 'asc');
+        return isset($this->metadata->meta->image) ? $this->metadata->meta->image : null;
     }
 
     /**
-     * Filter the query by category.
+     * Get the meta description value.
+     *
+     * @return string|null
+     */
+    public function getMetaDescriptionAttribute()
+    {
+        return isset($this->metadata->meta->description) ? $this->metadata->meta->description : null;
+    }
+
+    /**
+     * Get the meta keywords value.
+     *
+     * @return string|null
+     */
+    public function getMetaKeywordsAttribute()
+    {
+        return isset($this->metadata->meta->keywords) ? $this->metadata->meta->keywords : null;
+    }
+
+    /**
+     * Filter the query by category id.
      *
      * @param Builder $query
      * @param int $category
@@ -401,11 +432,77 @@ class Product extends Model
     }
 
     /**
+     * Filter the query by currency id.
+     *
+     * @param Builder $query
+     * @param int $currency
+     */
+    public function scopeWhereCurrency($query, $currency)
+    {
+        $query->where('currency_id', $currency);
+    }
+
+    /**
+     * Filter the query by slug.
+     *
+     * @param Builder $query
+     * @param int $slug
+     */
+    public function scopeWhereSlug($query, $slug)
+    {
+        $query->where('slug', $slug);
+    }
+
+    /**
+     * Filter the query by price.
+     *
+     * @param Builder $query
+     * @param float $min
+     * @param float $max
+     */
+    public function scopeWherePriceBetween($query, $min, $max)
+    {
+        $query->whereBetween('price', [$min, $max]);
+    }
+
+    /**
+     * Filter the query by quantity.
+     *
+     * @param Builder $query
+     * @param float $min
+     * @param float $max
+     */
+    public function scopeWhereQuantityBetween($query, $min, $max)
+    {
+        $query->whereBetween('quantity', [$min, $max]);
+    }
+
+    /**
+     * Filter the query to return only viewed results.
+     *
+     * @param Builder $query
+     */
+    public function scopeOnlyViewed($query)
+    {
+        $query->where('views', '>', 0);
+    }
+
+    /**
+     * Filter the query to return only sold results.
+     *
+     * @param Builder $query
+     */
+    public function scopeOnlySold($query)
+    {
+        $query->where('sales', '>', 0);
+    }
+
+    /**
      * Filter the query to return only active results.
      *
      * @param Builder $query
      */
-    public function scopeActive($query)
+    public function scopeOnlyActive($query)
     {
         $query->where('active', self::ACTIVE_YES);
     }
@@ -415,9 +512,39 @@ class Product extends Model
      *
      * @param Builder $query
      */
-    public function scopeInactive($query)
+    public function scopeOnlyInactive($query)
     {
         $query->where('active', self::ACTIVE_NO);
+    }
+
+    /**
+     * Sort the query alphabetically by name.
+     *
+     * @param Builder $query
+     */
+    public function scopeInAlphabeticalOrder($query)
+    {
+        $query->orderBy('name', 'asc');
+    }
+
+    /**
+     * Sort the query alphabetically by name.
+     *
+     * @param Builder $query
+     */
+    public function scopeInPopularOrder($query)
+    {
+        $query->orderBy('views', 'desc');
+    }
+
+    /**
+     * Sort the query alphabetically by name.
+     *
+     * @param Builder $query
+     */
+    public function scopeInSalesOrder($query)
+    {
+        $query->orderBy('sales', 'desc');
     }
 
     /**
@@ -465,7 +592,7 @@ class Product extends Model
      * Establish if the product inherits discounts from it's main category.
      * Or from it's main category's ancestors (parents until the root).
      *
-     * @return bool
+     * @return Collection
      */
     public function getInheritedDiscounts()
     {
@@ -488,7 +615,7 @@ class Product extends Model
      * Establish if the product inherits taxes from it's main category.
      * Or from it's main category's ancestors (parents until the root).
      *
-     * @return bool
+     * @return Collection
      */
     public function getInheritedTaxes()
     {
@@ -504,13 +631,13 @@ class Product extends Model
             }
         }
 
-        return false;
+        return collect();
     }
 
     /**
      * Get the product's direct or inherited subsequent discounts.
      *
-     * @return \Illuminate\Support\Collection|mixed
+     * @return Collection
      */
     public function getNestedDiscounts()
     {
@@ -537,7 +664,7 @@ class Product extends Model
     /**
      * Get the product's direct or inherited subsequent taxes.
      *
-     * @return \Illuminate\Support\Collection|mixed
+     * @return Collection
      */
     public function getNestedTaxes()
     {

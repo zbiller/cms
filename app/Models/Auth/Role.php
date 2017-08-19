@@ -31,13 +31,12 @@ class Role extends Model implements RoleContract
     protected $table = 'roles';
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are protected against mass assign.
      *
      * @var array
      */
-    protected $fillable = [
-        'name',
-        'type',
+    protected $guarded = [
+        'id',
     ];
 
     /**
@@ -85,22 +84,31 @@ class Role extends Model implements RoleContract
      * @param Builder $query
      * @param int $type
      */
-    public function scopeType($query, $type)
+    public function scopeWhereType($query, $type)
     {
         $query->where('type', $type);
 
     }
 
     /**
-     * Filter query results to exclude the given roles.
+     * Filter query by name.
      *
      * @param Builder $query
-     * @param ...$roles
+     * @param ...$permissions
      */
-    public function scopeNot($query, ...$roles)
+    public function scopeWhereName($query, $name)
     {
-        $query->whereNotIn('name', array_flatten($roles));
+        $query->where('name', $name);
+    }
 
+    /**
+     * Sort the query alphabetically by name.
+     *
+     * @param Builder $query
+     */
+    public function scopeInAlphabeticalOrder($query)
+    {
+        $query->orderBy('name', 'asc');
     }
 
     /**
@@ -113,7 +121,7 @@ class Role extends Model implements RoleContract
     public static function findByName($name)
     {
         try {
-            return static::where('name', $name)->firstOrFail();
+            return static::whereName($name)->firstOrFail();
         } catch (ModelNotFoundException $e) {
             throw new ModelNotFoundException('Role "' . $name . '" does not exist!');
         }

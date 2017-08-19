@@ -47,6 +47,16 @@ class Attribute extends Model
     ];
 
     /**
+     * The relations that are eager-loaded.
+     *
+     * @var array
+     */
+    protected $with = [
+        'set',
+        'values',
+    ];
+
+    /**
      * The constants defining the attribute's filtering capabilities.
      *
      * @const
@@ -63,24 +73,6 @@ class Attribute extends Model
         self::FILTERABLE_NO => 'No',
         self::FILTERABLE_YES => 'Yes',
     ];
-
-    /**
-     * Boot the model.
-     *
-     * Always eager load the values by a anonymous global scope.
-     */
-    public static function boot()
-    {
-        parent::boot();
-
-        static::addGlobalScope('set', function (Builder $builder) {
-            $builder->with('set');
-        });
-
-        static::addGlobalScope('values', function (Builder $builder) {
-            $builder->with('values');
-        });
-    }
 
     /**
      * An attribute belongs to a set.
@@ -141,26 +133,6 @@ class Attribute extends Model
     }
 
     /**
-     * Sort the query with newest records first.
-     *
-     * @param Builder $query
-     */
-    public function scopeNewest($query)
-    {
-        $query->orderBy('created_at', 'desc');
-    }
-
-    /**
-     * Sort the query alphabetically by name.
-     *
-     * @param Builder $query
-     */
-    public function scopeAlphabetically($query)
-    {
-        $query->orderBy('name', 'asc');
-    }
-
-    /**
      * Filter the query by the given parent id.
      *
      * @param Builder $query
@@ -169,6 +141,47 @@ class Attribute extends Model
     public function scopeWhereSet($query, $id)
     {
         $query->where('set_id', $id);
+    }
+
+    /**
+     * Filter the query by slug.
+     *
+     * @param Builder $query
+     * @param string $slug
+     */
+    public function scopeWhereSlug($query, $slug)
+    {
+        $query->where('slug', $slug);
+    }
+
+    /**
+     * Filter the query to return only filterable attributes.
+     *
+     * @param Builder $query
+     */
+    public function scopeOnlyFilterable($query)
+    {
+        $query->where('filterable', self::FILTERABLE_YES);
+    }
+
+    /**
+     * Filter the query to return only non-filterable attributes.
+     *
+     * @param Builder $query
+     */
+    public function scopeWithoutFilterable($query)
+    {
+        $query->where('filterable', self::FILTERABLE_NO);
+    }
+
+    /**
+     * Sort the query alphabetically by name.
+     *
+     * @param Builder $query
+     */
+    public function scopeInAlphabeticalOrder($query)
+    {
+        $query->orderBy('name', 'asc');
     }
 
     /**

@@ -16,7 +16,7 @@
     @endif
 
     <section class="actions">
-        {!! button()->updatePage() !!}
+        {!! button()->updateAction() !!}
         {!! button()->deletedRecords(route('admin.products.deleted')) !!}
         {!! button()->draftedRecords(route('admin.products.drafts')) !!}
         {!! button()->addRecord(route('admin.products.create')) !!}

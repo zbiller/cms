@@ -64,6 +64,6 @@ class RolesSeeder extends Seeder
          * Assign all permissions to the "owner" role.
          */
         $role = Role::findByName('owner');
-        $role->grantPermission(Permission::type(Permission::TYPE_ADMIN)->get());
+        $role->grantPermission(Permission::whereType(Permission::TYPE_ADMIN)->get());
     }
 }

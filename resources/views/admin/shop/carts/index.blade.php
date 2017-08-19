@@ -16,7 +16,7 @@
     @endif
 
     <section class="actions">
-        {!! button()->updatePage() !!}
+        {!! button()->updateAction() !!}
 
         {!! form()->open(['url' => route('admin.carts.remind'), 'method' => 'POST', 'class' => 'left']) !!}
         {!! form()->button('<i class="fa fa-bell"></i>&nbsp; Remind users of their cart', ['type' => 'submit', 'class' => 'btn green', 'onclick' => 'return confirm("Are you sure you want to notify by email all of the users that have a pending cart?")']) !!}

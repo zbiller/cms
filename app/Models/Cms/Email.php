@@ -57,7 +57,8 @@ class Email extends Model
      * @var array
      */
     protected $dates = [
-        'deleted_at'
+        'deleted_at',
+        'drafted_at',
     ];
 
     /**
@@ -144,8 +145,8 @@ class Email extends Model
                 'first_name',
                 'last_name',
                 'full_name',
-                'cart_contents',
                 'home_url',
+                'cart_contents',
             ],
         ],
         self::TYPE_ORDER_CREATED => [
@@ -233,26 +234,6 @@ class Email extends Model
             'label' => 'The full name of the logged in user.',
             'description' => 'If used in an email, but no logged in user exists, this variable will not render anything.',
         ],
-        'cart_contents' => [
-            'name' => 'Cart Contents',
-            'label' => 'The contents of a user\'s order.',
-            'description' => 'This automatically generates the HTML for a table displaying the products and their quantities from inside the order',
-        ],
-        'order_contents' => [
-            'name' => 'Order Contents',
-            'label' => 'The contents of a user\'s shopping cart.',
-            'description' => 'This automatically generates the HTML for a table displaying the products and their quantities from inside a user\'s shopping cart',
-        ],
-        'order_id' => [
-            'name' => 'Order ID',
-            'label' => 'The identifier for an order.',
-            'description' => 'This represents the order\'s identifier by which the order will be referenced anywhere.',
-        ],
-        'order_status' => [
-            'name' => 'Order Status',
-            'label' => 'The current status of an order.',
-            'description' => 'This represents the order\'s status at the time the email was sent.',
-        ],
         'home_url' => [
             'name' => 'Home URL',
             'label' => 'The home URL of the site.',
@@ -267,6 +248,26 @@ class Email extends Model
             'name' => 'Email Verification URL',
             'label' => 'The URL for verifying a user\'s email.',
             'description' => 'This URL will be generated dynamically based on the user\'s provided data upon registration.',
+        ],
+        'order_id' => [
+            'name' => 'Order ID',
+            'label' => 'The identifier for an order.',
+            'description' => 'This represents the order\'s identifier by which the order will be referenced anywhere.',
+        ],
+        'order_status' => [
+            'name' => 'Order Status',
+            'label' => 'The current status of an order.',
+            'description' => 'This represents the order\'s status at the time the email was sent.',
+        ],
+        'order_contents' => [
+            'name' => 'Order Contents',
+            'label' => 'The contents of a user\'s shopping cart.',
+            'description' => 'This automatically generates the HTML for a table displaying the products and their quantities from inside a user\'s shopping cart',
+        ],
+        'cart_contents' => [
+            'name' => 'Cart Contents',
+            'label' => 'The contents of a user\'s order.',
+            'description' => 'This automatically generates the HTML for a table displaying the products and their quantities from inside the order',
         ],
     ];
 
@@ -355,26 +356,6 @@ class Email extends Model
     }
 
     /**
-     * Sort the query with newest records first.
-     *
-     * @param Builder $query
-     */
-    public function scopeNewest($query)
-    {
-        $query->orderBy('created_at', 'desc');
-    }
-
-    /**
-     * Sort the query alphabetically by name.
-     *
-     * @param Builder $query
-     */
-    public function scopeAlphabetically($query)
-    {
-        $query->orderBy('name', 'asc');
-    }
-
-    /**
      * Filter the query by the given identifier.
      *
      * @param Builder $query
@@ -397,6 +378,16 @@ class Email extends Model
     }
 
     /**
+     * Sort the query alphabetically by name.
+     *
+     * @param Builder $query
+     */
+    public function scopeInAlphabeticalOrder($query)
+    {
+        $query->orderBy('name', 'asc');
+    }
+
+    /**
      * Get the corresponding view from the $map property, for a loaded email instance.
      *
      * @return mixed
@@ -405,7 +396,7 @@ class Email extends Model
     public function getView()
     {
         if (!isset(self::$map[$this->type]['view'])) {
-            throw new EmailException('Email view not found!');
+            throw EmailException::viewNotFound();
         }
 
         return self::$map[$this->type]['view'];
@@ -497,9 +488,7 @@ class Email extends Model
         try {
             return Email::whereIdentifier($identifier)->firstOrFail();
         } catch (ModelNotFoundException $e) {
-            throw new EmailException(
-                'No email with the "' . $identifier . '" identifier was found!'
-            );
+            throw EmailException::emailNotFound($identifier);
         }
     }
 
@@ -517,7 +506,7 @@ class Email extends Model
     public static function getRevisionOptions()
     {
         return RevisionOptions::instance()
-            ->limitRevisionsTo(500);
+            ->limitRevisionsTo(100);
     }
 
     /**

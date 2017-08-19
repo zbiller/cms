@@ -34,7 +34,7 @@ trait HasRoles
      * @param string|array|Role|Collection $roles
      * @return mixed
      */
-    public function scopeRole($query, $roles)
+    public function scopeWithRoles($query, $roles)
     {
         if ($roles instanceof Role) {
             $roles = [$roles];

@@ -23,7 +23,7 @@ class MenuHelper
      */
     public function get($location)
     {
-        return Menu::with('menuable')->active()->whereIsRoot()->whereLocation($location)->defaultOrder()->get();
+        return Menu::with('menuable')->onlyActive()->whereIsRoot()->whereLocation($location)->defaultOrder()->get();
     }
 
     /**
@@ -34,7 +34,7 @@ class MenuHelper
      */
     public function make(Closure $callback)
     {
-        $this->items = new Collection();
+        $this->items = collect();
 
         call_user_func($callback, $this);
 
@@ -63,7 +63,7 @@ class MenuHelper
      */
     public function add(Closure $callback)
     {
-        $item = new MenuItem();
+        $item = new MenuItem;
 
         call_user_func($callback, $item);
 
@@ -81,7 +81,7 @@ class MenuHelper
      */
     public function child(MenuItem $parent, Closure $callback)
     {
-        $item = new MenuItem();
+        $item = new MenuItem;
         $item->parent = $parent->id;
 
         call_user_func($callback, $item);
@@ -188,7 +188,7 @@ class MenuItem
      */
     public function name($name = null)
     {
-        if (!$name) {
+        if ($name === null) {
             return $this->name;
         }
 
@@ -205,7 +205,7 @@ class MenuItem
      */
     public function url($url = null)
     {
-        if (!$url) {
+        if ($url === null) {
             return $this->url;
         }
 
@@ -267,7 +267,7 @@ class MenuItem
      */
     public function data($key = null, $value = null)
     {
-        if (!$value) {
+        if ($value === null) {
             return $key ? $this->data[$key] : $this->data;
         }
 

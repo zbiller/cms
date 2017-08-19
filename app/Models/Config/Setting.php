@@ -28,13 +28,15 @@ class Setting extends Model
     ];
 
     /**
-     * Sort the query with newest records first.
+     * Filter the query by key.
      *
      * @param Builder $query
+     * @param string $key
+     * @return mixed
      */
-    public function scopeNewest($query)
+    public function scopeByKey($query, $key)
     {
-        $query->orderBy('created_at', 'desc');
+        return $query->where('key', $key);
     }
 
     /**
@@ -42,21 +44,9 @@ class Setting extends Model
      *
      * @param Builder $query
      */
-    public function scopeAlphabetically($query)
+    public function scopeInAlphabeticalOrder($query)
     {
         $query->orderBy('key', 'asc');
-    }
-
-    /**
-     * Filter the query by key.
-     *
-     * @param Builder $query
-     * @param string $key
-     * @return mixed
-     */
-    public function scopeKey($query, $key)
-    {
-        return $query->where('key', $key);
     }
 
     /**
@@ -67,6 +57,6 @@ class Setting extends Model
      */
     public static function findByKey($key)
     {
-        return static::key($key)->first();
+        return static::byKey($key)->first();
     }
 }

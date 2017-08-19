@@ -145,32 +145,12 @@ class User extends Authenticatable
     }
 
     /**
-     * Sort the query with newest records first.
-     *
-     * @param Builder $query
-     */
-    public function scopeNewest($query)
-    {
-        $query->orderBy('created_at', 'desc');
-    }
-
-    /**
-     * Sort the query alphabetically by name.
-     *
-     * @param Builder $query
-     */
-    public function scopeAlphabetically($query)
-    {
-        $query->orderBy('first_name', 'asc');
-    }
-
-    /**
      * Filter query results to show only users of the provided type.
      *
      * @param Builder $query
      * @param int $type
      */
-    public function scopeType($query, $type)
+    public function scopeWhereType($query, $type)
     {
         $query->where('type', $type);
     }
@@ -180,32 +160,39 @@ class User extends Authenticatable
      *
      * @param Builder $query
      */
-    public function scopeSuper($query)
+    public function scopeOnlySuper($query)
     {
         $query->where('super', static::SUPER_YES);
     }
 
     /**
-     * Filter query results to show users only with the given roles.
-     * Param $roles: single role type as model|string or multiple role types as a collection|array.
+     * Filter query results to show only normal users.
      *
      * @param Builder $query
-     * @param array|string $roles
      */
-    public function scopeWithRoles($query, $roles)
+    public function scopeOnlyNormal($query)
     {
-        $query->role($roles);
+        $query->where('super', static::SUPER_NO);
     }
 
     /**
-     * Filter query results to exclude users having one of the the provided username.
+     * Filter the query to exclude the "developer" user.
      *
      * @param Builder $query
-     * @param ...$usernames
      */
-    public function scopeNot($query, ...$usernames)
+    public function scopeNotDeveloper($query)
     {
-        $query->whereNotIn('username', array_flatten($usernames));
+        $query->where('username', '!=', 'developer');
+    }
+
+    /**
+     * Sort the query alphabetically by name.
+     *
+     * @param Builder $query
+     */
+    public function scopeInAlphabeticalOrder($query)
+    {
+        $query->orderBy('first_name', 'asc');
     }
 
     /**
@@ -356,17 +343,6 @@ class User extends Authenticatable
     }
 
     /**
-     * Set the options for the HasActivityLog trait.
-     *
-     * @return ActivityOptions
-     */
-    public static function getActivityOptions()
-    {
-        return ActivityOptions::instance()
-            ->logByField('username');
-    }
-
-    /**
      * Set the options for the IsVerifiable trait.
      *
      * @return VerifyOptions
@@ -375,5 +351,16 @@ class User extends Authenticatable
     {
         return VerifyOptions::instance()
             ->shouldQueueEmailSending();
+    }
+
+    /**
+     * Set the options for the HasActivity trait.
+     *
+     * @return ActivityOptions
+     */
+    public static function getActivityOptions()
+    {
+        return ActivityOptions::instance()
+            ->logByField('username');
     }
 }

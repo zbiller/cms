@@ -78,30 +78,6 @@ class Block extends Model
             'views_path' => 'app/Blocks/Example/Views',
             'preview_image' => 'example.jpg',
         ],
-        'Features' => [
-            'label' => 'Features',
-            'composer_class' => 'App\Blocks\Features\Composer',
-            'views_path' => 'app/Blocks/Features/Views',
-            'preview_image' => 'features.jpg',
-        ],
-        'Team' => [
-            'label' => 'Team',
-            'composer_class' => 'App\Blocks\Team\Composer',
-            'views_path' => 'app/Blocks/Team/Views',
-            'preview_image' => 'team.jpg',
-        ],
-        'Copyright' => [
-            'label' => 'Copyright',
-            'composer_class' => 'App\Blocks\Copyright\Composer',
-            'views_path' => 'app/Blocks/Copyright/Views',
-            'preview_image' => 'copyright.jpg',
-        ],
-        'Wallpaper' => [
-            'label' => 'Wallpaper',
-            'composer_class' => 'App\Blocks\Wallpaper\Composer',
-            'views_path' => 'app/Blocks/Wallpaper/Views',
-            'preview_image' => 'wallpaper.jpg',
-        ],
     ];
 
     /**
@@ -132,13 +108,14 @@ class Block extends Model
     }
 
     /**
-     * Sort the query with newest records first.
+     * Filter the query by type.
      *
      * @param Builder $query
+     * @param string $type
      */
-    public function scopeNewest($query)
+    public function scopeWhereType($query, $type)
     {
-        $query->orderBy('created_at', 'desc');
+        $query->where('type', $type);
     }
 
     /**
@@ -146,7 +123,7 @@ class Block extends Model
      *
      * @param Builder $query
      */
-    public function scopeAlphabetically($query)
+    public function scopeInAlphabeticalOrder($query)
     {
         $query->orderBy('name', 'asc');
     }
@@ -254,7 +231,7 @@ class Block extends Model
     public static function getRevisionOptions()
     {
         return RevisionOptions::instance()
-            ->limitRevisionsTo(500);
+            ->limitRevisionsTo(100);
     }
 
     /**
@@ -306,48 +283,15 @@ class Block extends Model
                             'ratio' => true,
                         ]
                     ],
-                    'metadata[footer_logo]' => [
-                        'logo_default' => [
-                            'width' => '85',
-                            'height' => '21',
-                            'ratio' => true,
-                        ],
-                    ],
-                    'metadata[header_wallpaper]' => [
-                        'wallpaper_default' => [
-                            'width' => '1920',
-                            'height' => '400',
-                            'ratio' => true,
-                        ],
-                    ],
                     'metadata[items][*][image]' => [
-                        'first_style' => [
+                        'default' => [
                             'width' => '400',
                             'height' => '100',
                             'ratio' => true,
                         ],
-                        'second_style' => [
+                        'custom' => [
                             'width' => '100',
                             'height' => '400',
-                            'ratio' => true,
-                        ],
-                    ],
-                    'metadata[items][*][client_image]' => [
-                        'default' => [
-                            'width' => '203',
-                            'height' => '77',
-                            'ratio' => true,
-                        ],
-                    ],
-                    'metadata[items][*][team_image]' => [
-                        'desktop' => [
-                            'width' => '770',
-                            'height' => '860',
-                            'ratio' => true,
-                        ],
-                        'mobile' => [
-                            'width' => '385',
-                            'height' => '430',
                             'ratio' => true,
                         ],
                     ],
@@ -355,8 +299,8 @@ class Block extends Model
             ],
             'videos' => [
                 'styles' => [
-                    'metadata[header_wallpaper]' => [
-                        'wallpaper_default' => [
+                    'metadata[video]' => [
+                        'default' => [
                             'width' => '600',
                             'height' => '400',
                             'ratio' => true,

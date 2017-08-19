@@ -14,23 +14,11 @@ class CacheConfig
     public static $config;
 
     /**
-     * The path of the upload config file.
+     * The path of the cache config file.
      *
      * @var string
      */
     public static $path = 'config/cache.php';
-
-    /**
-     * Check if all the config options from config/cache.php are properly set.
-     *
-     * @throws ConfigException
-     */
-    public function __construct()
-    {
-        self::$config = config('cache');
-
-        self::checkIfQueryCachingIsConfiguredProperly();
-    }
 
     /**
      * Check if all the config options from config/cache.php are properly set.

@@ -38,7 +38,7 @@ class AddressesController extends Controller
             $this->view = view('admin.acl.addresses.index');
             $this->vars = [
                 'user' => $user,
-                'countries' => Country::alphabetically()->get(),
+                'countries' => Country::inAlphabeticalOrder()->get(),
             ];
         });
     }
@@ -54,7 +54,7 @@ class AddressesController extends Controller
             $this->view = view('admin.acl.addresses.add');
             $this->vars = [
                 'user' => $user,
-                'countries' => Country::alphabetically()->get(),
+                'countries' => Country::inAlphabeticalOrder()->get(),
             ];
         });
     }
@@ -85,9 +85,9 @@ class AddressesController extends Controller
             $this->view = view('admin.acl.addresses.edit');
             $this->vars = [
                 'user' => $user,
-                'countries' => Country::alphabetically()->get(),
-                'states' => State::alphabetically()->where('country_id', $this->item->country_id)->get(),
-                'cities' => City::alphabetically()->where('country_id', $this->item->country_id)->where('state_id', $this->item->state_id)->get(),
+                'countries' => Country::inAlphabeticalOrder()->get(),
+                'states' => State::inAlphabeticalOrder()->whereCountry($this->item->country_id)->get(),
+                'cities' => City::inAlphabeticalOrder()->where('country_id', $this->item->country_id)->whereState($this->item->state_id)->get(),
             ];
         });
     }

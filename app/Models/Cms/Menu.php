@@ -4,6 +4,8 @@ namespace App\Models\Cms;
 
 use App\Exceptions\CrudException;
 use App\Models\Model;
+use App\Models\Shop\Category;
+use App\Models\Shop\Product;
 use App\Options\ActivityOptions;
 use App\Traits\HasActivity;
 use App\Traits\HasMetadata;
@@ -61,6 +63,8 @@ class Menu extends Model
      */
     const TYPE_URL = 'url';
     const TYPE_PAGE = 'page';
+    const TYPE_PRODUCT_CATEGORY = 'product-category';
+    const TYPE_PRODUCT = 'product';
 
     /**
      * The constants defining the menu visibility.
@@ -96,6 +100,8 @@ class Menu extends Model
     public static $types = [
         self::TYPE_URL => 'Url',
         self::TYPE_PAGE => 'Page',
+        self::TYPE_PRODUCT_CATEGORY => 'Product Category',
+        self::TYPE_PRODUCT => 'Product',
     ];
 
     /**
@@ -127,6 +133,8 @@ class Menu extends Model
         'types' => [
             self::TYPE_URL => null,
             self::TYPE_PAGE => Page::class,
+            self::TYPE_PRODUCT_CATEGORY => Category::class,
+            self::TYPE_PRODUCT => Product::class,
         ],
     ];
 
@@ -174,9 +182,7 @@ class Menu extends Model
 
         static::deleting(function (Model $model) {
             if ($model->children()->count() > 0) {
-                throw new CrudException(
-                    'Could not delete the record because it has children!'
-                );
+                throw CrudException::deletionRestrictedDueToChildren();
             }
         });
     }
@@ -213,46 +219,6 @@ class Menu extends Model
     }
 
     /**
-     * Sort the query with newest records first.
-     *
-     * @param Builder $query
-     */
-    public function scopeNewest($query)
-    {
-        $query->orderBy('created_at', 'desc');
-    }
-
-    /**
-     * Sort the query alphabetically by name.
-     *
-     * @param Builder $query
-     */
-    public function scopeAlphabetically($query)
-    {
-        $query->orderBy('name', 'asc');
-    }
-
-    /**
-     * Filter the query to return only active results.
-     *
-     * @param Builder $query
-     */
-    public function scopeActive($query)
-    {
-        $query->where('active', self::ACTIVE_YES);
-    }
-
-    /**
-     * Filter the query to return only inactive results.
-     *
-     * @param Builder $query
-     */
-    public function scopeInactive($query)
-    {
-        $query->where('active', self::ACTIVE_NO);
-    }
-
-    /**
      * Filter the query by the given parent id.
      *
      * @param Builder $query
@@ -272,6 +238,36 @@ class Menu extends Model
     public function scopeWhereLocation($query, $location)
     {
         $query->where('location', $location);
+    }
+
+    /**
+     * Filter the query to return only active results.
+     *
+     * @param Builder $query
+     */
+    public function scopeOnlyActive($query)
+    {
+        $query->where('active', self::ACTIVE_YES);
+    }
+
+    /**
+     * Filter the query to return only inactive results.
+     *
+     * @param Builder $query
+     */
+    public function scopeOnlyInactive($query)
+    {
+        $query->where('active', self::ACTIVE_NO);
+    }
+
+    /**
+     * Sort the query alphabetically by name.
+     *
+     * @param Builder $query
+     */
+    public function scopeInAlphabeticalOrder($query)
+    {
+        $query->orderBy('name', 'asc');
     }
 
     /**

@@ -9,6 +9,38 @@ class OrderException extends Exception
     /**
      * @return static
      */
+    public static function createOrderFailed()
+    {
+        return new static('Failed creating the order!');
+    }
+
+    /**
+     * @return static
+     */
+    public static function updateOrderFailed()
+    {
+        return new static('Failed updating the order!');
+    }
+
+    /**
+     * @return static
+     */
+    public static function syncTotalsFailed()
+    {
+        return new static('Failed syncing the order\'s totals!');
+    }
+
+    /**
+     * @return static
+     */
+    public static function syncItemsFailed()
+    {
+        return new static('Failed syncing the order\'s items!');
+    }
+
+    /**
+     * @return static
+     */
     public static function noOrderItems()
     {
         return new static(
@@ -119,34 +151,34 @@ class OrderException extends Exception
     /**
      * @return static
      */
-    public static function invalidDeliveryDetails()
+    public static function invalidBillingDetails()
     {
         return new static(
-            'No delivery address was supplied inside the addresses details!' . PHP_EOL .
-            'Please specify the delivery by including the "delivery" key to your addresses data.' . PHP_EOL .
-            'The "delivery" key should represent an array containing: "country" (optional), "state" (optional), "city" (required), "address" (required).'
+            'No billing address was supplied inside the addresses details!' . PHP_EOL .
+            'Please specify the billing by including the "billing" key to your addresses data.' . PHP_EOL .
+            'The "billing" key should represent an array containing: "country" (optional), "state" (optional), "city" (required), "address" (required).'
         );
     }
 
     /**
      * @return static
      */
-    public static function invalidDeliveryCity()
+    public static function invalidBillingCity()
     {
         return new static(
-            'No delivery city was supplied inside the delivery address details!' . PHP_EOL .
-            'Please specify the delivery city by including the "city" key to your delivery address data. ("delivery" => ["city" => ""])'
+            'No billing city was supplied inside the billing address details!' . PHP_EOL .
+            'Please specify the billing city by including the "city" key to your billing address data. ("billing" => ["city" => ""])'
         );
     }
 
     /**
      * @return static
      */
-    public static function invalidDeliveryAddress()
+    public static function invalidBillingAddress()
     {
         return new static(
-            'No delivery address was supplied inside the delivery address details!' . PHP_EOL .
-            'Please specify the delivery address by including the "address" key to your delivery address data. ("delivery" => ["address" => ""])'
+            'No billing address was supplied inside the billing address details!' . PHP_EOL .
+            'Please specify the billing address by including the "address" key to your billing address data. ("billing" => ["address" => ""])'
         );
     }
 }

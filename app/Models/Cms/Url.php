@@ -59,4 +59,14 @@ class Url extends Model
             'urlable_type' => $type,
         ]);
     }
+
+    /**
+     * Sort the query alphabetically by url.
+     *
+     * @param Builder $query
+     */
+    public function scopeInAlphabeticalOrder($query)
+    {
+        $query->orderBy('url', 'asc');
+    }
 }

@@ -49,7 +49,7 @@ trait IsVerifiable
      *
      * @param Builder $query
      */
-    public function scopeOnlyUnVerified($query)
+    public function scopeOnlyUnverified($query)
     {
         $query->where('verified', static::VERIFIED_NO);
     }
@@ -96,9 +96,7 @@ trait IsVerifiable
         $this->checkVerificationCompliance();
 
         if (empty($this->email)) {
-            throw new VerificationException(
-                'Could not generate an email verification token, because the user does not have any email!'
-            );
+            throw VerificationException::invalidEmail();
         }
 
         $this->verified = static::VERIFIED_NO;
@@ -123,9 +121,7 @@ trait IsVerifiable
         }
 
         if ($this->verification_token != $token) {
-            throw new VerificationException(
-                'Wrong verification token supplied!'
-            );
+            throw VerificationException::invalidToken();
         }
 
         $this->verified = static::VERIFIED_YES;

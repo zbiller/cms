@@ -56,13 +56,25 @@ class State extends Model
     }
 
     /**
-     * Sort the query with newest records first.
+     * Filter the query by country.
      *
      * @param Builder $query
+     * @param int $country
      */
-    public function scopeNewest($query)
+    public function scopeWhereCountry($query, $country)
     {
-        $query->orderBy('created_at', 'desc');
+        $query->where('country_id', $country);
+    }
+
+    /**
+     * Filter the query by code.
+     *
+     * @param Builder $query
+     * @param string $code
+     */
+    public function scopeWhereCode($query, $code)
+    {
+        $query->where('code', $code);
     }
 
     /**
@@ -70,7 +82,7 @@ class State extends Model
      *
      * @param Builder $query
      */
-    public function scopeAlphabetically($query)
+    public function scopeInAlphabeticalOrder($query)
     {
         $query->orderBy('name', 'asc');
     }

@@ -30,6 +30,6 @@
 
 @section('footer')
     <section class="actions">
-        {!! button()->updatePage() !!}
+        {!! button()->updateAction() !!}
     </section>
 @endsection

@@ -17,6 +17,7 @@ use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
 use DB;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -48,6 +49,15 @@ class Order extends Model
         'payment',
         'shipping',
         'status',
+    ];
+
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'deleted_at',
     ];
 
     /**
@@ -340,6 +350,77 @@ class Order extends Model
     }
 
     /**
+     * Filter the query by identifier.
+     *
+     * @param Builder $query
+     * @param string $identifier
+     */
+    public function scopeWhereIdentifier($query, $identifier)
+    {
+        $query->where('identifier', $identifier);
+    }
+
+    /**
+     * Filter the query to return only pending orders.
+     *
+     * @param Builder $query
+     */
+    public function scopeOnlyPending($query)
+    {
+        $query->where('status', self::STATUS_PENDING);
+    }
+
+    /**
+     * Filter the query to return only completed orders.
+     *
+     * @param Builder $query
+     */
+    public function scopeOnlyCompleted($query)
+    {
+        $query->where('status', self::STATUS_COMPLETED);
+    }
+
+    /**
+     * Filter the query to return only failed orders.
+     *
+     * @param Builder $query
+     */
+    public function scopeOnlyFailed($query)
+    {
+        $query->where('status', self::STATUS_FAILED);
+    }
+
+    /**
+     * Filter the query to return only canceled orders.
+     *
+     * @param Builder $query
+     */
+    public function scopeOnlyCanceled($query)
+    {
+        $query->where('status', self::STATUS_CANCELED);
+    }
+
+    /**
+     * Filter the query to return only viewed orders.
+     *
+     * @param Builder $query
+     */
+    public function scopeOnlyViewed($query)
+    {
+        $query->where('viewed', self::VIEWED_YES);
+    }
+
+    /**
+     * Filter the query to return only not viewed orders.
+     *
+     * @param Builder $query
+     */
+    public function scopeOnlyNew($query)
+    {
+        $query->where('viewed', self::VIEWED_NO);
+    }
+
+    /**
      * Create a new order.
      *
      * The $data parameter should be an array containing:
@@ -405,9 +486,7 @@ class Order extends Model
 
             return $order;
         } catch (Exception $e) {
-            throw new OrderException(
-                'Could not create the order!', $e->getCode(), $e
-            );
+            throw OrderException::createOrderFailed();
         }
     }
 
@@ -502,9 +581,7 @@ class Order extends Model
             return $order;
         } catch (Exception $e) {
             dd($e);
-            throw new OrderException(
-                'Could not update the order!', $e->getCode(), $e
-            );
+            throw OrderException::updateOrderFailed();
         }
     }
 
@@ -549,9 +626,7 @@ class Order extends Model
 
             $order->save();
         } catch (Exception $e) {
-            throw new OrderException(
-                'Could not sync the order\'s totals.', $e->getCode(), $e
-            );
+            throw OrderException::syncTotalsFailed();
         }
     }
 
@@ -593,9 +668,7 @@ class Order extends Model
             } catch (ModelNotFoundException $e) {
                 throw OrderException::invalidOrderItemProduct();
             } catch (Exception $e) {
-                throw new OrderException(
-                    'Could not sync the order item.', $e->getCode(), $e
-                );
+                throw OrderException::syncItemsFailed();
             }
         }
     }
@@ -621,7 +694,7 @@ class Order extends Model
     {
         $price = $total;
 
-        foreach (Discount::forOrder()->active()->get() as $discount) {
+        foreach (Discount::forOrder()->onlyActive()->get() as $discount) {
             if (!$discount->canBeApplied($total)) {
                 continue;
             }
@@ -649,7 +722,7 @@ class Order extends Model
     {
         $price = $total;
 
-        foreach (Tax::forOrder()->active()->get() as $tax) {
+        foreach (Tax::forOrder()->onlyActive()->get() as $tax) {
             if (!$tax->canBeApplied($total)) {
                 continue;
             }
@@ -819,15 +892,15 @@ class Order extends Model
         }
 
         if (!isset($addresses['billing']) || empty($addresses['billing'])) {
-            throw OrderException::invalidDeliveryDetails();
+            throw OrderException::invalidBillingDetails();
         }
 
         if (!isset($addresses['billing']['city']) || empty($addresses['billing']['city'])) {
-            throw OrderException::invalidDeliveryCity();
+            throw OrderException::invalidBillingCity();
         }
 
         if (!isset($addresses['billing']['address']) || empty($addresses['billing']['address'])) {
-            throw OrderException::invalidDeliveryAddress();
+            throw OrderException::invalidBillingAddress();
         }
 
         self::$addresses = array_replace_recursive(self::$addresses,

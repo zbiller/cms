@@ -70,7 +70,8 @@ class Category extends Model
      * @var array
      */
     protected $dates = [
-        'deleted_at'
+        'deleted_at',
+        'drafted_at',
     ];
 
     /**
@@ -106,14 +107,16 @@ class Category extends Model
 
         static::deleting(function (Category $category) {
             if ($category->children()->count() > 0) {
-                throw new CrudException(
-                    'Could not delete the record because it has children!'
-                );
+                throw CrudException::deletionRestrictedDueToChildren();
             }
         });
 
         static::deleted(function (Category $category) {
-            $category->products()->delete();
+            if ($category->forceDeleting === true) {
+                $category->products()->forceDelete();
+            } else {
+                $category->products()->delete();
+            }
         });
 
         static::restored(function (Category $category) {
@@ -128,7 +131,7 @@ class Category extends Model
      */
     public function products()
     {
-        return $this->hasMany(Product::class, 'category_id');
+        return $this->hasMany(Product::class, 'category_id')->orderBy('ord');
     }
 
     /**
@@ -148,7 +151,7 @@ class Category extends Model
      */
     public function attributes()
     {
-        return $this->belongsToMany(Attribute::class, 'category_attribute', 'category_id', 'attribute_id')->withTimestamps();
+        return $this->belongsToMany(Attribute::class, 'category_attribute', 'category_id', 'attribute_id')->withTimestamps()->orderBy('ord');
     }
 
     /**
@@ -173,6 +176,46 @@ class Category extends Model
         return $this->belongsToMany(Tax::class, 'category_tax', 'category_id', 'tax_id')->withPivot([
             'id', 'ord'
         ])->withTimestamps()->orderBy('category_tax.ord', 'asc');
+    }
+
+    /**
+     * Get the meta title value.
+     *
+     * @return string|null
+     */
+    public function getMetaTitleAttribute()
+    {
+        return isset($this->metadata->meta->title) ? $this->metadata->meta->title : null;
+    }
+
+    /**
+     * Get the meta image value.
+     *
+     * @return string|null
+     */
+    public function getMetaImageAttribute()
+    {
+        return isset($this->metadata->meta->image) ? $this->metadata->meta->image : null;
+    }
+
+    /**
+     * Get the meta description value.
+     *
+     * @return string|null
+     */
+    public function getMetaDescriptionAttribute()
+    {
+        return isset($this->metadata->meta->description) ? $this->metadata->meta->description : null;
+    }
+
+    /**
+     * Get the meta keywords value.
+     *
+     * @return string|null
+     */
+    public function getMetaKeywordsAttribute()
+    {
+        return isset($this->metadata->meta->keywords) ? $this->metadata->meta->keywords : null;
     }
 
     /**
@@ -221,23 +264,25 @@ class Category extends Model
     }
 
     /**
-     * Sort the query with newest records first.
+     * Filter the query by the given parent id.
      *
      * @param Builder $query
+     * @param int $parent
      */
-    public function scopeNewest($query)
+    public function scopeWhereParent($query, $parent)
     {
-        $query->orderBy('created_at', 'desc');
+        $query->where('parent_id', $parent);
     }
 
     /**
-     * Sort the query alphabetically by name.
+     * Filter the query by the given slug.
      *
      * @param Builder $query
+     * @param int $slug
      */
-    public function scopeAlphabetically($query)
+    public function scopeWhereSlug($query, $slug)
     {
-        $query->orderBy('name', 'asc');
+        $query->where('slug', $slug);
     }
 
     /**
@@ -245,7 +290,7 @@ class Category extends Model
      *
      * @param Builder $query
      */
-    public function scopeActive($query)
+    public function scopeOnlyActive($query)
     {
         $query->where('active', self::ACTIVE_YES);
     }
@@ -255,20 +300,19 @@ class Category extends Model
      *
      * @param Builder $query
      */
-    public function scopeInactive($query)
+    public function scopeOnlyInactive($query)
     {
         $query->where('active', self::ACTIVE_NO);
     }
 
     /**
-     * Filter the query by the given parent id.
+     * Sort the query alphabetically by name.
      *
      * @param Builder $query
-     * @param int $id
      */
-    public function scopeWhereParent($query, $id)
+    public function scopeInAlphabeticalOrder($query)
     {
-        $query->where('parent_id', $id);
+        $query->orderBy('name', 'asc');
     }
 
     /**
@@ -311,7 +355,7 @@ class Category extends Model
     public static function getDraftOptions()
     {
         return DraftOptions::instance()
-            ->relationsToDraft('blocks', 'discounts', 'taxes');
+            ->relationsToDraft('blocks', 'attributes', 'discounts', 'taxes');
     }
 
     /**
@@ -321,7 +365,7 @@ class Category extends Model
     {
         return RevisionOptions::instance()
             ->limitRevisionsTo(100)
-            ->relationsToRevision('blocks', 'discounts', 'taxes');
+            ->relationsToRevision('blocks', 'attributes', 'discounts', 'taxes');
     }
 
     /**

@@ -1,1 +1,0 @@
-{!! form_admin()->text('metadata[copyright]', 'Copyright') !!}

@@ -103,7 +103,7 @@ class FlashHelper
     {
         return view("helpers::flash.message.{$this->type}")->with([
             'type' => $type,
-            'message' => $message
+            'message' => $message,
         ]);
     }
 }

@@ -116,9 +116,9 @@ class ButtonHelper
      * @param array $attributes
      * @return \Illuminate\View\View
      */
-    public function updatePage(array $attributes = [])
+    public function updateAction(array $attributes = [])
     {
-        return view('helpers::button.update_page')->with([
+        return view('helpers::button.update_action')->with([
             'attributes' => self::buildAttributes($attributes)
         ]);
     }

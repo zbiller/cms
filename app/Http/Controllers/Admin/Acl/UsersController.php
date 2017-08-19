@@ -28,7 +28,7 @@ class UsersController extends Controller
     public function index(Request $request, UserFilter $filter, UserSort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
-            $this->items = User::type(User::TYPE_FRONT)->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = User::whereType(User::TYPE_FRONT)->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
             $this->title = 'Users';
             $this->view = view('admin.acl.users.index');
             $this->vars = [

@@ -94,9 +94,7 @@ trait HasDuplicates
 
             return $model;
         } catch (Exception $e) {
-            throw new DuplicateException(
-                'Could not duplicate the record!', $e->getCode(), $e
-            );
+            throw DuplicateException::duplicateFailed();
         }
     }
 
@@ -104,7 +102,7 @@ trait HasDuplicates
      * Get a replicated instance of the original model's instance.
      *
      * @return Model
-     * @throws DuplicateException
+     * @throws Exception
      */
     protected function duplicateModel()
     {
@@ -116,9 +114,7 @@ trait HasDuplicates
 
             return $model;
         } catch (Exception $e) {
-            throw new DuplicateException(
-                'Could not duplicate the model!', $e->getCode(), $e
-            );
+            throw $e;
         }
     }
 
@@ -129,7 +125,7 @@ trait HasDuplicates
      * @param Model $model
      * @param string $relation
      * @return Model
-     * @throws DuplicateException
+     * @throws Exception
      */
     protected function duplicateDirectRelation(Model $model, $relation)
     {
@@ -143,9 +139,7 @@ trait HasDuplicates
 
             return $model;
         } catch (Exception $e) {
-            throw new DuplicateException(
-                'Could not duplicate a direct relation!', $e->getCode(), $e
-            );
+            throw $e;
         }
     }
 
@@ -156,7 +150,7 @@ trait HasDuplicates
      * @param Model $model
      * @param string $relation
      * @return Model
-     * @throws DuplicateException
+     * @throws Exception
      */
     protected function duplicatePivotedRelation(Model $model, $relation)
     {
@@ -169,9 +163,7 @@ trait HasDuplicates
 
             return $model;
         } catch (Exception $e) {
-            throw new DuplicateException(
-                'Could not duplicate a pivoted relation!', $e->getCode(), $e
-            );
+            throw $e;
         }
     }
 

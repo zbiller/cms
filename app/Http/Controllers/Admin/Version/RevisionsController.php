@@ -127,7 +127,7 @@ class RevisionsController extends Controller
         return Revision::with('user')->whereRevisionable(
             $request->get('revisionable_id'),
             $request->get('revisionable_type')
-        )->newest()->get();
+        )->latest()->get();
     }
 
     /**

@@ -67,7 +67,7 @@ class OrdersController extends Controller
             $this->view = view('admin.shop.orders.view');
             $this->vars = [
                 'items' => $order->items,
-                'products' => Product::alphabetically()->get(),
+                'products' => Product::inAlphabeticalOrder()->get(),
                 'statuses' => Order::$statuses,
                 'views' => Order::$views,
                 'payments' => Order::$payments,
@@ -86,7 +86,7 @@ class OrdersController extends Controller
             $this->view = view('admin.shop.orders.add');
             $this->vars = [
                 'items' => collect(),
-                'products' => Product::alphabetically()->get(),
+                'products' => Product::inAlphabeticalOrder()->get(),
                 'statuses' => Order::$statuses,
                 'views' => Order::$views,
                 'payments' => Order::$payments,
@@ -136,7 +136,7 @@ class OrdersController extends Controller
             $this->view = view('admin.shop.orders.edit');
             $this->vars = [
                 'items' => $order->items,
-                'products' => Product::alphabetically()->get(),
+                'products' => Product::inAlphabeticalOrder()->get(),
                 'statuses' => Order::$statuses,
                 'views' => Order::$views,
                 'payments' => Order::$payments,

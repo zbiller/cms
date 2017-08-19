@@ -63,7 +63,7 @@ class CartsController extends Controller
             $this->title = 'Carts';
             $this->view = view('admin.shop.carts.index');
             $this->vars = [
-                'users' => User::alphabetically()->get(),
+                'users' => User::inAlphabeticalOrder()->get(),
                 'paginate' => $paginate,
             ];
         });
@@ -80,7 +80,7 @@ class CartsController extends Controller
             $this->title = 'Edit Cart';
             $this->view = view('admin.shop.carts.view');
             $this->vars = [
-                'users' => User::alphabetically()->get(),
+                'users' => User::inAlphabeticalOrder()->get(),
                 'items' => $this->item->items()->get(),
             ];
         });

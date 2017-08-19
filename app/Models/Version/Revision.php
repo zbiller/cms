@@ -33,16 +33,6 @@ class Revision extends Model
     ];
 
     /**
-     * Get all of the owning revisionable models.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
-     */
-    public function revisionable()
-    {
-        return $this->morphTo();
-    }
-
-    /**
      * Revision belongs to user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
@@ -53,23 +43,24 @@ class Revision extends Model
     }
 
     /**
-     * Sort the query with newest records first.
+     * Get all of the owning revisionable models.
      *
-     * @param Builder $query
+     * @return \Illuminate\Database\Eloquent\Relations\MorphTo
      */
-    public function scopeNewest($query)
+    public function revisionable()
     {
-        $query->orderBy('created_at', 'desc');
+        return $this->morphTo();
     }
 
     /**
-     * Sort the query with oldest records first.
+     * Filter the query by the given user id.
      *
      * @param Builder $query
+     * @param int $id
      */
-    public function scopeOldest($query)
+    public function scopeWhereUser($query, $id)
     {
-        $query->orderBy('created_at', 'asc');
+        $query->where('user_id', $id);
     }
 
     /**
@@ -85,16 +76,5 @@ class Revision extends Model
             'revisionable_id' => $id,
             'revisionable_type' => $type,
         ]);
-    }
-
-    /**
-     * Filter the query by the given user id.
-     *
-     * @param Builder $query
-     * @param int $id
-     */
-    public function scopeWhereUser($query, $id)
-    {
-        $query->where('user_id', $id);
     }
 }

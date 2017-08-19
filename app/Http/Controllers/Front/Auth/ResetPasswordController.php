@@ -22,7 +22,7 @@ class ResetPasswordController extends Controller
     public function show(Request $request, $token = null)
     {
         return view('front.auth.password.reset')->with([
-            'page' => page()->find('home'),
+            'page' => page()->find('account'),
             'username' => $request->username,
             'token' => $token,
         ]);

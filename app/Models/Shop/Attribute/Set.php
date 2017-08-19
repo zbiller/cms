@@ -14,6 +14,7 @@ use App\Traits\IsFilterable;
 use App\Traits\IsOrderable;
 use App\Traits\IsSortable;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Set extends Model
 {
@@ -48,7 +49,7 @@ class Set extends Model
      */
     public function attributes()
     {
-        return $this->hasMany(Attribute::class, 'set_id')->orderBy('ord', 'asc');
+        return $this->hasMany(Attribute::class, 'set_id')->orderBy('ord');
     }
 
     /**
@@ -58,17 +59,18 @@ class Set extends Model
      */
     public function values()
     {
-        return $this->hasManyThrough(Value::class, Attribute::class, 'set_id', 'attribute_id');
+        return $this->hasManyThrough(Value::class, Attribute::class, 'set_id', 'attribute_id')->orderBy('ord');
     }
 
     /**
-     * Sort the query with newest records first.
+     * Filter the query by slug.
      *
      * @param Builder $query
+     * @param string $slug
      */
-    public function scopeNewest($query)
+    public function scopeWhereSlug($query, $slug)
     {
-        $query->orderBy('created_at', 'desc');
+        $query->where('slug', $slug);
     }
 
     /**
@@ -76,9 +78,24 @@ class Set extends Model
      *
      * @param Builder $query
      */
-    public function scopeAlphabetically($query)
+    public function scopeInAlphabeticalOrder($query)
     {
         $query->orderBy('name', 'asc');
+    }
+
+    /**
+     * Get an attribute set by it's slug
+     *
+     * @param string $slug
+     * @return mixed
+     */
+    public static function findBySlug($slug)
+    {
+        try {
+            return static::whereSlug($slug)->firstOrFail();
+        } catch (ModelNotFoundException $e) {
+            throw new ModelNotFoundException('Attribute Set "' . $slug . '" does not exist!');
+        }
     }
 
     /**

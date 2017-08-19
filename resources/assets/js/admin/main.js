@@ -161,7 +161,7 @@ function buttons() {
     });
 
     //update
-    $(document).on('click', 'a.btn-update-page', function (e) {
+    $(document).on('click', 'a.btn-update-action', function (e) {
         e.preventDefault();
 
         location.reload();

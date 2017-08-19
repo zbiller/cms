@@ -254,7 +254,9 @@ class UploadedHelper
             );
         }
 
-        return $full === true ? Storage::disk($this->disk)->getDriver()->getAdapter()->applyPathPrefix($this->file) : $this->file;
+        return $full === true ?
+            Storage::disk($this->disk)->getDriver()->getAdapter()->applyPathPrefix($this->file) :
+            $this->file;
     }
 
     /**

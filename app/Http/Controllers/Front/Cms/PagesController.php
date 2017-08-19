@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\Front\Cms;
 
 use App\Http\Controllers\Controller;
-use App\Models\Auth\User;
 use App\Models\Cms\Page;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
 
 class PagesController extends Controller
 {
@@ -29,13 +27,21 @@ class PagesController extends Controller
 
         $action = $request->route()->action;
 
-        if (isset($action['model']) && $action['model'] instanceof Page && ($this->page = $action['model'])) {
+        if (isset($action['model']) && $action['model'] instanceof Page) {
+            $this->page = $action['model'];
+
             if ($this->page->active != Page::ACTIVE_YES) {
                 abort(404);
             }
 
             $this->page->load('layout');
-            $this->setPageMeta();
+
+            $this->setMeta([
+                'title' => $this->page->meta_title ?: $this->page->name,
+                'image' => $this->page->meta_image ? uploaded($this->page->meta_image)->url() : null,
+                'description' => $this->page->description ?: null,
+                'keywords' => $this->page->keywords ?: null,
+            ]);
 
             view()->share([
                 'page' => $this->page,
@@ -49,7 +55,7 @@ class PagesController extends Controller
      *
      * @return mixed
      */
-    public function show()
+    public function view()
     {
         return $this->{$this->page->route_action}();
     }
@@ -69,26 +75,8 @@ class PagesController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function custom()
+    public function home()
     {
         return view($this->page->route_view);
-    }
-
-    /**
-     * Build the meta tags for the page.
-     *
-     * @return void
-     */
-    private function setPageMeta()
-    {
-        $this->setMeta('title', isset($this->page->metadata->meta->title) ? $this->page->metadata->meta->title : $this->page->name);
-
-        if (isset($this->page->metadata->meta) && $meta = $this->page->metadata->meta) {
-            $this->setMeta([
-                'image' => isset($meta->image) ? uploaded($meta->image)->url() : null,
-                'description' => isset($meta->description) ? $meta->description : null,
-                'keywords' => isset($meta->keywords) ? $meta->keywords : null,
-            ]);
-        }
     }
 }

@@ -24,7 +24,7 @@ class PageHelper
      */
     public function all()
     {
-        return Page::withTrashed()->get();
+        return Page::withTrashed()->defaultOrder()->get();
     }
 
     /**
@@ -35,7 +35,7 @@ class PageHelper
      */
     public function roots()
     {
-        return Page::withTrashed()->whereIsRoot()->get();
+        return Page::withTrashed()->whereIsRoot()->defaultOrder()->get();
     }
 
     /**
@@ -46,7 +46,20 @@ class PageHelper
      */
     public function children($parent)
     {
-        return Page::withTrashed()->whereDescendantOf($parent)->get();
+        return Page::withTrashed()->whereDescendantOf($parent)->defaultOrder()->get();
+    }
+
+    /**
+     * Build the canonical tag for a page if necessary.
+     *
+     * @param Page $page
+     * @return string
+     */
+    public function canonical(Page $page)
+    {
+        if ($page->canonical) {
+            return '<link rel="canonical" href="' . url($page->canonical) . '">';
+        }
     }
 
     /**

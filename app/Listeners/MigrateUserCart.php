@@ -90,7 +90,7 @@ class MigrateUserCart implements ShouldQueue
      */
     protected function setUserCart(User $user)
     {
-        $this->userCart = Cart::where('user_id', $user->id)->first();
+        $this->userCart = Cart::whereUser($user->id)->first();
     }
 
     /**

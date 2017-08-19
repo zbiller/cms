@@ -37,7 +37,7 @@ class RolesController extends Controller
                 }
             }
 
-            $this->items = Role::type(Role::TYPE_ADMIN)->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Role::whereType(Role::TYPE_ADMIN)->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
             $this->title = 'Roles';
             $this->view = view('admin.acl.roles.index');
             $this->vars = [

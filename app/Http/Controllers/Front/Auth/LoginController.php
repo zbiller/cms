@@ -23,7 +23,7 @@ class LoginController extends Controller
         $this->intendRedirectTo();
 
         return view('front.auth.login')->with([
-            'page' => page()->find('home')
+            'page' => page()->find('account')
         ]);
     }
 

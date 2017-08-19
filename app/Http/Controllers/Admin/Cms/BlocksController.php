@@ -49,6 +49,7 @@ class BlocksController extends Controller
     {
         if (!$type || !array_key_exists($type, Block::getTypes())) {
             $this->setMeta('title', 'Admin - Add Block');
+
             return view('admin.cms.blocks.init')->with([
                 'title' => 'Add Block',
                 'types' => Block::getTypes(),
@@ -228,7 +229,7 @@ class BlocksController extends Controller
         }, function () use ($request) {
             $this->item->saveAsDraft($request->all());
             $this->redirect = redirect()->route('admin.blocks.drafts');
-        }, $id, $request, new BlockRequest());
+        }, $id, $request, new BlockRequest);
     }
 
     /**

@@ -13,16 +13,6 @@ class CartReminded
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * Create a new event instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
-    /**
      * Get the channels the event should broadcast on.
      *
      * @return Channel|array

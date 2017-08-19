@@ -14,7 +14,7 @@
     {!! pagination('admin')->render($items) !!}
 
     <section class="actions">
-        {!! button()->updatePage() !!}
+        {!! button()->updateAction() !!}
 
         {!! form()->open(['url' => route('admin.activity.delete'), 'method' => 'DELETE', 'class' => 'left']) !!}
         {!! form()->button('<i class="fa fa-trash"></i>&nbsp; Delete All Activity', ['type' => 'submit', 'class' => 'btn green', 'onclick' => 'return confirm("Are you sure you want to delete all of the activity logs?")']) !!}

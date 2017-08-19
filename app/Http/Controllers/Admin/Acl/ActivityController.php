@@ -34,14 +34,14 @@ class ActivityController extends Controller
             if ($request->has('sort')) {
                 $query->sorted($request, $sort);
             } else {
-                $query->newest();
+                $query->latest();
             }
 
             $this->items = $query->paginate(10);
             $this->title = 'Activity';
             $this->view = view('admin.acl.activity.index');
             $this->vars = [
-                'users' => User::alphabetically()->get(),
+                'users' => User::inAlphabeticalOrder()->get(),
             ];
         });
     }
@@ -85,7 +85,7 @@ class ActivityController extends Controller
     public function delete()
     {
         try {
-            Activity::getQuery()->delete();
+            Activity::query()->delete();
 
             flash()->success('All records were successfully deleted!');
         } catch (Exception $e) {

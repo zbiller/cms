@@ -33,7 +33,7 @@ class StatesController extends Controller
             $this->title = 'States';
             $this->view = view('admin.location.states.index');
             $this->vars = [
-                'countries' => Country::alphabetically()->get(),
+                'countries' => Country::inAlphabeticalOrder()->get(),
             ];
         });
     }
@@ -47,7 +47,7 @@ class StatesController extends Controller
             $this->title = 'Add State';
             $this->view = view('admin.location.states.add');
             $this->vars = [
-                'countries' => Country::alphabetically()->get(),
+                'countries' => Country::inAlphabeticalOrder()->get(),
             ];
         });
     }
@@ -76,7 +76,7 @@ class StatesController extends Controller
             $this->title = 'Edit State';
             $this->view = view('admin.location.states.edit');
             $this->vars = [
-                'countries' => Country::alphabetically()->get(),
+                'countries' => Country::inAlphabeticalOrder()->get(),
             ];
         });
     }
@@ -125,7 +125,7 @@ class StatesController extends Controller
             ], 400);
         }
 
-        $query = State::alphabetically();
+        $query = State::inAlphabeticalOrder();
 
         if ($country && $country->exists) {
             $query->where('country_id', $country->id);

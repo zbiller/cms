@@ -129,31 +129,11 @@ class Upload extends Model
     }
 
     /**
-     * Sort the query with newest records first.
-     *
-     * @param $query
-     */
-    public function scopeNewest($query)
-    {
-        $query->orderBy('created_at', 'desc');
-    }
-
-    /**
-     * Sort the query alphabetically by original_name.
-     *
-     * @param $query
-     */
-    public function scopeAlphabetically($query)
-    {
-        $query->orderBy('original_name', 'asc');
-    }
-
-    /**
      * Filter query results to show uploads only of type.
      * Param $types: single upload type as string or multiple upload types as an array.
      *
      * @param Builder $query
-     * @param array|int|string $types
+     * @param ...$types
      */
     public function scopeOnlyTypes($query, ...$types)
     {
@@ -175,7 +155,7 @@ class Upload extends Model
      * Param $types: single upload type as string or multiple upload types as an array.
      *
      * @param Builder $query
-     * @param array|int|string $types
+     * @param ...$types
      */
     public function scopeExcludingTypes($query, ...$types)
     {
@@ -197,7 +177,7 @@ class Upload extends Model
      * Param $extensions: single upload extension as string or multiple upload extensions as an array.
      *
      * @param Builder $query
-     * @param array|int|string $extensions
+     * @param ...$extensions
      */
     public function scopeOnlyExtensions($query, ...$extensions)
     {
@@ -219,7 +199,7 @@ class Upload extends Model
      * Param $extensions: single upload extension as string or multiple upload extensions as an array.
      *
      * @param Builder $query
-     * @param array|int|string $extensions
+     * @param ...$extensions
      */
     public function scopeExcludingExtensions($query, ...$extensions)
     {
@@ -230,6 +210,50 @@ class Upload extends Model
                 foreach ($extensions as $extension) {
                     if ($extension) {
                         $q->orWhere('extension', '!=', strtolower($extension));
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * Filter query results to show uploads only of the given mime types.
+     * Param $mimes: single upload mime as string or multiple upload mimes as an array.
+     *
+     * @param Builder $query
+     * @param ...$mimes
+     */
+    public function scopeOnlyMimes($query, ...$mimes)
+    {
+        $mimes = array_flatten($mimes);
+
+        if (!empty($mimes)) {
+            $query->where(function ($q) use ($mimes) {
+                foreach ($mimes as $mime) {
+                    if ($mime) {
+                        $q->orWhere('mime', strtolower($mime));
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * Filter query results to show uploads excluding the given mimes.
+     * Param $mimes: single upload mime as string or multiple upload mimes as an array.
+     *
+     * @param Builder $query
+     * @param ...$mimes
+     */
+    public function scopeExcludingMimes($query, ...$mimes)
+    {
+        $mimes = array_flatten($mimes);
+
+        if (!empty($mimes)) {
+            $query->where(function ($q) use ($mimes) {
+                foreach ($mimes as $mime) {
+                    if ($mime) {
+                        $q->orWhere('mime', '!=', strtolower($mime));
                     }
                 }
             });
@@ -284,6 +308,16 @@ class Upload extends Model
     public function scopeWhereFullPath($query, $path)
     {
         $query->where('full_path', '=', $path);
+    }
+
+    /**
+     * Sort the query alphabetically by original_name.
+     *
+     * @param $query
+     */
+    public function scopeInAlphabeticalOrder($query)
+    {
+        $query->orderBy('original_name', 'asc');
     }
 
     /**

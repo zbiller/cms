@@ -408,7 +408,7 @@ class DraftsController extends Controller
         return Draft::with('user')->whereDraftable(
             $request->get('draftable_id'),
             $request->get('draftable_type')
-        )->newest()->get();
+        )->latest()->get();
     }
 
     /**

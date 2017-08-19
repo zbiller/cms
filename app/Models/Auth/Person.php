@@ -30,6 +30,15 @@ class Person extends Model
     ];
 
     /**
+     * The relations that are eager-loaded.
+     *
+     * @var array
+     */
+    protected $with = [
+        'user',
+    ];
+
+    /**
      * Person belongs to user.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
