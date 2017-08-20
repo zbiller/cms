@@ -45,8 +45,9 @@ class PagesController extends Controller
 
             view()->share([
                 'page' => $this->page,
-                'layout' => $this->page->layout,
             ]);
+        } else {
+            abort(404);
         }
     }
 
@@ -55,7 +56,7 @@ class PagesController extends Controller
      *
      * @return mixed
      */
-    public function view()
+    public function show()
     {
         return $this->{$this->page->route_action}();
     }

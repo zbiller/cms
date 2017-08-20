@@ -363,7 +363,7 @@ class Page extends Model
     public static function getUrlOptions()
     {
         return UrlOptions::instance()
-            ->routeUrlTo('App\Http\Controllers\Front\Cms\PagesController', 'view')
+            ->routeUrlTo('App\Http\Controllers\Front\Cms\PagesController', 'show')
             ->generateUrlSlugFrom('slug')
             ->saveUrlSlugTo('slug')
             ->prefixUrlWith(function ($prefix, $model) {
