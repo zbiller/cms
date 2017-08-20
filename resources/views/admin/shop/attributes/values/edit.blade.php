@@ -7,14 +7,15 @@
     </section>
 
     <section class="tabs">
-        @include('admin.shop.values._tabs')
+        @include('admin.shop.attributes.values._tabs')
     </section>
 
     <section class="view">
-        @include('admin.shop.values._form', ['url' => route('admin.values.store', ['set' => $set, 'attribute' => $attribute])])
+        @include('admin.shop.attributes.values._form', ['url' => route('admin.attribute_values.update', ['set' => $set, 'attribute' => $attribute,'id' => $item->id])])
     </section>
 @endsection
 
 @section('footer')
-    @include('admin.shop.values._buttons')
+    @include('admin.shop.attributes.values._buttons')
 @endsection
+

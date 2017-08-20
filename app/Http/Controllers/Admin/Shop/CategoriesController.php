@@ -64,6 +64,10 @@ class CategoriesController extends Controller
             $this->view = view('admin.shop.categories.add');
             $this->vars = [
                 'parent' => $parent->exists ? $parent : null,
+                'discounts' => Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
+                'taxes' => Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
+                'discountTypes' => Discount::$types,
+                'taxTypes' => Tax::$types,
                 'actives' => Category::$actives,
             ];
         });

@@ -43,7 +43,7 @@ class ValuesController extends Controller
             }
 
             $this->title = 'Values';
-            $this->view = view('admin.shop.values.index');
+            $this->view = view('admin.shop.attributes.values.index');
             $this->vars = [
                 'set' => $set,
                 'attribute' => $attribute,
@@ -60,7 +60,7 @@ class ValuesController extends Controller
     {
         return $this->_create(function () use ($set, $attribute) {
             $this->title = 'Add Value';
-            $this->view = view('admin.shop.values.add');
+            $this->view = view('admin.shop.attributes.values.add');
             $this->vars = [
                 'set' => $set,
                 'attribute' => $attribute,
@@ -78,7 +78,7 @@ class ValuesController extends Controller
     {
         return $this->_store(function () use ($request, $set, $attribute) {
             $this->item = Value::create($request->all());
-            $this->redirect = redirect()->route('admin.values.index', ['set' => $set, 'attribute' => $attribute]);
+            $this->redirect = redirect()->route('admin.attribute_values.index', ['set' => $set, 'attribute' => $attribute]);
         }, $request);
     }
 
@@ -93,7 +93,7 @@ class ValuesController extends Controller
         return $this->_edit(function () use ($set, $attribute, $value) {
             $this->item = $value;
             $this->title = 'Edit Value';
-            $this->view = view('admin.shop.values.edit');
+            $this->view = view('admin.shop.attributes.values.edit');
             $this->vars = [
                 'set' => $set,
                 'attribute' => $attribute,
@@ -112,7 +112,7 @@ class ValuesController extends Controller
     {
         return $this->_update(function () use ($request, $set, $attribute, $value) {
             $this->item = $value;
-            $this->redirect = redirect()->route('admin.values.index', ['set' => $set, 'attribute' => $attribute]);
+            $this->redirect = redirect()->route('admin.attribute_values.index', ['set' => $set, 'attribute' => $attribute]);
 
             $this->item->update($request->all());
         }, $request);
@@ -128,7 +128,7 @@ class ValuesController extends Controller
     {
         return $this->_destroy(function () use ($set, $attribute, $value) {
             $this->item = $value;
-            $this->redirect = redirect()->route('admin.values.index', ['set' => $set, 'attribute' => $attribute]);
+            $this->redirect = redirect()->route('admin.attribute_values.index', ['set' => $set, 'attribute' => $attribute]);
 
             $this->item->delete();
         });

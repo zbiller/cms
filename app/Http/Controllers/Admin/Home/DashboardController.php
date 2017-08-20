@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Home;
 
 use Analytics;
 use App\Http\Controllers\Controller;
+use App\Models\Shop\Cart;
 use Carbon\Carbon;
 use File;
 use Illuminate\Http\Request;
@@ -18,6 +19,30 @@ class DashboardController extends Controller
      */
     public function index(Request $request)
     {
+        $data = [];
+
+        $customer = [
+            'first_name' => 'Andrei',
+            'last_name' => 'Badea',
+            'email' => 'zbiller@gmail.com',
+            'phone' => '0726583991',
+        ];
+
+        $addresses = [
+            'shipping' => [
+                'city' => 'asaa',
+                'address' => 'asaa',
+            ],
+            'billing' => [
+                'city' => 'asaa',
+                'address' => 'asaa',
+            ],
+        ];
+
+        dd(Cart::placeOrder($data, $customer, $addresses));
+
+
+
         $startDate = Carbon::now()->subMonth();
         $endDate = Carbon::now();
 

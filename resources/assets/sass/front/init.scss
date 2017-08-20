@@ -1,0 +1,133 @@
+$colorWhite: #FFFFFF;
+$colorBlack: #000000;
+
+$resolutions: (
+        'phone':        400px,
+        'phone-wide':   480px,
+        'phablet':      560px,
+        'tablet-small': 640px,
+        'tablet':       768px,
+        'tablet-wide':  1024px,
+        'desktop':      1248px,
+        'desktop-wide': 1440px
+);
+
+$z-indexes: (
+        'overlay',
+        'popup',
+        'flash',
+        'menu',
+        'header',
+        'footer',
+        'content'
+);
+
+@function calculate-rem($size) {
+  $remSize: $size / 16px;
+  @return $remSize * 1rem;
+}
+
+@function z-index($name) {
+  @if index($z-indexes, $name) {
+    @return (length($z-indexes) - index($z-indexes, $name)) + 1;
+  } @else {
+    @warn 'There is no item "#{$name}" in this list; choose one of: #{$z-indexes}';
+    @return null;
+  }
+}
+
+@mixin font-size($size) {
+  font-size: $size;
+  font-size: calculate-rem($size);
+}
+
+@mixin transition($args) {
+  -webkit-transition: $args;
+  -moz-transition: $args;
+  -ms-transition: $args;
+  -o-transition: $args;
+  transition: $args;
+}
+
+@mixin opacity($opacity) {
+  opacity: $opacity;
+  $opacity-ie: $opacity * 100;
+  filter: alpha(opacity=$opacity-ie);
+}
+
+@mixin calc($property, $expression) {
+  #{$property}: -moz-calc(#{$expression});
+  #{$property}: -webkit-calc(#{$expression});
+  #{$property}: calc(#{$expression});
+}
+
+@mixin center() {
+  margin: {
+    left: auto;
+    right: auto;
+  }
+}
+
+@mixin media-query($width, $type: max) {
+  @if map_has_key($resolutions, $width) {
+    $width: map_get($resolutions, $width);
+
+    @if $type == max {
+      $width: $width - 1px;
+    }
+
+    @media only screen and (#{$type}-width: $width) {
+      @content;
+    }
+  }
+}
+
+@mixin truncate($max-width) {
+  max-width: $max-width;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@mixin smooth-text() {
+  -webkit-font-smoothing: antialiased !important;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
+  text-rendering: optimizeLegibility !important;
+}
+
+@mixin clear-padding() {
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
+@mixin transform($expression) {
+  -webkit-transform: #{$expression};
+  -moz-transform: #{$expression};
+  -ms-transform: #{$expression};
+  -o-transform: #{$expression};
+  transform: #{$expression};
+}
+
+@mixin shadow($expression) {
+  -webkit-box-shadow: #{$expression};
+  -moz-box-shadow: #{$expression};
+  box-shadow: #{$expression};
+}
+
+@mixin border-radius($expression) {
+  -webkit-border-radius: #{$expression};
+  -moz-border-radius: #{$expression};
+  border-radius: #{$expression};
+}
+
+%clearfix {
+  *zoom: 1;
+  &:before, &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}

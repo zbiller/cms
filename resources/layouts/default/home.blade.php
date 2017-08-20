@@ -4,12 +4,12 @@
     @include('layouts::default.partials._head')
 </head>
 <body>
-@include('layouts::default.partials._header')
+    @include('layouts::default.partials._header')
 
-<main>
-    @yield('content')
-</main>
+    <main>
+        @yield('content')
+    </main>
 
-@include('layouts::default.partials._footer')
+    @include('layouts::default.partials._footer')
 </body>
 </html>

@@ -1,108 +1,26 @@
 @extends('layouts::default.default')
 
 @section('content')
-<!--========== PAGE LAYOUT ==========-->
+    <h1>Register</h1>
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Register</div>
-                <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ route('register') }}">
-                        {{ csrf_field() }}
+    {!! form()->open(['method' => 'POST', 'url' => route('register')]) !!}
 
-                        <div class="form-group{{ $errors->has('username') ? ' has-error' : '' }}">
-                            <label for="name" class="col-md-4 control-label">Username</label>
+    @foreach($errors->all() as $error)
+        <span style="color: red;">{{ $error }}</span><br /><br />
+    @endforeach
 
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" name="username" value="{{ old('username') }}">
-
-                                @if ($errors->has('username'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('username') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">Password</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password">
-
-                                @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="password-confirm" class="col-md-4 control-label">Confirm Password</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation">
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('person.first_name') ? ' has-error' : '' }}">
-                            <label for="name" class="col-md-4 control-label">First Name</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" name="person[first_name]" value="{{ old('person.first_name') }}">
-
-                                @if ($errors->has('person.first_name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('person.first_name') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('person.last_name') ? ' has-error' : '' }}">
-                            <label for="name" class="col-md-4 control-label">Last Name</label>
-
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" name="person[last_name]" value="{{ old('person.last_name') }}">
-
-                                @if ($errors->has('person.last_name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('person.last_name') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('person.email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="text" class="form-control" name="person[email]" value="{{ old('person.email') }}">
-
-                                @if ($errors->has('person.email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('person.email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Register
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!--========== END PAGE LAYOUT ==========-->
+    <label>Username</label><br />
+    {!! form()->text('username', old('username') ?: null) !!}<br /><br />
+    <label>Password</label><br />
+    {!! form()->password('password') !!}<br /><br />
+    <label>Confirm Password</label><br />
+    {!! form()->password('password_confirmation') !!}<br /><br />
+    <label>First Name</label><br />
+    {!! form()->text('person[first_name]', old('person.first_name') ?: null) !!}<br /><br />
+    <label>Last Name</label><br />
+    {!! form()->text('person[last_name]', old('person.last_name') ?: null) !!}<br /><br />
+    <label>Email</label><br />
+    {!! form()->text('person[email]', old('person.email') ?: null) !!}<br /><br />
+    {!! form()->submit('Reset Password') !!}
+    {!! form()->close() !!}
 @endsection

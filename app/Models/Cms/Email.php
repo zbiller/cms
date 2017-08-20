@@ -13,6 +13,7 @@ use App\Traits\HasDrafts;
 use App\Traits\HasDuplicates;
 use App\Traits\HasMetadata;
 use App\Traits\HasRevisions;
+use App\Traits\HasUploads;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
@@ -22,6 +23,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Email extends Model
 {
+    use HasUploads;
     use HasDrafts;
     use HasRevisions;
     use HasDuplicates;
@@ -530,5 +532,15 @@ class Email extends Model
     {
         return ActivityOptions::instance()
             ->logByField('name');
+    }
+
+    /**
+     * Get the specific upload config parts for this model.
+     *
+     * @return array
+     */
+    public function getUploadConfig()
+    {
+        return [];
     }
 }

@@ -48,7 +48,6 @@ class Cart extends Model
      */
     protected $with = [
         'user',
-        'items',
     ];
 
     /**

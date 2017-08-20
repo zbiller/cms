@@ -7,11 +7,11 @@
     </section>
 
     <section class="filters">
-        @include('admin.shop.values._filter')
+        @include('admin.shop.attributes.values._filter')
     </section>
 
     <section class="list">
-        @include('admin.shop.values._table', ['items' => $items])
+        @include('admin.shop.attributes.values._table', ['items' => $items])
     </section>
 @endsection
 
@@ -22,6 +22,6 @@
 
     <section class="actions">
         {!! button()->updateAction() !!}
-        {!! button()->addRecord(route('admin.values.create', ['set' => $set, 'attribute' => $attribute])) !!}
+        {!! button()->addRecord(route('admin.attribute_values.create', ['set' => $set, 'attribute' => $attribute])) !!}
     </section>
 @endsection

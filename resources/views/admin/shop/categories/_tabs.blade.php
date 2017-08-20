@@ -1,10 +1,9 @@
 <a href="#tab-1">Basic</a>
 <a href="#tab-2">Meta</a>
+<a href="#tab-3">Discounts</a>
+<a href="#tab-4">Taxes</a>
 
 @if($item->exists)
-    <a href="#tab-3">Discounts</a>
-    <a href="#tab-4">Taxes</a>
-
     {!! block()->tab($item) !!}
 
     @if(!isset($on_draft) && !isset($on_limbo_draft) && !isset($on_revision))

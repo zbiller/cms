@@ -12,5 +12,6 @@
         This occurrence has been logged, and a team has been dispatched to deal with your problem.
         We're really sorry about this, and will work hard to get this resolved as soon as possible.
     </p>
+
     @parent
 @endsection

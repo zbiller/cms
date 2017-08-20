@@ -36,6 +36,10 @@ elixir(function (mix) {
             'admin/custom.scss'
         ], 'resources/assets/css/admin/main.css')
 
+        .sass([
+            'front/main.scss'
+        ], 'resources/assets/css/front/main.css')
+
         .styles([
             'libs/chosen.css',
             'libs/colorpicker.css',
@@ -50,11 +54,7 @@ elixir(function (mix) {
         ], 'public/assets/css/admin/app.css')
 
         .styles([
-            'front/icons.css',
-            'front/bootstrap.css',
-            'front/animate.css',
-            'front/swiper.css',
-            'front/layout.css'
+            'front/main.css'
         ], 'public/assets/css/front/app.css')
 
         .scripts([
@@ -78,17 +78,7 @@ elixir(function (mix) {
         ], 'public/assets/js/admin/app.js')
 
         .scripts([
-            'front/jquery.js',
-            'front/migrate.js',
-            'front/bootstrap.js',
-            'front/easing.js',
-            'front/back-to-top.js',
-            'front/scroll.js',
-            'front/wow.js',
-            'front/swiper.js',
-            'front/masonry.js',
-            'front/images-loaded.js',
-            'front/layout.js'
+            'front/main.js'
         ], 'public/assets/js/front/app.js')
 
         .version([

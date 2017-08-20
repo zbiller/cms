@@ -507,21 +507,21 @@ Breadcrumbs::register('admin.attributes.edit', function($breadcrumbs, $set, $att
 | ---------------------------------------------------------------------------------------------------------------------
  */
 /* Home > Values */
-Breadcrumbs::register('admin.values.index', function($breadcrumbs, $set, $attribute) {
+Breadcrumbs::register('admin.attribute_values.index', function($breadcrumbs, $set, $attribute) {
     $breadcrumbs->parent('admin.attributes.edit', $set, $attribute);
-    $breadcrumbs->push('Values', route('admin.values.index', ['set' => $set, 'attribute' => $attribute]));
+    $breadcrumbs->push('Values', route('admin.attribute_values.index', ['set' => $set, 'attribute' => $attribute]));
 });
 
 /* Home > Values > Add */
-Breadcrumbs::register('admin.values.create', function($breadcrumbs, $set, $attribute) {
-    $breadcrumbs->parent('admin.values.index', $set, $attribute);
-    $breadcrumbs->push('Add', route('admin.values.create', ['set' => $set, 'attribute' => $attribute]));
+Breadcrumbs::register('admin.attribute_values.create', function($breadcrumbs, $set, $attribute) {
+    $breadcrumbs->parent('admin.attribute_values.index', $set, $attribute);
+    $breadcrumbs->push('Add', route('admin.attribute_values.create', ['set' => $set, 'attribute' => $attribute]));
 });
 
 /* Home > Values > Edit */
-Breadcrumbs::register('admin.values.edit', function($breadcrumbs, $set, $attribute, $value) {
-    $breadcrumbs->parent('admin.values.index', $set, $attribute);
-    $breadcrumbs->push('Edit', route('admin.values.edit', ['set' => $set, 'attribute' => $attribute, 'value' => $value]));
+Breadcrumbs::register('admin.attribute_values.edit', function($breadcrumbs, $set, $attribute, $value) {
+    $breadcrumbs->parent('admin.attribute_values.index', $set, $attribute);
+    $breadcrumbs->push('Edit', route('admin.attribute_values.edit', ['set' => $set, 'attribute' => $attribute, 'value' => $value]));
 });
 /**
 | ---------------------------------------------------------------------------------------------------------------------

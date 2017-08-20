@@ -9,7 +9,7 @@
 <div id="tab-1" class="tab">
     {!! form_admin()->select('for', 'For', $for) !!}
     {!! form_admin()->text('name') !!}
-    {!! form_admin()->text('rate') !!}
+    {!! form_admin()->number('rate') !!}
     {!! form_admin()->select('type', 'Type', $types) !!}
     {!! form_admin()->select('active', 'Active', $actives) !!}
 </div>

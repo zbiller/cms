@@ -1,7 +1,7 @@
 <table
     cellspacing="0" cellpadding="0" border="0"
     data-orderable="{{ empty(request()->all()) ? 'true' : 'false' }}"
-    data-order-url="{{ route('admin.values.order', ['set' => $set, 'attribute' => $attribute]) }}"
+    data-order-url="{{ route('admin.attribute_values.order', ['set' => $set, 'attribute' => $attribute]) }}"
     data-order-model="{{ \App\Models\Shop\Attribute\Value::class }}"
     data-order-token="{{ csrf_token() }}"
 >
@@ -19,8 +19,8 @@
                 <tr id="{{ $item->id }}" class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
                     <td>{{ $item->value ?: 'N/A' }}</td>
                     <td>
-                        {!! button()->editRecord(route('admin.values.edit', ['set' => $set, 'attribute' => $attribute, 'id' => $item->id])) !!}
-                        {!! button()->deleteRecord(route('admin.values.destroy', ['set' => $set, 'attribute' => $attribute, 'id' => $item->id])) !!}
+                        {!! button()->editRecord(route('admin.attribute_values.edit', ['set' => $set, 'attribute' => $attribute, 'id' => $item->id])) !!}
+                        {!! button()->deleteRecord(route('admin.attribute_values.destroy', ['set' => $set, 'attribute' => $attribute, 'id' => $item->id])) !!}
                     </td>
                 </tr>
             @endforeach

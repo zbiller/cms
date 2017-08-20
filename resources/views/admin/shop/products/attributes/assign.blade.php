@@ -154,7 +154,7 @@
             if (set_id && attribute_id) {
                 $.ajax({
                     type: 'GET',
-                    url: '{{ route('admin.values.get') }}' + '/' + set_id + '/' + attribute_id,
+                    url: '{{ route('admin.attribute_values.get') }}' + '/' + set_id + '/' + attribute_id,
                     success: function (data) {
                         value_select.empty();
 

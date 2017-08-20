@@ -16,21 +16,18 @@
 {!! form()->hidden('_back', route('admin.orders.drafts')) !!}
 
 <div id="tab-1" class="tab">
-    {!! form_admin()->text('identifier') !!}
-    {!! form_admin()->select('status', 'Status', $statuses) !!}
-    {!! form_admin()->select('payment', 'Payment Type', $payments) !!}
-    {!! form_admin()->select('shipping', 'Shipping Type', $shippings) !!}
-
-    <span class="title" style="margin-top: 20px;">Order Totals</span>
     <div class="box warning" style="margin-bottom: 20px;">
         <span>
             Please note that all of the order's totals are dynamically generated using the assigned products and their quantities.
         </span>
     </div>
-
     {!! form_admin()->text('', 'Raw Total', $item && $item->exists ? number_format($item->raw_total, 2) . ' ' . $item->currency : '0.00 ' . config('shop.price.default_currency'), ['disabled' => 'disabled']) !!}
     {!! form_admin()->text('', 'Sub Total', $item && $item->exists ? number_format($item->sub_total, 2) . ' ' . $item->currency : '0.00 ' . config('shop.price.default_currency'), ['disabled' => 'disabled']) !!}
     {!! form_admin()->text('', 'Grand Total', $item && $item->exists ? number_format($item->grand_total, 2) . ' ' . $item->currency : '0.00 ' . config('shop.price.default_currency'), ['disabled' => 'disabled']) !!}
+    {!! form_admin()->text('identifier') !!}
+    {!! form_admin()->select('status', 'Status', $statuses) !!}
+    {!! form_admin()->select('payment', 'Payment Type', $payments) !!}
+    {!! form_admin()->select('shipping', 'Shipping Type', $shippings) !!}
 </div>
 <div id="tab-2" class="tab">
     {!! form_admin()->text('customer[first_name]', 'First Name') !!}
