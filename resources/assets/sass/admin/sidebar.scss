@@ -56,16 +56,16 @@ nav {
                 @include font-size(12px);
 
                 padding: 12px 15px;
-                background: url('/build/assets/img/admin/arrow-right.png') no-repeat right 15px center;
+                background: url('/images/admin/arrow-right.png') no-repeat right 15px center;
                 font-family: 'Open Sans Bold', sans-serif;
                 text-transform: uppercase;
 
                 &:hover {
-                    background: darken($colorFiord, 7%) url('/build/assets/img/admin/arrow-right.png') no-repeat right 15px center;
+                    background: darken($colorFiord, 7%) url('/images/admin/arrow-right.png') no-repeat right 15px center;
                 }
 
                 &.active {
-                    background: darken($colorFiord, 7%) url('/build/assets/img/admin/arrow-down.png') no-repeat right 15px center;
+                    background: darken($colorFiord, 7%) url('/images/admin/arrow-down.png') no-repeat right 15px center;
                 }
             }
         }

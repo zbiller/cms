@@ -3,7 +3,7 @@
 @section('content')
     <section class="view">
         {!! form_admin()->open(['class' => 'form']) !!}
-            {!! form_admin()->select('type', 'Type', ['' => ''] + $types, null, ['id' => 'block-type', 'data-url' => route('admin.blocks.create'), 'data-image' => asset('/build/assets/img/admin/blocks'), 'data-images' => json_encode($images)]) !!}
+            {!! form_admin()->select('type', 'Type', ['' => ''] + $types, null, ['id' => 'block-type', 'data-url' => route('admin.blocks.create'), 'data-image' => asset('/images/admin/blocks'), 'data-images' => json_encode($images)]) !!}
             <img src="" id="block-image" />
         {!! form()->close() !!}
     </section>

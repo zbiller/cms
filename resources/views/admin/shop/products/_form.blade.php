@@ -72,7 +72,7 @@
             @foreach($item->images as $index => $image)
                 <div class="multiple-item" data-index="{{ $index }}">
                     {!! block()->buttons() !!}
-                    {!! uploader()->field('metadata[images][' . $index . '][image]')->label('<img src="' . uploaded($image)->thumbnail() . '" width="180" />')->model($item)->types('image')->manager() !!}
+                    {!! uploader()->field('metadata[images][' . $index . '][image]')->label('<img src="' . uploaded($image)->thumbnail() . '" width="150" />')->model($item)->types('image')->manager() !!}
                 </div>
             @endforeach
         @endif

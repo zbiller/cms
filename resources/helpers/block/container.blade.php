@@ -1,7 +1,7 @@
 @permission('blocks-list')
     <div id="tab-blocks" class="tab">
         <div class="loading loading-blocks">
-            <img src="{{ asset('/build/assets/img/admin/loading.gif') }}" />
+            <img src="{{ asset('/images/admin/loading.gif') }}" />
         </div>
         <div
             class="blocks-container"

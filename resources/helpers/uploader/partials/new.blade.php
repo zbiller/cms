@@ -5,7 +5,7 @@
     <section id="upload-new-{!! $index !!}" class="upload-new popup" data-model="{{ get_class($model) }}" data-field="{{ $field }}">
         <div class="modal">
             <div class="loading">
-                <img src="{{ asset('/build/assets/img/admin/loading.gif') }}" />
+                <img src="{{ asset('/images/admin/loading.gif') }}" />
             </div>
             <div class="header">
                 <ul class="modal-tabs">

@@ -2,7 +2,6 @@ $(window).load(function(){
     /**
      * General Scripts
      */
-    //load();
     flash();
     menu();
     buttons();
@@ -25,15 +24,6 @@ $(window).load(function(){
     items();
     emails();
 });
-
-/**
- * @return void
- */
-function load()
-{
-    $('#loading').fadeOut();
-    $('header, nav, main, footer').fadeIn();
-}
 
 /**
  * @return void

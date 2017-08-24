@@ -95,7 +95,7 @@ div.tab {
             margin: 0;
             padding: 5px;
             border-bottom: 1px solid darken($colorGallery, 3%);
-            background: url('/build/assets/img/admin/img/input-file-bg.png') bottom 0 left 0 no-repeat !important;
+            background: url('/images/admin/img/input-file-bg.png') bottom 0 left 0 no-repeat !important;
             background-color: $colorWhite;
             text-transform: none;
 
@@ -192,7 +192,7 @@ div.tab {
 
     select {
         padding: 5px 32px 5px 5px;
-        background: url('/build/assets/img/admin/select-dropdown-bg.png') no-repeat right 5px center;
+        background: url('/images/admin/select-dropdown-bg.png') no-repeat right 5px center;
     }
 
     textarea {

@@ -2,7 +2,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 
 {!! Meta::tag('title') !!}
-{{ Html::style(elixir('assets/css/admin/app.css')) }}
+{!! Html::style(mix('css/admin/libs.css')) !!}
+{!! Html::style(mix('css/admin/app.css')) !!}
 
 @section('top_styles') @show
 @section('top_scripts') @show

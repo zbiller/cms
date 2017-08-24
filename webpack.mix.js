@@ -1,4 +1,4 @@
-const { mix } = require('laravel-mix');
+let mix = require('laravel-mix');
 
 /*
  |--------------------------------------------------------------------------
@@ -11,5 +11,77 @@ const { mix } = require('laravel-mix');
  |
  */
 
-mix.js('resources/assets/js/app.js', 'public/js')
-   .sass('resources/assets/sass/app.scss', 'public/css');
+mix
+    .copyDirectory('resources/assets/fonts', 'public/fonts')
+    .copyDirectory('resources/assets/images', 'public/images')
+    .copyDirectory('resources/assets/vendor', 'public/vendor')
+
+    /**
+     * Compile ADMIN sass files.
+     */
+    .sass('resources/assets/sass/admin/main.scss', 'public/css/admin/app.css')
+
+    /**
+     * Compile FRONT sass files.
+     */
+    .sass('resources/assets/sass/front/main.scss', 'public/css/front/app.css')
+
+    /**
+     * Concatenate LIBRARY css files.
+     */
+    .styles([
+        'resources/assets/css/admin/libs/jquery.css',
+        'resources/assets/css/admin/libs/dropzone.css',
+        'resources/assets/css/admin/libs/jstree.css',
+        'resources/assets/css/admin/libs/chosen.css',
+        'resources/assets/css/admin/libs/tooltip.css',
+        'resources/assets/css/admin/libs/colorpicker.css',
+        'resources/assets/css/admin/libs/timepicker.css',
+        'resources/assets/css/admin/libs/scroll.css',
+        'resources/assets/css/admin/libs/icons.css'
+    ], 'public/css/admin/libs.css')
+
+    /**
+     * Minify LIBRARY js files.
+     */
+    .scripts([
+        'resources/assets/js/admin/libs/jquery.js',
+        'resources/assets/js/admin/libs/jquery-ui.js',
+        'resources/assets/js/admin/libs/jquery-transport.js',
+        'resources/assets/js/admin/libs/bootstrap.js',
+        'resources/assets/js/admin/libs/scroll.js',
+        'resources/assets/js/admin/libs/chosen.js',
+        'resources/assets/js/admin/libs/timepicker.js',
+        'resources/assets/js/admin/libs/colorpicker.js',
+        'resources/assets/js/admin/libs/generator.js',
+        'resources/assets/js/admin/libs/dropzone.js',
+        'resources/assets/js/admin/libs/tooltip.js',
+        'resources/assets/js/admin/libs/upload.js',
+        'resources/assets/js/admin/libs/jstree.js',
+        'resources/assets/js/admin/libs/tablednd.js'
+        './public/vendor/jsvalidation/js/jsvalidation.js'
+    ], 'public/js/admin/libs.js')
+
+    /**
+     * Minify ADMIN js files.
+     */
+    .scripts([
+        'resources/assets/js/admin/helpers.js',
+        'resources/assets/js/admin/main.js'
+    ], 'public/js/admin/app.js')
+
+    /**
+     * Minify FRONT js files.
+     */
+    .scripts([
+        'resources/assets/js/front/main.js'
+    ], 'public/js/front/app.js')
+
+    .version([
+        'public/css/admin/libs.css',
+        'public/css/admin/app.css',
+        'public/css/front/app.css',
+        'public/js/admin/libs.js',
+        'public/js/admin/app.js',
+        'public/js/front/app.js'
+    ]);

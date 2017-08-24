@@ -1213,6 +1213,11 @@ class UploadService
         $styles = $this->getConfig('images.styles.' . $this->getField());
         $minWidth = $minHeight = 0;
 
+        if ($styles === null) {
+            $field = preg_replace('/[[0-9]+]/', '[*]', $this->getField());
+            $styles = $this->getConfig('images.styles.' . $field);
+        }
+
         if (!$styles || !is_array($styles) || empty($styles)) {
             return;
         }
