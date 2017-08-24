@@ -12,14 +12,14 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call(SettingsSeeder::class);
-        $this->call(CountriesSeeder::class);
-        $this->call(CurrenciesSeeder::class);
         $this->call(PermissionsSeeder::class);
         $this->call(RolesSeeder::class);
         $this->call(UsersSeeder::class);
         $this->call(LayoutsSeeder::class);
         $this->call(PagesSeeder::class);
         $this->call(EmailsSeeder::class);
+        $this->call(CountriesSeeder::class);
+        $this->call(CurrenciesSeeder::class);
         $this->call(ShopSeeder::class);
     }
 }

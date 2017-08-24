@@ -147,7 +147,7 @@ class CategoriesController extends Controller
     public function deleted(Request $request, CategoryFilter $filter, CategorySort $sort)
     {
         return $this->_deleted(function () use ($request, $filter, $sort) {
-            $this->items = Category::onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Category::onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Deleted Categories';
             $this->view = view('admin.shop.categories.deleted');
             $this->vars = [
@@ -226,7 +226,7 @@ class CategoriesController extends Controller
     public function drafts(Request $request, CategoryFilter $filter, CategorySort $sort)
     {
         return $this->_drafts(function () use ($request, $filter, $sort) {
-            $this->items = Category::onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Category::onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Drafted Categories';
             $this->view = view('admin.shop.categories.drafts');
             $this->vars = [

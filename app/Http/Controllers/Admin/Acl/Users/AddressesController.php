@@ -33,7 +33,7 @@ class AddressesController extends Controller
     public function index(Request $request, AddressFilter $filter, AddressSort $sort, User $user)
     {
         return $this->_index(function () use ($request, $filter, $sort, $user) {
-            $this->items = Address::whereUser($user->id)->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Address::whereUser($user->id)->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Addresses';
             $this->view = view('admin.acl.addresses.index');
             $this->vars = [

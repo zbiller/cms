@@ -29,7 +29,7 @@ class StatesController extends Controller
     public function index(Request $request, StateFilter $filter, StateSort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
-            $this->items = State::with('country')->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = State::with('country')->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'States';
             $this->view = view('admin.location.states.index');
             $this->vars = [

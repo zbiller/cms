@@ -30,7 +30,7 @@ class CitiesController extends Controller
     public function index(Request $request, CityFilter $filter, CitySort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
-            $this->items = City::with(['country', 'state'])->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = City::with(['country', 'state'])->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Cities';
             $this->view = view('admin.location.cities.index');
             $this->vars = [

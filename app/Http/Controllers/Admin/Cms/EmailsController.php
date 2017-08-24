@@ -33,7 +33,7 @@ class EmailsController extends Controller
     public function index(Request $request, EmailFilter $filter, EmailSort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
-            $this->items = Email::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Email::filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Emails';
             $this->view = view('admin.cms.emails.index');
             $this->vars = [
@@ -142,7 +142,7 @@ class EmailsController extends Controller
     public function deleted(Request $request, EmailFilter $filter, EmailSort $sort)
     {
         return $this->_deleted(function () use ($request, $filter, $sort) {
-            $this->items = Email::onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Email::onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Deleted Emails';
             $this->view = view('admin.cms.emails.deleted');
             $this->vars = [
@@ -231,7 +231,7 @@ class EmailsController extends Controller
     public function drafts(Request $request, EmailFilter $filter, EmailSort $sort)
     {
         return $this->_drafts(function () use ($request, $filter, $sort) {
-            $this->items = Email::onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Email::onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Drafted Emails';
             $this->view = view('admin.cms.emails.drafts');
             $this->vars = [

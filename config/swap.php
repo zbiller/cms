@@ -54,8 +54,7 @@ return [
     */
 
     'services' => [
-        'fixer' => true,
-        'yahoo' => true,
+        'google' => true,
     ],
 
     /*

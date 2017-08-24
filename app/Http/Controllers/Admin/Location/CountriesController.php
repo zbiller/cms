@@ -28,7 +28,7 @@ class CountriesController extends Controller
     public function index(Request $request, CountryFilter $filter, CountrySort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
-            $this->items = Country::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Country::filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Countries';
             $this->view = view('admin.location.countries.index');
         });

@@ -149,12 +149,6 @@ class CurrenciesSeeder extends Seeder
             'format' => 'P1,0.00',
             'exchange_rate' => 0.00,
         ],
-        'BYR' => [
-            'name' => 'Belarussian Ruble',
-            'symbol' => 'р.',
-            'format' => '1 0,00 р.',
-            'exchange_rate' => 0.00,
-        ],
         'BZD' => [
             'name' => 'Belize Dollar',
             'symbol' => 'BZ$',
@@ -201,12 +195,6 @@ class CurrenciesSeeder extends Seeder
             'name' => 'Costa Rican Colon',
             'symbol' => '₡',
             'format' => '₡1,0.00',
-            'exchange_rate' => 0.00,
-        ],
-        'CUC' => [
-            'name' => 'Cuban Convertible Peso',
-            'symbol' => 'CUC',
-            'format' => 'CUC1,0.00',
             'exchange_rate' => 0.00,
         ],
         'CUP' => [
@@ -381,12 +369,6 @@ class CurrenciesSeeder extends Seeder
             'name' => 'Iraqi Dinar',
             'symbol' => 'د.ع.‏',
             'format' => 'د.ع.‏ 1,0.00',
-            'exchange_rate' => 0.00,
-        ],
-        'IRR' => [
-            'name' => 'Iranian Rial',
-            'symbol' => '﷼',
-            'format' => '﷼ 1,0/00',
             'exchange_rate' => 0.00,
         ],
         'ISK' => [
@@ -755,12 +737,6 @@ class CurrenciesSeeder extends Seeder
             'format' => '$1,0.00',
             'exchange_rate' => 0.00,
         ],
-        'STD' => [
-            'name' => 'Sao Tome and Principe, Dobra',
-            'symbol' => 'Db',
-            'format' => 'Db1,0.00',
-            'exchange_rate' => 0.00,
-        ],
         'SVC' => [
             'name' => 'El Salvador Colon',
             'symbol' => '₡',
@@ -867,12 +843,6 @@ class CurrenciesSeeder extends Seeder
             'name' => 'Venezuela Bolivares Fuertes',
             'symbol' => 'Bs. F.',
             'format' => 'Bs. F. 1,0.00',
-            'exchange_rate' => 0.00,
-        ],
-        'VND' => [
-            'name' => 'Viet Nam, Dong',
-            'symbol' => '₫',
-            'format' => '1,0.0 ₫',
             'exchange_rate' => 0.00,
         ],
         'VUV' => [

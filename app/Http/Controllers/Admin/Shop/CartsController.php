@@ -59,7 +59,7 @@ class CartsController extends Controller
 
             $query->filtered($request, $filter)->sorted($request, $sort);
 
-            $this->items = $paginate ? $query->paginate(10) : $query->get();
+            $this->items = $paginate ? $query->paginate(config('crud.per_page')) : $query->get();
             $this->title = 'Carts';
             $this->view = view('admin.shop.carts.index');
             $this->vars = [

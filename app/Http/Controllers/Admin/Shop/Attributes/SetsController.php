@@ -31,7 +31,7 @@ class SetsController extends Controller
     {
         return $this->_index(function () use ($request, $filter, $sort) {
             if (count($request->all()) > 0) {
-                $this->items = Set::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+                $this->items = Set::filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             } else {
                 $this->items = Set::ordered()->get();
             }

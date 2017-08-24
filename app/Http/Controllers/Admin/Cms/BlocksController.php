@@ -32,7 +32,7 @@ class BlocksController extends Controller
     public function index(Request $request, BlockFilter $filter, BlockSort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
-            $this->items = Block::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Block::filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Blocks';
             $this->view = view('admin.cms.blocks.index');
             $this->vars = [
@@ -130,7 +130,7 @@ class BlocksController extends Controller
     public function deleted(Request $request, BlockFilter $filter, BlockSort $sort)
     {
         return $this->_deleted(function () use ($request, $filter, $sort) {
-            $this->items = Block::onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Block::onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Deleted Blocks';
             $this->view = view('admin.cms.blocks.deleted');
             $this->vars = [
@@ -191,7 +191,7 @@ class BlocksController extends Controller
     public function drafts(Request $request, BlockFilter $filter, BlockSort $sort)
     {
         return $this->_drafts(function () use ($request, $filter, $sort) {
-            $this->items = Block::onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Block::onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Drafted Blocks';
             $this->view = view('admin.cms.blocks.drafts');
             $this->vars = [

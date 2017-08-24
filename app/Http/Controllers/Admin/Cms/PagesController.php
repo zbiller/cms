@@ -143,7 +143,7 @@ class PagesController extends Controller
     public function deleted(Request $request, PageFilter $filter, PageSort $sort)
     {
         return $this->_deleted(function () use ($request, $filter, $sort) {
-            $this->items = Page::onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Page::onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Deleted Pages';
             $this->view = view('admin.cms.pages.deleted');
             $this->vars = [
@@ -224,7 +224,7 @@ class PagesController extends Controller
     public function drafts(Request $request, PageFilter $filter, PageSort $sort)
     {
         return $this->_drafts(function () use ($request, $filter, $sort) {
-            $this->items = Page::onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Page::onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Drafted Pages';
             $this->view = view('admin.cms.pages.drafts');
             $this->vars = [

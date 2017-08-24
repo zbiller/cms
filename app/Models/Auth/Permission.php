@@ -26,12 +26,15 @@ class Permission extends Model implements PermissionContract
     protected $table = 'permissions';
 
     /**
-     * The attributes that are protected against mass assign.
+     * The attributes that are mass assignable.
      *
      * @var array
      */
-    protected $guarded = [
-        'id',
+    protected $fillable = [
+        'name',
+        'group',
+        'label',
+        'type',
     ];
 
     /**

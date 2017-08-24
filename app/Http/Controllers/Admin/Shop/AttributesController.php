@@ -36,7 +36,7 @@ class AttributesController extends Controller
             $query = Attribute::whereSet($set->id);
 
             if (count($request->all()) > 0) {
-                $this->items = $query->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+                $this->items = $query->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             } else {
                 $this->items = $query->ordered()->get();
             }

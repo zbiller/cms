@@ -29,7 +29,7 @@ class DiscountsController extends Controller
     public function index(Request $request, DiscountFilter $filter, DiscountSort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
-            $this->items = Discount::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Discount::filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Discounts';
             $this->view = view('admin.shop.discounts.index');
             $this->vars = [

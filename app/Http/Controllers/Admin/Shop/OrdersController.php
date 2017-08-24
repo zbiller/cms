@@ -38,7 +38,7 @@ class OrdersController extends Controller
                 $query->latest();
             }
 
-            $this->items = $query->paginate(10);
+            $this->items = $query->paginate(config('crud.per_page'));
             $this->title = 'Orders';
             $this->view = view('admin.shop.orders.index');
             $this->vars = [
@@ -196,7 +196,7 @@ class OrdersController extends Controller
     public function deleted(Request $request, OrderFilter $filter, OrderSort $sort)
     {
         return $this->_deleted(function () use ($request, $filter, $sort) {
-            $this->items = Order::onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Order::onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Deleted Orders';
             $this->view = view('admin.shop.orders.deleted');
             $this->vars = [

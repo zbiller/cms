@@ -29,7 +29,7 @@ class LayoutsController extends Controller
     public function index(Request $request, LayoutFilter $filter, LayoutSort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
-            $this->items = Layout::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Layout::filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Layouts';
             $this->view = view('admin.cms.layouts.index');
             $this->vars['types'] = Layout::$types;

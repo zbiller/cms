@@ -33,17 +33,17 @@ class PermissionsSeeder extends Seeder
                 'type' => Permission::TYPE_ADMIN,
                 'name' => 'uploads-list',
             ],
-            'Upload' => [
-                'group' => 'Uploads',
-                'label' => 'Upload',
-                'type' => Permission::TYPE_ADMIN,
-                'name' => 'uploads-upload',
-            ],
             'Select' => [
                 'group' => 'Uploads',
                 'label' => 'Select',
                 'type' => Permission::TYPE_ADMIN,
                 'name' => 'uploads-select',
+            ],
+            'Upload' => [
+                'group' => 'Uploads',
+                'label' => 'Upload',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'uploads-upload',
             ],
             'Download' => [
                 'group' => 'Uploads',

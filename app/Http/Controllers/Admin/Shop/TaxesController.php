@@ -29,7 +29,7 @@ class TaxesController extends Controller
     public function index(Request $request, TaxFilter $filter, TaxSort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
-            $this->items = Tax::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Tax::filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Taxes';
             $this->view = view('admin.shop.taxes.index');
             $this->vars = [

@@ -63,7 +63,7 @@ class ProductsController extends Controller
             if ($orderable) {
                 $this->items = $query->whereCategory($request->get('category'))->ordered()->get();
             } else {
-                $this->items = $query->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+                $this->items = $query->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             }
 
             $this->title = 'Products';
@@ -225,7 +225,7 @@ class ProductsController extends Controller
     public function deleted(Request $request, ProductFilter $filter, ProductSort $sort)
     {
         return $this->_deleted(function () use ($request, $filter, $sort) {
-            $this->items = Product::with('category')->onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Product::with('category')->onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Deleted Products';
             $this->view = view('admin.shop.products.deleted');
             $this->vars = [
@@ -306,7 +306,7 @@ class ProductsController extends Controller
     public function drafts(Request $request, ProductFilter $filter, ProductSort $sort)
     {
         return $this->_drafts(function () use ($request, $filter, $sort) {
-            $this->items = Product::with('category')->onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Product::with('category')->onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Drafted Products';
             $this->view = view('admin.shop.products.drafts');
             $this->vars = [

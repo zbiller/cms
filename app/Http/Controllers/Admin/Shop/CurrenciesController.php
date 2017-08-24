@@ -29,7 +29,7 @@ class CurrenciesController extends Controller
     public function index(Request $request, CurrencyFilter $filter, CurrencySort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
-            $this->items = Currency::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+            $this->items = Currency::filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Currencies';
             $this->view = view('admin.shop.currencies.index');
         });

@@ -37,7 +37,7 @@ class ActivityController extends Controller
                 $query->latest();
             }
 
-            $this->items = $query->paginate(10);
+            $this->items = $query->paginate(config('crud.per_page'));
             $this->title = 'Activity';
             $this->view = view('admin.acl.activity.index');
             $this->vars = [

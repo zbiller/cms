@@ -27,7 +27,7 @@ class UploadsController extends Controller
      */
     public function index(Request $request, UploadFilter $filter, UploadSort $sort)
     {
-        $items = Upload::filtered($request, $filter)->sorted($request, $sort)->paginate(10);
+        $items = Upload::filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
 
         $this->setMeta('title', 'Admin - Uploads');
 
