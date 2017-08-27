@@ -62,7 +62,7 @@ class PagesController extends Controller
     }
 
     /**
-     * Method to execute when viewing a page of type "normal".
+     * Method to execute when viewing a page of type "default".
      *
      * @return \Illuminate\View\View
      */
@@ -72,7 +72,7 @@ class PagesController extends Controller
     }
 
     /**
-     * Method to execute when viewing a page of type "special".
+     * Method to execute when viewing a page of type "home".
      *
      * @return \Illuminate\View\View
      */

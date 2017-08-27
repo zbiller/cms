@@ -32,6 +32,7 @@
                         keyword: keyword
                     },
                     beforeSend:function(){
+                        popup.show();
                         container.hide();
                     },
                     complete:function(){
@@ -236,6 +237,9 @@
             //click load
             $(document).on('click', '.upload-new:not(.disabled) ul.modal-tabs > li', function(e) {
                 e.preventDefault();
+
+                $(this).closest('ul.modal-tabs').find('li').removeClass('active');
+                $(this).addClass('active');
 
                 uploadLoad($(this).closest('.upload-new:not(.disabled)').prev('.open-upload-new'));
             });

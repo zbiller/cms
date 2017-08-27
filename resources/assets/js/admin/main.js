@@ -631,6 +631,9 @@ function blocks()
     }
 }
 
+/**
+ * @return void
+ */
 function items()
 {
     //manage multiple items inside a form

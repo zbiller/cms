@@ -31,7 +31,7 @@
 </div>
 <div id="tab-3" class="tab">
     {!! form_admin()->text('metadata[meta][title]', 'Title') !!}
-    {!! uploader()->field('metadata[meta][image]')->label('Image')->model($item)->types('image')->manager() !!}
+    {!! uploader()->field('metadata[meta][image]')->label('Image')->model($item)->manager() !!}
     {!! form_admin()->textarea('metadata[meta][description]', 'Description') !!}
     {!! form_admin()->textarea('metadata[meta][keywords]', 'Keywords') !!}
 </div>
