@@ -84,6 +84,9 @@ class CategoriesController extends Controller
         return $this->_store(function () use ($request, $parent) {
             $this->item = Category::create($request->all(), $parent->exists ? $parent : null);
             $this->redirect = redirect()->route('admin.product_categories.index');
+
+            $this->item->discounts()->attach($request->get('discounts'));
+            $this->item->taxes()->attach($request->get('taxes'));
         }, $request);
     }
 
@@ -120,6 +123,8 @@ class CategoriesController extends Controller
             $this->redirect = redirect()->route('admin.product_categories.index');
 
             $this->item->update($request->all());
+            $this->item->discounts()->sync($request->get('discounts'));
+            $this->item->taxes()->sync($request->get('taxes'));
         }, $request);
     }
 
@@ -210,9 +215,15 @@ class CategoriesController extends Controller
         return $this->_preview(function () use ($category, $request) {
             if ($category && $category->exists) {
                 $this->item = $category;
+
                 $this->item->update($request->all());
+                $this->item->discounts()->sync($request->get('discounts'));
+                $this->item->taxes()->sync($request->get('taxes'));
             } else {
                 $this->item = Category::create($request->all());
+
+                $this->item->discounts()->attach($request->get('discounts'));
+                $this->item->taxes()->attach($request->get('taxes'));
             }
         });
     }

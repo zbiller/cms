@@ -225,6 +225,28 @@ if (!function_exists('is_json_format')) {
     }
 }
 
+if (!function_exists('array_depth')) {
+    /**
+     * @param array $array
+     * @return int
+     */
+    function array_depth(array $array) {
+        $maxDepth = 1;
+
+        foreach ($array as $value) {
+            if (is_array($value)) {
+                $depth = array_depth($value) + 1;
+
+                if ($depth > $maxDepth) {
+                    $maxDepth = $depth;
+                }
+            }
+        }
+
+        return $maxDepth;
+    }
+}
+
 if (!function_exists('array_search_key_recursive')) {
     /**
      * @param string|int $needle

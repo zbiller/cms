@@ -461,19 +461,20 @@ trait HasDrafts
         $data = $this->buildDraftDataFromModel($params);
 
         foreach ($this->getRelationsForDraft() as $relation => $attributes) {
-            if (
-                (!isset($params[$relation]) || empty($params[$relation])) &&
-                self::$draftOptions->softDraftRelations === true
-            ) {
+            if ((!isset($params[$relation]) || empty($params[$relation])) && self::$draftOptions->softDraftRelations === true) {
                 continue;
             }
 
             if (relation()->isDirect($attributes['type'])) {
-                $data['relations'][$relation] = $this->buildDraftDataFromDirectRelation($params, $relation, $attributes);
+                $data['relations'][$relation] = $this->buildDraftDataFromDirectRelation(
+                    $params, $relation, $attributes
+                );
             }
 
             if (relation()->isPivoted($attributes['type'])) {
-                $data['relations'][$relation] = $this->buildDraftDataFromPivotedRelation($params, $relation, $attributes, $draft);
+                $data['relations'][$relation] = $this->buildDraftDataFromPivotedRelation(
+                    $params, $relation, $attributes, $draft
+                );
             }
         }
 
@@ -604,9 +605,15 @@ trait HasDrafts
 
             foreach ($params[$relation] as $index => $parameters) {
                 if (is_array($parameters)) {
-                    foreach ($parameters as $id => $attributes) {
+                    if (array_depth($parameters) > 1) {
+                        foreach ($parameters as $id => $attributes) {
+                            $this->attachPivotedRelationFromExistingOrNewRelated(
+                                $this, $id, $relation, $attributes, $draft
+                            );
+                        }
+                    } else {
                         $this->attachPivotedRelationFromExistingOrNewRelated(
-                            $this, $id, $relation, $attributes, $draft
+                            $this, $index, $relation, $parameters, $draft
                         );
                     }
                 } else {
@@ -731,14 +738,16 @@ trait HasDrafts
      */
     protected function publishDirectChildRelationFromDraft($relation, $attributes)
     {
-        if (array_key_exists(SoftDeletes::class, class_uses($this->{$relation}))) {
+        $related = $this->{$relation}()->getRelated();
+
+        if (array_key_exists(SoftDeletes::class, class_uses($related))) {
             $this->{$relation}()->forceDelete();
         } else {
             $this->{$relation}()->delete();
         }
 
         foreach ($attributes->records->items as $item) {
-            $rel = $this->{$relation}()->getRelated()->newInstance();
+            $rel = $related->newInstance();
 
             foreach ($item as $field => $value) {
                 if ($field != $attributes->records->primary_key) {

@@ -24,9 +24,6 @@ use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsOrderable;
 use App\Traits\IsSortable;
-use App\Traits\TouchesAttributes;
-use App\Traits\TouchesDiscounts;
-use App\Traits\TouchesTaxes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
@@ -45,9 +42,6 @@ class Product extends Model
     use IsFilterable;
     use IsSortable;
     use IsOrderable;
-    use TouchesAttributes;
-    use TouchesDiscounts;
-    use TouchesTaxes;
     use SoftDeletes;
 
     /**
