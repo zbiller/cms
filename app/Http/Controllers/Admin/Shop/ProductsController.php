@@ -119,6 +119,9 @@ class ProductsController extends Controller
             $this->redirect = redirect()->route('admin.products.index');
 
             $this->item->categories()->attach($request->get('categories'));
+            $this->item->attributes()->attach($request->get('attributes'));
+            $this->item->discounts()->attach($request->get('discounts'));
+            $this->item->taxes()->attach($request->get('taxes'));
         }, $request);
     }
 
@@ -168,6 +171,9 @@ class ProductsController extends Controller
 
             $this->item->update($request->all());
             $this->item->categories()->sync($request->get('categories'));
+            $this->item->attributes()->sync($request->get('attributes'));
+            $this->item->discounts()->sync($request->get('discounts'));
+            $this->item->taxes()->sync($request->get('taxes'));
         }, $request);
     }
 
@@ -290,9 +296,19 @@ class ProductsController extends Controller
         return $this->_preview(function () use ($product, $request) {
             if ($product && $product->exists) {
                 $this->item = $product;
+
                 $this->item->update($request->all());
+                $this->item->categories()->sync($request->get('categories'));
+                $this->item->attributes()->sync($request->get('attributes'));
+                $this->item->discounts()->sync($request->get('discounts'));
+                $this->item->taxes()->sync($request->get('taxes'));
             } else {
                 $this->item = Product::create($request->all());
+
+                $this->item->categories()->attach($request->get('categories'));
+                $this->item->attributes()->attach($request->get('attributes'));
+                $this->item->discounts()->attach($request->get('discounts'));
+                $this->item->taxes()->attach($request->get('taxes'));
             }
         });
     }

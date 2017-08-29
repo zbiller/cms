@@ -80,8 +80,8 @@
         @if($productTaxes->count() > 0)
             @foreach($productTaxes as $index => $tax)
                 @php($pivot = $tax->pivot)
-                {!! form()->hidden('taxes[' . $pivot->id . '][' . $tax->id . ']', $pivot->product_id, ['class' => 'tax-input', 'data-index' => $pivot->id]) !!}
-                {!! form()->hidden('taxes[' . $pivot->id . '][' . $tax->id . '][ord]', $pivot->ord, ['class' => 'tax-input', 'data-index' => $pivot->id]) !!}
+                {!! form()->hidden('taxes[' . $tax->id . ']', $pivot->product_id, ['class' => 'tax-input', 'data-index' => $pivot->id]) !!}
+                {!! form()->hidden('taxes[' . $tax->id . '][ord]', $pivot->ord, ['class' => 'tax-input', 'data-index' => $pivot->id]) !!}
             @endforeach
         @endif
     </div>
@@ -132,8 +132,8 @@
     There are no taxes assigned to this product
 </script>
 <script type="x-template" id="tax-request-template">
-    {!! form()->hidden('taxes[#index#][#tax_id#]', '#tax_id#', ['class' => 'tax-input', 'data-index' => '#index#']) !!}
-    {!! form()->hidden('taxes[#index#][#tax_id#][ord]', '#tax_ord#', ['class' => 'tax-input', 'data-index' => '#index#']) !!}
+    {!! form()->hidden('taxes[#tax_id#]', '#tax_id#', ['class' => 'tax-input', 'data-index' => '#index#']) !!}
+    {!! form()->hidden('taxes[#tax_id#][ord]', '#tax_ord#', ['class' => 'tax-input', 'data-index' => '#index#']) !!}
 </script>
 
 @php($item->clearQueryCache())
@@ -230,7 +230,7 @@
                     var rows = table.tBodies[0].rows;
 
                     $(rows).each(function (index, selector) {
-                        $('input[name="taxes[' + $(selector).attr('data-index') + '][' + $(selector).attr('data-tax-id') + '][ord]"]').val(index + 1);
+                        $('input[name="taxes[' + $(selector).attr('data-tax-id') + '][ord]"][data-index="' + $(selector).attr('data-index') + '"]').val(index + 1);
                     });
                 }
             });

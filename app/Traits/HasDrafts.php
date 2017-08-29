@@ -12,6 +12,7 @@ use BadMethodCallException;
 use Closure;
 use DB;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use ReflectionMethod;
 use Relation;
@@ -261,6 +262,8 @@ trait HasDrafts
             $this->getDraftedAtColumn() => $this->fromDateTime($this->freshTimestamp())
         ]);
 
+        $this->saveRelationsForLimboDraft($model, $data);
+
         return $model;
     }
 
@@ -351,6 +354,98 @@ trait HasDrafts
             $this->forceDelete();
         } else {
             $this->delete();
+        }
+    }
+
+    /**
+     * Save all relations for a limbo draft.
+     *
+     * @param Model $model
+     * @param array $data
+     * @throws DraftException
+     */
+    protected function saveRelationsForLimboDraft(Model $model, array $data = [])
+    {
+        try {
+            foreach ($this->getRelationsForDraft() as $relation => $attributes) {
+                if (!isset($data[$relation]) || empty($data[$relation]) || self::$draftOptions->softDraftRelations === true) {
+                    continue;
+                }
+
+                if (relation()->isDirect($attributes['type']) && relation()->isChild($attributes['type'])) {
+                    if (relation()->isChildSingle($attributes['type'])) {
+                        $this->saveSingleChildRelationForLimboDraft($model, $relation, $data);
+                    }
+
+                    if (relation()->isChildMultiple($attributes['type'])) {
+                        $this->saveMultipleChildrenRelationForLimboDraft($model, $relation, $data);
+                    }
+                }
+
+                if (relation()->isPivoted($attributes['type'])) {
+                    $this->savePivotedRelationForLimboDraft($model, $relation, $data);
+                }
+            }
+        } catch (Exception $e) {
+            throw DraftException::saveRelationFailed();
+        }
+    }
+
+    /**
+     * Save a direct relation for the limbo draft of type "single child".
+     * Ex: hasOne, morphOne.
+     *
+     * @param Model $model
+     * @param string $relation
+     * @param array $data
+     */
+    protected function saveSingleChildRelationForLimboDraft(Model $model, $relation, array $data = [])
+    {
+        if ($model->{$relation} && $model->{$relation}->exists) {
+            $model->{$relation}->update($data[$relation]);
+        } else {
+            $model->{$relation}()->create($data[$relation]);
+        }
+    }
+
+    /**
+     * Save a direct relation for the limbo draft of type "multiple children".
+     * Ex: hasMany, morphMany.
+     *
+     * @param Model $model
+     * @param string $relation
+     * @param array $data
+     */
+    protected function saveMultipleChildrenRelationForLimboDraft(Model $model, $relation, array $data = [])
+    {
+        foreach ($data[$relation] as $attributes) {
+            $primary = $model->{$relation}()->getRelated()->getKeyName();
+
+            if (array_key_exists($primary, $attributes)) {
+                $related = $model->{$relation}()->find($attributes[$primary]);
+
+                if ($related && $related->exists) {
+                    $related->update(array_except($attributes, $primary));
+                }
+            } else {
+                $model->{$relation}()->create($attributes);
+            }
+        }
+    }
+
+    /**
+     * Save a pivoted relation for the limbo draft.
+     *
+     * @param Model $model
+     * @param string $relation
+     * @param array $data
+     */
+    protected function savePivotedRelationForLimboDraft(Model $model, $relation, array $data = [])
+    {
+        if ($model->wasRecentlyCreated === true) {
+            $model->{$relation}()->attach($data[$relation]);
+        } else {
+            $model->{$relation}()->sync($data[$relation]);
         }
     }
 

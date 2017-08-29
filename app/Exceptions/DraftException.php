@@ -30,4 +30,12 @@ class DraftException extends Exception
     {
         return new static('Failed deleting the draft' . ($multiple ? 's' : '') . '!');
     }
+
+    /**
+     * @return static
+     */
+    public static function saveRelationFailed()
+    {
+        return new static('Failed saving a relation for the draft!');
+    }
 }

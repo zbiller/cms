@@ -51,6 +51,26 @@ class RelationHelper
     ];
 
     /**
+     * All available Laravel's direct single child relations.
+     *
+     * @var array
+     */
+    protected $childRelationsSingle = [
+        'Illuminate\Database\Eloquent\Relations\HasOne',
+        'Illuminate\Database\Eloquent\Relations\MorphOne',
+    ];
+
+    /**
+     * All available Laravel's direct multiple children relations.
+     *
+     * @var array
+     */
+    protected $childRelationsMultiple = [
+        'Illuminate\Database\Eloquent\Relations\HasMany',
+        'Illuminate\Database\Eloquent\Relations\MorphMany',
+    ];
+
+    /**
      * Verify if a given relation is direct or not.
      *
      * @param string $relation
@@ -92,5 +112,29 @@ class RelationHelper
     public function isChild($relation)
     {
         return in_array($relation, $this->childRelations);
+    }
+
+    /**
+     * Verify if a given direct relation is of type single child.
+     * Ex: hasOne, morphOne.
+     *
+     * @param string $relation
+     * @return bool
+     */
+    public function isChildSingle($relation)
+    {
+        return in_array($relation, $this->childRelationsSingle);
+    }
+
+    /**
+     * Verify if a given direct relation is of type single child.
+     * Ex: hasMany, morphMany.
+     *
+     * @param string $relation
+     * @return bool
+     */
+    public function isChildMultiple($relation)
+    {
+        return in_array($relation, $this->childRelationsMultiple);
     }
 }
