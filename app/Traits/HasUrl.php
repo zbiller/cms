@@ -242,7 +242,7 @@ trait HasUrl
         $segment = self::$urlOptions->{'url' . ucwords($type)};
 
         if (is_callable($segment)) {
-            return call_user_func_array($segment, ['', $this]);
+            return call_user_func_array($segment, [[], $this]);
         } elseif (is_array($segment)) {
             return implode('/', $segment);
         } elseif (is_string($segment)) {
