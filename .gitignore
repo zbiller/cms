@@ -8,7 +8,6 @@
 /public/uploads
 /public/vendor
 /storage/*.key
-/pma
 /vendor
 /.idea
 /.vagrant
