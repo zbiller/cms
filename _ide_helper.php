@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.4.36 on 2017-08-30.
+ * Generated for Laravel 5.4.36 on 2017-08-31.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -3044,86 +3044,6 @@ namespace Illuminate\Support\Facades {
         public static function getQueuedCookies()
         {
             return \Illuminate\Cookie\CookieJar::getQueuedCookies();
-        }
-         
-    }
-
-    class Crypt {
-        
-        /**
-         * Determine if the given key and cipher combination is valid.
-         *
-         * @param string $key
-         * @param string $cipher
-         * @return bool 
-         * @static 
-         */ 
-        public static function supported($key, $cipher)
-        {
-            return \Illuminate\Encryption\Encrypter::supported($key, $cipher);
-        }
-        
-        /**
-         * Encrypt the given value.
-         *
-         * @param mixed $value
-         * @param bool $serialize
-         * @return string 
-         * @throws \Illuminate\Contracts\Encryption\EncryptException
-         * @static 
-         */ 
-        public static function encrypt($value, $serialize = true)
-        {
-            return \Illuminate\Encryption\Encrypter::encrypt($value, $serialize);
-        }
-        
-        /**
-         * Encrypt a string without serialization.
-         *
-         * @param string $value
-         * @return string 
-         * @static 
-         */ 
-        public static function encryptString($value)
-        {
-            return \Illuminate\Encryption\Encrypter::encryptString($value);
-        }
-        
-        /**
-         * Decrypt the given value.
-         *
-         * @param mixed $payload
-         * @param bool $unserialize
-         * @return string 
-         * @throws \Illuminate\Contracts\Encryption\DecryptException
-         * @static 
-         */ 
-        public static function decrypt($payload, $unserialize = true)
-        {
-            return \Illuminate\Encryption\Encrypter::decrypt($payload, $unserialize);
-        }
-        
-        /**
-         * Decrypt the given string without unserialization.
-         *
-         * @param string $payload
-         * @return string 
-         * @static 
-         */ 
-        public static function decryptString($payload)
-        {
-            return \Illuminate\Encryption\Encrypter::decryptString($payload);
-        }
-        
-        /**
-         * Get the encryption key.
-         *
-         * @return string 
-         * @static 
-         */ 
-        public static function getKey()
-        {
-            return \Illuminate\Encryption\Encrypter::getKey();
         }
          
     }
@@ -13353,193 +13273,6 @@ namespace Proengsoft\JsValidation\Facades {
  
 }
 
-namespace Pbmedia\LaravelFFMpeg { 
-
-    class FFMpegFacade {
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function getFilesystems()
-        {
-            return \Pbmedia\LaravelFFMpeg\FFMpeg::getFilesystems();
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function newTemporaryFile()
-        {
-            return \Pbmedia\LaravelFFMpeg\FFMpeg::newTemporaryFile();
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function cleanupTemporaryFiles()
-        {
-            return \Pbmedia\LaravelFFMpeg\FFMpeg::cleanupTemporaryFiles();
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function fromFilesystem($filesystem)
-        {
-            return \Pbmedia\LaravelFFMpeg\FFMpeg::fromFilesystem($filesystem);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function fromDisk($diskName)
-        {
-            return \Pbmedia\LaravelFFMpeg\FFMpeg::fromDisk($diskName);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function open($path)
-        {
-            return \Pbmedia\LaravelFFMpeg\FFMpeg::open($path);
-        }
-         
-    }
- 
-}
-
-namespace Spatie\Analytics { 
-
-    class AnalyticsFacade {
-        
-        /**
-         * 
-         *
-         * @param string $viewId
-         * @return $this 
-         * @static 
-         */ 
-        public static function setViewId($viewId)
-        {
-            return \Spatie\Analytics\Analytics::setViewId($viewId);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function fetchVisitorsAndPageViews($period)
-        {
-            return \Spatie\Analytics\Analytics::fetchVisitorsAndPageViews($period);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function fetchTotalVisitorsAndPageViews($period)
-        {
-            return \Spatie\Analytics\Analytics::fetchTotalVisitorsAndPageViews($period);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function fetchMostVisitedPages($period, $maxResults = 20)
-        {
-            return \Spatie\Analytics\Analytics::fetchMostVisitedPages($period, $maxResults);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function fetchTopReferrers($period, $maxResults = 20)
-        {
-            return \Spatie\Analytics\Analytics::fetchTopReferrers($period, $maxResults);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function fetchTopBrowsers($period, $maxResults = 10)
-        {
-            return \Spatie\Analytics\Analytics::fetchTopBrowsers($period, $maxResults);
-        }
-        
-        /**
-         * Call the query method on the authenticated client.
-         *
-         * @param \Spatie\Analytics\Period $period
-         * @param string $metrics
-         * @param array $others
-         * @return array|null 
-         * @static 
-         */ 
-        public static function performQuery($period, $metrics, $others = array())
-        {
-            return \Spatie\Analytics\Analytics::performQuery($period, $metrics, $others);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function getAnalyticsService()
-        {
-            return \Spatie\Analytics\Analytics::getAnalyticsService();
-        }
-        
-        /**
-         * Register a custom macro.
-         *
-         * @param string $name
-         * @param callable $macro
-         * @return void 
-         * @static 
-         */ 
-        public static function macro($name, $macro)
-        {
-            \Spatie\Analytics\Analytics::macro($name, $macro);
-        }
-        
-        /**
-         * Checks if macro is registered.
-         *
-         * @param string $name
-         * @return bool 
-         * @static 
-         */ 
-        public static function hasMacro($name)
-        {
-            return \Spatie\Analytics\Analytics::hasMacro($name);
-        }
-         
-    }
- 
-}
-
 namespace DaveJamesMiller\Breadcrumbs { 
 
     class Facade {
@@ -14289,8 +14022,6 @@ namespace  {
     class Config extends \Illuminate\Support\Facades\Config {}
 
     class Cookie extends \Illuminate\Support\Facades\Cookie {}
-
-    class Crypt extends \Illuminate\Support\Facades\Crypt {}
 
     class DB extends \Illuminate\Support\Facades\DB {}
 
@@ -16369,10 +16100,6 @@ namespace  {
     class Image extends \Intervention\Image\Facades\Image {}
 
     class JsValidator extends \Proengsoft\JsValidation\Facades\JsValidatorFacade {}
-
-    class FFMpeg extends \Pbmedia\LaravelFFMpeg\FFMpegFacade {}
-
-    class Analytics extends \Spatie\Analytics\AnalyticsFacade {}
 
     class Breadcrumbs extends \DaveJamesMiller\Breadcrumbs\Facade {}
 
