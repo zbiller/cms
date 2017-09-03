@@ -8,6 +8,7 @@ use App\Exceptions\DraftException;
 use App\Exceptions\DuplicateException;
 use App\Exceptions\OrderException;
 use App\Exceptions\RevisionException;
+use App\Exceptions\UploadException;
 use App\Exceptions\UrlException;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
@@ -27,7 +28,6 @@ use Illuminate\Routing\Route as Router;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Route;
-use Symfony\Component\HttpFoundation\File\Exception\UploadException;
 
 trait CanCrud
 {
@@ -129,23 +129,6 @@ trait CanCrud
         'revision' => [
             'GET',
         ],
-    ];
-
-    /**
-     * The list of exceptions that are soft (not throwable).
-     * When the script fails with one of these exceptions, instead of throwing it, it will output an error message to the user.
-     * 
-     * @var array
-     */
-    protected static $softExceptions = [
-        CrudException::class,
-        UploadException::class,
-        DraftException::class,
-        RevisionException::class,
-        UrlException::class,
-        DuplicateException::class,
-        OrderException::class,
-        CartException::class,
     ];
 
     /**
@@ -626,7 +609,7 @@ trait CanCrud
                     } catch (Exception $e) {
                         flash()->error($e->getMessage());
 
-                        if (!in_array(get_class($e), self::$softExceptions)) {
+                        if (!in_array(get_class($e), config('crud.soft_exceptions'))) {
                             throw $e;
                         }
                     }
@@ -677,7 +660,7 @@ trait CanCrud
         } catch (ModelNotFoundException $e) {
             flash()->error(__('crud.model_not_found'));
         } catch (Exception $e) {
-            if (in_array(get_class($e), self::$softExceptions)) {
+            if (in_array(get_class($e), config('crud.soft_exceptions'))) {
                 flash()->error($e->getMessage());
             } else {
                 throw $e;
@@ -729,7 +712,7 @@ trait CanCrud
         } catch (Exception $e) {
             DB::rollBack();
 
-            if (in_array(get_class($e), self::$softExceptions)) {
+            if (in_array(get_class($e), config('crud.soft_exceptions'))) {
                 flash()->error($e->getMessage());
                 return back()->withInput($request ? $request->all() : []);
             }

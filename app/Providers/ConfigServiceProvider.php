@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Configs\ActivityConfig;
 use App\Configs\CacheConfig;
+use App\Configs\CrudConfig;
 use App\Configs\ShopConfig;
 use App\Configs\UploadConfig;
 use Illuminate\Support\ServiceProvider;
@@ -18,6 +19,7 @@ class ConfigServiceProvider extends ServiceProvider
     public function boot()
     {
         if (!app()->runningInConsole()) {
+            $this->checkCrudConfig();
             $this->checkUploadConfig();
             $this->checkCacheConfig();
             $this->checkShopConfig();
@@ -33,6 +35,16 @@ class ConfigServiceProvider extends ServiceProvider
     public function register()
     {
 
+    }
+
+    /**
+     * Check if the config/crud.php is properly and fully configured.
+     *
+     * @return void
+     */
+    protected function checkCrudConfig()
+    {
+        CrudConfig::check();
     }
 
     /**
@@ -56,7 +68,7 @@ class ConfigServiceProvider extends ServiceProvider
     }
 
     /**
-     * Check if the config/cache.php is properly and fully configured.
+     * Check if the config/shop.php is properly and fully configured.
      *
      * @return void
      */
