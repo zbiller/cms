@@ -52,13 +52,22 @@ var init = {
     FlashMessage: function (type, message) {
         var flash = $('div.flash');
 
-        flash.removeClass('success error warning').addClass(type);
-        flash.find('p').text('').text(message);
-        flash.fadeIn(800);
+        if (flash.length) {
+            flash.removeClass('success error warning').addClass(type);
+            flash.find('p').text('').text(message);
+            flash.fadeIn(800);
 
-        setTimeout(function(){
-            flash.fadeOut(800);
-        }, 10000);
+            setTimeout(function(){
+                flash.fadeOut(800);
+            }, 10000);
+        } else {
+            $('body').append(
+                '<div class="flash ' + type + '"><a><i class="fa fa-times"></i></a><p>' + message + '</p></div>'
+            );
+            setTimeout(function(){
+                $('div.flash').fadeOut(800);
+            }, 10000);
+        }
     },
     Editor: function () {
         tinymce.init({

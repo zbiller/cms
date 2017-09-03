@@ -259,7 +259,7 @@ class BlocksController extends Controller
             ], 400);
         }
 
-        $this->validate($request, [
+        $request->validate([
             'blockable_id' => 'required|numeric',
             'blockable_type' => 'required',
         ]);
@@ -314,7 +314,7 @@ class BlocksController extends Controller
             ], 400);
         }
 
-        $this->validate($request, [
+        $request->validate([
             'block_id' => 'required|numeric',
         ]);
 

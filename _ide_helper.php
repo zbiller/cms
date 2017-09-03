@@ -3275,98 +3275,6 @@ namespace Illuminate\Support\Facades {
          
     }
 
-    class Crypt {
-        
-        /**
-         * Determine if the given key and cipher combination is valid.
-         *
-         * @param string $key
-         * @param string $cipher
-         * @return bool 
-         * @static 
-         */ 
-        public static function supported($key, $cipher)
-        {
-            return \Illuminate\Encryption\Encrypter::supported($key, $cipher);
-        }
-        
-        /**
-         * Create a new encryption key for the given cipher.
-         *
-         * @param string $cipher
-         * @return string 
-         * @static 
-         */ 
-        public static function generateKey($cipher)
-        {
-            return \Illuminate\Encryption\Encrypter::generateKey($cipher);
-        }
-        
-        /**
-         * Encrypt the given value.
-         *
-         * @param mixed $value
-         * @param bool $serialize
-         * @return string 
-         * @throws \Illuminate\Contracts\Encryption\EncryptException
-         * @static 
-         */ 
-        public static function encrypt($value, $serialize = true)
-        {
-            return \Illuminate\Encryption\Encrypter::encrypt($value, $serialize);
-        }
-        
-        /**
-         * Encrypt a string without serialization.
-         *
-         * @param string $value
-         * @return string 
-         * @static 
-         */ 
-        public static function encryptString($value)
-        {
-            return \Illuminate\Encryption\Encrypter::encryptString($value);
-        }
-        
-        /**
-         * Decrypt the given value.
-         *
-         * @param mixed $payload
-         * @param bool $unserialize
-         * @return string 
-         * @throws \Illuminate\Contracts\Encryption\DecryptException
-         * @static 
-         */ 
-        public static function decrypt($payload, $unserialize = true)
-        {
-            return \Illuminate\Encryption\Encrypter::decrypt($payload, $unserialize);
-        }
-        
-        /**
-         * Decrypt the given string without unserialization.
-         *
-         * @param string $payload
-         * @return string 
-         * @static 
-         */ 
-        public static function decryptString($payload)
-        {
-            return \Illuminate\Encryption\Encrypter::decryptString($payload);
-        }
-        
-        /**
-         * Get the encryption key.
-         *
-         * @return string 
-         * @static 
-         */ 
-        public static function getKey()
-        {
-            return \Illuminate\Encryption\Encrypter::getKey();
-        }
-         
-    }
-
     class DB {
         
         /**
@@ -13938,137 +13846,6 @@ namespace Pbmedia\LaravelFFMpeg {
  
 }
 
-namespace Spatie\Analytics { 
-
-    class AnalyticsFacade {
-        
-        /**
-         * 
-         *
-         * @param string $viewId
-         * @return $this 
-         * @static 
-         */ 
-        public static function setViewId($viewId)
-        {
-            return \Spatie\Analytics\Analytics::setViewId($viewId);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function fetchVisitorsAndPageViews($period)
-        {
-            return \Spatie\Analytics\Analytics::fetchVisitorsAndPageViews($period);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function fetchTotalVisitorsAndPageViews($period)
-        {
-            return \Spatie\Analytics\Analytics::fetchTotalVisitorsAndPageViews($period);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function fetchMostVisitedPages($period, $maxResults = 20)
-        {
-            return \Spatie\Analytics\Analytics::fetchMostVisitedPages($period, $maxResults);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function fetchTopReferrers($period, $maxResults = 20)
-        {
-            return \Spatie\Analytics\Analytics::fetchTopReferrers($period, $maxResults);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function fetchTopBrowsers($period, $maxResults = 10)
-        {
-            return \Spatie\Analytics\Analytics::fetchTopBrowsers($period, $maxResults);
-        }
-        
-        /**
-         * Call the query method on the authenticated client.
-         *
-         * @param \Spatie\Analytics\Period $period
-         * @param string $metrics
-         * @param array $others
-         * @return array|null 
-         * @static 
-         */ 
-        public static function performQuery($period, $metrics, $others = array())
-        {
-            return \Spatie\Analytics\Analytics::performQuery($period, $metrics, $others);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function getAnalyticsService()
-        {
-            return \Spatie\Analytics\Analytics::getAnalyticsService();
-        }
-        
-        /**
-         * Register a custom macro.
-         *
-         * @param string $name
-         * @param object|callable $macro
-         * @return void 
-         * @static 
-         */ 
-        public static function macro($name, $macro)
-        {
-            \Spatie\Analytics\Analytics::macro($name, $macro);
-        }
-        
-        /**
-         * Mix another object into the class.
-         *
-         * @param object $mixin
-         * @return void 
-         * @static 
-         */ 
-        public static function mixin($mixin)
-        {
-            \Spatie\Analytics\Analytics::mixin($mixin);
-        }
-        
-        /**
-         * Checks if macro is registered.
-         *
-         * @param string $name
-         * @return bool 
-         * @static 
-         */ 
-        public static function hasMacro($name)
-        {
-            return \Spatie\Analytics\Analytics::hasMacro($name);
-        }
-         
-    }
- 
-}
-
 namespace Swap\Laravel\Facades { 
 
     class Swap {
@@ -14626,74 +14403,6 @@ namespace App\Facades {
  
 }
 
-namespace Spatie\LaravelImageOptimizer\Facades { 
-
-    class ImageOptimizer {
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function getOptimizers()
-        {
-            return \Spatie\ImageOptimizer\OptimizerChain::getOptimizers();
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function addOptimizer($optimizer)
-        {
-            return \Spatie\ImageOptimizer\OptimizerChain::addOptimizer($optimizer);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function setOptimizers($optimizers)
-        {
-            return \Spatie\ImageOptimizer\OptimizerChain::setOptimizers($optimizers);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function setTimeout($timeoutInSeconds)
-        {
-            return \Spatie\ImageOptimizer\OptimizerChain::setTimeout($timeoutInSeconds);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function useLogger($log)
-        {
-            return \Spatie\ImageOptimizer\OptimizerChain::useLogger($log);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function optimize($pathToImage, $pathToOutput = null)
-        {
-            return \Spatie\ImageOptimizer\OptimizerChain::optimize($pathToImage, $pathToOutput);
-        }
-         
-    }
- 
-}
-
 namespace DaveJamesMiller\Breadcrumbs\Facades { 
 
     class Breadcrumbs {
@@ -14885,6 +14594,74 @@ namespace DaveJamesMiller\Breadcrumbs\Facades {
  
 }
 
+namespace Spatie\LaravelImageOptimizer\Facades { 
+
+    class ImageOptimizer {
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getOptimizers()
+        {
+            return \Spatie\ImageOptimizer\OptimizerChain::getOptimizers();
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function addOptimizer($optimizer)
+        {
+            return \Spatie\ImageOptimizer\OptimizerChain::addOptimizer($optimizer);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setOptimizers($optimizers)
+        {
+            return \Spatie\ImageOptimizer\OptimizerChain::setOptimizers($optimizers);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setTimeout($timeoutInSeconds)
+        {
+            return \Spatie\ImageOptimizer\OptimizerChain::setTimeout($timeoutInSeconds);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function useLogger($log)
+        {
+            return \Spatie\ImageOptimizer\OptimizerChain::useLogger($log);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function optimize($pathToImage, $pathToOutput = null)
+        {
+            return \Spatie\ImageOptimizer\OptimizerChain::optimize($pathToImage, $pathToOutput);
+        }
+         
+    }
+ 
+}
+
 
 namespace  { 
 
@@ -14905,8 +14682,6 @@ namespace  {
     class Config extends \Illuminate\Support\Facades\Config {}
 
     class Cookie extends \Illuminate\Support\Facades\Cookie {}
-
-    class Crypt extends \Illuminate\Support\Facades\Crypt {}
 
     class DB extends \Illuminate\Support\Facades\DB {}
 
@@ -17012,8 +16787,6 @@ namespace  {
 
     class FFMpeg extends \Pbmedia\LaravelFFMpeg\FFMpegFacade {}
 
-    class Analytics extends \Spatie\Analytics\AnalyticsFacade {}
-
     class Swap extends \Swap\Laravel\Facades\Swap {}
 
     class Uploader extends \App\Facades\UploaderFacade {}
@@ -17022,9 +16795,9 @@ namespace  {
 
     class Meta extends \App\Facades\MetaFacade {}
 
-    class ImageOptimizer extends \Spatie\LaravelImageOptimizer\Facades\ImageOptimizer {}
-
     class Breadcrumbs extends \DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs {}
+
+    class ImageOptimizer extends \Spatie\LaravelImageOptimizer\Facades\ImageOptimizer {}
  
 }
 

@@ -154,7 +154,7 @@ class RevisionsController extends Controller
      */
     protected function validateRevisionableAjaxData(Request $request)
     {
-        $this->validate($request, [
+        $request->validate([
             'revisionable_id' => 'required|numeric',
             'revisionable_type' => 'required',
             'route' => 'required',

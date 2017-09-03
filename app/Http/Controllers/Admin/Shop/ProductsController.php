@@ -448,7 +448,7 @@ class ProductsController extends Controller
             ], 400);
         }
 
-        $this->validate($request, [
+        $request->validate([
             'query' => 'required',
         ]);
 
@@ -486,7 +486,7 @@ class ProductsController extends Controller
             ], 400);
         }
 
-        $this->validate($request, [
+        $request->validate([
             'set_id' => 'required|numeric',
             'attribute_id' => 'required|numeric',
             'value_id' => 'nullable|numeric',
@@ -528,7 +528,7 @@ class ProductsController extends Controller
             ], 400);
         }
 
-        $this->validate($request, [
+        $request->validate([
             'discount_id' => 'required|numeric',
         ]);
 
@@ -565,7 +565,7 @@ class ProductsController extends Controller
             ], 400);
         }
 
-        $this->validate($request, [
+        $request->validate([
             'tax_id' => 'required|numeric',
         ]);
 
@@ -602,7 +602,7 @@ class ProductsController extends Controller
             ], 400);
         }
 
-        $this->validate($request, [
+        $request->validate([
             'value_id' => 'required|numeric',
             'pivot_id' => 'required|numeric',
         ]);
