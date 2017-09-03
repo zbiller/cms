@@ -34,7 +34,7 @@ class Builder extends QueryBuilder
      * @param Grammar|null $grammar
      * @param Processor|null $processor
      * @param string|null $cacheTag
-     * @param int $cacheType
+     * @param int|null $cacheType
      */
     public function __construct(ConnectionInterface $connection, Grammar $grammar = null, Processor $processor = null, $cacheTag = null, $cacheType = null)
     {

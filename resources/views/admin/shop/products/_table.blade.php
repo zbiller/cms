@@ -41,7 +41,7 @@
                     <td>{{ $item->price ? number_format($item->price) . ' ' . $item->currency->code : 'N/A' }}</td>
                     <td>{{ $item->final_price ? number_format($item->final_price) . ' ' . $item->currency->code : 'N/A' }}</td>
                     <td>{{ $item->quantity ?: 'N/A' }}</td>
-                    <td>{{ isset($actives[$item->active]) ? $actives[$item->active] : 'N/A' }}</td>
+                    <td>{{ $actives[$item->active] ?? 'N/A' }}</td>
                     <td>
                         {!! button()->editRecord(route('admin.products.edit', $item->id)) !!}
                         {!! button()->deleteRecord(route('admin.products.destroy', $item->id)) !!}

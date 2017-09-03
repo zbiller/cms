@@ -97,11 +97,7 @@ trait HasBlocks
         $blocks = collect();
 
         foreach (Block::inAlphabeticalOrder()->get() as $block) {
-            if (
-                isset(Block::$blocks[$block->type]['composer_class']) &&
-                ($class = Block::$blocks[$block->type]['composer_class']) &&
-                in_array($location, $class::$locations)
-            ) {
+            if (($class = Block::$blocks[$block->type]['composer_class'] ?? null) && in_array($location, $class::$locations)) {
                 $blocks->push($block);
             }
         }
@@ -211,7 +207,7 @@ trait HasBlocks
                     foreach ($blocks as $data) {
                         foreach ($data as $id => $attributes) {
                             if (($id && isset($attributes['location'])) && ($block = Block::find($id))) {
-                                $this->assignBlock($block, $attributes['location'], isset($attributes['ord']) ? $attributes['ord'] : null);
+                                $this->assignBlock($block, $attributes['location'], $attributes['ord'] ?? null);
                             }
 
                         }

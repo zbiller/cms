@@ -22,8 +22,8 @@
             <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
                 <td>{{ $item->name ?: 'N/A' }}</td>
                 <td>{{ $item->url ?: 'N/A' }}</td>
-                <td>{{ isset($types[$item->type]) ? $types[$item->type] : 'N/A' }}</td>
-                <td>{{ isset($actives[$item->active]) ? $actives[$item->active] : 'N/A' }}</td>
+                <td>{{ $types[$item->type] ?? 'N/A' }}</td>
+                <td>{{ $actives[$item->active] ?? 'N/A' }}</td>
                 <td>
                     {!! button()->editRecord(route('admin.menus.edit', ['location' => $location, 'id' => $item->id])) !!}
                     {!! button()->deleteRecord(route('admin.menus.destroy', ['location' => $location, 'id' => $item->id])) !!}

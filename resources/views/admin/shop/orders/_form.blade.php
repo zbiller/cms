@@ -49,7 +49,7 @@
     {!! form_admin()->textarea('addresses[billing][address]', 'Address') !!}
 </div>
 <div id="tab-4" class="tab">
-    @include('admin.shop.orders.items.assign', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
+    @include('admin.shop.orders.items.assign', ['item' => $item, 'draft' => $draft ?? null, 'revision' => $revision ?? null, 'disabled' => isset($on_revision) ? true : false])
 </div>
 
 {!! form_admin()->close() !!}

@@ -76,7 +76,7 @@ class MenusController extends Controller
             $this->view = view('admin.cms.menus.add');
             $this->vars = [
                 'location' => $location,
-                'parent' => $parent->exists ? $parent : null,
+                'parent' => $parent && $parent->exists ? $parent : null,
                 'types' => Menu::$types,
                 'actives' => Menu::$actives,
                 'windows' => Menu::$windows,
@@ -98,7 +98,7 @@ class MenusController extends Controller
         ]);
 
         return $this->_store(function () use ($request, $location, $parent) {
-            $this->item = Menu::create($request->all(), $parent->exists ? $parent : null);
+            $this->item = Menu::create($request->all(), $parent && $parent->exists ? $parent : null);
             $this->redirect = redirect()->route('admin.menus.index', $location);
         }, $request);
     }

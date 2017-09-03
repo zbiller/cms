@@ -39,7 +39,7 @@
                         <td>{{ $item->name ?: 'N/A' }}</td>
                         <td>{{ $item->price ? number_format($item->price) . ' ' . $item->currency->code : 'N/A' }}</td>
                         <td>{{ $item->quantity ?: 'N/A' }}</td>
-                        <td>{{ isset($actives[$item->active]) ? $actives[$item->active] : 'N/A' }}</td>
+                        <td>{{ $actives[$item->active] ?? 'N/A' }}</td>
                         <td>
                             {!! button()->publishLimboDraft(route('admin.drafts.publish_limbo'), $item) !!}
                             {!! button()->editRecord(route('admin.products.limbo', $item->id)) !!}

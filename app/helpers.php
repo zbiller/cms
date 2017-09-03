@@ -192,7 +192,7 @@ if (!function_exists('force_redirect')) {
      * @param string $url
      * @param int $code
      */
-    function force_redirect($url, $code = 302)
+    function force_redirect($url, int $code = 302)
     {
         try {
             app()->abort($code, '', [

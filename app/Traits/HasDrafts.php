@@ -710,10 +710,7 @@ trait HasDrafts
                 $related = $related->withTrashed();
             }
 
-            $rel = $related->findOrNew(
-                isset($item->{$attributes->records->primary_key}) ?
-                    $item->{$attributes->records->primary_key} : null
-            );
+            $rel = $related->findOrNew($item->{$attributes->records->primary_key} ?? null);
 
             foreach ($item as $field => $value) {
                 if ($field != $attributes->records->primary_key) {
@@ -784,10 +781,7 @@ trait HasDrafts
                 $related = $related->withTrashed();
             }
 
-            $rel = $related->findOrNew(
-                isset($item->{$attributes->records->primary_key}) ?
-                    $item->{$attributes->records->primary_key} : null
-            );
+            $rel = $related->findOrNew($item->{$attributes->records->primary_key} ?? null);
 
             if ($rel->exists === false) {
                 foreach ((array)$item as $field => $value) {

@@ -19,7 +19,7 @@
             <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
                 <td>{{ $item->name ?: 'N/A' }}</td>
                 <td>{{ $item->url ? $item->url->url : 'N/A' }}</td>
-                <td>{{ isset($actives[$item->active]) ? $actives[$item->active] : 'N/A' }}</td>
+                <td>{{ $actives[$item->active] ?? 'N/A' }}</td>
                 <td>
                     {!! button()->editRecord(route('admin.pages.edit', $item->id)) !!}
                     {!! button()->deleteRecord(route('admin.pages.destroy', $item->id)) !!}

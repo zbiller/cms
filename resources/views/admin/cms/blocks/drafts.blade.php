@@ -23,7 +23,7 @@
                 @foreach($items as $index => $item)
                     <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
                         <td>{{ $item->name ?: 'N/A' }}</td>
-                        <td>{{ isset($types[$item->type]) ? $types[$item->type] : 'N/A' }}</td>
+                        <td>{{ $types[$item->type] ?? 'N/A' }}</td>
                         <td>
                             {!! button()->publishLimboDraft(route('admin.drafts.publish_limbo'), $item) !!}
                             {!! button()->editRecord(route('admin.blocks.limbo', $item->id)) !!}

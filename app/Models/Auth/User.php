@@ -202,13 +202,7 @@ class User extends Authenticatable
      */
     public function getFirstNameAttribute()
     {
-        if (isset($this->attributes['first_name'])) {
-            return $this->attributes['first_name'];
-        } elseif ($this->person && $this->person->first_name) {
-            return $this->person->first_name;
-        }
-
-        return null;
+        return $this->attributes['first_name'] ?? optional($this->person)->first_name;
     }
 
     /**
@@ -218,13 +212,7 @@ class User extends Authenticatable
      */
     public function getLastNameAttribute()
     {
-        if (isset($this->attributes['last_name'])) {
-            return $this->attributes['last_name'];
-        } elseif ($this->person && $this->person->last_name) {
-            return $this->person->last_name;
-        }
-
-        return null;
+        return $this->attributes['last_name'] ?? optional($this->person)->last_name;
     }
 
     /**
@@ -244,13 +232,7 @@ class User extends Authenticatable
      */
     public function getEmailAttribute()
     {
-        if (isset($this->attributes['email'])) {
-            return $this->attributes['email'];
-        } elseif ($this->person && $this->person->email) {
-            return $this->person->email;
-        }
-
-        return null;
+        return $this->attributes['email'] ?? optional($this->person)->email;
     }
 
     /**
@@ -260,13 +242,7 @@ class User extends Authenticatable
      */
     public function getPhoneAttribute()
     {
-        if (isset($this->attributes['phone'])) {
-            return $this->attributes['phone'];
-        } elseif ($this->person && $this->person->phone) {
-            return $this->person->phone;
-        }
-
-        return null;
+        return $this->attributes['phone'] ?? optional($this->person)->phone;
     }
 
     /**

@@ -438,10 +438,7 @@ trait HasRevisions
                 $related = $related->withTrashed();
             }
 
-            $rel = $related->findOrNew(
-                isset($item->{$attributes->records->primary_key}) ?
-                    $item->{$attributes->records->primary_key} : null
-            );
+            $rel = $related->findOrNew($item->{$attributes->records->primary_key} ?? null);
 
             foreach ($item as $field => $value) {
                 $rel->attributes[$field] = $value;
@@ -481,10 +478,7 @@ trait HasRevisions
                 $related = $related->withTrashed();
             }
 
-            $rel = $related->findOrNew(
-                isset($item->{$attributes->records->primary_key}) ?
-                    $item->{$attributes->records->primary_key} : null
-            );
+            $rel = $related->findOrNew($item->{$attributes->records->primary_key} ?? null);
 
             if ($rel->exists === false) {
                 foreach ($item as $field => $value) {

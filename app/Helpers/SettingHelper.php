@@ -19,11 +19,7 @@ class SettingHelper
      */
     public function find($key)
     {
-        if (!isset(self::$settings[$key])) {
-            return self::$settings[$key] = Setting::byKey($key)->first();
-        }
-
-        return self::$settings[$key];
+        return self::$settings[$key] ?? Setting::byKey($key)->first();
     }
 
     /**
@@ -34,10 +30,6 @@ class SettingHelper
      */
     public function value($key)
     {
-        if ($setting = $this->find($key)) {
-            return $setting->value;
-        }
-
-        return null;
+        return optional($this->find($key))->value ?: null;
     }
 }

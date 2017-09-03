@@ -181,7 +181,7 @@ class Category extends Model
      */
     public function getMetaTitleAttribute()
     {
-        return isset($this->metadata->meta->title) ? $this->metadata->meta->title : null;
+        return $this->metadata->meta->title ?? null;
     }
 
     /**
@@ -191,7 +191,7 @@ class Category extends Model
      */
     public function getMetaImageAttribute()
     {
-        return isset($this->metadata->meta->image) ? $this->metadata->meta->image : null;
+        return $this->metadata->meta->image ?? null;
     }
 
     /**
@@ -201,7 +201,7 @@ class Category extends Model
      */
     public function getMetaDescriptionAttribute()
     {
-        return isset($this->metadata->meta->description) ? $this->metadata->meta->description : null;
+        return $this->metadata->meta->description ?? null;
     }
 
     /**
@@ -211,7 +211,7 @@ class Category extends Model
      */
     public function getMetaKeywordsAttribute()
     {
-        return isset($this->metadata->meta->keywords) ? $this->metadata->meta->keywords : null;
+        return $this->metadata->meta->keywords ?? null;
     }
 
     /**

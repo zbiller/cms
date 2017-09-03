@@ -42,10 +42,10 @@ class RegisterController extends Controller
 
         $person = Person::create([
             'user_id' => $user->id,
-            'first_name' => isset($data['person']['first_name']) ? $data['person']['first_name'] : null,
-            'last_name' => isset($data['person']['last_name']) ? $data['person']['last_name'] : null,
-            'email' => isset($data['person']['email']) ? $data['person']['email'] : null,
-            'phone' => isset($data['person']['phone']) ? $data['person']['phone'] : null,
+            'first_name' => $data['person']['first_name'] ?? null,
+            'last_name' => $data['person']['last_name'] ?? null,
+            'email' => $data['person']['email'] ?? null,
+            'phone' => $data['person']['phone'] ?? null,
         ]);
 
         return $user;

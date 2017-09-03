@@ -29,7 +29,7 @@
                 <tr id="{{ $tax->pivot->id }}" data-tax-id="{{ $tax->id }}" data-index="{{ $tax->pivot->id }}" class="{!! $disabled === true ? 'nodrag nodrop' : '' !!}">
                     <td>{{ $tax->name ?: 'N/A' }}</td>
                     <td>{{ $tax->rate ?: 'N/A' }}</td>
-                    <td>{{ isset($taxTypes[$tax->type]) ? $taxTypes[$tax->type] : 'N/A' }}</td>
+                    <td>{{ $taxTypes[$tax->type] ?? 'N/A' }}</td>
                     <td>
                         <a href="{{ route('admin.taxes.edit', $tax->id) }}" class="assign-view btn yellow no-margin-top no-margin-bottom no-margin-left" target="_blank">
                             <i class="fa fa-eye"></i>&nbsp; View

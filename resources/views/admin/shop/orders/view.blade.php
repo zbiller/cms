@@ -18,13 +18,13 @@
         <section class="content content-third center">
             <span class="title">Order Details</span>
             <article class="split">
-                <em>Order Status:</em> {{ isset($statuses[$item->status]) ? $statuses[$item->status] : 'N/A' }}
+                <em>Order Status:</em> {{ $statuses[$item->status] ?? 'N/A' }}
             </article>
             <article class="split">
-                <em>Payment Method:</em> {{ isset($payments[$item->payment]) ? $payments[$item->payment] : 'N/A' }}
+                <em>Payment Method:</em> {{ $payments[$item->payment] ?? 'N/A' }}
             </article>
             <article class="split">
-                <em>Shipping Option:</em> {{ isset($shippings[$item->shipping]) ? $shippings[$item->shipping] : 'N/A' }}
+                <em>Shipping Option:</em> {{ $shippings[$item->shipping] ?? 'N/A' }}
             </article>
         </section>
         <section class="content content-third right">

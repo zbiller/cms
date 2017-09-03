@@ -63,7 +63,7 @@ class CategoriesController extends Controller
             $this->title = 'Add Category';
             $this->view = view('admin.shop.categories.add');
             $this->vars = [
-                'parent' => $parent->exists ? $parent : null,
+                'parent' => $parent && $parent->exists ? $parent : null,
                 'discounts' => Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
                 'taxes' => Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
                 'discountTypes' => Discount::$types,
@@ -82,7 +82,7 @@ class CategoriesController extends Controller
     public function store(CategoryRequest $request, Category $parent = null)
     {
         return $this->_store(function () use ($request, $parent) {
-            $this->item = Category::create($request->all(), $parent->exists ? $parent : null);
+            $this->item = Category::create($request->all(), $parent && $parent->exists ? $parent : null);
             $this->redirect = redirect()->route('admin.product_categories.index');
 
             $this->item->discounts()->attach($request->input('discounts'));
@@ -338,7 +338,7 @@ class CategoriesController extends Controller
                     'id' => $discount->id,
                     'name' => $discount->name ?: 'N/A',
                     'rate' => $discount->rate ?: 'N/A',
-                    'type' => isset(Discount::$types[$discount->type]) ? Discount::$types[$discount->type] : 'N/A',
+                    'type' => Discount::$types[$discount->type] ?? 'N/A',
                     'url' => route('admin.discounts.edit', $discount->id),
                 ],
             ]);
@@ -375,7 +375,7 @@ class CategoriesController extends Controller
                     'id' => $tax->id,
                     'name' => $tax->name ?: 'N/A',
                     'rate' => $tax->rate ?: 'N/A',
-                    'type' => isset(Tax::$types[$tax->type]) ? Tax::$types[$tax->type] : 'N/A',
+                    'type' => Tax::$types[$tax->type] ?? 'N/A',
                     'url' => route('admin.taxes.edit', $tax->id),
                 ],
             ]);

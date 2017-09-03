@@ -148,10 +148,7 @@ class CacheService
             cache()->store(self::getQueryCacheStore())->tags(self::$model->getQueryCacheTag())->flush();
 
             foreach ((new ModelSniffer())->getAllRelations(self::$model) as $relation => $attributes) {
-                if (
-                    isset($attributes['model']) && ($related = $attributes['model']) &&
-                    $related instanceof Model && array_key_exists(IsCacheable::class, class_uses($related))
-                ) {
+                if (($related = $attributes['model'] ?? null) && $related instanceof Model && array_key_exists(IsCacheable::class, class_uses($related))) {
                     cache()->store(self::getQueryCacheStore())->tags(self::$model->getQueryCacheTag())->flush();
                 }
             }

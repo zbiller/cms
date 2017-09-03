@@ -194,7 +194,7 @@ class FormAdminHelper
     {
         $list = $list instanceof Collection ? $list->toArray() : $list;
         $selected = $selected instanceof Collection ? $selected->toArray() : $selected;
-        $options['class'] = 'select-input ' . (isset($options['class']) ? $options['class'] : '');
+        $options['class'] = 'select-input ' . ($options['class'] ?? '');
         $options['data-selected'] = is_array($selected) ? json_encode($selected) : $selected;
 
         return $this->wrap(
@@ -215,7 +215,7 @@ class FormAdminHelper
     public function password($name, $label = null, array $options = [], $generate = false)
     {
         if ($generate) {
-            $options['class'] = 'with-generate-button ' . (isset($options['class']) ? $options['class'] : '');
+            $options['class'] = 'with-generate-button ' . ($options['class'] ?? '');
         }
 
         return $this->wrap($this->form->password($this->name($name), $options) . (
@@ -347,7 +347,7 @@ class FormAdminHelper
      */
     public function editor($name, $label = null, $value = null, array $options = [])
     {
-        $options['class'] = 'editor-input ' . (isset($options['class']) ? $options['class'] : '');
+        $options['class'] = 'editor-input ' . ($options['class'] ?? '');
         $options['data-value'] = $value;
 
         return $this->wrap(
@@ -367,7 +367,7 @@ class FormAdminHelper
      */
     public function calendar($name, $label = null, $value = null, array $options = [])
     {
-        $options['class'] = 'date-input ' . (isset($options['class']) ? $options['class'] : '');
+        $options['class'] = 'date-input ' . ($options['class'] ?? '');
         $options['data-value'] = $value;
 
         return $this->wrap(
@@ -387,7 +387,7 @@ class FormAdminHelper
      */
     public function time($name, $label = null, $value = null, array $options = [])
     {
-        $options['class'] = 'time-input ' . (isset($options['class']) ? $options['class'] : '');
+        $options['class'] = 'time-input ' . ($options['class'] ?? '');
         $options['data-value'] = $value;
 
         return $this->wrap(
@@ -407,7 +407,7 @@ class FormAdminHelper
      */
     public function color($name, $label = null, $value = null, array $options = [])
     {
-        $options['class'] = 'color-input ' . (isset($options['class']) ? $options['class'] : '');
+        $options['class'] = 'color-input ' . ($options['class'] ?? '');
         $options['data-value'] = $value;
 
         return $this->wrap(
@@ -429,7 +429,7 @@ class FormAdminHelper
      */
     public function selectRange($name, $label = null, $start = 0, $end = 0, $selected = null, array $options = [])
     {
-        $options['class'] = 'select-input ' . (isset($options['class']) ? $options['class'] : '');
+        $options['class'] = 'select-input ' . ($options['class'] ?? '');
         $options['data-selected'] = $selected;
 
         return $this->wrap(
@@ -451,7 +451,7 @@ class FormAdminHelper
      */
     public function selectYear($name, $label = null, $start = null, $end = null, $selected = null, array $options = [])
     {
-        $options['class'] = 'select-input ' . (isset($options['class']) ? $options['class'] : '');
+        $options['class'] = 'select-input ' . ($options['class'] ?? '');
         $options['data-selected'] = $selected;
 
         return $this->wrap(
@@ -472,7 +472,7 @@ class FormAdminHelper
      */
     public function selectMonth($name, $label = null, $selected = null, array $options = [], $format = '%B')
     {
-        $options['class'] = 'select-input ' . (isset($options['class']) ? $options['class'] : '');
+        $options['class'] = 'select-input ' . ($options['class'] ?? '');
         $options['data-selected'] = $selected;
 
         return $this->wrap(

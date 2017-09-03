@@ -286,7 +286,7 @@ class Order extends Model
      */
     public function getFirstNameAttribute()
     {
-        return isset($this->customer->first_name) ? $this->customer->first_name : null;
+        return $this->customer->first_name ?? null;
     }
 
     /**
@@ -296,7 +296,7 @@ class Order extends Model
      */
     public function getLastNameAttribute()
     {
-        return isset($this->customer->last_name) ? $this->customer->last_name : null;
+        return $this->customer->last_name ?? null;
     }
 
     /**
@@ -316,7 +316,7 @@ class Order extends Model
      */
     public function getEmailAttribute()
     {
-        return isset($this->customer->email) ? $this->customer->email : null;
+        return $this->customer->email ?? null;
     }
 
     /**
@@ -326,7 +326,7 @@ class Order extends Model
      */
     public function getPhoneAttribute()
     {
-        return isset($this->customer->phone) ? $this->customer->phone : null;
+        return $this->customer->phone ?? null;
     }
 
     /**
@@ -336,7 +336,7 @@ class Order extends Model
      */
     public function getShippingAddressAttribute()
     {
-        return isset($this->addresses->shipping) ? $this->addresses->shipping : null;
+        return $this->addresses->shipping ?? null;
     }
 
     /**
@@ -346,7 +346,7 @@ class Order extends Model
      */
     public function getBillingAddressAttribute()
     {
-        return isset($this->addresses->billing) ? $this->addresses->billing : null;
+        return $this->addresses->billing ?? null;
     }
 
     /**
@@ -649,7 +649,7 @@ class Order extends Model
 
             try {
                 $product = Product::findOrFail($item['product_id']);
-                $quantity = isset($item['quantity']) ? (int)$item['quantity'] : 1;
+                $quantity = (int)$item['quantity'] ?? 1;
                 $item = new Item;
 
                 $item->order_id = $order->id;

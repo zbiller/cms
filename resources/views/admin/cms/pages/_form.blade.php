@@ -37,7 +37,7 @@
 </div>
 
 @if($item->exists)
-    {!! block()->container($item, isset($on_draft) ? $draft : null, isset($on_revision) ? $revision : null, isset($on_revision) ? true : false) !!}
+    {!! block()->container($item, $draft ?? null, $revision ?? null, isset($on_revision) ? true : false) !!}
 
     @if(!isset($on_draft) && !isset($on_limbo_draft) && !isset($on_revision))
         {!! draft()->container($item) !!}

@@ -26,8 +26,8 @@
                 @foreach($items as $index => $item)
                     <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
                         <td>{{ $item->name ?: 'N/A' }}</td>
-                        <td>{{ $item->url ? $item->url->url : 'N/A' }}</td>
-                        <td>{{ isset($actives[$item->active]) ? $actives[$item->active] : 'N/A' }}</td>
+                        <td>{{ optional($item->url)->url ?: 'N/A' }}</td>
+                        <td>{{ $actives[$item->active] ?? 'N/A' }}</td>
                         <td>
                             {!! button()->publishLimboDraft(route('admin.drafts.publish_limbo'), $item) !!}
                             {!! button()->editRecord(route('admin.product_categories.limbo', $item->id)) !!}

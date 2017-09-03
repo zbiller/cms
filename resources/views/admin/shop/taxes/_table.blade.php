@@ -25,9 +25,9 @@
                 <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
                     <td>{{ $item->name ?: 'N/A' }}</td>
                     <td>{{ $item->rate ? number_format($item->rate) : 'N/A' }}</td>
-                    <td>{{ isset($types[$item->type]) ? $types[$item->type] : 'N/A' }}</td>
-                    <td>{{ isset($for[$item->for]) ? $for[$item->for] : 'N/A' }}</td>
-                    <td>{{ isset($actives[$item->active]) ? $actives[$item->active] : 'N/A' }}</td>
+                    <td>{{ $types[$item->type] ?? 'N/A' }}</td>
+                    <td>{{ $for[$item->for] ?? 'N/A' }}</td>
+                    <td>{{ $actives[$item->active] ?? 'N/A' }}</td>
                     <td>
                         {!! button()->editRecord(route('admin.taxes.edit', $item->id)) !!}
                         {!! button()->deleteRecord(route('admin.taxes.destroy', $item->id)) !!}

@@ -15,7 +15,7 @@
         @foreach($items as $index => $item)
             <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
                 <td>{{ $item->name ?: 'N/A' }}</td>
-                <td>{{ isset($types[$item->type]) ? $types[$item->type] : 'N/A' }}</td>
+                <td>{{ $types[$item->type] ?? 'N/A' }}</td>
                 <td>
                     {!! button()->editRecord(route('admin.emails.edit', $item->id)) !!}
                     {!! button()->deleteRecord(route('admin.emails.destroy', $item->id)) !!}

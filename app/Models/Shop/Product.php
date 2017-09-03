@@ -316,15 +316,11 @@ class Product extends Model
      */
     public function getFirstImageAttribute()
     {
-        $images = (array)$this->metadata('images');
-
-        if (empty($images)) {
-            return null;
+        if (($images = (array)$this->metadata('images')) && !empty($images)) {
+            return array_first($images)['image'] ?? null;
         }
 
-        $image = array_first($images);
-
-        return isset($image['image']) ? $image['image'] : null;
+        return null;
     }
 
     /**
@@ -334,15 +330,11 @@ class Product extends Model
      */
     public function getLastImageAttribute()
     {
-        $images = (array)$this->metadata('images');
-
-        if (empty($images)) {
-            return null;
+        if (($images = (array)$this->metadata('images')) && !empty($images)) {
+            return array_last($images)['image'] ?? null;
         }
 
-        $image = array_last($images);
-
-        return isset($image['image']) ? $image['image'] : null;
+        return null;
     }
 
     /**
@@ -381,7 +373,7 @@ class Product extends Model
      */
     public function getMetaTitleAttribute()
     {
-        return isset($this->metadata->meta->title) ? $this->metadata->meta->title : null;
+        return $this->metadata->meta->title ?? null;
     }
 
     /**
@@ -391,7 +383,7 @@ class Product extends Model
      */
     public function getMetaImageAttribute()
     {
-        return isset($this->metadata->meta->image) ? $this->metadata->meta->image : null;
+        return $this->metadata->meta->image ?? null;
     }
 
     /**
@@ -401,7 +393,7 @@ class Product extends Model
      */
     public function getMetaDescriptionAttribute()
     {
-        return isset($this->metadata->meta->description) ? $this->metadata->meta->description : null;
+        return $this->metadata->meta->description ?? null;
     }
 
     /**
@@ -411,7 +403,7 @@ class Product extends Model
      */
     public function getMetaKeywordsAttribute()
     {
-        return isset($this->metadata->meta->keywords) ? $this->metadata->meta->keywords : null;
+        return $this->metadata->meta->keywords ?? null;
     }
 
     /**

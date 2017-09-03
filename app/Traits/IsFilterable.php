@@ -229,7 +229,7 @@ trait IsFilterable
                 break;
             case str_contains($_method, Filter::OPERATOR_DATE):
                 $operator = explode(' ', $this->filter['operator']);
-                $query->{$method}($column, (isset($operator[1]) ? $operator[1] : '='), $this->filter['value']);
+                $query->{$method}($column, ($operator[1] ?? '='), $this->filter['value']);
                 break;
             default:
                 $query->{$method}($column, $this->filter['operator'], $this->filter['value']);

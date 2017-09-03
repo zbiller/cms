@@ -27,14 +27,14 @@
     {!! form_admin()->textarea('metadata[meta][keywords]', 'Keywords') !!}
 </div>
 <div id="tab-3" class="tab tab-discounts">
-    @include('admin.shop.categories.discounts.assign', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
+    @include('admin.shop.categories.discounts.assign', ['item' => $item, 'draft' => $draft ?? null, 'revision' => $revision ?? null, 'disabled' => isset($on_revision) ? true : false])
 </div>
 <div id="tab-4" class="tab tab-taxes">
-    @include('admin.shop.categories.taxes.assign', ['item' => $item, 'draft' => isset($draft) ? $draft : null, 'revision' => isset($revision) ? $revision : null, 'disabled' => isset($on_revision) ? true : false])
+    @include('admin.shop.categories.taxes.assign', ['item' => $item, 'draft' => $draft ?? null, 'revision' => $revision ?? null, 'disabled' => isset($on_revision) ? true : false])
 </div>
 
 @if($item->exists)
-    {!! block()->container($item, isset($on_draft) ? $draft : null, isset($on_revision) ? $revision : null, isset($on_revision) ? true : false) !!}
+    {!! block()->container($item, $draft ?? null, isset($on_revision) ? $revision : null, isset($on_revision) ? true : false) !!}
 
     @if(!isset($on_draft) && !isset($on_limbo_draft) && !isset($on_revision))
         {!! draft()->container($item) !!}

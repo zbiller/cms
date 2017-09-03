@@ -26,7 +26,7 @@
                     <td>{{ $item->identifier ?: 'N/A' }}</td>
                     <td>{{ number_format($item->grand_total, 2) . ' ' . ($item->currency ?: config('shop.price.default_currency')) }}</td>
                     <td>{{ $item->full_name ?: 'N/A' }}</td>
-                    <td>{{ isset($statuses[$item->status]) ? $statuses[$item->status] : 'N/A' }}</td>
+                    <td>{{ $statuses[$item->status] ?? 'N/A' }}</td>
                     <td>
                         <span class="flag {!! $item->viewed == \App\Models\Shop\Order::VIEWED_NO ? 'red' : 'green' !!}">
                             {!! $item->viewed == \App\Models\Shop\Order::VIEWED_NO ? 'No' : 'Yes' !!}

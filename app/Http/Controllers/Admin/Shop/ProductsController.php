@@ -541,7 +541,7 @@ class ProductsController extends Controller
                     'id' => $discount->id,
                     'name' => $discount->name ?: 'N/A',
                     'rate' => $discount->rate ?: 'N/A',
-                    'type' => isset(Discount::$types[$discount->type]) ? Discount::$types[$discount->type] : 'N/A',
+                    'type' => Discount::$types[$discount->type] ?? 'N/A',
                     'url' => route('admin.discounts.edit', $discount->id),
                 ],
             ]);
@@ -578,7 +578,7 @@ class ProductsController extends Controller
                     'id' => $tax->id,
                     'name' => $tax->name ?: 'N/A',
                     'rate' => $tax->rate ?: 'N/A',
-                    'type' => isset(Tax::$types[$tax->type]) ? Tax::$types[$tax->type] : 'N/A',
+                    'type' => Tax::$types[$tax->type] ?? 'N/A',
                     'url' => route('admin.taxes.edit', $tax->id),
                 ],
             ]);

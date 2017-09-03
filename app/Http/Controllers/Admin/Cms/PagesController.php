@@ -64,7 +64,7 @@ class PagesController extends Controller
             $this->title = 'Add Page';
             $this->view = view('admin.cms.pages.add');
             $this->vars = [
-                'parent' => $parent->exists ? $parent : null,
+                'parent' => $parent && $parent->exists ? $parent : null,
                 'types' => Page::$types,
                 'actives' => Page::$actives,
             ];
@@ -80,7 +80,7 @@ class PagesController extends Controller
     public function store(PageRequest $request, Page $parent = null)
     {
         return $this->_store(function () use ($request, $parent) {
-            $this->item = Page::create($request->all(), $parent->exists ? $parent : null);
+            $this->item = Page::create($request->all(), $parent && $parent->exists ? $parent : null);
             $this->redirect = redirect()->route('admin.pages.index');
         }, $request);
     }

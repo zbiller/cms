@@ -82,11 +82,4 @@ mix
     /**
      * Version the FINAL css & js files.
      */
-    .version([
-        'public/css/admin/libs.css',
-        'public/css/admin/app.css',
-        'public/css/front/app.css',
-        'public/js/admin/libs.js',
-        'public/js/admin/app.js',
-        'public/js/front/app.js'
-    ]);
+    .version();

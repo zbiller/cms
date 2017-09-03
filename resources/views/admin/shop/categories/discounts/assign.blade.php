@@ -28,7 +28,7 @@
                 <tr id="{{ $discount->pivot->id }}" data-discount-id="{{ $discount->id }}" data-index="{{ $discount->pivot->id }}" class="{!! $disabled === true ? 'nodrag nodrop' : '' !!}">
                     <td>{{ $discount->name ?: 'N/A' }}</td>
                     <td>{{ $discount->rate ?: 'N/A' }}</td>
-                    <td>{{ isset($discountTypes[$discount->type]) ? $discountTypes[$discount->type] : 'N/A' }}</td>
+                    <td>{{ $discountTypes[$discount->type] ?? 'N/A' }}</td>
                     <td>
                         <a href="{{ route('admin.discounts.edit', $discount->id) }}" class="assign-view btn yellow no-margin-top no-margin-bottom no-margin-left" target="_blank">
                             <i class="fa fa-eye"></i>&nbsp; View

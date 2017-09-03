@@ -280,11 +280,9 @@ class Email extends Model
      */
     public function getFromAddressAttribute()
     {
-        if (isset($this->metadata->from_email)) {
-            return $this->metadata->from_email;
-        }
-
-        return setting()->value('company-email') ?: config('mail.from.address');
+        return $this->metadata->from_email ?? (
+            setting()->value('company-email') ?: config('mail.from.address')
+        );
     }
 
     /**
@@ -294,11 +292,9 @@ class Email extends Model
      */
     public function getFromNameAttribute()
     {
-        if (isset($this->metadata->from_name)) {
-            return $this->metadata->from_name;
-        }
-
-        return setting()->value('company-name') ?: config('mail.from.name');
+        return $this->metadata->from_name ?? (
+            setting()->value('company-email') ?: config('mail.from.address')
+        );
     }
 
     /**
@@ -308,11 +304,9 @@ class Email extends Model
      */
     public function getReplyToAttribute()
     {
-        if (isset($this->metadata->reply_to)) {
-            return $this->metadata->reply_to;
-        }
-
-        return setting()->value('company-email') ?: config('mail.from.address');
+        return $this->metadata->reply_to ?? (
+            setting()->value('company-email') ?: config('mail.from.address')
+        );
     }
 
     /**
@@ -322,11 +316,7 @@ class Email extends Model
      */
     public function getAttachmentAttribute()
     {
-        if (isset($this->metadata->attachment)) {
-            return $this->metadata->attachment;
-        }
-
-        return null;
+        return $this->metadata->attachment ?? null;
     }
 
     /**
@@ -336,11 +326,7 @@ class Email extends Model
      */
     public function getSubjectAttribute()
     {
-        if (isset($this->metadata->subject)) {
-            return $this->metadata->subject;
-        }
-
-        return null;
+        return $this->metadata->subject ?? null;
     }
 
     /**
@@ -350,11 +336,7 @@ class Email extends Model
      */
     public function getMessageAttribute()
     {
-        if (isset($this->metadata->message)) {
-            return $this->metadata->message;
-        }
-
-        return null;
+        return $this->metadata->message ?? null;
     }
 
     /**
@@ -413,9 +395,7 @@ class Email extends Model
      */
     public function getData(array $data = [])
     {
-        $original = isset($this->metadata) ? (array)$this->metadata : [];
-
-        return array_merge($original, $data);
+        return array_merge((array)$this->metadata ?? [], $data);
     }
 
     /**
