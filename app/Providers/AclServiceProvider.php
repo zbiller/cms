@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Auth\Permission;
+use Blade;
 use Cache;
 use Exception;
 use Gate;
@@ -20,6 +21,7 @@ class AclServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerGates();
+        $this->registerBladeIfs();
     }
 
     /**
@@ -29,7 +31,7 @@ class AclServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->registerBladeExtensions();
+        //
     }
 
     /**
@@ -61,104 +63,42 @@ class AclServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerBladeExtensions()
+    protected function registerBladeIfs()
     {
-        $this->app->afterResolving('blade.compiler', function (BladeCompiler $blade) {
-            $blade->directive('permission', function ($permission) {
-                return "<?php if(auth()->check() && (auth()->user()->isDeveloper() || auth()->user()->hasPermission({$permission}))): ?>";
-            });
+        Blade::if('developer', function () {
+            return auth()->check() && auth()->user()->isDeveloper();
+        });
 
-            $blade->directive('elsepermission', function () {
-                return "<?php else: ?>";
-            });
+        Blade::if('permission', function ($permission) {
+            return auth()->check() && (auth()->user()->isDeveloper() || auth()->user()->hasPermission($permission));
+        });
 
-            $blade->directive('endpermission', function () {
-                return "<?php endif; ?>";
-            });
+        Blade::if('haspermission', function ($permission) {
+            return auth()->check() && (auth()->user()->isDeveloper() || auth()->user()->hasPermission($permission));
+        });
 
-            $blade->directive('haspermission', function ($permission) {
-                return "<?php if(auth()->check() && (auth()->user()->isDeveloper() || auth()->user()->hasPermission({$permission}))): ?>";
-            });
+        Blade::if('hasanypermission', function ($permissions) {
+            return auth()->check() && (auth()->user()->isDeveloper() || auth()->user()->hasAnyPermission($permissions));
+        });
 
-            $blade->directive('elsehaspermission', function () {
-                return "<?php else: ?>";
-            });
+        Blade::if('hasallpermissions', function ($permissions) {
+            return auth()->check() && (auth()->user()->isDeveloper() || auth()->user()->hasAllPermissions($permissions));
+        });
 
-            $blade->directive('endhaspermission', function () {
-                return "<?php endif; ?>";
-            });
+        Blade::if('role', function ($role) {
+            return auth()->check() && auth()->user()->hasRole($role);
+        });
 
-            $blade->directive('hasanypermission', function ($permissions) {
-                return "<?php if(auth()->check() && (auth()->user()->isDeveloper() || auth()->user()->hasAnyPermission({$permissions}))): ?>";
-            });
+        Blade::if('hasrole', function ($role) {
+            return auth()->check() && auth()->user()->hasRole($role);
+        });
 
-            $blade->directive('elsehasanypermission', function () {
-                return "<?php else: ?>";
-            });
+        Blade::if('hasanyrole', function ($roles) {
+            return auth()->check() && auth()->user()->hasAnyRole($roles);
+        });
 
-            $blade->directive('endhasanypermission', function () {
-                return "<?php endif; ?>";
-            });
-
-            $blade->directive('hasallpermissions', function ($permissions) {
-                return "<?php if(auth()->check() && (auth()->user()->isDeveloper() || auth()->user()->hasAllPermissions({$permissions}))): ?>";
-            });
-
-            $blade->directive('elsehasallpermissions', function () {
-                return "<?php else: ?>";
-            });
-
-            $blade->directive('endhasallpermissions', function () {
-                return "<?php endif; ?>";
-            });
-
-            $blade->directive('role', function ($role) {
-                return "<?php if(auth()->check() && auth()->user()->hasRole({$role})): ?>";
-            });
-
-            $blade->directive('elserole', function () {
-                return '<?php else: ?>';
-            });
-
-            $blade->directive('endrole', function () {
-                return '<?php endif; ?>';
-            });
-
-            $blade->directive('hasrole', function ($role) {
-                return "<?php if(auth()->check() && auth()->user()->hasRole({$role})): ?>";
-            });
-
-            $blade->directive('elsehasrole', function () {
-                return '<?php else: ?>';
-            });
-
-            $blade->directive('endhasrole', function () {
-                return '<?php endif; ?>';
-            });
-
-            $blade->directive('hasanyrole', function ($roles) {
-                return "<?php if(auth()->check() && auth()->user()->hasAnyRole({$roles})): ?>";
-            });
-
-            $blade->directive('elsehasanyrole', function () {
-                return '<?php else: ?>';
-            });
-
-            $blade->directive('endhasanyrole', function () {
-                return '<?php endif; ?>';
-            });
-
-            $blade->directive('hasallroles', function ($roles) {
-                return "<?php if(auth()->check() && auth()->user()->hasAllRoles({$roles})): ?>";
-            });
-
-            $blade->directive('elsehasallroles', function () {
-                return '<?php else: ?>';
-            });
-
-            $blade->directive('endhasallroles', function () {
-                return '<?php endif; ?>';
-            });
+        Blade::if('hasallroles', function ($roles) {
+            return auth()->check() && auth()->user()->hasAllRoles($roles);
         });
     }
 }
