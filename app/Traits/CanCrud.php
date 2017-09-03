@@ -737,7 +737,7 @@ trait CanCrud
             throw $e;
         }
 
-        if ($request && $request->has('save_stay')) {
+        if ($request && $request->filled('save_stay')) {
             return back();
         }
 

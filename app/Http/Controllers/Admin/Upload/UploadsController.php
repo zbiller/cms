@@ -62,13 +62,13 @@ class UploadsController extends Controller
      */
     public function get(Request $request, $type = null)
     {
-        $uploads = Upload::latest()->onlyTypes($type)->onlyExtensions($request->get('accept'))->like([
-            'original_name' => $request->get('keyword'),
+        $uploads = Upload::latest()->onlyTypes($type)->onlyExtensions($request->query('accept'))->like([
+            'original_name' => $request->query('keyword'),
         ])->paginate(28);
 
         return response()->json([
-            'status' => $request->get('page') > 1 && !$uploads->count() ? false : true,
-            'html' => $request->get('page') > 1 && !$uploads->count() ? '' : view('helpers::uploader.partials.items')->with([
+            'status' => $request->query('page') > 1 && !$uploads->count() ? false : true,
+            'html' => $request->query('page') > 1 && !$uploads->count() ? '' : view('helpers::uploader.partials.items')->with([
                 'type' => $type,
                 'uploads' => $uploads,
             ])->render()
@@ -82,11 +82,11 @@ class UploadsController extends Controller
     public function set(Request $request)
     {
         try {
-            if (!$request->has('path') || !$request->has('model') || !$request->has('field')) {
+            if (!$request->filled('path') || !$request->filled('model') || !$request->filled('field')) {
                 throw new Exception;
             }
 
-            $upload = (new UploadService($request->get('path'), app($request->get('model')), $request->get('field')))->upload();
+            $upload = (new UploadService($request->input('path'), app($request->input('model')), $request->input('field')))->upload();
 
             return response()->json([
                 'status' => true,
@@ -188,20 +188,20 @@ class UploadsController extends Controller
             ]);
         }
 
-        if ($request->get('accept') && !in_array($request->file('file')->getClientOriginalExtension(), explode(',', $request->get('accept')))) {
+        if ($request->input('accept') && !in_array($request->file('file')->getClientOriginalExtension(), explode(',', $request->input('accept')))) {
             return response()->json([
                 'status' => false,
-                'message' => 'File type is not allowed! Allowed extensions: ' . $request->get('accept')
+                'message' => 'File type is not allowed! Allowed extensions: ' . $request->input('accept')
             ]);
         }
 
         try {
-            if (!$request->has('model') || !$request->has('field')) {
+            if (!$request->filled('model') || !$request->filled('field')) {
                 throw new Exception;
             }
 
             $collection = new Collection();
-            $file = (new UploadService($request->file('file'), app($request->get('model')), $request->get('field')))->upload();
+            $file = (new UploadService($request->file('file'), app($request->input('model')), $request->input('field')))->upload();
             $upload = Upload::whereFullPath($file->getPath() . '/' . $file->getName())->firstOrFail();
 
             $collection->push($upload);
@@ -236,12 +236,12 @@ class UploadsController extends Controller
      */
     public function crop(Request $request)
     {
-        $index = $request->get('index');
-        $model = app($request->get('model'));
-        $field = $request->get('field');
-        $url = $request->get('url');
-        $path = $request->get('path');
-        $style = $request->get('style');
+        $index = $request->query('index');
+        $model = app($request->query('model'));
+        $field = $request->query('field');
+        $url = $request->query('url');
+        $path = $request->query('path');
+        $style = $request->query('style');
 
         if (isset($model->getUploadConfig()['images']['styles'])) {
             foreach ($model->getUploadConfig()['images']['styles'] as $name => $styles) {
@@ -287,13 +287,13 @@ class UploadsController extends Controller
      */
     public function cut(Request $request)
     {
-        $path = $request->get('path');
-        $style = $request->get('style');
-        $size = $request->get('size');
-        $width = $request->get('w');
-        $height = $request->get('h');
-        $x = $request->get('x');
-        $y = $request->get('y');
+        $path = $request->input('path');
+        $style = $request->input('style');
+        $size = $request->input('size');
+        $width = $request->input('w');
+        $height = $request->input('h');
+        $x = $request->input('x');
+        $y = $request->input('y');
 
         $image = Image::make($path);
         $image->crop((int)$width, (int)$height, (int)$x, (int)$y);

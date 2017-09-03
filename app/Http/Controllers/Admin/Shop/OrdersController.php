@@ -32,7 +32,7 @@ class OrdersController extends Controller
         return $this->_index(function () use ($request, $filter, $sort) {
             $query = Order::filtered($request, $filter);
 
-            if ($request->has('sort')) {
+            if ($request->filled('sort')) {
                 $query->sorted($request, $sort);
             } else {
                 $query->latest();
@@ -104,15 +104,15 @@ class OrdersController extends Controller
     {
         return $this->_store(function () use ($request) {
             $data = [
-                'identifier' => $request->get('identifier') ?: null,
-                'payment' => $request->get('payment') ?: null,
-                'shipping' => $request->get('shipping') ?: null,
-                'status' => $request->get('status') ?: null,
+                'identifier' => $request->input('identifier') ?: null,
+                'payment' => $request->input('payment') ?: null,
+                'shipping' => $request->input('shipping') ?: null,
+                'status' => $request->input('status') ?: null,
             ];
 
-            $customer = $request->get('customer');
-            $addresses = $request->get('addresses');
-            $items = $request->get('items');
+            $customer = $request->input('customer');
+            $addresses = $request->input('addresses');
+            $items = $request->input('items');
 
             $this->item = Order::createOrder($data, $customer, $addresses, $items);
             $this->redirect = redirect()->route('admin.orders.index');
@@ -158,15 +158,15 @@ class OrdersController extends Controller
             $this->redirect = redirect()->route('admin.orders.index');
 
             $data = [
-                'identifier' => $request->get('identifier') ?: null,
-                'payment' => $request->get('payment') ?: null,
-                'shipping' => $request->get('shipping') ?: null,
-                'status' => $request->get('status') ?: null,
+                'identifier' => $request->input('identifier') ?: null,
+                'payment' => $request->input('payment') ?: null,
+                'shipping' => $request->input('shipping') ?: null,
+                'status' => $request->input('status') ?: null,
             ];
 
-            $customer = $request->get('customer');
-            $addresses = $request->get('addresses');
-            $items = $request->get('items');
+            $customer = $request->input('customer');
+            $addresses = $request->input('addresses');
+            $items = $request->input('items');
 
             Order::updateOrder($order->id, $data, $customer, $addresses, $items);
         }, $request);
@@ -256,8 +256,8 @@ class OrdersController extends Controller
         ]);
 
         try {
-            $product = Product::findOrFail($request->get('product_id'));
-            $quantity = $request->get('quantity');
+            $product = Product::findOrFail($request->input('product_id'));
+            $quantity = $request->input('quantity');
 
             return response()->json([
                 'status' => true,

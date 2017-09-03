@@ -47,7 +47,7 @@ class MenusController extends Controller
         return $this->_index(function () use ($request, $filter, $sort, $location) {
             $query = Menu::whereIsRoot()->whereLocation($location)->filtered($request, $filter);
 
-            if ($request->has('sort')) {
+            if ($request->filled('sort')) {
                 $query->sorted($request, $sort);
             } else {
                 $query->defaultOrder();

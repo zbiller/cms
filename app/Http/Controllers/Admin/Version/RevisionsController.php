@@ -44,7 +44,7 @@ class RevisionsController extends Controller
 
         try {
             $this->revisions = $this->getRevisionRecords($request);
-            $this->route = $request->get('route');
+            $this->route = $request->input('route');
 
             return response()->json([
                 'status' => true,
@@ -72,7 +72,7 @@ class RevisionsController extends Controller
 
             flash()->success('The revision was successfully rolled back!');
 
-            if (request()->ajax()) {
+            if ($request->ajax()) {
                 return [
                     'status' => true
                 ];
@@ -102,7 +102,7 @@ class RevisionsController extends Controller
                 $revision->delete();
 
                 $this->revisions = $this->getRevisionRecords($request);
-                $this->route = $request->get('route');
+                $this->route = $request->input('route');
 
                 return [
                     'status' => true,
@@ -125,8 +125,8 @@ class RevisionsController extends Controller
     protected function getRevisionRecords(Request $request)
     {
         return Revision::with('user')->whereRevisionable(
-            $request->get('revisionable_id'),
-            $request->get('revisionable_type')
+            $request->input('revisionable_id'),
+            $request->input('revisionable_type')
         )->latest()->get();
     }
 

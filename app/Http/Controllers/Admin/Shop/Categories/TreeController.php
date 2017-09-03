@@ -74,7 +74,7 @@ class TreeController extends CategoriesController
     {
         $query = Category::filtered($request, $filter);
 
-        if ($request->has('sort')) {
+        if ($request->filled('sort')) {
             $query->sorted($request, $sort);
         } else {
             $query->defaultOrder();

@@ -112,7 +112,7 @@ return [
         | 1. APP_ENV must not be "development" (in development mode no caching will happen, so debug is possible).
         |
         */
-        'cache_queries' => env('CACHE_QUERIES', false),
+        'cache_queries' => env('ENABLE_QUERY_CACHE', false),
 
         /*
         |
@@ -124,7 +124,7 @@ return [
         | 1. APP_ENV must not be "development" (in development mode no caching will happen, so debug is possible).
         |
         */
-        'cache_duplicate_queries' => env('CACHE_DUPLICATE_QUERIES', false),
+        'cache_duplicate_queries' => env('ENABLE_DUPLICATE_QUERY_CACHE', false),
 
         /*
         |

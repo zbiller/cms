@@ -41,7 +41,7 @@ class UploadFilter extends Filter
     {
         return [
             'size' => function ($modified) {
-                foreach (request('size') as $size) {
+                foreach (request()->query('size') as $size) {
                     $modified[] = $size * pow(1024, 2);
                 }
 

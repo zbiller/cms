@@ -265,18 +265,18 @@ class BlocksController extends Controller
         ]);
 
         try {
-            $class = $request->get('blockable_type');
-            $id = $request->get('blockable_id');
+            $class = $request->input('blockable_type');
+            $id = $request->input('blockable_id');
             $model = $class::withoutGlobalScopes()->findOrFail($id);
 
-            if ($request->has('draft') && ($draft = Draft::find((int)$request->get('draft')))) {
+            if ($request->filled('draft') && ($draft = Draft::find((int)$request->input('draft')))) {
                 DB::beginTransaction();
 
                 $model = $draft->draftable;
                 $model->publishDraft($draft);
             }
 
-            if ($request->has('revision') && ($revision = Revision::find((int)$request->get('revision')))) {
+            if ($request->filled('revision') && ($revision = Revision::find((int)$request->input('revision')))) {
                 DB::beginTransaction();
 
                 $model = $revision->revisionable;
@@ -291,7 +291,7 @@ class BlocksController extends Controller
                     'locations' => $model->getBlockLocations(),
                     'draft' => isset($draft) ? $draft : null,
                     'revision' => isset($revision) ? $revision : null,
-                    'disabled' => $request->get('disabled') ? true : false,
+                    'disabled' => $request->input('disabled') ? true : false,
                 ])->render(),
             ]);
         } catch (Exception $e) {
@@ -319,7 +319,7 @@ class BlocksController extends Controller
         ]);
 
         try {
-            $block = Block::findOrFail($request->get('block_id'));
+            $block = Block::findOrFail($request->input('block_id'));
 
             return response()->json([
                 'status' => true,

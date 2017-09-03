@@ -199,7 +199,7 @@ trait HasBlocks
     public function saveBlocks(Request $request = null)
     {
         $request = $request ?: request();
-        $blocks = $request->get('blocks');
+        $blocks = $request->input('blocks');
 
         try {
             DB::transaction(function () use ($blocks) {

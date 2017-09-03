@@ -1,6 +1,6 @@
 @if ($breadcrumbs)
     @foreach ($breadcrumbs as $breadcrumb)
-        @if (!$breadcrumb->last)
+        @if (!$loop->last)
             <a href="{{ $breadcrumb->url }}" class="breadcrumb">
                 {{ $breadcrumb->title }} <i class="fa fa-angle-double-right"></i>
             </a>

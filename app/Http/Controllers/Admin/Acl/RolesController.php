@@ -72,7 +72,7 @@ class RolesController extends Controller
             $this->item = Role::create($request->all());
             $this->redirect = redirect()->route('admin.roles.index');
 
-            $this->item->permissions()->attach((array)$request->get('permissions'));
+            $this->item->permissions()->attach((array)$request->input('permissions'));
         }, $request);
     }
 
@@ -105,7 +105,7 @@ class RolesController extends Controller
             $this->redirect = redirect()->route('admin.roles.index');
 
             $this->item->update($request->all());
-            $this->item->permissions()->sync((array)$request->get('permissions'));
+            $this->item->permissions()->sync((array)$request->input('permissions'));
         }, $request);
     }
 

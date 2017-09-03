@@ -8,10 +8,10 @@
             <section class="filters filters-inside">
                 {!! form()->open(['url' => request()->url(), 'method' => 'GET']) !!}
                     <fieldset>
-                        {!! form_admin()->calendar('start_date', false, request('start_date') !== null ? request('start_date') : null, ['placeholder' => 'Date From']) !!}
+                        {!! form_admin()->calendar('start_date', false, request()->query('start_date') !== null ? request()->query('start_date') : null, ['placeholder' => 'Date From']) !!}
                     </fieldset>
                     <fieldset>
-                        {!! form_admin()->calendar('end_date', false, request('end_date') !== null ? request('end_date') : null, ['placeholder' => 'Date To']) !!}
+                        {!! form_admin()->calendar('end_date', false, request()->query('end_date') !== null ? request()->query('end_date') : null, ['placeholder' => 'Date To']) !!}
                     </fieldset>
                     <div>
                         {!! button()->filterRecords() !!}

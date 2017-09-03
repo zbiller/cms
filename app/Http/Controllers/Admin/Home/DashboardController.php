@@ -21,12 +21,12 @@ class DashboardController extends Controller
         $startDate = Carbon::now()->subMonth();
         $endDate = Carbon::now();
 
-        if ($request->has('start_date')) {
-            $startDate = Carbon::createFromFormat('Y-m-d', $request->get('start_date'));
+        if ($request->filled('start_date')) {
+            $startDate = Carbon::createFromFormat('Y-m-d', $request->query('start_date'));
         }
 
-        if ($request->has('end_date')) {
-            $endDate = Carbon::createFromFormat('Y-m-d', $request->get('end_date'));
+        if ($request->filled('end_date')) {
+            $endDate = Carbon::createFromFormat('Y-m-d', $request->query('end_date'));
         }
 
         if ($startDate > $endDate) {

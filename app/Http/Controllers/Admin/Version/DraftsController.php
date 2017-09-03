@@ -78,7 +78,7 @@ class DraftsController extends Controller
 
         try {
             $this->drafts = $this->getDraftRecords($request);
-            $this->route = $request->get('route');
+            $this->route = $request->input('route');
 
             return response()->json([
                 'status' => true,
@@ -105,9 +105,9 @@ class DraftsController extends Controller
         try {
             $this->validateDraftCreationData($request->all());
 
-            $this->class = $request->get('_class');
-            $this->request = $request->get('_request');
-            $this->id = $request->get('_id');
+            $this->class = $request->input('_class');
+            $this->request = $request->input('_request');
+            $this->id = $request->input('_id');
 
             $this->validateOriginalEntityData($request->all());
         } catch (ValidationException $e) {
@@ -149,9 +149,9 @@ class DraftsController extends Controller
         try {
             $this->validateDraftCreationData($request->all());
 
-            $this->class = $request->get('_class');
-            $this->request = $request->get('_request');
-            $this->id = $request->get('_id');
+            $this->class = $request->input('_class');
+            $this->request = $request->input('_request');
+            $this->id = $request->input('_id');
 
             $this->validateOriginalEntityData($request->all());
 
@@ -186,9 +186,9 @@ class DraftsController extends Controller
         try {
             $this->validateDraftCreationData($request->all());
 
-            $this->class = $request->get('_class');
-            $this->request = $request->get('_request');
-            $this->id = $request->get('_id');
+            $this->class = $request->input('_class');
+            $this->request = $request->input('_request');
+            $this->id = $request->input('_id');
 
             $this->validateOriginalEntityData($request->all());
 
@@ -223,16 +223,16 @@ class DraftsController extends Controller
     public function publishDraft(Draft $draft, Request $request)
     {
         try {
-            if ($request->has('_class')) {
-                $this->class = $request->get('_class');
+            if ($request->filled('_class')) {
+                $this->class = $request->input('_class');
             }
 
-            if ($request->has('_request')) {
-                $this->request = $request->get('_request');
+            if ($request->filled('_request')) {
+                $this->request = $request->input('_request');
             }
 
-            if ($request->has('_id')) {
-                $this->id = $request->get('_id');
+            if ($request->filled('_id')) {
+                $this->id = $request->input('_id');
             }
 
             $this->validateOriginalEntityData($request->all());
@@ -251,7 +251,7 @@ class DraftsController extends Controller
 
             flash()->success('The draft was successfully published!');
 
-            if (request()->ajax()) {
+            if ($request->ajax()) {
                 return ['status' => true];
             }
 
@@ -259,7 +259,7 @@ class DraftsController extends Controller
         } catch (DraftException $e) {
             flash()->error($e->getMessage());
 
-            if (request()->ajax()) {
+            if ($request->ajax()) {
                 return ['status' => true];
             }
 
@@ -268,7 +268,7 @@ class DraftsController extends Controller
             flash()->error($e->getMessage());
             return back()->withInput($request->all())->withErrors($e->validator->errors());
         } catch (Exception $e) {
-            if (request()->ajax()) {
+            if ($request->ajax()) {
                 return ['status' => true];
             }
 
@@ -296,14 +296,14 @@ class DraftsController extends Controller
         }
 
         try {
-            if ($request->has('_request')) {
-                $this->request = $request->get('_request');
+            if ($request->filled('_request')) {
+                $this->request = $request->input('_request');
             }
 
             $this->validateOriginalEntityData($request->all());
 
-            $class = $request->get('_class');
-            $id = $request->get('_id');
+            $class = $request->input('_class');
+            $id = $request->input('_id');
             $data = $request->except(['_token', '_method', '_back', '_class', '_request', '_id']);
             $model = $class::onlyDrafts()->findOrFail($id);
 
@@ -316,10 +316,10 @@ class DraftsController extends Controller
             });
 
             flash()->success('The draft was successfully published!');
-            return $request->get('_back') ? redirect($request->get('_back')) : back();
+            return $request->input('_back') ? redirect($request->input('_back')) : back();
         } catch (ModelNotFoundException $e) {
             flash()->error('You are trying to publish a draft that does not exist!');
-            return $request->get('_back') ? redirect($request->get('_back')) : back();
+            return $request->input('_back') ? redirect($request->input('_back')) : back();
         } catch (ValidationException $e) {
             flash()->error($e->getMessage());
             return back()->withInput($request->all())->withErrors($e->validator->errors());
@@ -344,7 +344,7 @@ class DraftsController extends Controller
                 $draft->delete();
 
                 $this->drafts = $this->getDraftRecords($request);
-                $this->route = $request->get('route');
+                $this->route = $request->input('route');
 
                 return [
                     'status' => true,
@@ -378,8 +378,8 @@ class DraftsController extends Controller
         }
 
         try {
-            $class = $request->get('_class');
-            $id = $request->get('_id');
+            $class = $request->input('_class');
+            $id = $request->input('_id');
             $model = $class::onlyDrafts()->findOrFail($id);
 
             $model->deleteDraft();
@@ -406,8 +406,8 @@ class DraftsController extends Controller
     protected function getDraftRecords(Request $request)
     {
         return Draft::with('user')->whereDraftable(
-            $request->get('draftable_id'),
-            $request->get('draftable_type')
+            $request->input('draftable_id'),
+            $request->input('draftable_type')
         )->latest()->get();
     }
 
@@ -512,16 +512,16 @@ class DraftsController extends Controller
      */
     protected function doInitAndValidate(Request $request)
     {
-        if ($request->has('_class')) {
-            $this->class = $request->get('_class');
+        if ($request->filled('_class')) {
+            $this->class = $request->input('_class');
         }
 
-        if ($request->has('_request')) {
-            $this->request = $request->get('_request');
+        if ($request->filled('_request')) {
+            $this->request = $request->input('_request');
         }
 
-        if ($request->has('_id')) {
-            $this->id = $request->get('_id');
+        if ($request->filled('_id')) {
+            $this->id = $request->input('_id');
         }
 
         $this->validateOriginalEntityData($request->all());

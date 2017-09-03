@@ -19,8 +19,8 @@ trait CanOrder
             'items' => 'required|array'
         ]);
 
-        app($request->get('model'))->setNewOrder(
-            array_values($request->get('items'))
+        app($request->input('model'))->setNewOrder(
+            array_values($request->input('items'))
         );
     }
 }

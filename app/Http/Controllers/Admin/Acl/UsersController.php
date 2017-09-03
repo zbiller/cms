@@ -63,7 +63,7 @@ class UsersController extends Controller
             $this->item = User::create($request->all());
             $this->redirect = redirect()->route('admin.users.index');
 
-            $this->item->person()->create($request->get('person'));
+            $this->item->person()->create($request->input('person'));
         }, $request);
     }
 
@@ -98,7 +98,7 @@ class UsersController extends Controller
             $this->redirect = redirect()->route('admin.users.index');
 
             $this->item->update($request->all());
-            $this->item->person()->update($request->get('person'));
+            $this->item->person()->update($request->input('person'));
         }, $request);
     }
 
@@ -135,9 +135,9 @@ class UsersController extends Controller
      */
     protected function mergeRequest(Request $request)
     {
-        if ($request->has('password')) {
+        if ($request->filled('password')) {
             $request->merge([
-                'password' => bcrypt($request->get('password')),
+                'password' => bcrypt($request->input('password')),
             ]);
         } else {
             $request = UserRequest::create($request->url(), $request->method(), $request->except([

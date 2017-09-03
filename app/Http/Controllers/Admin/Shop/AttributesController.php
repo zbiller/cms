@@ -78,7 +78,7 @@ class AttributesController extends Controller
             $this->item = Attribute::create($request->all());
             $this->redirect = redirect()->route('admin.attributes.index', $set);
 
-            $this->item->categories()->attach($request->get('categories'));
+            $this->item->categories()->attach($request->input('categories'));
         }, $request);
     }
 
@@ -114,7 +114,7 @@ class AttributesController extends Controller
             $this->redirect = redirect()->route('admin.attributes.index', $set);
 
             $this->item->update($request->all());
-            $this->item->categories()->sync($request->get('categories'));
+            $this->item->categories()->sync($request->input('categories'));
         }, $request);
     }
 

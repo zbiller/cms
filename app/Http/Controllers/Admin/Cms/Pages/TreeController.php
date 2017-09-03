@@ -74,7 +74,7 @@ class TreeController extends PagesController
     {
         $query = Page::filtered($request, $filter);
 
-        if ($request->has('sort')) {
+        if ($request->filled('sort')) {
             $query->sorted($request, $sort);
         } else {
             $query->defaultOrder();

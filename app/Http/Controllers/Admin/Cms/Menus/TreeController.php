@@ -75,7 +75,7 @@ class TreeController extends MenusController
     {
         $query = Menu::whereLocation($location)->filtered($request, $filter);
 
-        if ($request->has('sort')) {
+        if ($request->filled('sort')) {
             $query->sorted($request, $sort);
         } else {
             $query->defaultOrder();

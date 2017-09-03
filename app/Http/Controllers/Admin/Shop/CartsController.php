@@ -32,27 +32,27 @@ class CartsController extends Controller
             $query = Cart::query();
             $paginate = true;
 
-            if ($request->has('total_from')) {
-                $query->having('total', '>=', (float)$request->get('total_from'));
+            if ($request->filled('total_from')) {
+                $query->having('total', '>=', (float)$request->query('total_from'));
                 $paginate = false;
             }
 
-            if ($request->has('total_to')) {
-                $query->having('total', '<=', (float)$request->get('total_to'));
+            if ($request->filled('total_to')) {
+                $query->having('total', '<=', (float)$request->query('total_to'));
                 $paginate = false;
             }
 
-            if ($request->has('count_from')) {
-                $query->having('count', '>=', (int)$request->get('count_from'));
+            if ($request->filled('count_from')) {
+                $query->having('count', '>=', (int)$request->query('count_from'));
                 $paginate = false;
             }
 
-            if ($request->has('count_to')) {
-                $query->having('count', '<=', (int)$request->get('count_to'));
+            if ($request->filled('count_to')) {
+                $query->having('count', '<=', (int)$request->query('count_to'));
                 $paginate = false;
             }
 
-            if ($request->has('user') && $request->get('user') == 'guests_only') {
+            if ($request->filled('user') && $request->query('user') == 'guests_only') {
                 $query->whereNull('user_id');
                 $request = new Request($request->except('user'));
             }

@@ -38,7 +38,7 @@ class CategoriesController extends Controller
         return $this->_index(function () use ($request, $filter, $sort) {
             $query = Category::whereIsRoot()->filtered($request, $filter);
 
-            if ($request->has('sort')) {
+            if ($request->filled('sort')) {
                 $query->sorted($request, $sort);
             } else {
                 $query->defaultOrder();
@@ -85,8 +85,8 @@ class CategoriesController extends Controller
             $this->item = Category::create($request->all(), $parent->exists ? $parent : null);
             $this->redirect = redirect()->route('admin.product_categories.index');
 
-            $this->item->discounts()->attach($request->get('discounts'));
-            $this->item->taxes()->attach($request->get('taxes'));
+            $this->item->discounts()->attach($request->input('discounts'));
+            $this->item->taxes()->attach($request->input('taxes'));
         }, $request);
     }
 
@@ -123,8 +123,8 @@ class CategoriesController extends Controller
             $this->redirect = redirect()->route('admin.product_categories.index');
 
             $this->item->update($request->all());
-            $this->item->discounts()->sync($request->get('discounts'));
-            $this->item->taxes()->sync($request->get('taxes'));
+            $this->item->discounts()->sync($request->input('discounts'));
+            $this->item->taxes()->sync($request->input('taxes'));
         }, $request);
     }
 
@@ -217,13 +217,13 @@ class CategoriesController extends Controller
                 $this->item = $category;
 
                 $this->item->update($request->all());
-                $this->item->discounts()->sync($request->get('discounts'));
-                $this->item->taxes()->sync($request->get('taxes'));
+                $this->item->discounts()->sync($request->input('discounts'));
+                $this->item->taxes()->sync($request->input('taxes'));
             } else {
                 $this->item = Category::create($request->all());
 
-                $this->item->discounts()->attach($request->get('discounts'));
-                $this->item->taxes()->attach($request->get('taxes'));
+                $this->item->discounts()->attach($request->input('discounts'));
+                $this->item->taxes()->attach($request->input('taxes'));
             }
         });
     }
@@ -330,7 +330,7 @@ class CategoriesController extends Controller
         ]);
 
         try {
-            $discount = Discount::findOrFail($request->get('discount_id'));
+            $discount = Discount::findOrFail($request->input('discount_id'));
 
             return response()->json([
                 'status' => true,
@@ -367,7 +367,7 @@ class CategoriesController extends Controller
         ]);
 
         try {
-            $tax = Tax::findOrFail($request->get('tax_id'));
+            $tax = Tax::findOrFail($request->input('tax_id'));
 
             return response()->json([
                 'status' => true,

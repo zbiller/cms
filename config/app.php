@@ -10,6 +10,7 @@ return [
     | This value is the name of your application. This value is used when the
     | framework needs to place the application's name in a notification or
     | any other location as required by the application or its packages.
+    |
     */
 
     'name' => 'LaraBox',
@@ -164,16 +165,13 @@ return [
         /*
          * Package Service Providers
          */
-        Laravel\Tinker\TinkerServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
-        GrahamCampbell\Exceptions\ExceptionsServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Proengsoft\JsValidation\JsValidationServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
         Spatie\Analytics\AnalyticsServiceProvider::class,
         Spatie\LaravelImageOptimizer\ImageOptimizerServiceProvider::class,
-        DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
         Swap\Laravel\SwapServiceProvider::class,
 
         /*
@@ -250,8 +248,6 @@ return [
         'JsValidator' => Proengsoft\JsValidation\Facades\JsValidatorFacade::class,
         'FFMpeg' => Pbmedia\LaravelFFMpeg\FFMpegFacade::class,
         'Analytics' => Spatie\Analytics\AnalyticsFacade::class,
-        'ImageOptimizer' => Spatie\LaravelImageOptimizer\ImageOptimizerFacade::class,
-        'Breadcrumbs' => DaveJamesMiller\Breadcrumbs\Facade::class,
         'Swap' => Swap\Laravel\Facades\Swap::class,
 
         /**

@@ -64,8 +64,8 @@ class AdminsController extends Controller
             $this->item = User::create($request->all());
             $this->redirect = redirect()->route('admin.admins.index');
 
-            $this->item->person()->create($request->get('person'));
-            $this->item->roles()->attach($request->get('roles'));
+            $this->item->person()->create($request->input('person'));
+            $this->item->roles()->attach($request->input('roles'));
         }, $request);
     }
 
@@ -100,8 +100,8 @@ class AdminsController extends Controller
             $this->redirect = redirect()->route('admin.admins.index');
 
             $this->item->update($request->all());
-            $this->item->person()->update($request->get('person'));
-            $this->item->roles()->sync($request->get('roles'));
+            $this->item->person()->update($request->input('person'));
+            $this->item->roles()->sync($request->input('roles'));
         }, $request);
     }
 
@@ -126,9 +126,9 @@ class AdminsController extends Controller
      */
     protected function mergeRequest(Request $request)
     {
-        if ($request->has('password')) {
+        if ($request->filled('password')) {
             $request->merge([
-                'password' => bcrypt($request->get('password')),
+                'password' => bcrypt($request->input('password')),
             ]);
         } else {
             $request = AdminRequest::create($request->url(), $request->method(), $request->except([

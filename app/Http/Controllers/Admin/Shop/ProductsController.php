@@ -48,20 +48,20 @@ class ProductsController extends Controller
             foreach ($request->except('category') as $input => $value) {
                 $value = is_array($value) ? array_filter($value) : $value;
 
-                if ($request->has('category') && !is_null($value) && !empty($value) && $value != '') {
+                if ($request->filled('category') && !is_null($value) && !empty($value) && $value != '') {
                     $orderable = false;
                     break;
                 }
             }
 
-            if (!$request->get('category')) {
+            if (!$request->query('category')) {
                 $orderable = false;
             }
 
             $query = Product::with('category');
 
             if ($orderable) {
-                $this->items = $query->whereCategory($request->get('category'))->ordered()->get();
+                $this->items = $query->whereCategory($request->query('category'))->ordered()->get();
             } else {
                 $this->items = $query->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             }
@@ -118,10 +118,10 @@ class ProductsController extends Controller
             $this->item = Product::create($request->all());
             $this->redirect = redirect()->route('admin.products.index');
 
-            $this->item->categories()->attach($request->get('categories'));
-            $this->item->attributes()->attach($request->get('attributes'));
-            $this->item->discounts()->attach($request->get('discounts'));
-            $this->item->taxes()->attach($request->get('taxes'));
+            $this->item->categories()->attach($request->input('categories'));
+            $this->item->attributes()->attach($request->input('attributes'));
+            $this->item->discounts()->attach($request->input('discounts'));
+            $this->item->taxes()->attach($request->input('taxes'));
         }, $request);
     }
 
@@ -170,10 +170,10 @@ class ProductsController extends Controller
             $this->redirect = redirect()->route('admin.products.index');
 
             $this->item->update($request->all());
-            $this->item->categories()->sync($request->get('categories'));
-            $this->item->attributes()->sync($request->get('attributes'));
-            $this->item->discounts()->sync($request->get('discounts'));
-            $this->item->taxes()->sync($request->get('taxes'));
+            $this->item->categories()->sync($request->input('categories'));
+            $this->item->attributes()->sync($request->input('attributes'));
+            $this->item->discounts()->sync($request->input('discounts'));
+            $this->item->taxes()->sync($request->input('taxes'));
         }, $request);
     }
 
@@ -298,17 +298,17 @@ class ProductsController extends Controller
                 $this->item = $product;
 
                 $this->item->update($request->all());
-                $this->item->categories()->sync($request->get('categories'));
-                $this->item->attributes()->sync($request->get('attributes'));
-                $this->item->discounts()->sync($request->get('discounts'));
-                $this->item->taxes()->sync($request->get('taxes'));
+                $this->item->categories()->sync($request->input('categories'));
+                $this->item->attributes()->sync($request->input('attributes'));
+                $this->item->discounts()->sync($request->input('discounts'));
+                $this->item->taxes()->sync($request->input('taxes'));
             } else {
                 $this->item = Product::create($request->all());
 
-                $this->item->categories()->attach($request->get('categories'));
-                $this->item->attributes()->attach($request->get('attributes'));
-                $this->item->discounts()->attach($request->get('discounts'));
-                $this->item->taxes()->attach($request->get('taxes'));
+                $this->item->categories()->attach($request->input('categories'));
+                $this->item->attributes()->attach($request->input('attributes'));
+                $this->item->discounts()->attach($request->input('discounts'));
+                $this->item->taxes()->attach($request->input('taxes'));
             }
         });
     }
@@ -452,13 +452,13 @@ class ProductsController extends Controller
             'query' => 'required',
         ]);
 
-        $products = Product::inAlphabeticalOrder()->where('name', 'like', '%' . $request->get('query') . '%')->get();
+        $products = Product::inAlphabeticalOrder()->where('name', 'like', '%' . $request->query('query') . '%')->get();
         $results = [];
 
         if ($products->count() == 0) {
             $results[] = [
                 'id' => '',
-                'name' => 'No results match "' . $request->get('query') . '"',
+                'name' => 'No results match "' . $request->query('query') . '"',
                 'disabled' => true,
             ];
         }
@@ -493,18 +493,18 @@ class ProductsController extends Controller
         ]);
 
         try {
-            $set = Set::findOrFail($request->get('set_id'));
-            $attribute = Attribute::findOrFail($request->get('attribute_id'));
-            $value = Value::findOrFail($request->get('value_id'));
+            $set = Set::findOrFail($request->input('set_id'));
+            $attribute = Attribute::findOrFail($request->input('attribute_id'));
+            $value = Value::findOrFail($request->input('value_id'));
 
             return response()->json([
                 'status' => true,
                 'data' => [
                     'attribute_id' => $attribute->id,
                     'attribute_name' => $attribute->name,
-                    'attribute_value' => $request->get('value') ?: $value->value,
+                    'attribute_value' => $request->input('value') ?: $value->value,
                     'value_id' => $value->id,
-                    'value' => $request->get('value') ?: '',
+                    'value' => $request->input('value') ?: '',
                     'url' => route('admin.attributes.edit', [$set, $attribute]),
                 ],
             ]);
@@ -533,7 +533,7 @@ class ProductsController extends Controller
         ]);
 
         try {
-            $discount = Discount::findOrFail($request->get('discount_id'));
+            $discount = Discount::findOrFail($request->input('discount_id'));
 
             return response()->json([
                 'status' => true,
@@ -570,7 +570,7 @@ class ProductsController extends Controller
         ]);
 
         try {
-            $tax = Tax::findOrFail($request->get('tax_id'));
+            $tax = Tax::findOrFail($request->input('tax_id'));
 
             return response()->json([
                 'status' => true,
@@ -608,12 +608,12 @@ class ProductsController extends Controller
         ]);
 
         try {
-            $value = Value::findOrFail($request->get('value_id'));
-            $pivot = DB::table('product_attribute')->where('id', $request->get('pivot_id'));
+            $value = Value::findOrFail($request->input('value_id'));
+            $pivot = DB::table('product_attribute')->where('id', $request->input('pivot_id'));
 
             $pivot->update([
-                'value' => $request->get('value') && $request->get('value') != $value->value ?
-                    $request->get('value') : null
+                'value' => $request->filled('value') && $request->input('value') != $value->value ?
+                    $request->input('value') : null
             ]);
 
             return response()->json([

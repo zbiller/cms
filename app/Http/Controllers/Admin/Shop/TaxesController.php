@@ -117,41 +117,4 @@ class TaxesController extends Controller
             $this->item->delete();
         });
     }
-
-    /**
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function load(Request $request)
-    {
-        if (!$request->ajax()) {
-            return response()->json([
-                'error' => 'Bad request'
-            ], 400);
-        }
-
-        $this->validate($request, [
-            'tax_id' => 'required|numeric',
-        ]);
-
-        try {
-            $tax = Tax::findOrFail($request->get('tax_id'));
-
-            return response()->json([
-                'status' => true,
-                'data' => [
-                    'id' => $tax->id,
-                    'name' => $tax->name ?: 'N/A',
-                    'rate' => $tax->rate ?: 'N/A',
-                    'type' => isset(Tax::$types[$tax->type]) ? Tax::$types[$tax->type] : 'N/A',
-                    'url' => route('admin.taxes.edit', $tax->id),
-                ],
-            ]);
-        } catch (Exception $e) {
-            return response()->json([
-                'status' => false,
-                'message' => $e->getMessage(),
-            ]);
-        }
-    }
 }

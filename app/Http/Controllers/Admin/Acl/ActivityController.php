@@ -31,7 +31,7 @@ class ActivityController extends Controller
         return $this->_index(function () use ($request, $filter, $sort) {
             $query = Activity::filtered($request, $filter);
 
-            if ($request->has('sort')) {
+            if ($request->filled('sort')) {
                 $query->sorted($request, $sort);
             } else {
                 $query->latest();
