@@ -30,6 +30,7 @@
     </div>
 
     {!! form_admin()->text('metadata[from_name]', 'From Name', $item && $item->exists ? $item->metadata('from_name') : null, ['placeholder' => 'Default is ' . $fromName]) !!}
+    {!! form_admin()->text('metadata[from_name]', 'From Name', $item && $item->exists ? $item->metadata('from_name') : null, ['placeholder' => 'Default is ' . $fromName]) !!}
     {!! form_admin()->text('metadata[from_email]', 'From Email', $item && $item->exists ? $item->metadata('from_email') : null, ['placeholder' => 'Default is ' . $fromEmail]) !!}
     {!! form_admin()->text('metadata[reply_to]', 'Reply To', $item && $item->exists ? $item->metadata('reply_to') : null, ['placeholder' => 'Default is ' . $fromEmail]) !!}
     {!! uploader()->field('metadata[attachment]')->label('Attachment')->model($item)->manager() !!}

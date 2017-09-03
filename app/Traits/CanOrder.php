@@ -14,7 +14,7 @@ trait CanOrder
      */
     public function order(Request $request)
     {
-        $this->validate($request, [
+        $request->validate([
             'model' => 'required',
             'items' => 'required|array'
         ]);

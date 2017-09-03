@@ -610,7 +610,7 @@ trait CanCrud
                             }
                         }
 
-                        $this->validate($request, $validation, $req->messages(), $req->attributes());
+                        $request->validate($validation, $req->messages(), $req->attributes());
                     } catch (ValidationException $e) {
                         return back()->withErrors($e->validator->errors());
                     }

@@ -250,7 +250,7 @@ class OrdersController extends Controller
             ], 400);
         }
 
-        $this->validate($request, [
+        $request->validate([
             'product_id' => 'required|numeric',
             'quantity' => 'required|numeric',
         ]);

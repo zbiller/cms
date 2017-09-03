@@ -325,7 +325,7 @@ class CategoriesController extends Controller
             ], 400);
         }
 
-        $this->validate($request, [
+        $request->validate([
             'discount_id' => 'required|numeric',
         ]);
 
@@ -362,7 +362,7 @@ class CategoriesController extends Controller
             ], 400);
         }
 
-        $this->validate($request, [
+        $request->validate([
             'tax_id' => 'required|numeric',
         ]);
 

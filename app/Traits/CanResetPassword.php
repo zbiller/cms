@@ -85,7 +85,7 @@ trait CanResetPassword
     {
         $validator = self::$resetPasswordOptions->validator;
 
-        $this->validate($request, $validator->rules(), $validator->messages(), $validator->attributes());
+        $request->validate($validator->rules(), $validator->messages(), $validator->attributes());
 
         $response = $this->broker()->reset(
             $this->credentials($request), function ($user, $password) {

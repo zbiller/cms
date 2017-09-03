@@ -19,12 +19,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        UploadsLinkCommand::class,
-        BlockMakeCommand::class,
-        CurrencyUpdateCommand::class,
-        CartCleanCommand::class,
-        CartReminderCommand::class,
-        ActivityCleanCommand::class,
+        //
     ];
 
     /**

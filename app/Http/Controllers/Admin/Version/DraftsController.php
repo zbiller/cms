@@ -435,7 +435,7 @@ class DraftsController extends Controller
      */
     protected function validateDraftableAjaxData(Request $request)
     {
-        $this->validate($request, [
+        $request->validate([
             'draftable_id' => 'required|numeric',
             'draftable_type' => 'required',
             'route' => 'required',

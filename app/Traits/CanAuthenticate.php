@@ -103,7 +103,7 @@ trait CanAuthenticate
     {
         $validator = self::$authenticationOptions->validator;
 
-        $this->validate($request, $validator->rules(), $validator->messages(), $validator->attributes());
+        $request->validate($validator->rules(), $validator->messages(), $validator->attributes());
     }
 
     /**
