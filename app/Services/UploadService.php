@@ -250,8 +250,8 @@ class UploadService
             $this->simple = true;
         }
 
-        $this->setFile($file)->setField($field)->setModel($model)->setConfig($model);
-        $this->setDisk()->setPath()->setName()->setExtension()->setSize()->setType();
+        $this->setDisk()->setFile($file)->setField($field)->setModel($model)->setConfig($model);
+        $this->setPath()->setName()->setExtension()->setSize()->setType();
     }
 
     /**
@@ -262,6 +262,12 @@ class UploadService
      */
     public function setFile($file)
     {
+        if (static::isUsingAmazonS3()) {
+            $this->file = $this->createFromAmazonS3($file);
+
+            return $this;
+        }
+
         switch ($file) {
             case is_string($file):
                 $this->file = $this->createFromString($file);
@@ -370,7 +376,7 @@ class UploadService
      */
     public function setDisk()
     {
-        $this->disk = $this->config['storage']['disk'];
+        $this->disk = config('upload.storage.disk');
 
         return $this;
     }
@@ -399,7 +405,7 @@ class UploadService
         } else {
             $this->name = str_random(40) . '.' . $this->file->getClientOriginalExtension();
 
-            if (Storage::disk($this->disk)->exists($this->path . '/' . $this->name)) {
+            if (Storage::disk($this->getDisk())->exists($this->path . '/' . $this->name)) {
                 $this->setName();
             }
         }
@@ -637,6 +643,16 @@ class UploadService
     }
 
     /**
+     * Determine if the uploading functionality is currently using the S3 storage disk.
+     *
+     * @return bool
+     */
+    public static function isUsingAmazonS3()
+    {
+        return strtolower(config('upload.storage.disk')) === 's3';
+    }
+
+    /**
      * Manage uploading of files.
      *
      * The uploading will be done based on the file type: image|video|audio|file.
@@ -760,6 +776,39 @@ class UploadService
             );
         } catch (UploadException $e) {
             throw $e;
+        }
+    }
+
+    /**
+     * Manage cropping an already existing image across different storage disks.
+     *
+     * @param string $path
+     * @param string $style
+     * @param int $size
+     * @param int $width
+     * @param int $height
+     * @param int $x
+     * @param int $y
+     * @throws UploadException
+     */
+    public function crop($path, $style, $size, $width, $height, $x = 0, $y = 0)
+    {
+        dd('asa');
+        try {
+            $image = Image::make($this->getFile());
+            $image->crop((int)$width, (int)$height, (int)$x, (int)$y);
+
+            if (is_numeric($width) && is_numeric($size) && $width > $size) {
+                $image->resize(floor($width * ($size / $width)), floor($height * ($size / $width)));
+            }
+
+            Storage::disk($this->getDisk())->put(
+                substr_replace($path, '_' . $style, strrpos($path, '.'), 0),
+                $image->stream(null, (int)$this->getConfig('images.quality') ?: 90)->__toString(),
+                config('upload.storage.visibility')
+            );
+        } catch (Exception $e) {
+            throw UploadException::cropImageFailed();
         }
     }
 
@@ -1033,7 +1082,8 @@ class UploadService
 
             Storage::disk($this->getDisk())->put(
                 $this->getPath() . '/' . substr_replace($this->getName(), '_thumbnail', strpos($this->getName(), '.' . $this->getExtension()), 0),
-                Image::make($original)->fit($width, $height)->stream(null, (int)$this->getConfig('images.quality') ?: 90)->__toString()
+                Image::make($original)->fit($width, $height)->stream(null, (int)$this->getConfig('images.quality') ?: 90)->__toString(),
+                config('upload.storage.visibility')
             );
         } catch (Exception $e) {
             throw UploadException::generateImageThumbnailFailed();
@@ -1071,8 +1121,11 @@ class UploadService
 
                     if (!$this->uploadAlreadyExistsInStorage($path)) {
                         Storage::disk($this->getDisk())->put(
-                            $path, Image::make($original)->{!isset($style['ratio']) || $style['ratio'] === true ? 'fit' : 'resize'}($style['width'], $style['height'])
-                                ->stream(null, (int)$this->getConfig('images.quality') ?: 90)->__toString()
+                            $path,
+                            Image::make($original)
+                                ->{!isset($style['ratio']) || $style['ratio'] === true ? 'fit' : 'resize'}($style['width'], $style['height'])
+                                ->stream(null, (int)$this->getConfig('images.quality') ?: 90)->__toString(),
+                            config('upload.storage.visibility')
                         );
                     }
                 }
@@ -1108,7 +1161,9 @@ class UploadService
 
                 $video
                     ->getFrameFromSeconds(floor(($duration * $i) / $number))
-                    ->export()->toDisk($this->getDisk())->save($thumbnail);
+                    ->export()->toDisk($this->getDisk())
+                    ->withVisibility(config('upload.storage.visibility'))
+                    ->save($thumbnail);
             }
         } catch (Exception $e) {
             throw UploadException::generateVideoThumbnailFailed();
@@ -1145,9 +1200,12 @@ class UploadService
                     $path = $this->getPath() . '/' . substr_replace($this->getName(), '_' . $name, strpos($this->getName(), '.' . $this->getExtension()), 0);
 
                     if (!$this->uploadAlreadyExistsInStorage($path)) {
-                        $original->addFilter(function ($filters) use ($style) {
-                            $filters->resize(new FFMpeg\Coordinate\Dimension($style['width'], $style['height']));
-                        })->export()->toDisk($this->getDisk())->inFormat(new FFMpeg\Format\Video\WebM)->save($path);
+                        $original
+                            ->addFilter(function ($filters) use ($style) {
+                                $filters->resize(new FFMpeg\Coordinate\Dimension($style['width'], $style['height']));
+                            })->export()->toDisk($this->getDisk())
+                            ->inFormat(new FFMpeg\Format\Video\WebM)
+                            ->withVisibility(config('upload.storage.visibility'))->save($path);
                     }
                 }
             }
@@ -1234,7 +1292,7 @@ class UploadService
 
         list($width, $height) = getimagesize($this->getFile());
 
-        if ($width < $minWidth || $height < $minHeight) {
+        if ($width && $height && $width < $minWidth || $height < $minHeight) {
             throw UploadException::minimumImageSizeRequired($minWidth, $minHeight);
         }
 
@@ -1254,6 +1312,30 @@ class UploadService
         }
 
         return $file;
+    }
+
+    /**
+     * Get the UploadedFile instance.
+     *
+     * @param object $file
+     * @return UploadedFile
+     * @throws UploadException
+     */
+    private function createFromAmazonS3($file)
+    {
+        if ($file instanceof UploadedFile) {
+            return $file;
+        }
+
+        try {
+            $this->setOriginal($file);
+
+            return $this->createFromUrl(
+                Storage::disk($this->getDisk())->url($file)
+            );
+        } catch (Exception $e) {
+            throw UploadException::invalidFile();
+        }
     }
 
     /**
@@ -1306,8 +1388,7 @@ class UploadService
         try {
             $this->setOriginal($file);
 
-            $disk = config('upload.storage.disk');
-            $path = config('filesystems.disks.' . $disk . '.root') . DIRECTORY_SEPARATOR;
+            $path = config('filesystems.disks.' . $this->getDisk() . '.root') . DIRECTORY_SEPARATOR;
 
             return new UploadedFile(
                 $path . $this->getOriginal()->full_path,

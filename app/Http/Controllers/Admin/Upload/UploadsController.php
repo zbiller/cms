@@ -15,6 +15,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Image;
+use Storage;
 use Throwable;
 
 class UploadsController extends Controller
@@ -255,7 +256,7 @@ class UploadsController extends Controller
         $width = array_get($model->getUploadConfig(), "images.styles.{$field}.{$style}.width");
         $height = array_get($model->getUploadConfig(), "images.styles.{$field}.{$style}.height");
 
-        $imageSize = getimagesize($path);
+        $imageSize = getimagesize(Storage::disk(config('upload.storage.disk'))->url($path));
         $cropSize = [$width, $height];
         $dCropSize = $cropSize;
 
@@ -287,27 +288,32 @@ class UploadsController extends Controller
      */
     public function cut(Request $request)
     {
-        $path = $request->input('path');
-        $style = $request->input('style');
-        $size = $request->input('size');
-        $width = $request->input('w');
-        $height = $request->input('h');
-        $x = $request->input('x');
-        $y = $request->input('y');
+        try {
+            (new UploadService(
+                $request->input('path')
+            ))->crop(
+                $request->input('path'),
+                $request->input('style'),
+                $request->input('size'),
+                $request->input('w'),
+                $request->input('h'),
+                $request->input('x'),
+                $request->input('y')
+            );
 
-        $image = Image::make($path);
-        $image->crop((int)$width, (int)$height, (int)$x, (int)$y);
-
-        if (is_numeric($width) && is_numeric($size) && $width > $size) {
-            $image->resize(floor($width * ($size / $width)), floor($height * ($size / $width)));
+            return response()->json([
+                'status' => true
+            ]);
+        } catch (UploadException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage(),
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Something went wrong!',
+            ]);
         }
-
-        $image->save(substr_replace(
-            $path, '_' . $style, strrpos($path, '.'), 0
-        ));
-
-        return response()->json([
-            'status' => true
-        ]);
     }
 }

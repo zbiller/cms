@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.5.1 on 2017-09-03.
+ * Generated for Laravel 5.5.2 on 2017-09-04.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -14934,7 +14934,7 @@ namespace  {
             /**
              * Find multiple models by their primary keys.
              *
-             * @param array $ids
+             * @param \Illuminate\Contracts\Support\Arrayable|array $ids
              * @param array $columns
              * @return \Illuminate\Database\Eloquent\Collection 
              * @static 

@@ -22,7 +22,8 @@
         "predis/predis": "^1.1",
         "proengsoft/laravel-jsvalidation": "^2.0",
         "spatie/laravel-analytics": "^3.0",
-        "spatie/laravel-image-optimizer": "^1.0"
+        "spatie/laravel-image-optimizer": "^1.0",
+        "league/flysystem-aws-s3-v3": "~1.0"
     },
     "require-dev": {
         "filp/whoops": "^2.1",

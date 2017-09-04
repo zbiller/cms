@@ -116,6 +116,14 @@ class UploadException extends Exception
     /**
      * @return static
      */
+    public static function cropImageFailed()
+    {
+        return new static('Failed cropping the given image! Please try again.');
+    }
+
+    /**
+     * @return static
+     */
     public static function generateVideoThumbnailFailed()
     {
         return new static('Thumbnail generation for the uploaded video failed! Please try again.');

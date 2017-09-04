@@ -24,7 +24,7 @@
                                 <a class="open-upload-cropper open-upload-cropper-{{ $index }} {!! $disabled ? 'disabled' : '' !!}" data-url="{{ $current->url('original') }}" data-path="{{ $current->path('original', true) }}" data-style="{{ $style }}">
                                     <img src="{!! $current->url($style) !!}" />
                                 </a>
-                            @elsepermission
+                            @else
                                 <img src="{!! $current->url($style) !!}" />
                             @endpermission
                         @elseif($upload->isVideo())

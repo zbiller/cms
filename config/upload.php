@@ -49,6 +49,14 @@ return [
          */
         'override_dependencies' => false,
 
+        /**
+         * Flag indicating a file's visibility type.
+         *
+         * Please note that this option is used only when opting for an "s3" storage.
+         * The value of the visibility key may be any visibility type supported by Amazon S3 and Laravel's Filesystem storage.
+         */
+        'visibility' => 'public'
+
     ],
 
     /**

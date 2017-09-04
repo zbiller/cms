@@ -89,15 +89,22 @@
                     w: w,
                     h: h
                 },
+                complete: function () {
+                    $('#upload-crop-' + index).hide();
+                },
                 success: function(data) {
                     if (data.status === true) {
                         date = new Date();
 
-                        $('#upload-crop-' + index).hide();
                         $('#upload-current-' + index +' .modal-tab.active > a > img').attr(
                             'src', $('#upload-current-' + index +' .modal-tab.active > a > img').attr('src') + '?' + date.getTime()
                         );
+                    } else {
+                        init.FlashMessage('error', data.message);
                     }
+                },
+                error: function () {
+                    init.FlashMessage('error', data.message);
                 }
             });
         });
