@@ -250,7 +250,7 @@ class UploadService
             $this->simple = true;
         }
 
-        $this->setDisk()->setFile($file)->setField($field)->setModel($model)->setConfig($model);
+        $this->setDisk()->setFile($file)->setModel($model)->setField($field)->setConfig($model);
         $this->setPath()->setName()->setExtension()->setSize()->setType();
     }
 
@@ -793,7 +793,6 @@ class UploadService
      */
     public function crop($path, $style, $size, $width, $height, $x = 0, $y = 0)
     {
-        dd('asa');
         try {
             $image = Image::make($this->getFile());
             $image->crop((int)$width, (int)$height, (int)$x, (int)$y);

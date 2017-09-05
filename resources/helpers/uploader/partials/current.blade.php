@@ -21,7 +21,7 @@
                     <div id="{!! $style !!}-{!! $index !!}" class="modal-tab {!! $loop->first ? 'active' : '' !!}">
                         @if($upload->isImage())
                             @permission('uploads-crop')
-                                <a class="open-upload-cropper open-upload-cropper-{{ $index }} {!! $disabled ? 'disabled' : '' !!}" data-url="{{ $current->url('original') }}" data-path="{{ $current->path('original', true) }}" data-style="{{ $style }}">
+                                <a class="open-upload-cropper open-upload-cropper-{{ $index }} {!! $disabled ? 'disabled' : '' !!}" data-url="{{ $current->url('original') }}" data-path="{{ $current->path('original') }}" data-style="{{ $style }}">
                                     <img src="{!! $current->url($style) !!}" />
                                 </a>
                             @else

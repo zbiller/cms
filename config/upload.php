@@ -20,7 +20,7 @@ return [
          * 2. Verify if the /storage/uploads directory exists and if not, create it with a .gitignore file inside.
          * 3. Run the artisan command: uploads:link, to create a symlink between the storage and public directories.
          */
-        'disk' => 'uploads',
+        'disk' => env('UPLOAD_DRIVER', 'uploads'),
 
         /**
          * Flag indicating that on record upload, to keep or remove both old uploaded file (and it's dependencies) and the database record.
