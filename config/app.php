@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => 'LaraBox',
+    'name' => env('APP_NAME', 'Platform'),
 
     /*
     |--------------------------------------------------------------------------
@@ -170,6 +170,7 @@ return [
         Proengsoft\JsValidation\JsValidationServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
         Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
+        Spatie\Backup\BackupServiceProvider::class,
         Spatie\Analytics\AnalyticsServiceProvider::class,
         Spatie\LaravelImageOptimizer\ImageOptimizerServiceProvider::class,
         Swap\Laravel\SwapServiceProvider::class,
