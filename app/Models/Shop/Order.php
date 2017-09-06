@@ -452,7 +452,6 @@ class Order extends Model
 
             return $order;
         } catch (Exception $e) {
-            dd($e);
             throw OrderException::createOrderFailed();
         }
     }
@@ -547,7 +546,6 @@ class Order extends Model
 
             return $order;
         } catch (Exception $e) {
-            dd($e);
             throw OrderException::updateOrderFailed();
         }
     }

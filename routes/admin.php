@@ -756,4 +756,17 @@ Route::group([
         Route::match(['get', 'post'], 'analytics', ['as' => 'admin.settings.analytics', 'uses' => 'SettingsController@analytics', 'permissions' => 'settings-analytics']);
         Route::match(['get', 'post'], 'courier', ['as' => 'admin.settings.courier', 'uses' => 'SettingsController@courier', 'permissions' => 'settings-courier']);
     });
+
+    /**
+     * Crud Settings.
+     */
+    Route::group([
+        'namespace' => 'Backup',
+        'prefix' => 'backups',
+    ], function () {
+        Route::get('/', ['as' => 'admin.backups.index', 'uses' => 'BackupsController@index', 'permissions' => 'backups-list']);
+        Route::post('create', ['as' => 'admin.backups.create', 'uses' => 'BackupsController@create', 'permissions' => 'backups-create']);
+        Route::get('download/{backup}', ['as' => 'admin.backups.download', 'uses' => 'BackupsController@download', 'permissions' => 'backups-download']);
+        Route::delete('destroy/{backup}', ['as' => 'admin.backups.destroy', 'uses' => 'BackupsController@destroy', 'permissions' => 'backups-delete']);
+    });
 });

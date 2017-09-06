@@ -133,17 +133,21 @@ class MenuComposer
             });
 
             $menu->add(function ($item) use ($menu) {
-                $access = $item->name('System Settings')->data('icon', 'fa-cog')->active('admin/settings/*');
+                $config = $item->name('System Settings')->data('icon', 'fa-cog')->active('admin/settings/*', 'admin/backups/*');
 
-                $menu->child($access, function (MenuItem $item) {
+                $menu->child($config, function (MenuItem $item) {
                     $item->name('General')->url(route('admin.settings.general'))->permissions('settings-general')->active('admin/settings/general/*');
                 });
 
-                $menu->child($access, function (MenuItem $item) {
+                $menu->child($config, function (MenuItem $item) {
+                    $item->name('Backups')->url(route('admin.backups.index'))->permissions('backups-list')->active('admin/backups/*');
+                });
+
+                $menu->child($config, function (MenuItem $item) {
                     $item->name('Analytics')->url(route('admin.settings.analytics'))->permissions('settings-analytics')->active('admin/settings/analytics/*');
                 });
 
-                $menu->child($access, function (MenuItem $item) {
+                $menu->child($config, function (MenuItem $item) {
                     $item->name('Courier')->url(route('admin.settings.courier'))->permissions('settings-courier')->active('admin/settings/courier/*');
                 });
             });

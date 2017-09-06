@@ -113,7 +113,7 @@ class Upload extends Model
      *
      * @return string
      */
-    public function getSizeMbAttribute()
+    public function getSizeInMbAttribute()
     {
         return number_format($this->attributes['size'] / pow(1024, 2), 2);
     }

@@ -19,7 +19,7 @@
                     <span class="upload-aligned-text">{{ $item->original_name ?: 'N/A' }}</span>
                 </td>
                 <td>
-                    {{ $item->size_mb . ' MB' }}
+                    {{ $item->size_in_mb . ' MB' }}
                 </td>
                 <td>
                     {!! button()->downloadFile(route('admin.uploads.download', $item->id)) !!}

@@ -874,6 +874,32 @@ class PermissionsSeeder extends Seeder
                 'name' => 'settings-courier',
             ],
         ],
+        'Backups' => [
+            'List' => [
+                'group' => 'Backups',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'backups-list',
+            ],
+            'Create' => [
+                'group' => 'Backups',
+                'label' => 'Create',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'backups-create',
+            ],
+            'Download' => [
+                'group' => 'Backups',
+                'label' => 'Download',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'backups-download',
+            ],
+            'Delete' => [
+                'group' => 'Backups',
+                'label' => 'Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'backups-delete',
+            ],
+        ],
     ];
 
     /**
