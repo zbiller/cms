@@ -16,6 +16,9 @@ class EventServiceProvider extends ServiceProvider
         'Illuminate\Auth\Events\Login' => [
             'App\Listeners\MigrateUserCart',
         ],
+        'Spatie\Backup\Events\BackupWasSuccessful' => [
+            'App\Listeners\StoreBackupToDatabase',
+        ],
         'App\Events\CartReminded' => [
             'App\Listeners\SendCartReminders',
         ],

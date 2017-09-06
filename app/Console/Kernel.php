@@ -30,14 +30,18 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        //uncomment to clean activity log entries weekly via cron jobs
+        //$schedule->command('backup:clean')->daily()->at('01:00')->withoutOverlapping()->emailOutputTo('example@mail.com');
+        //$schedule->command('backup:run')->daily()->at('02:00')->withoutOverlapping()->emailOutputTo('example@mail.com');
+
+        //uncomment to clean activity log entries weekly via cron jobs
+        //$schedule->command(ActivityCleanCommand::class)->weekly()->withoutOverlapping()->emailOutputTo('example@mail.com');
+
         //uncomment to run currency exchange rate update daily via cron jobs
         //$schedule->command(CurrencyUpdateCommand::class)->daily()->withoutOverlapping()->emailOutputTo('example@mail.com');
 
         //uncomment to clean cart entries weekly via cron jobs
         //$schedule->command(CartCleanCommand::class)->weekly()->withoutOverlapping()->emailOutputTo('example@mail.com');
-
-        //uncomment to clean activity log entries weekly via cron jobs
-        //$schedule->command(ActivityCleanCommand::class)->weekly()->withoutOverlapping()->emailOutputTo('example@mail.com');
     }
 
     /**
