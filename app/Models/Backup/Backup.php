@@ -8,6 +8,7 @@ use App\Traits\HasActivity;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
 use Illuminate\Database\Eloquent\Builder;
+use Storage;
 
 class Backup extends Model
 {
@@ -108,6 +109,44 @@ class Backup extends Model
     public function scopeInAlphabeticalOrder($query)
     {
         $query->orderBy('name', 'asc');
+    }
+
+    /**
+     * Determine if the current backup is on the "local" filesystem driver.
+     * Please note that we're talking about the filesystem "DRIVER", not the "DISK".
+     *
+     * @return bool
+     */
+    public function local()
+    {
+        return strtolower(config("filesystems.disks.{$this->disk}.driver")) === 'local';
+    }
+
+    /**
+     * Download a backup zip archive from any storage driver.
+     *
+     * @return int|\Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function download()
+    {
+        if ($this->local()) {
+            return response()->download(
+                Storage::disk($this->disk)->getDriver()->getAdapter()->applyPathPrefix($this->path)
+            );
+        } else {
+            Storage::disk($this->disk)->setVisibility($this->path, 'public');
+
+            header("Cache-Control: public");
+            header("Content-Description: File Transfer");
+            header("Content-Disposition: attachment; filename=" . basename($this->path));
+            header("Content-Type: application/zip");
+
+            $file = readfile(Storage::disk($this->disk)->url($this->path));
+
+            Storage::disk($this->disk)->setVisibility($this->path, 'private');
+
+            return $file;
+        }
     }
 
     /**

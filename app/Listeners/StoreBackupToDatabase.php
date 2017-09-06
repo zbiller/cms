@@ -3,14 +3,10 @@
 namespace App\Listeners;
 
 use App\Models\Backup\Backup;
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Spatie\Backup\Events\BackupWasSuccessful;
 
-class StoreBackupToDatabase /*implements ShouldQueue*/
+class StoreBackupToDatabase
 {
-    //use InteractsWithQueue;
-
     /**
      * Handle the event.
      *

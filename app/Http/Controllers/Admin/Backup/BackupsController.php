@@ -31,7 +31,15 @@ class BackupsController extends Controller
     public function index(Request $request, BackupFilter $filter, BackupSort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
-            $this->items = Backup::filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
+            $query = Backup::filtered($request, $filter);
+
+            if ($request->filled('sort')) {
+                $query->sorted($request, $sort);
+            } else {
+                $query->latest();
+            }
+
+            $this->items = $query->paginate(config('crud.per_page'));
             $this->title = 'Backups';
             $this->view = view('admin.backup.backups.index');
         });
@@ -63,9 +71,7 @@ class BackupsController extends Controller
     public function download(Backup $backup)
     {
         try {
-            return response()->download(
-                Storage::disk($backup->disk)->getDriver()->getAdapter()->applyPathPrefix($backup->path)
-            );
+            return $backup->download();
         } catch (ModelNotFoundException $e) {
             flash()->error('You are trying to download a backup archive that does not exist!');
             return redirect()->route('admin.backups.index');
