@@ -633,7 +633,7 @@ class Cart extends Model
             return DB::transaction(function () use ($data, $customer, $addresses, $items) {
                 $order = Order::createOrder($data, $customer, $addresses, $items);
 
-                //self::$cart->delete();
+                self::$cart->delete();
 
                 return $order;
             });

@@ -49,7 +49,7 @@ class CreateCmsTables extends Migration
             $table->string('slug')->unique();
             $table->string('identifier')->unique()->nullable();
 
-            $table->longText('metadata')->nullable();
+            $table->json('metadata')->nullable();
             $table->string('canonical')->nullable();
 
             $table->tinyInteger('active')->default(1);
@@ -68,7 +68,7 @@ class CreateCmsTables extends Migration
             $table->string('name')->unique();
             $table->string('type')->nullable();
             $table->string('anchor')->nullable();
-            $table->longText('metadata')->nullable();
+            $table->json('metadata')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
@@ -84,7 +84,7 @@ class CreateCmsTables extends Migration
             $table->string('url')->nullable();
             $table->string('type')->nullable();
             $table->string('location')->nullable();
-            $table->longText('metadata')->nullable();
+            $table->json('metadata')->nullable();
             $table->tinyInteger('active')->default(1);
 
             $table->timestamps();
@@ -96,7 +96,7 @@ class CreateCmsTables extends Migration
             $table->string('name')->unique();
             $table->string('identifier')->unique()->nullable();
             $table->tinyInteger('type')->default(1);
-            $table->longText('metadata')->nullable();
+            $table->json('metadata')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

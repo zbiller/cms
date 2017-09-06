@@ -18,7 +18,7 @@ class CreateVersionTables extends Migration
 
             $table->integer('user_id')->unsigned()->index()->nullable();
             $table->morphs('draftable');
-            $table->longText('metadata')->nullable();
+            $table->json('metadata')->nullable();
 
             $table->timestamps();
 
@@ -30,7 +30,7 @@ class CreateVersionTables extends Migration
 
             $table->integer('user_id')->unsigned()->index()->nullable();
             $table->morphs('revisionable');
-            $table->longText('metadata')->nullable();
+            $table->json('metadata')->nullable();
 
             $table->timestamps();
 

@@ -34,7 +34,7 @@ class CreateShopTables extends Migration
             $table->string('name')->unique();
             $table->string('slug')->unique();
 
-            $table->longText('metadata')->nullable();
+            $table->json('metadata')->nullable();
             $table->tinyInteger('active')->default(1);
 
             $table->timestamps();
@@ -50,7 +50,7 @@ class CreateShopTables extends Migration
             $table->string('sku')->unique();
             $table->string('name')->unique();
             $table->string('slug')->unique();
-            $table->longText('content')->nullable();
+            $table->text('content')->nullable();
 
             $table->float('price')->default(0);
             $table->integer('quantity')->default(0);
@@ -58,7 +58,7 @@ class CreateShopTables extends Migration
             $table->integer('views')->default(0);
             $table->integer('sales')->default(0);
 
-            $table->longText('metadata')->nullable();
+            $table->json('metadata')->nullable();
             $table->tinyInteger('active')->default(1);
             $table->tinyInteger('inherit_discounts')->default(1);
             $table->tinyInteger('inherit_taxes')->default(1);
@@ -82,13 +82,39 @@ class CreateShopTables extends Migration
             $table->float('sub_total')->default(0);
             $table->float('grand_total')->default(0);
 
-            $table->longText('customer')->nullable();
-            $table->longText('addresses')->nullable();
+            $table->json('customer')->nullable();
+            $table->json('addresses')->nullable();
 
             $table->tinyInteger('payment')->default(1);
             $table->tinyInteger('shipping')->default(1);
             $table->tinyInteger('status')->default(1);
             $table->tinyInteger('viewed')->default(0);
+
+            $table->string('customer_first_name')->virtualAs('customer->>"$.first_name"');
+            $table->string('customer_last_name')->virtualAs('customer->>"$.last_name"');
+            $table->string('customer_email')->virtualAs('customer->>"$.email"');
+            $table->string('customer_phone')->virtualAs('customer->>"$.phone"');
+            $table->string('shipping_country')->virtualAs('addresses->>"$.shipping->$.country"');
+            $table->string('shipping_state')->virtualAs('addresses->>"$.shipping->$.state"');
+            $table->string('shipping_city')->virtualAs('addresses->>"$.shipping->$.city"');
+            $table->string('shipping_address')->virtualAs('addresses->>"$.shipping->$.address"');
+            $table->string('billing_country')->virtualAs('addresses->>"$.billing->$.country"');
+            $table->string('billing_state')->virtualAs('addresses->>"$.billing->$.state"');
+            $table->string('billing_city')->virtualAs('addresses->>"$.billing->$.city"');
+            $table->string('billing_address')->virtualAs('addresses->>"$.billing->$.address"');
+
+            $table->index('customer_first_name');
+            $table->index('customer_last_name');
+            $table->index('customer_email');
+            $table->index('customer_phone');
+            $table->index('shipping_country');
+            $table->index('shipping_state');
+            $table->index('shipping_city');
+            $table->index('shipping_address');
+            $table->index('billing_country');
+            $table->index('billing_state');
+            $table->index('billing_address');
+            $table->index('billing_city');
 
             $table->timestamps();
             $table->softDeletes();

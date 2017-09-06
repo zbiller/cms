@@ -20,8 +20,8 @@ class NotifyOrderFailure implements ShouldQueue
      */
     public function handle(OrderFailed $event)
     {
-        if (isset($event->order->customer->email)) {
-            Mail::to($event->order->customer->email)->queue(
+        if (isset($event->order->customer['email'])) {
+            Mail::to($event->order->customer['email'])->queue(
                 new OrderFailedMail('order-failed', $event->order)
             );
         }

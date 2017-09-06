@@ -3,6 +3,7 @@
 use App\Models\Shop\Attribute;
 use App\Models\Shop\Attribute\Set;
 use App\Models\Shop\Attribute\Value;
+use App\Models\Shop\Cart;
 use App\Models\Shop\Category as ProductCategory;
 use App\Models\Shop\Currency;
 use App\Models\Shop\Discount;
@@ -305,5 +306,40 @@ class ShopSeeder extends Seeder
             'content' => '<p>Some content here</p>',
             'active' => Product::ACTIVE_YES,
         ]);
+
+        /**
+         * Create cart entry
+         */
+        auth()->loginUsingId(1);
+        $product_1->addToCart(3);
+        $product_2->addToCart(5);
+
+        /**
+         * Create order entry
+         */
+        Cart::placeOrder(
+            [],
+            [
+                'first_name' => 'Andrei',
+                'last_name' => 'Badea',
+                'email' => 'zbiller@gmail.com',
+                'phone' => '0726583992',
+            ],
+            [
+                'shipping' => [
+                    'country' => 'Romania',
+                    'state' => 'Bucharest',
+                    'city' => 'Bucharest',
+                    'address' => 'str. Adrian Carstea, nr. 13, bl. P37, sc. 1, et. 1, ap. 159',
+                ],
+                'billing' => [
+                    'country' => 'Romania',
+                    'state' => 'Dambovita',
+                    'city' => 'Targoviste',
+                    'address' => 'bld. Unirii, nr. 10, bl. A, sc. 1, et. 1, ap. 5',
+                ]
+            ]
+        );
+
     }
 }

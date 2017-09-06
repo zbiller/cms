@@ -20,8 +20,8 @@ class NotifyOrderCompletion implements ShouldQueue
      */
     public function handle(OrderCompleted $event)
     {
-        if (isset($event->order->customer->email)) {
-            Mail::to($event->order->customer->email)->queue(
+        if (isset($event->order->customer['email'])) {
+            Mail::to($event->order->customer['email'])->queue(
                 new OrderCompletedMail('order-completed', $event->order)
             );
         }

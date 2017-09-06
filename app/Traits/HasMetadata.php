@@ -11,7 +11,7 @@ trait HasMetadata
      */
     public function getMetadataAttribute()
     {
-        return json_decode($this->attributes['metadata']);
+        return $this->fromJson($this->attributes['metadata'], true);
     }
 
     /**
@@ -22,7 +22,7 @@ trait HasMetadata
     public function setMetadataAttribute($value)
     {
         $this->attributes['metadata'] = $value ? (
-            is_json_format($value) ? $value : json_encode($value)
+            is_json_format($value) ? $value : $this->asJson($value)
         ) : null;
     }
 
@@ -37,13 +37,9 @@ trait HasMetadata
      */
     public function metadata($raw)
     {
-        if (!$this->metadata) {
-            return null;
-        }
-
-        $metadata = get_object_vars_recursive($this->metadata);
-        $field = str_replace('][', '.', trim(str_replace('metadata', '', $raw), '.[]'));
-
-        return array_get($metadata, $field);
+        return $this->metadata ? array_get(
+            get_object_vars_recursive($this->metadata),
+            str_replace('][', '.', trim(str_replace('metadata', '', $raw), '.[]'))
+        ) : null;
     }
 }

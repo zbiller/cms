@@ -61,6 +61,16 @@ class Order extends Model
     ];
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'customer' => 'array',
+        'addresses' => 'array',
+    ];
+
+    /**
      * The constants defining the order statuses.
      *
      * @const
@@ -236,57 +246,13 @@ class Order extends Model
     }
 
     /**
-     * Set the json encoded data for the "customer" column.
-     *
-     * @param $value
-     */
-    public function setCustomerAttribute($value)
-    {
-        $this->attributes['customer'] = $value ? (
-            is_json_format($value) ? $value : json_encode($value)
-        ) : null;
-    }
-
-    /**
-     * Set the json encoded data for the "addresses" column.
-     *
-     * @param $value
-     */
-    public function setAddressesAttribute($value)
-    {
-        $this->attributes['addresses'] = $value ? (
-            is_json_format($value) ? $value : json_encode($value)
-        ) : null;
-    }
-
-    /**
-     * Get the json decoded representation of the "customer" column.
-     *
-     * @return mixed
-     */
-    public function getCustomerAttribute()
-    {
-        return json_decode($this->attributes['customer']);
-    }
-
-    /**
-     * Get the json decoded representation of the "addresses" column.
-     *
-     * @return mixed
-     */
-    public function getAddressesAttribute()
-    {
-        return json_decode($this->attributes['addresses']);
-    }
-
-    /**
      * Get the first name of the customer.
      *
      * @return string|null
      */
     public function getFirstNameAttribute()
     {
-        return $this->customer->first_name ?? null;
+        return $this->customer['first_name'] ?? null;
     }
 
     /**
@@ -296,7 +262,7 @@ class Order extends Model
      */
     public function getLastNameAttribute()
     {
-        return $this->customer->last_name ?? null;
+        return $this->customer['last_name'] ?? null;
     }
 
     /**
@@ -316,7 +282,7 @@ class Order extends Model
      */
     public function getEmailAttribute()
     {
-        return $this->customer->email ?? null;
+        return $this->customer['email'] ?? null;
     }
 
     /**
@@ -326,7 +292,7 @@ class Order extends Model
      */
     public function getPhoneAttribute()
     {
-        return $this->customer->phone ?? null;
+        return $this->customer['phone'] ?? null;
     }
 
     /**
@@ -336,7 +302,7 @@ class Order extends Model
      */
     public function getShippingAddressAttribute()
     {
-        return $this->addresses->shipping ?? null;
+        return $this->addresses['shipping'] ?? null;
     }
 
     /**
@@ -346,7 +312,7 @@ class Order extends Model
      */
     public function getBillingAddressAttribute()
     {
-        return $this->addresses->billing ?? null;
+        return $this->addresses['billing'] ?? null;
     }
 
     /**
@@ -486,6 +452,7 @@ class Order extends Model
 
             return $order;
         } catch (Exception $e) {
+            dd($e);
             throw OrderException::createOrderFailed();
         }
     }
@@ -819,7 +786,7 @@ class Order extends Model
     {
         if ($order && $order->exists) {
             self::$customer = array_replace_recursive(
-                (array)$order->customer, $customer
+                $order->customer, $customer
             );
 
             return;
@@ -873,7 +840,7 @@ class Order extends Model
     {
         if ($order && $order->exists) {
             self::$addresses = array_replace_recursive(
-                (array)$order->addresses, $addresses
+                $order->addresses, $addresses
             );
 
             return;

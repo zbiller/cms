@@ -44,17 +44,17 @@
     <div style="margin-top: 20px;">
         <section class="content content-half left">
             <span class="title">Shipping Address</span>
-            {{ $item->shipping_address && isset($item->shipping_address->country) ? $item->shipping_address->country . ', ' : '' }}
-            {{ $item->shipping_address && isset($item->shipping_address->state) ? $item->shipping_address->state . ', ' : '' }}
-            {{ $item->shipping_address && isset($item->shipping_address->city) ? $item->shipping_address->city : '' }}
-            {!! $item->shipping_address->address && isset($item->shipping_address->address) ? '<br />' . nl2br($item->shipping_address->address) : '' !!}
+            {{ isset($item->shipping_address['country']) ? $item->shipping_address['country'] . ', ' : '' }}
+            {{ isset($item->shipping_address['state']) ? $item->shipping_address['state'] . ', ' : '' }}
+            {{ isset($item->shipping_address['city']) ? $item->shipping_address['city'] : '' }}
+            {!! isset($item->shipping_address['address']) ? '<br /><br />' . nl2br($item->shipping_address['address']) : '' !!}
         </section>
         <section class="content content-half right">
             <span class="title">Billing Address</span>
-            {{ $item->billing_address && isset($item->billing_address->country) ? $item->billing_address->country . ', ' : '' }}
-            {{ $item->billing_address && isset($item->billing_address->state) ? $item->billing_address->state . ', ' : '' }}
-            {{ $item->billing_address && isset($item->billing_address->city) ? $item->billing_address->city : '' }}
-            {!! $item->billing_address->address && isset($item->billing_address->address) ? '<br />' . nl2br($item->billing_address->address) : '' !!}
+            {{ isset($item->billing_address['country']) ? $item->billing_address['country'] . ', ' : '' }}
+            {{ isset($item->billing_address['state']) ? $item->billing_address['state'] . ', ' : '' }}
+            {{ isset($item->billing_address['city']) ? $item->billing_address['city'] : '' }}
+            {!! isset($item->billing_address['address']) ? '<br /><br />' . nl2br($item->billing_address['address']) : '' !!}
         </section>
     </div>
 

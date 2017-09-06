@@ -7,7 +7,7 @@
             <td class="sortable" data-sort="grand_total">
                 <i class="fa fa-sort"></i>&nbsp; Total
             </td>
-            <td class="sortable" data-sort="customer">
+            <td class="sortable" data-sort="customer->first_name">
                 <i class="fa fa-sort"></i>&nbsp; Customer
             </td>
             <td class="sortable" data-sort="status">

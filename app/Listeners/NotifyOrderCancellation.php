@@ -20,8 +20,8 @@ class NotifyOrderCancellation implements ShouldQueue
      */
     public function handle(OrderCanceled $event)
     {
-        if (isset($event->order->customer->email)) {
-            Mail::to($event->order->customer->email)->queue(
+        if (isset($event->order->customer['email'])) {
+            Mail::to($event->order->customer['email'])->queue(
                 new OrderCanceledMail('order-canceled', $event->order)
             );
         }

@@ -50,7 +50,7 @@ class CreateAuthTables extends Migration
             $table->integer('state_id')->unsigned()->index()->nullable();
             $table->integer('city_id')->unsigned()->index()->nullable();
 
-            $table->longText('address')->nullable();
+            $table->text('address')->nullable();
             $table->integer('ord')->default(0);
 
             $table->timestamps();
