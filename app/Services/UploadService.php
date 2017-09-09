@@ -751,9 +751,10 @@ class UploadService
     public function download()
     {
         try {
-            return response()->download(
-                Storage::disk($this->getDisk())->getDriver()->getAdapter()->applyPathPrefix($this->getOriginal()->full_path)
-            );
+            return response(Storage::disk($this->getDisk())->get($this->getOriginal()->full_path), 200, [
+                'Content-Type' => $this->getOriginal()->mime,
+                'Content-Disposition' => 'attachment; filename=' . $this->getOriginal()->original_name,
+            ]);
         } catch (UploadException $e) {
             throw $e;
         }
@@ -771,9 +772,9 @@ class UploadService
     public function show()
     {
         try {
-            return response()->file(
-                Storage::disk($this->getDisk())->getDriver()->getAdapter()->applyPathPrefix($this->getOriginal()->full_path)
-            );
+            return response(Storage::disk($this->getDisk())->get($this->getOriginal()->full_path), 200, [
+                'Content-Type' => $this->getOriginal()->mime,
+            ]);
         } catch (UploadException $e) {
             throw $e;
         }

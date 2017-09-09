@@ -17,11 +17,7 @@
     @if($items->count() > 0)
         @foreach($items as $index => $item)
             <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
-                {{--<td>{{ $item->name ?: 'N/A' }}</td>--}}
-                <td>
-                    <img src="{{ asset('images/admin/flags/' . $item->code . '.png') }}" title="{{ $item->name }}" class="upload-aligned-image" />
-                    <span class="upload-aligned-text">{{ $item->name ?: 'N/A' }}</span>
-                </td>
+                <td>{{ $item->name ?: 'N/A' }}</td>
                 <td>{{ $item->code ?: 'N/A' }}</td>
                 <td>{{ $defaults[$item->default] ?? 'N/A' }}</td>
                 <td>
