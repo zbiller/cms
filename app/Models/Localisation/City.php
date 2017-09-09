@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Location;
+namespace App\Models\Localisation;
 
 use App\Models\Model;
 use App\Options\ActivityOptions;
@@ -10,7 +10,7 @@ use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
 use Illuminate\Database\Eloquent\Builder;
 
-class State extends Model
+class City extends Model
 {
     use HasActivity;
     use IsCacheable;
@@ -22,7 +22,7 @@ class State extends Model
      *
      * @var string
      */
-    protected $table = 'states';
+    protected $table = 'cities';
 
     /**
      * The attributes that are mass assignable.
@@ -31,12 +31,12 @@ class State extends Model
      */
     protected $fillable = [
         'country_id',
+        'state_id',
         'name',
-        'code',
     ];
 
     /**
-     * State belongs to country.
+     * City belongs to country.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -46,13 +46,13 @@ class State extends Model
     }
 
     /**
-     * Country has many cities.
+     * City belongs to state.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function cities()
+    public function state()
     {
-        return $this->hasMany(City::class, 'state_id')->orderBy('name');
+        return $this->belongsTo(State::class, 'state_id');
     }
 
     /**
@@ -67,14 +67,14 @@ class State extends Model
     }
 
     /**
-     * Filter the query by code.
+     * Filter the query by state.
      *
      * @param Builder $query
-     * @param string $code
+     * @param int $state
      */
-    public function scopeWhereCode($query, $code)
+    public function scopeWhereState($query, $state)
     {
-        $query->where('code', $code);
+        $query->where('state_id', $state);
     }
 
     /**

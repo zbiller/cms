@@ -15,18 +15,6 @@ class CreateShopTables extends Migration
      */
     public function up()
     {
-        Schema::create('currencies', function (Blueprint $table) {
-            $table->increments('id');
-
-            $table->string('name')->unique();
-            $table->string('code')->index()->unique();
-            $table->string('symbol')->nullable();
-            $table->string('format')->nullable();
-            $table->float('exchange_rate', 8, 4)->default(0);
-
-            $table->timestamps();
-        });
-
         Schema::create('product_categories', function (Blueprint $table) {
             $table->increments('id');
             NestedSet::columns($table);
@@ -334,7 +322,6 @@ class CreateShopTables extends Migration
         Schema::dropIfExists('orders');
         Schema::dropIfExists('products');
         Schema::dropIfExists('product_categories');
-        Schema::dropIfExists('currencies');
 
         Schema::enableForeignKeyConstraints();
     }

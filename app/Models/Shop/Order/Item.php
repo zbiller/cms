@@ -41,6 +41,15 @@ class Item extends Model
     ];
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'quantity' => 'integer'
+    ];
+
+    /**
      * Order item belongs to order.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

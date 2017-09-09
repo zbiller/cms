@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Location;
+namespace App\Http\Controllers\Admin\Localisation;
 
 use App\Http\Controllers\Controller;
-use App\Http\Filters\Location\CityFilter;
-use App\Http\Requests\Location\CityRequest;
-use App\Http\Sorts\Location\CitySort;
-use App\Models\Location\City;
-use App\Models\Location\Country;
-use App\Models\Location\State;
+use App\Http\Filters\Localisation\CityFilter;
+use App\Http\Requests\Localisation\CityRequest;
+use App\Http\Sorts\Localisation\CitySort;
+use App\Models\Localisation\City;
+use App\Models\Localisation\Country;
+use App\Models\Localisation\State;
 use App\Traits\CanCrud;
 use Illuminate\Http\Request;
 

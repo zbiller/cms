@@ -22,7 +22,7 @@
                     {{ $item->quantity }}
                 </td>
                 <td align="right" class="content-cell">
-                    {{ number_format($item->quantity * \App\Models\Shop\Currency::convert($item->product->final_price, $item->product->currency->code, config('shop.price.default_currency'))) }}&nbsp;
+                    {{ number_format($item->quantity * \App\Models\Localisation\Currency::convert($item->product->final_price, $item->product->currency->code, config('shop.price.default_currency'))) }}&nbsp;
                     {{ config('shop.price.default_currency') }}
                 </td>
             </tr>

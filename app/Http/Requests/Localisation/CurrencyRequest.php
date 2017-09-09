@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Location;
+namespace App\Http\Requests\Localisation;
 
 use App\Http\Requests\Request;
 use Illuminate\Validation\Rule;
 
-class CountryRequest extends Request
+class CurrencyRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,13 +27,17 @@ class CountryRequest extends Request
         return [
             'name' => [
                 'required',
-                Rule::unique('countries', 'name')
-                    ->ignore($this->route('country') ? $this->route('country')->id : null)
+                Rule::unique('currencies', 'name')
+                    ->ignore($this->route('currency') ? $this->route('currency')->id : null)
             ],
             'code' => [
                 'required',
-                Rule::unique('countries', 'code')
-                    ->ignore($this->route('country') ? $this->route('country')->id : null)
+                Rule::unique('currencies', 'code')
+                    ->ignore($this->route('currency') ? $this->route('currency')->id : null)
+            ],
+            'exchange_rate' => [
+                'nullable',
+                'numeric',
             ],
         ];
     }

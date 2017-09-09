@@ -11,7 +11,7 @@ use App\Models\Shop\Attribute;
 use App\Models\Shop\Attribute\Set;
 use App\Models\Shop\Attribute\Value;
 use App\Models\Shop\Category;
-use App\Models\Shop\Currency;
+use App\Models\Localisation\Currency;
 use App\Models\Shop\Discount;
 use App\Models\Shop\Product;
 use App\Models\Shop\Tax;

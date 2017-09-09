@@ -71,12 +71,21 @@ class Category extends Model
     ];
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'active' => 'boolean',
+    ];
+
+    /**
      * The constants defining the category visibility.
      *
      * @const
      */
+    const ACTIVE_NO = 0;
     const ACTIVE_YES = 1;
-    const ACTIVE_NO = 2;
 
     /**
      * The property defining the category visibilities.
@@ -84,8 +93,8 @@ class Category extends Model
      * @var array
      */
     public static $actives = [
-        self::ACTIVE_YES => 'Yes',
         self::ACTIVE_NO => 'No',
+        self::ACTIVE_YES => 'Yes',
     ];
 
     /**

@@ -76,20 +76,29 @@ class Page extends Model
     ];
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'active' => 'boolean'
+    ];
+
+    /**
      * The constants defining the page visibility.
      *
      * @const
      */
+    const ACTIVE_NO = 0;
     const ACTIVE_YES = 1;
-    const ACTIVE_NO = 2;
 
     /**
      * The constants defining the page type.
      *
      * @const
      */
-    const TYPE_DEFAULT = 1;
-    const TYPE_HOME = 2;
+    const TYPE_HOME = 1;
+    const TYPE_DEFAULT = 2;
 
     /**
      * The property defining the page visibilities.
@@ -97,8 +106,8 @@ class Page extends Model
      * @var array
      */
     public static $actives = [
-        self::ACTIVE_YES => 'Yes',
         self::ACTIVE_NO => 'No',
+        self::ACTIVE_YES => 'Yes',
     ];
 
     /**
@@ -107,8 +116,8 @@ class Page extends Model
      * @var array
      */
     public static $types = [
-        self::TYPE_DEFAULT => 'Default',
         self::TYPE_HOME => 'Home',
+        self::TYPE_DEFAULT => 'Default',
     ];
 
     /**
@@ -128,18 +137,18 @@ class Page extends Model
      * @var array
      */
     public static $map = [
+        self::TYPE_HOME => [
+            'action' => 'home',
+            'view' => 'front.cms.pages.home',
+            'layouts' => [
+                Layout::TYPE_HOME,
+            ],
+        ],
         self::TYPE_DEFAULT => [
             'action' => 'normal',
             'view' => 'front.cms.pages.normal',
             'layouts' => [
                 Layout::TYPE_DEFAULT,
-                Layout::TYPE_HOME,
-            ],
-        ],
-        self::TYPE_HOME => [
-            'action' => 'home',
-            'view' => 'front.cms.pages.home',
-            'layouts' => [
                 Layout::TYPE_HOME,
             ],
         ],

@@ -39,7 +39,7 @@
                         <td>{{ $item->name ?: 'N/A' }}</td>
                         <td>{{ $item->price ? number_format($item->price) . ' ' . $item->currency->code : 'N/A' }}</td>
                         <td>{{ $item->quantity ?: 'N/A' }}</td>
-                        <td>{{ $actives[$item->active] ?? 'N/A' }}</td>
+                        <td>{{ $item->active ? 'Yes' : 'No' }}</td>
                         <td>
                             {!! button()->restoreRecord(route('admin.products.restore', $item->id)) !!}
                             {!! button()->deleteRecord(route('admin.products.delete', $item->id)) !!}

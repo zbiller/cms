@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Filters\Location;
+namespace App\Http\Filters\Localisation;
 
 use App\Http\Filters\Filter;
 
-class CountryFilter extends Filter
+class CurrencyFilter extends Filter
 {
     /**
      * Get the main where condition between entire request fields.
@@ -25,6 +25,7 @@ class CountryFilter extends Filter
     {
         return [
             'search' => 'operator:like|condition:or|columns:name,code',
+            'rate' => 'operator:between|condition:or|columns:exchange_rate',
             'start_date' => 'operator:date >=|condition:or|columns:created_at',
             'end_date' => 'operator:date <=|condition:or|columns:created_at',
         ];

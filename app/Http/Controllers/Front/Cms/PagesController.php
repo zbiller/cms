@@ -30,7 +30,7 @@ class PagesController extends Controller
         if (isset($action['model']) && $action['model'] instanceof Page) {
             $this->page = $action['model'];
 
-            if ($this->page->active != Page::ACTIVE_YES) {
+            if (!($this->page && $this->page->exists && $this->page->active)) {
                 abort(404);
             }
 

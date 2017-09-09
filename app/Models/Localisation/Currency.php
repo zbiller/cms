@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Shop;
+namespace App\Models\Localisation;
 
 use App\Exceptions\CurrencyException;
 use App\Models\Model;

@@ -8,9 +8,9 @@ use App\Http\Requests\Auth\AddressRequest;
 use App\Http\Sorts\Auth\AddressSort;
 use App\Models\Auth\User;
 use App\Models\Auth\User\Address;
-use App\Models\Location\City;
-use App\Models\Location\Country;
-use App\Models\Location\State;
+use App\Models\Localisation\City;
+use App\Models\Localisation\Country;
+use App\Models\Localisation\State;
 use App\Traits\CanCrud;
 use Illuminate\Http\Request;
 

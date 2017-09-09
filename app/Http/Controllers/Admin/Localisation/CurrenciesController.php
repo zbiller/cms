@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Shop;
+namespace App\Http\Controllers\Admin\Localisation;
 
 use App\Http\Controllers\Controller;
-use App\Http\Filters\Shop\CurrencyFilter;
-use App\Http\Requests\Shop\CurrencyRequest;
-use App\Http\Sorts\Shop\CurrencySort;
-use App\Models\Shop\Currency;
+use App\Http\Filters\Localisation\CurrencyFilter;
+use App\Http\Requests\Localisation\CurrencyRequest;
+use App\Http\Sorts\Localisation\CurrencySort;
+use App\Models\Localisation\Currency;
 use App\Traits\CanCrud;
 use Exception;
 use Illuminate\Http\Request;

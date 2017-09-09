@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Sorts\Location;
+namespace App\Http\Sorts\Localisation;
 
 use App\Http\Sorts\Sort;
 
-class CitySort extends Sort
+class StateSort extends Sort
 {
     /**
      * Get the request field name to sort by.

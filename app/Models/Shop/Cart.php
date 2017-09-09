@@ -6,6 +6,7 @@ use App\Events\CartReminded;
 use App\Exceptions\CartException;
 use App\Exceptions\OrderException;
 use App\Models\Auth\User;
+use App\Models\Localisation\Currency;
 use App\Models\Model;
 use App\Models\Shop\Cart\Item;
 use App\Scopes\WithCartTotalAndCountScope;

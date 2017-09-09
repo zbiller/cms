@@ -27,7 +27,7 @@
                     <td>{{ $item->rate ? number_format($item->rate) : 'N/A' }}</td>
                     <td>{{ $types[$item->type] ?? 'N/A' }}</td>
                     <td>{{ $for[$item->for] ?? 'N/A' }}</td>
-                    <td>{{ $actives[$item->active] ?? 'N/A' }}</td>
+                    <td>{{ $item->active ? 'Yes' : 'No' }}</td>
                     <td>
                         {!! button()->editRecord(route('admin.taxes.edit', $item->id)) !!}
                         {!! button()->deleteRecord(route('admin.taxes.destroy', $item->id)) !!}

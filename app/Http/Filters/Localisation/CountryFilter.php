@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Filters\Location;
+namespace App\Http\Filters\Localisation;
 
 use App\Http\Filters\Filter;
 
-class CityFilter extends Filter
+class CountryFilter extends Filter
 {
     /**
      * Get the main where condition between entire request fields.
@@ -24,10 +24,9 @@ class CityFilter extends Filter
     public function filters()
     {
         return [
-            'search' => 'operator:like|condition:or|columns:name',
-            'country' => 'operator:=|condition:or|columns:country_id',
-            'start_date' => 'operator:date >=|condition:or|columns:users.created_at',
-            'end_date' => 'operator:date <=|condition:or|columns:users.created_at',
+            'search' => 'operator:like|condition:or|columns:name,code',
+            'start_date' => 'operator:date >=|condition:or|columns:created_at',
+            'end_date' => 'operator:date <=|condition:or|columns:created_at',
         ];
     }
 

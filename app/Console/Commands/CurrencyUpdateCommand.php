@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\Shop\Currency;
+use App\Models\Localisation\Currency;
 use Exchanger\Exception\ChainException;
 use Illuminate\Console\Command;
 use Swap;

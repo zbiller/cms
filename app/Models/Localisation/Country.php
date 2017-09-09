@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Location;
+namespace App\Models\Localisation;
 
 use App\Models\Model;
 use App\Options\ActivityOptions;

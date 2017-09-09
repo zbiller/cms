@@ -61,7 +61,7 @@ trait IsVerifiable
      */
     public function isVerified()
     {
-        return $this->verified === static::VERIFIED_YES;
+        return $this->verified === true;
     }
 
     /**
@@ -99,7 +99,7 @@ trait IsVerifiable
             throw VerificationException::invalidEmail();
         }
 
-        $this->verified = static::VERIFIED_NO;
+        $this->verified = false;
         $this->verification_token = hash_hmac('sha256', str_random(40), config('app.key'));
 
         return $this->save();
@@ -116,7 +116,7 @@ trait IsVerifiable
     {
         unset($this->{"password"});
 
-        if ($this->verified == static::VERIFIED_YES) {
+        if ($this->verified === true) {
             return $this;
         }
 
@@ -124,7 +124,7 @@ trait IsVerifiable
             throw VerificationException::invalidToken();
         }
 
-        $this->verified = static::VERIFIED_YES;
+        $this->verified = true;
         $this->verification_token = null;
 
         return $this->save();

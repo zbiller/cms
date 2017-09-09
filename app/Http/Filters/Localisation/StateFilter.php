@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Filters\Location;
+namespace App\Http\Filters\Localisation;
 
 use App\Http\Filters\Filter;
 

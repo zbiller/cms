@@ -1,6 +1,6 @@
 <?php
 
-use App\Models\Location\Country;
+use App\Models\Localisation\Country;
 use Illuminate\Database\Seeder;
 
 class CountriesSeeder extends Seeder

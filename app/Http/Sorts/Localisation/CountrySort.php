@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Sorts\Shop;
+namespace App\Http\Sorts\Localisation;
 
 use App\Http\Sorts\Sort;
 
-class CurrencySort extends Sort
+class CountrySort extends Sort
 {
     /**
      * Get the request field name to sort by.

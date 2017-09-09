@@ -52,6 +52,16 @@ class Tax extends Model
     ];
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'rate' => 'float',
+        'active' => 'boolean',
+    ];
+
+    /**
      * The constants defining the tax type.
      *
      * @const
@@ -72,8 +82,8 @@ class Tax extends Model
      *
      * @const
      */
+    const ACTIVE_NO = 0;
     const ACTIVE_YES = 1;
-    const ACTIVE_NO = 2;
 
     /**
      * The property defining the tax types.
@@ -101,8 +111,8 @@ class Tax extends Model
      * @var array
      */
     public static $actives = [
-        self::ACTIVE_YES => 'Yes',
         self::ACTIVE_NO => 'No',
+        self::ACTIVE_YES => 'Yes',
     ];
 
     /**
@@ -187,7 +197,7 @@ class Tax extends Model
      */
     public function canBeApplied($value = null)
     {
-        if ($this->active == self::ACTIVE_NO) {
+        if (!$this->active) {
             return false;
         }
 

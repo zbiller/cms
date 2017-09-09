@@ -39,7 +39,7 @@ class CategoriesController extends Controller
         if (isset($action['model']) && $action['model'] instanceof Category) {
             $this->category = $action['model'];
 
-            if (!$this->category || !$this->category->exists || $this->category->active != Category::ACTIVE_YES) {
+            if (!($this->category && $this->category->exists && $this->category->active)) {
                 abort(404);
             }
 
@@ -47,7 +47,7 @@ class CategoriesController extends Controller
 
             $this->page = page()->find('shop');
 
-            if (!$this->page || !$this->page->exists || $this->page->active != Page::ACTIVE_YES) {
+            if (!($this->page && $this->page->exists && $this->page->active)) {
                 abort(404);
             }
 

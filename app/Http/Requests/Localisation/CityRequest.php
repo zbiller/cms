@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Location;
+namespace App\Http\Requests\Localisation;
 
 use App\Http\Requests\Request;
 use Illuminate\Validation\Rule;
 
-class StateRequest extends Request
+class CityRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -31,13 +31,6 @@ class StateRequest extends Request
             ],
             'name' => [
                 'required',
-                Rule::unique('states', 'name')
-                    ->ignore($this->route('state') ? $this->route('state')->id : null),
-            ],
-            'code' => [
-                'required',
-                Rule::unique('states', 'code')
-                    ->ignore($this->route('state') ? $this->route('state')->id : null),
             ],
         ];
     }

@@ -39,7 +39,7 @@ class ProductsController extends Controller
         if (isset($action['model']) && $action['model'] instanceof Product) {
             $this->product = $action['model'];
 
-            if (!$this->product || !$this->product->exists || $this->product->active != Product::ACTIVE_YES) {
+            if (!($this->product && $this->product->exists && $this->product->active)) {
                 abort(404);
             }
 
@@ -47,7 +47,7 @@ class ProductsController extends Controller
 
             $this->page = page()->find('shop');
 
-            if (!$this->page || !$this->page->exists || $this->page->active != Page::ACTIVE_YES) {
+            if (!($this->page && $this->page->exists && $this->page->active)) {
                 abort(404);
             }
 

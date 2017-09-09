@@ -49,6 +49,15 @@ class Menu extends Model
     ];
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'active' => 'boolean'
+    ];
+
+    /**
      * The constants defining the menu locations.
      *
      * @const
@@ -71,8 +80,8 @@ class Menu extends Model
      *
      * @const
      */
+    const ACTIVE_NO = 0;
     const ACTIVE_YES = 1;
-    const ACTIVE_NO = 2;
 
     /**
      * The constants defining the menu tab opening.
@@ -110,8 +119,8 @@ class Menu extends Model
      * @var array
      */
     public static $actives = [
-        self::ACTIVE_YES => 'Yes',
         self::ACTIVE_NO => 'No',
+        self::ACTIVE_YES => 'Yes',
     ];
 
     /**

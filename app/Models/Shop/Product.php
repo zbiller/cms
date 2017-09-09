@@ -3,6 +3,7 @@
 namespace App\Models\Shop;
 
 use App\Exceptions\CartException;
+use App\Models\Localisation\Currency;
 use App\Models\Model;
 use App\Models\Shop\Attribute\Value;
 use App\Options\ActivityOptions;
@@ -93,20 +94,33 @@ class Product extends Model
     ];
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'price' => 'float',
+        'quantity' => 'integer',
+        'active' => 'boolean',
+        'inherit_discounts' => 'boolean',
+        'inherit_taxes' => 'boolean',
+    ];
+
+    /**
      * The constants defining the product visibility.
      *
      * @const
      */
+    const ACTIVE_NO = 0;
     const ACTIVE_YES = 1;
-    const ACTIVE_NO = 2;
 
     /**
      * The constants defining the category discounts / taxes inheritance.
      *
      * @const
      */
+    const INHERIT_NO = 0;
     const INHERIT_YES = 1;
-    const INHERIT_NO = 2;
 
     /**
      * The property defining the product visibilities.
@@ -114,8 +128,8 @@ class Product extends Model
      * @var array
      */
     public static $actives = [
-        self::ACTIVE_YES => 'Yes',
         self::ACTIVE_NO => 'No',
+        self::ACTIVE_YES => 'Yes',
     ];
 
     /**
@@ -124,8 +138,8 @@ class Product extends Model
      * @var array
      */
     public static $inherits = [
-        self::INHERIT_YES => 'Yes',
         self::INHERIT_NO => 'No',
+        self::INHERIT_YES => 'Yes',
     ];
 
     /**

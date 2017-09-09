@@ -3,9 +3,9 @@
 namespace App\Models\Auth\User;
 
 use App\Models\Auth\User;
-use App\Models\Location\City;
-use App\Models\Location\Country;
-use App\Models\Location\State;
+use App\Models\Localisation\City;
+use App\Models\Localisation\Country;
+use App\Models\Localisation\State;
 use App\Models\Model;
 use App\Options\ActivityOptions;
 use App\Options\OrderOptions;

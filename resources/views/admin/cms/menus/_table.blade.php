@@ -23,7 +23,7 @@
                 <td>{{ $item->name ?: 'N/A' }}</td>
                 <td>{{ $item->url ?: 'N/A' }}</td>
                 <td>{{ $types[$item->type] ?? 'N/A' }}</td>
-                <td>{{ $actives[$item->active] ?? 'N/A' }}</td>
+                <td>{{ $item->active ? 'Yes' : 'No' }}</td>
                 <td>
                     {!! button()->editRecord(route('admin.menus.edit', ['location' => $location, 'id' => $item->id])) !!}
                     {!! button()->deleteRecord(route('admin.menus.destroy', ['location' => $location, 'id' => $item->id])) !!}

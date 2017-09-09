@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateLocationTables extends Migration
+class CreateLocalisationTables extends Migration
 {
     /**
      * Run the migrations.
@@ -13,6 +13,18 @@ class CreateLocationTables extends Migration
      */
     public function up()
     {
+        Schema::create('currencies', function (Blueprint $table) {
+            $table->increments('id');
+
+            $table->string('name')->unique();
+            $table->string('code')->index()->unique();
+            $table->string('symbol')->nullable();
+            $table->string('format')->nullable();
+            $table->float('exchange_rate', 8, 4)->default(0);
+
+            $table->timestamps();
+        });
+
         Schema::create('countries', function (Blueprint $table) {
             $table->increments('id');
 
@@ -60,6 +72,7 @@ class CreateLocationTables extends Migration
         Schema::dropIfExists('cities');
         Schema::dropIfExists('states');
         Schema::dropIfExists('countries');
+        Schema::dropIfExists('currencies');
 
         Schema::enableForeignKeyConstraints();
     }

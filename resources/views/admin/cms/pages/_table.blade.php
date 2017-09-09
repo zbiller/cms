@@ -18,8 +18,8 @@
         @foreach($items as $index => $item)
             <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
                 <td>{{ $item->name ?: 'N/A' }}</td>
-                <td>{{ $item->url ? $item->url->url : 'N/A' }}</td>
-                <td>{{ $actives[$item->active] ?? 'N/A' }}</td>
+                <td>{{ optional($item->url)->url ?: 'N/A' }}</td>
+                <td>{{ $item->active ? 'Yes' : 'No' }}</td>
                 <td>
                     {!! button()->editRecord(route('admin.pages.edit', $item->id)) !!}
                     {!! button()->deleteRecord(route('admin.pages.destroy', $item->id)) !!}

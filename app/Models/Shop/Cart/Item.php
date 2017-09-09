@@ -40,6 +40,15 @@ class Item extends Model
     ];
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'quantity' => 'integer'
+    ];
+
+    /**
      * Cart item belongs to cart.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

@@ -19,7 +19,7 @@
             <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
                 <td>{{ $item->name ?: 'N/A' }}</td>
                 <td>{{ optional($item->url)->url ?: 'N/A' }}</td>
-                <td>{{ $actives[$item->active] ?? 'N/A' }}</td>
+                <td>{{ $item->active ? 'Yes' : 'No' }}</td>
                 <td>
                     {!! button()->editRecord(route('admin.product_categories.edit', $item->id)) !!}
                     {!! button()->deleteRecord(route('admin.product_categories.destroy', $item->id)) !!}

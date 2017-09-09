@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Location;
+namespace App\Http\Controllers\Admin\Localisation;
 
 use App\Http\Controllers\Controller;
-use App\Http\Filters\Location\CountryFilter;
-use App\Http\Requests\Location\CountryRequest;
-use App\Http\Sorts\Location\CountrySort;
-use App\Models\Location\Country;
+use App\Http\Filters\Localisation\CountryFilter;
+use App\Http\Requests\Localisation\CountryRequest;
+use App\Http\Sorts\Localisation\CountrySort;
+use App\Models\Localisation\Country;
 use App\Traits\CanCrud;
 use Illuminate\Http\Request;
 

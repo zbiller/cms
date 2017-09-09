@@ -57,6 +57,15 @@ class Attribute extends Model
     ];
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'filterable' => 'boolean',
+    ];
+
+    /**
      * The constants defining the attribute's filtering capabilities.
      *
      * @const
