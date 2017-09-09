@@ -31,7 +31,7 @@ class CurrenciesController extends Controller
         return $this->_index(function () use ($request, $filter, $sort) {
             $this->items = Currency::filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Currencies';
-            $this->view = view('admin.shop.currencies.index');
+            $this->view = view('admin.localisation.currencies.index');
         });
     }
 
@@ -42,7 +42,7 @@ class CurrenciesController extends Controller
     {
         return $this->_create(function () {
             $this->title = 'Add Currency';
-            $this->view = view('admin.shop.currencies.add');
+            $this->view = view('admin.localisation.currencies.add');
         });
     }
 
@@ -68,7 +68,7 @@ class CurrenciesController extends Controller
         return $this->_edit(function () use ($currency) {
             $this->item = $currency;
             $this->title = 'Edit currency';
-            $this->view = view('admin.shop.currencies.edit');
+            $this->view = view('admin.localisation.currencies.edit');
         });
     }
 

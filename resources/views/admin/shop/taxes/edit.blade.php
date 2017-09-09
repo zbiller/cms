@@ -6,7 +6,7 @@
     </section>
 
     <section class="view">
-        @include('admin.shop.taxes._form', ['url' => route('admin.taxes.update', ['id' => $item->id])])
+        @include('admin.shop.taxes._form', ['url' => route('admin.taxes.update', $item->id)])
     </section>
 @endsection
 

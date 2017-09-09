@@ -6,7 +6,7 @@
     </section>
 
     <section class="view">
-        @include('admin.shop.attributes.sets._form', ['url' => route('admin.attribute_sets.update', ['id' => $item->id])])
+        @include('admin.shop.attributes.sets._form', ['url' => route('admin.attribute_sets.update', $item->id)])
     </section>
 @endsection
 

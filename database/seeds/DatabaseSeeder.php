@@ -18,8 +18,9 @@ class DatabaseSeeder extends Seeder
         $this->call(LayoutsSeeder::class);
         $this->call(PagesSeeder::class);
         $this->call(EmailsSeeder::class);
-        $this->call(CountriesSeeder::class);
+        $this->call(LanguagesSeeder::class);
         $this->call(CurrenciesSeeder::class);
+        $this->call(CountriesSeeder::class);
         $this->call(ShopSeeder::class);
     }
 }

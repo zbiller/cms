@@ -35,7 +35,7 @@ class AddressesController extends Controller
         return $this->_index(function () use ($request, $filter, $sort, $user) {
             $this->items = Address::whereUser($user->id)->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Addresses';
-            $this->view = view('admin.acl.addresses.index');
+            $this->view = view('admin.acl.users.addresses.index');
             $this->vars = [
                 'user' => $user,
                 'countries' => Country::inAlphabeticalOrder()->get(),
@@ -51,7 +51,7 @@ class AddressesController extends Controller
     {
         return $this->_create(function () use ($user) {
             $this->title = 'Add Address';
-            $this->view = view('admin.acl.addresses.add');
+            $this->view = view('admin.acl.users.addresses.add');
             $this->vars = [
                 'user' => $user,
                 'countries' => Country::inAlphabeticalOrder()->get(),
@@ -82,7 +82,7 @@ class AddressesController extends Controller
         return $this->_edit(function () use ($user, $address) {
             $this->item = $address;
             $this->title = 'Edit Address';
-            $this->view = view('admin.acl.addresses.edit');
+            $this->view = view('admin.acl.users.addresses.edit');
             $this->vars = [
                 'user' => $user,
                 'countries' => Country::inAlphabeticalOrder()->get(),

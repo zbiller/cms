@@ -32,7 +32,7 @@ class CitiesController extends Controller
         return $this->_index(function () use ($request, $filter, $sort) {
             $this->items = City::with(['country', 'state'])->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Cities';
-            $this->view = view('admin.location.cities.index');
+            $this->view = view('admin.localisation.cities.index');
             $this->vars = [
                 'countries' => Country::inAlphabeticalOrder()->get(),
             ];
@@ -46,7 +46,7 @@ class CitiesController extends Controller
     {
         return $this->_create(function () {
             $this->title = 'Add City';
-            $this->view = view('admin.location.cities.add');
+            $this->view = view('admin.localisation.cities.add');
             $this->vars = [
                 'countries' => Country::inAlphabeticalOrder()->get(),
             ];
@@ -75,7 +75,7 @@ class CitiesController extends Controller
         return $this->_edit(function () use ($city) {
             $this->item = $city;
             $this->title = 'Edit City';
-            $this->view = view('admin.location.cities.edit');
+            $this->view = view('admin.localisation.cities.edit');
             $this->vars = [
                 'countries' => Country::inAlphabeticalOrder()->get(),
                 'states' => State::where('country_id', $this->item->country_id)->get(),

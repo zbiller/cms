@@ -30,7 +30,7 @@ class CountriesController extends Controller
         return $this->_index(function () use ($request, $filter, $sort) {
             $this->items = Country::filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Countries';
-            $this->view = view('admin.location.countries.index');
+            $this->view = view('admin.localisation.countries.index');
         });
     }
 
@@ -41,7 +41,7 @@ class CountriesController extends Controller
     {
         return $this->_create(function () {
             $this->title = 'Add Country';
-            $this->view = view('admin.location.countries.add');
+            $this->view = view('admin.localisation.countries.add');
         });
     }
 
@@ -67,7 +67,7 @@ class CountriesController extends Controller
         return $this->_edit(function () use ($country) {
             $this->item = $country;
             $this->title = 'Edit Country';
-            $this->view = view('admin.location.countries.edit');
+            $this->view = view('admin.localisation.countries.edit');
         });
     }
 

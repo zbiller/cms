@@ -2,15 +2,15 @@
 
 @section('content')
     <section class="tabs">
-        @include('admin.location.countries._tabs')
+        @include('admin.localisation.countries._tabs')
     </section>
 
     <section class="view">
-        @include('admin.location.countries._form', ['url' => route('admin.countries.update', ['id' => $item->id])])
+        @include('admin.localisation.countries._form', ['url' => route('admin.countries.update', $item->id)])
     </section>
 @endsection
 
 @section('footer')
-    @include('admin.location.countries._buttons')
+    @include('admin.localisation.countries._buttons')
 @endsection
 

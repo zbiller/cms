@@ -266,9 +266,9 @@ class CountriesSeeder extends Seeder
     {
         DB::table('countries')->delete();
 
-        foreach ($this->countries as $code => $country) {
+        foreach ($this->countries as $code => $name) {
             Country::create([
-                'name' => $country,
+                'name' => $name,
                 'code' => $code
             ]);
         }

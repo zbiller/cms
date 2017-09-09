@@ -2,11 +2,11 @@
 
 @section('content')
     <section class="filters">
-        @include('admin.location.countries._filter')
+        @include('admin.localisation.countries._filter')
     </section>
 
     <section class="list">
-        @include('admin.location.countries._table', ['items' => $items])
+        @include('admin.localisation.countries._table', ['items' => $items])
     </section>
 @endsection
 

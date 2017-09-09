@@ -31,7 +31,7 @@ class StatesController extends Controller
         return $this->_index(function () use ($request, $filter, $sort) {
             $this->items = State::with('country')->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'States';
-            $this->view = view('admin.location.states.index');
+            $this->view = view('admin.localisation.states.index');
             $this->vars = [
                 'countries' => Country::inAlphabeticalOrder()->get(),
             ];
@@ -45,7 +45,7 @@ class StatesController extends Controller
     {
         return $this->_create(function () {
             $this->title = 'Add State';
-            $this->view = view('admin.location.states.add');
+            $this->view = view('admin.localisation.states.add');
             $this->vars = [
                 'countries' => Country::inAlphabeticalOrder()->get(),
             ];
@@ -74,7 +74,7 @@ class StatesController extends Controller
         return $this->_edit(function () use ($state) {
             $this->item = $state;
             $this->title = 'Edit State';
-            $this->view = view('admin.location.states.edit');
+            $this->view = view('admin.localisation.states.edit');
             $this->vars = [
                 'countries' => Country::inAlphabeticalOrder()->get(),
             ];

@@ -6,7 +6,7 @@
     </section>
 
     <section class="view">
-        @include('admin.acl.admins._form', ['url' => route('admin.admins.update', ['id' => $item->id])])
+        @include('admin.acl.admins._form', ['url' => route('admin.admins.update', $item->id)])
 </section>
 @endsection
 

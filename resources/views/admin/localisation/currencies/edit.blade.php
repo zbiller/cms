@@ -2,15 +2,15 @@
 
 @section('content')
     <section class="tabs">
-        @include('admin.shop.currencies._tabs')
+        @include('admin.localisation.currencies._tabs')
     </section>
 
     <section class="view">
-        @include('admin.shop.currencies._form', ['url' => route('admin.currencies.update', ['id' => $item->id])])
+        @include('admin.localisation.currencies._form', ['url' => route('admin.currencies.update', $item->id)])
     </section>
 @endsection
 
 @section('footer')
-    @include('admin.shop.currencies._buttons')
+    @include('admin.localisation.currencies._buttons')
 @endsection
 

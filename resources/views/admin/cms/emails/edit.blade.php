@@ -6,7 +6,7 @@
     </section>
 
     <section class="view">
-        @include('admin.cms.emails._form', ['url' => route('admin.emails.update', ['id' => $item->id])])
+        @include('admin.cms.emails._form', ['url' => route('admin.emails.update', $item->id)])
     </section>
 @endsection
 
