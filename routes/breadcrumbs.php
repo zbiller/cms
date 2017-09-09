@@ -587,34 +587,6 @@ Breadcrumbs::register('admin.taxes.edit', function($breadcrumbs, $tax) {
 
 /**
 | ---------------------------------------------------------------------------------------------------------------------
-| Currencies
-| ---------------------------------------------------------------------------------------------------------------------
- */
-/* Home > Currencies */
-Breadcrumbs::register('admin.currencies.index', function($breadcrumbs) {
-    $breadcrumbs->parent('admin');
-    $breadcrumbs->push('Currencies', route('admin.currencies.index'));
-});
-
-/* Home > Currencies > Add */
-Breadcrumbs::register('admin.currencies.create', function($breadcrumbs) {
-    $breadcrumbs->parent('admin.currencies.index');
-    $breadcrumbs->push('Add', route('admin.currencies.create'));
-});
-
-/* Home > Currencies > Edit */
-Breadcrumbs::register('admin.currencies.edit', function($breadcrumbs, $currency) {
-    $breadcrumbs->parent('admin.currencies.index');
-    $breadcrumbs->push('Edit', route('admin.currencies.edit', $currency));
-});
-/**
-| ---------------------------------------------------------------------------------------------------------------------
- */
-
-
-
-/**
-| ---------------------------------------------------------------------------------------------------------------------
 | Users
 | ---------------------------------------------------------------------------------------------------------------------
  */
@@ -734,6 +706,62 @@ Breadcrumbs::register('admin.roles.edit', function($breadcrumbs, $role) {
 Breadcrumbs::register('admin.activity.index', function($breadcrumbs) {
     $breadcrumbs->parent('admin');
     $breadcrumbs->push('Activity', route('admin.activity.index'));
+});
+/**
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+
+
+
+/**
+| ---------------------------------------------------------------------------------------------------------------------
+| Languages
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+/* Home > Languages */
+Breadcrumbs::register('admin.languages.index', function($breadcrumbs) {
+    $breadcrumbs->parent('admin');
+    $breadcrumbs->push('Languages', route('admin.languages.index'));
+});
+
+/* Home > Languages > Add */
+Breadcrumbs::register('admin.languages.create', function($breadcrumbs) {
+    $breadcrumbs->parent('admin.languages.index');
+    $breadcrumbs->push('Add', route('admin.languages.create'));
+});
+
+/* Home > Languages > Edit */
+Breadcrumbs::register('admin.languages.edit', function($breadcrumbs, $language) {
+    $breadcrumbs->parent('admin.languages.index');
+    $breadcrumbs->push('Edit', route('admin.languages.edit', $language));
+});
+/**
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+
+
+
+/**
+| ---------------------------------------------------------------------------------------------------------------------
+| Currencies
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+/* Home > Currencies */
+Breadcrumbs::register('admin.currencies.index', function($breadcrumbs) {
+    $breadcrumbs->parent('admin');
+    $breadcrumbs->push('Currencies', route('admin.currencies.index'));
+});
+
+/* Home > Currencies > Add */
+Breadcrumbs::register('admin.currencies.create', function($breadcrumbs) {
+    $breadcrumbs->parent('admin.currencies.index');
+    $breadcrumbs->push('Add', route('admin.currencies.create'));
+});
+
+/* Home > Currencies > Edit */
+Breadcrumbs::register('admin.currencies.edit', function($breadcrumbs, $currency) {
+    $breadcrumbs->parent('admin.currencies.index');
+    $breadcrumbs->push('Edit', route('admin.currencies.edit', $currency));
 });
 /**
 | ---------------------------------------------------------------------------------------------------------------------

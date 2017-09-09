@@ -113,7 +113,11 @@ class MenuComposer
             });
 
             $menu->add(function ($item) use ($menu) {
-                $localisation = $item->name('Localisation')->data('icon', 'fa-globe')->active('admin/currencies/*', 'admin/countries/*', 'admin/states/*', 'admin/cities/*');
+                $localisation = $item->name('Localisation')->data('icon', 'fa-globe')->active('admin/languages/*', 'admin/currencies/*', 'admin/countries/*', 'admin/states/*', 'admin/cities/*');
+
+                $menu->child($localisation, function (MenuItem $item) {
+                    $item->name('Languages')->url(route('admin.languages.index'))->permissions('languages-list')->active('admin/languages/*');
+                });
 
                 $menu->child($localisation, function (MenuItem $item) {
                     $item->name('Currencies')->url(route('admin.currencies.index'))->permissions('currencies-list')->active('admin/currencies/*');

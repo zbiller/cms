@@ -13,6 +13,16 @@ class CreateLocalisationTables extends Migration
      */
     public function up()
     {
+        Schema::create('languages', function (Blueprint $table) {
+            $table->increments('id');
+
+            $table->string('name')->unique();
+            $table->string('code')->unique();
+            $table->tinyInteger('default')->default(0);
+
+            $table->timestamps();
+        });
+
         Schema::create('currencies', function (Blueprint $table) {
             $table->increments('id');
 
@@ -73,6 +83,7 @@ class CreateLocalisationTables extends Migration
         Schema::dropIfExists('states');
         Schema::dropIfExists('countries');
         Schema::dropIfExists('currencies');
+        Schema::dropIfExists('languages');
 
         Schema::enableForeignKeyConstraints();
     }

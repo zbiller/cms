@@ -18,11 +18,12 @@ return [
     'soft_exceptions' => [
         \App\Exceptions\CrudException::class,
         \App\Exceptions\UploadException::class,
-        \App\Exceptions\DraftException::class,
-        \App\Exceptions\RevisionException::class,
+        \App\Exceptions\LanguageException::class,
         \App\Exceptions\UrlException::class,
         \App\Exceptions\DuplicateException::class,
         \App\Exceptions\OrderException::class,
+        \App\Exceptions\DraftException::class,
+        \App\Exceptions\RevisionException::class,
         \App\Exceptions\CartException::class,
     ],
 
