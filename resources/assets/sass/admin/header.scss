@@ -87,4 +87,50 @@ header {
             display: none;
         }
     }
+
+    div.dropdown {
+        position: relative;
+        float: right;
+        margin: 0 20px 0 0;
+
+        a.dropdown-current {
+            @include font-size(13px);
+
+            display: inline-block;
+            padding: 22px 15px;
+            color: $colorGullGray;
+            font-family: 'Open Sans Semibold', sans-serif;
+
+            &.active {
+                background: $colorFiord;
+                color: $colorWhite;
+            }
+        }
+
+        ul.dropdown-choices {
+            display: none;
+            position: absolute;
+            list-style: none;
+            right: 0;
+            top: 61px;
+
+            li {
+                a {
+                    @include font-size(13px);
+                    @include transition(all 0.3s ease);
+
+                    display: block;
+                    padding: 7px 70px 7px 10px;
+                    background: $colorFiord;
+                    color: $colorGhost;
+                    font-family: 'Open Sans', sans-serif;
+
+                    &:hover {
+                        color: $colorWhite;
+                        background: darken($colorFiord, 7%);
+                    }
+                }
+            }
+        }
+    }
 }

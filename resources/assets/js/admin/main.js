@@ -4,6 +4,7 @@ $(window).load(function(){
      */
     flash();
     menu();
+    dropdown();
     buttons();
     inputs();
     sort();
@@ -76,6 +77,30 @@ function menu() {
         menu.animate({
             "margin-left": menu.css('margin-left') == '-250px' ? '0px' : '-250px'
         }, 300);
+    });
+}
+
+/**
+ * @return void
+ */
+function dropdown()
+{
+    var dropdown = $('div.dropdown');
+
+    // toggle dropdown
+    dropdown.find('a.dropdown-current').click(function (e) {
+        e.preventDefault();
+
+        $(this).toggleClass('active');
+        $(this).next('.dropdown-choices').toggle();
+    });
+
+    // hide dropdown when clicked outside
+    $(document).mouseup(function(e) {
+        if (!dropdown.is(e.target) && dropdown.has(e.target).length === 0) {
+            dropdown.find('a.dropdown-current').removeClass('active');
+            dropdown.find('a.dropdown-current').next('ul.dropdown-choices').hide();
+        }
     });
 }
 
