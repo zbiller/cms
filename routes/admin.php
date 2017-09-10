@@ -118,6 +118,7 @@ Route::group([
          */
         Route::group([
             'prefix' => 'pages',
+            'middleware' => 'is.translatable',
         ], function () {
             Route::get('/', ['as' => 'admin.pages.index', 'uses' => 'PagesController@index', 'permissions' => 'pages-list']);
             Route::get('create/{parent?}', ['as' => 'admin.pages.create', 'uses' => 'PagesController@create', 'permissions' => 'pages-add']);
@@ -686,6 +687,7 @@ Route::group([
             Route::get('/', ['as' => 'admin.languages.index', 'uses' => 'LanguagesController@index', 'permissions' => 'languages-list']);
             Route::get('create', ['as' => 'admin.languages.create', 'uses' => 'LanguagesController@create', 'permissions' => 'languages-add']);
             Route::get('edit/{language}', ['as' => 'admin.languages.edit', 'uses' => 'LanguagesController@edit', 'permissions' => 'languages-edit']);
+            Route::get('change/{language}', ['as' => 'admin.languages.change', 'uses' => 'LanguagesController@change', 'permissions' => 'languages-change']);
             Route::post('store', ['as' => 'admin.languages.store', 'uses' => 'LanguagesController@store', 'permissions' => 'languages-add']);
             Route::put('update/{language}', ['as' => 'admin.languages.update', 'uses' => 'LanguagesController@update', 'permissions' => 'languages-edit']);
             Route::delete('destroy/{language}', ['as' => 'admin.languages.destroy', 'uses' => 'LanguagesController@destroy', 'permissions' => 'languages-delete']);

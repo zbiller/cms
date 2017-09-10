@@ -41,6 +41,56 @@ if (!function_exists('form_admin')) {
     }
 }
 
+if (!function_exists('page')) {
+    /**
+     * @return \App\Helpers\PageHelper
+     */
+    function page()
+    {
+        return new App\Helpers\PageHelper();
+    }
+}
+
+if (!function_exists('block')) {
+    /**
+     * @return \App\Helpers\BlockHelper
+     */
+    function block()
+    {
+        return new App\Helpers\BlockHelper();
+    }
+}
+
+if (!function_exists('draft')) {
+    /**
+     * @return \App\Helpers\DraftHelper
+     */
+    function draft()
+    {
+        return new App\Helpers\DraftHelper();
+    }
+}
+
+if (!function_exists('revision')) {
+    /**
+     * @return \App\Helpers\RevisionHelper
+     */
+    function revision()
+    {
+        return new App\Helpers\RevisionHelper();
+    }
+}
+
+if (!function_exists('setting')) {
+    /**
+     * @return \App\Helpers\SettingHelper
+     */
+    function setting()
+    {
+        return new App\Helpers\SettingHelper();
+    }
+}
+
 if (!function_exists('flash')) {
     /**
      * @param string|null $type
@@ -91,56 +141,6 @@ if (!function_exists('button')) {
     function button()
     {
         return new App\Helpers\ButtonHelper();
-    }
-}
-
-if (!function_exists('page')) {
-    /**
-     * @return \App\Helpers\PageHelper
-     */
-    function page()
-    {
-        return new App\Helpers\PageHelper();
-    }
-}
-
-if (!function_exists('block')) {
-    /**
-     * @return \App\Helpers\BlockHelper
-     */
-    function block()
-    {
-        return new App\Helpers\BlockHelper();
-    }
-}
-
-if (!function_exists('draft')) {
-    /**
-     * @return \App\Helpers\DraftHelper
-     */
-    function draft()
-    {
-        return new App\Helpers\DraftHelper();
-    }
-}
-
-if (!function_exists('revision')) {
-    /**
-     * @return \App\Helpers\RevisionHelper
-     */
-    function revision()
-    {
-        return new App\Helpers\RevisionHelper();
-    }
-}
-
-if (!function_exists('setting')) {
-    /**
-     * @return \App\Helpers\SettingHelper
-     */
-    function setting()
-    {
-        return new App\Helpers\SettingHelper();
     }
 }
 

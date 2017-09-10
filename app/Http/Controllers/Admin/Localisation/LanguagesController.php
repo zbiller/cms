@@ -111,4 +111,15 @@ class LanguagesController extends Controller
             $this->item->delete();
         });
     }
+
+    /**
+     * @param Language $language
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function change(Language $language)
+    {
+        session()->put('locale', $language->code);
+
+        return back();
+    }
 }

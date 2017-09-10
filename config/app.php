@@ -186,6 +186,7 @@ return [
         App\Providers\AclServiceProvider::class,
         App\Providers\ViewServiceProvider::class,
         App\Providers\ComposerServiceProvider::class,
+        App\Providers\TranslationServiceProvider::class,
 
     ],
 

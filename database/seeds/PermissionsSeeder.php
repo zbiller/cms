@@ -743,6 +743,12 @@ class PermissionsSeeder extends Seeder
                 'type' => Permission::TYPE_ADMIN,
                 'name' => 'languages-delete',
             ],
+            'Change' => [
+                'group' => 'Languages',
+                'label' => 'Change',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'languages-change',
+            ],
         ],
         'Currencies' => [
             'List' => [

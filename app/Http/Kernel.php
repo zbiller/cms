@@ -15,10 +15,9 @@ class Kernel extends HttpKernel
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
-        \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+        \App\Http\Middleware\TrimStrings::class,
         \App\Http\Middleware\TrustProxies::class,
-        \Spatie\LaravelImageOptimizer\Middlewares\OptimizeImages::class,
     ];
 
     /**
@@ -32,8 +31,10 @@ class Kernel extends HttpKernel
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
-            \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\VerifyCsrfToken::class,
+            \App\Http\Middleware\PersistLocale::class,
+            \Spatie\LaravelImageOptimizer\Middlewares\OptimizeImages::class,
         ],
         'api' => [
             'throttle:60,1',
@@ -54,6 +55,7 @@ class Kernel extends HttpKernel
         'not.authenticated' => \App\Http\Middleware\NotAuthenticated::class,
         'check.roles' => \App\Http\Middleware\CheckRoles::class,
         'check.permissions' => \App\Http\Middleware\CheckPermissions::class,
+        'is.translatable' => \App\Http\Middleware\IsTranslatable::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'bindings' => \Illuminate\Routing\Middleware\SubstituteBindings::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
