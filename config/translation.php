@@ -3,7 +3,8 @@
 return [
 
     /**
-     * Flag indicating if multi-language behavior should be present at all on the site.
+     * Flag indicating if multi-language behavior should be present at all on the site (globally).
+     *
      * If this is set to false, the multi-language feature will not work (be present), regardless of your other settings.
      */
     'enable_multi_language' => env('ENABLE_MULTI_LANGUAGE', false),

@@ -13,8 +13,8 @@ class PersistLocale
      */
     public function handle($request, Closure $next)
     {
-        if (config('language.enable_multi_language') === true && session()->has('locale')) {
-            app()->setLocale(session('locale'));
+        if (session()->has('locale')) {
+            app()->setLocale(session()->get('locale'));
         }
 
         return $next($request);
