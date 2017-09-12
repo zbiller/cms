@@ -26,6 +26,7 @@ class LanguageFilter extends Filter
         return [
             'search' => 'operator:like|condition:or|columns:name,code',
             'default' => 'operator:=|condition:or|columns:default',
+            'active' => 'operator:=|condition:or|columns:active',
             'start_date' => 'operator:date >=|condition:or|columns:created_at',
             'end_date' => 'operator:date <=|condition:or|columns:created_at',
         ];

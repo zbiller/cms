@@ -81,7 +81,7 @@ class Page extends Model
      * @var array
      */
     protected $casts = [
-        'active' => 'boolean'
+        'active' => 'boolean',
     ];
 
     /**

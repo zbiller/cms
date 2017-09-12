@@ -10,6 +10,9 @@
         <td class="sortable" data-sort="default">
             <i class="fa fa-sort"></i>&nbsp; Default
         </td>
+        <td class="sortable" data-sort="active">
+            <i class="fa fa-sort"></i>&nbsp; Active
+        </td>
         <td>Actions</td>
     </tr>
     </thead>
@@ -20,6 +23,7 @@
                 <td>{{ $item->name ?: 'N/A' }}</td>
                 <td>{{ $item->code ?: 'N/A' }}</td>
                 <td>{{ $defaults[$item->default] ?? 'N/A' }}</td>
+                <td>{{ $item->active ? 'Yes' : 'No' }}</td>
                 <td>
                     {!! button()->editRecord(route('admin.languages.edit', $item->id)) !!}
                     {!! button()->deleteRecord(route('admin.languages.destroy', $item->id)) !!}

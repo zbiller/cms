@@ -163,6 +163,7 @@ class LanguagesSeeder extends Seeder
                 'name' => $name,
                 'code' => $code,
                 'default' => $count == 0 ? true : false,
+                'active' => in_array($code, ['en', 'ro']) ? 1 : 0,
             ]);
 
             $count++;

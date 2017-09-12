@@ -13,10 +13,8 @@ use Closure;
 use DB;
 use Doctrine\DBAL\Schema\SchemaException;
 use Exception;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use ReflectionMethod;
-use Relation;
 
 trait HasDrafts
 {
@@ -117,6 +115,7 @@ trait HasDrafts
 
             return $model;
         } catch (Exception $e) {
+            dd($e);
             throw DraftException::saveFailed();
         }
     }
@@ -463,18 +462,15 @@ trait HasDrafts
      */
     protected function mergeOriginalModelData(array $data = [])
     {
-        foreach ($data as $key => $value) {
-            try {
-                $column = DB::connection()->getDoctrineColumn($this->getTable(), $key);
-                $type = $column->getType()->getName();
+        if (!$this->exists) {
+            return $data;
+        }
 
-                if (strtolower($type) === 'json') {
-                    $data[$key] = array_merge(array_except(
-                        $this->fromJson($this->attributes[$key]), $key
-                    ), $data[$key]);
-                }
-            } catch (SchemaException $e) {
-                continue;
+        foreach ($data as $key => $value) {
+            if ($this->isJsonCastable($key)) {
+                $data[$key] = array_merge(array_except(
+                    $this->fromJson($this->attributes[$key]), $key
+                ), $data[$key]);
             }
         }
 

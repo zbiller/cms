@@ -6,6 +6,9 @@
         {!! form()->select('default', ['' => 'Default'] + $defaults, request()->query('default') ?: null) !!}
     </fieldset>
     <fieldset>
+        {!! form()->select('active', ['' => 'Active'] + $actives, request()->query('active') ?: null) !!}
+    </fieldset>
+    <fieldset>
         {!! form_admin()->calendar('start_date', false, request()->query('start_date') !== null ? request()->query('start_date') : null, ['placeholder' => 'Date From', 'style' => 'width: 48%;']) !!}
         {!! form_admin()->calendar('end_date', false, request()->query('end_date') !== null ? request()->query('end_date') : null, ['placeholder' => 'Date To', 'style' => 'width: 48%;']) !!}
     </fieldset>

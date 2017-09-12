@@ -35,6 +35,7 @@ class Language extends Model
         'name',
         'code',
         'default',
+        'active',
     ];
 
     /**
@@ -46,6 +47,14 @@ class Language extends Model
     const DEFAULT_YES = 1;
 
     /**
+     * The constants defining the languages availability.
+     *
+     * @const
+     */
+    const ACTIVE_NO = 0;
+    const ACTIVE_YES = 1;
+
+    /**
      * The property defining the languages default.
      *
      * @var array
@@ -53,6 +62,16 @@ class Language extends Model
     public static $defaults = [
         self::DEFAULT_NO => 'No',
         self::DEFAULT_YES => 'Yes',
+    ];
+
+    /**
+     * The property defining the languages availability.
+     *
+     * @var array
+     */
+    public static $actives = [
+        self::ACTIVE_NO => 'No',
+        self::ACTIVE_YES => 'Yes',
     ];
 
     /**
@@ -112,6 +131,26 @@ class Language extends Model
     public function scopeExcludingDefault($query)
     {
         $query->where('default', self::DEFAULT_NO);
+    }
+
+    /**
+     * Filter the query to return only active results.
+     *
+     * @param Builder $query
+     */
+    public function scopeOnlyActive($query)
+    {
+        $query->where('active', self::ACTIVE_YES);
+    }
+
+    /**
+     * Filter the query to return only inactive results.
+     *
+     * @param Builder $query
+     */
+    public function scopeOnlyInactive($query)
+    {
+        $query->where('active', self::ACTIVE_NO);
     }
 
     /**

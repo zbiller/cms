@@ -34,6 +34,7 @@ class LanguagesController extends Controller
             $this->view = view('admin.localisation.languages.index');
             $this->vars = [
                 'defaults' => Language::$defaults,
+                'actives' => Language::$actives,
             ];
         });
     }
@@ -48,6 +49,7 @@ class LanguagesController extends Controller
             $this->view = view('admin.localisation.languages.add');
             $this->vars = [
                 'defaults' => Language::$defaults,
+                'actives' => Language::$actives,
             ];
         });
     }
@@ -77,6 +79,7 @@ class LanguagesController extends Controller
             $this->view = view('admin.localisation.languages.edit');
             $this->vars = [
                 'defaults' => Language::$defaults,
+                'actives' => Language::$actives,
             ];
         });
     }

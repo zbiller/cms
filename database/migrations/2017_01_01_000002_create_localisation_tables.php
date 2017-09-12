@@ -19,6 +19,7 @@ class CreateLocalisationTables extends Migration
             $table->string('name')->unique();
             $table->string('code')->unique();
             $table->tinyInteger('default')->default(0);
+            $table->tinyInteger('active')->default(0);
 
             $table->timestamps();
         });

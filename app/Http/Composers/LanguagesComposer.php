@@ -18,7 +18,7 @@ class LanguagesComposer
             return;
         }
 
-        $languages = Language::all();
+        $languages = Language::onlyActive()->get();
 
         if (!($language = $languages->where('code', app()->getLocale())->first())) {
             $language = $languages->first();
