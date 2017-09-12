@@ -3,7 +3,6 @@
 namespace App\Http\Composers;
 
 use App\Models\Localisation\Language;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\View\View;
 
 class LanguagesComposer
@@ -15,16 +14,14 @@ class LanguagesComposer
      */
     public function compose(View $view)
     {
-        if (config('language.enable_multi_language') !== true) {
+        if (!translation()->isMultiLanguageEnabled()) {
             return;
         }
 
         $languages = Language::all();
 
-        try {
-            $language = Language::whereCode(app()->getLocale())->firstOrFail();
-        } catch (ModelNotFoundException $e) {
-            $language = Language::onlyDefault()->first();
+        if (!($language = $languages->where('code', app()->getLocale())->first())) {
+            $language = $languages->first();
         }
 
         $view->with([
