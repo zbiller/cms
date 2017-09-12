@@ -18,7 +18,7 @@
     </div>
 
     {!! form_admin()->select('active', 'Active', $actives) !!}
-    {!! form_admin()->select('metadata[new_window]', 'Open In New Window', $windows, ($item->exists && isset($item->metadata->new_window) ? $item->metadata->new_window : null)) !!}
+    {!! form_admin()->select('metadata[new_window]', 'Open In New Window', $windows) !!}
 </div>
 
 {!! form_admin()->close() !!}

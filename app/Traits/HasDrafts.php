@@ -318,8 +318,8 @@ trait HasDrafts
 
         $this->publishModelFromDraft($draft);
 
-        if (isset($draft->metadata->relations)) {
-            foreach ($draft->metadata->relations as $relation => $attributes) {
+        if (isset($draft->metadata['relations'])) {
+            foreach ($draft->metadata['relations'] as $relation => $attributes) {
                 if (relation()->isDirect($attributes->type)) {
                     $this->publishDirectRelationFromDraft($relation, $attributes);
                 }
@@ -841,8 +841,8 @@ trait HasDrafts
         if ($related->exists) {
             $model->{$relation}()->attach($id, $attributes);
         } elseif ($draft->exists) {
-            if (isset($draft->metadata->relations->{$relation}->records->items)) {
-                foreach ($draft->metadata->relations->{$relation}->records->items as $item) {
+            if (isset($draft->metadata['relations'][$relation]['records']['items'])) {
+                foreach ($draft->metadata['relations'][$relation]['records']['items'] as $item) {
                     if (isset($item->id) && $item->id == $id) {
                         foreach ((array)$item as $field => $value) {
                             $related->{$field} = $value;

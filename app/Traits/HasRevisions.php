@@ -167,8 +167,8 @@ trait HasRevisions
 
                 $this->rollbackModelToRevision($revision);
 
-                if (isset($revision->metadata->relations)) {
-                    foreach ($revision->metadata->relations as $relation => $attributes) {
+                if (isset($revision->metadata['relations'])) {
+                    foreach ($revision->metadata['relations'] as $relation => $attributes) {
                         if (relation()->isDirect($attributes->type)) {
                             $this->rollbackDirectRelationToRevision($relation, $attributes);
                         }

@@ -11,7 +11,7 @@ trait HasMetadata
      */
     public function getMetadataAttribute()
     {
-        return $this->fromJson($this->attributes['metadata'], true);
+        return $this->fromJson($this->attributes['metadata']);
     }
 
     /**

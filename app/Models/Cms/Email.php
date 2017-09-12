@@ -280,7 +280,7 @@ class Email extends Model
      */
     public function getFromAddressAttribute()
     {
-        return $this->metadata->from_email ?? (
+        return $this->metadata['from_email'] ?? (
             setting()->value('company-email') ?: config('mail.from.address')
         );
     }
@@ -292,7 +292,7 @@ class Email extends Model
      */
     public function getFromNameAttribute()
     {
-        return $this->metadata->from_name ?? (
+        return $this->metadata['from_name'] ?? (
             setting()->value('company-email') ?: config('mail.from.address')
         );
     }
@@ -304,7 +304,7 @@ class Email extends Model
      */
     public function getReplyToAttribute()
     {
-        return $this->metadata->reply_to ?? (
+        return $this->metadata['reply_to'] ?? (
             setting()->value('company-email') ?: config('mail.from.address')
         );
     }
@@ -316,7 +316,7 @@ class Email extends Model
      */
     public function getAttachmentAttribute()
     {
-        return $this->metadata->attachment ?? null;
+        return $this->metadata['attachment'] ?? null;
     }
 
     /**
@@ -326,7 +326,7 @@ class Email extends Model
      */
     public function getSubjectAttribute()
     {
-        return $this->metadata->subject ?? null;
+        return $this->metadata['subject'] ?? null;
     }
 
     /**
@@ -336,7 +336,7 @@ class Email extends Model
      */
     public function getMessageAttribute()
     {
-        return $this->metadata->message ?? null;
+        return $this->metadata['message'] ?? null;
     }
 
     /**

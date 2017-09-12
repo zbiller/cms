@@ -8,8 +8,8 @@
     <i class="fa fa-plus"></i>&nbsp; Add new item
 </a>
 <div id="multiple-items-container">
-    @if($item->exists && isset($item->metadata->items))
-        @foreach($item->metadata->items as $index => $_item)
+    @if($item->exists && isset($item->metadata['items']))
+        @foreach($item->metadata['items'] as $index => $_item)
             <div class="multiple-item" data-index="{{ $index }}">
                 {!! block()->buttons() !!}
 
