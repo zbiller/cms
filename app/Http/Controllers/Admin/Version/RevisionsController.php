@@ -72,7 +72,7 @@ class RevisionsController extends Controller
 
             flash()->success('The revision was successfully rolled back!');
 
-            if ($request->ajax()) {
+            if (request()->ajax()) {
                 return [
                     'status' => true
                 ];

@@ -169,11 +169,11 @@ trait HasRevisions
 
                 if (isset($revision->metadata['relations'])) {
                     foreach ($revision->metadata['relations'] as $relation => $attributes) {
-                        if (relation()->isDirect($attributes->type)) {
+                        if (relation()->isDirect($attributes['type'])) {
                             $this->rollbackDirectRelationToRevision($relation, $attributes);
                         }
 
-                        if (relation()->isPivoted($attributes->type)) {
+                        if (relation()->isPivoted($attributes['type'])) {
                             $this->rollbackPivotedRelationToRevision($relation, $attributes);
                         }
                     }
@@ -408,7 +408,7 @@ trait HasRevisions
     {
         foreach ($revision->metadata as $field => $value) {
             if (array_key_exists($field, $this->getAttributes())) {
-                $this->{$field} = $value;
+                $this->attributes[$field] = $value;
             }
         }
 
@@ -431,14 +431,14 @@ trait HasRevisions
      */
     protected function rollbackDirectRelationToRevision($relation, $attributes)
     {
-        foreach ($attributes->records->items as $item) {
+        foreach ($attributes['records']['items'] as $item) {
             $related = $this->{$relation}();
 
             if (array_key_exists(SoftDeletes::class, class_uses($this->{$relation}))) {
                 $related = $related->withTrashed();
             }
 
-            $rel = $related->findOrNew($item->{$attributes->records->primary_key} ?? null);
+            $rel = $related->findOrNew($item->{$attributes['records']['primary_key']} ?? null);
 
             foreach ($item as $field => $value) {
                 $rel->attributes[$field] = $value;
@@ -471,14 +471,14 @@ trait HasRevisions
      */
     protected function rollbackPivotedRelationToRevision($relation, $attributes)
     {
-        foreach ($attributes->records->items as $item) {
+        foreach ($attributes['records']['items'] as $item) {
             $related = $this->{$relation}()->getRelated();
 
             if (array_key_exists(SoftDeletes::class, class_uses($related))) {
                 $related = $related->withTrashed();
             }
 
-            $rel = $related->findOrNew($item->{$attributes->records->primary_key} ?? null);
+            $rel = $related->findOrNew($item->{$attributes['records']['primary_key']} ?? null);
 
             if ($rel->exists === false) {
                 foreach ($item as $field => $value) {
@@ -494,13 +494,13 @@ trait HasRevisions
 
         $this->{$relation}()->detach();
 
-        foreach ($attributes->pivots->items as $item) {
+        foreach ($attributes['pivots']['items'] as $item) {
             $this->{$relation}()->attach(
-                $item->{$attributes->pivots->related_key},
+                $item->{$attributes['pivots']['related_key']},
                 array_except((array)$item, [
-                    $attributes->pivots->primary_key,
-                    $attributes->pivots->foreign_key,
-                    $attributes->pivots->related_key,
+                    $attributes['pivots']['primary_key'],
+                    $attributes['pivots']['foreign_key'],
+                    $attributes['pivots']['related_key'],
                 ])
             );
         }

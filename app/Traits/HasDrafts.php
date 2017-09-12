@@ -11,6 +11,7 @@ use App\Sniffers\ModelSniffer;
 use BadMethodCallException;
 use Closure;
 use DB;
+use Doctrine\DBAL\Schema\SchemaException;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -97,6 +98,10 @@ trait HasDrafts
             }
 
             $model = DB::transaction(function () use ($data, $draft) {
+                $data = $draft && $draft->exists ?
+                    $this->mergeDraftModelData($data, $draft) :
+                    $this->mergeOriginalModelData($data);
+
                 if ($this->isLimboDraft()) {
                     $model = $this->saveLimboDraft($data);
                 } else {
@@ -320,11 +325,11 @@ trait HasDrafts
 
         if (isset($draft->metadata['relations'])) {
             foreach ($draft->metadata['relations'] as $relation => $attributes) {
-                if (relation()->isDirect($attributes->type)) {
+                if (relation()->isDirect($attributes['type'])) {
                     $this->publishDirectRelationFromDraft($relation, $attributes);
                 }
 
-                if (relation()->isPivoted($attributes->type)) {
+                if (relation()->isPivoted($attributes['type'])) {
                     $this->publishPivotedRelationFromDraft($relation, $attributes);
                 }
             }
@@ -447,6 +452,46 @@ trait HasDrafts
         } else {
             $model->{$relation}()->sync($data[$relation]);
         }
+    }
+
+    /**
+     * Merge the existing model's json data that's not included with the request.
+     * Meaning, the already existing (ignored) data should still be saved.
+     *
+     * @param array $data
+     * @return array
+     */
+    protected function mergeOriginalModelData(array $data = [])
+    {
+        foreach ($data as $key => $value) {
+            try {
+                $column = DB::connection()->getDoctrineColumn($this->getTable(), $key);
+                $type = $column->getType()->getName();
+
+                if (strtolower($type) === 'json') {
+                    $data[$key] = array_merge(array_except(
+                        $this->fromJson($this->attributes[$key]), $key
+                    ), $data[$key]);
+                }
+            } catch (SchemaException $e) {
+                continue;
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Merge the existing model's json data that's not included with the request.
+     * Meaning, the already existing (ignored) data should still be saved.
+     *
+     * @param array $data
+     * @param Draft $draft
+     * @return array
+     */
+    protected function mergeDraftModelData(array $data = [], Draft $draft)
+    {
+        return array_replace_recursive($draft->metadata, $data);
     }
 
     /**
@@ -665,7 +710,7 @@ trait HasDrafts
     {
         foreach ($draft->metadata as $field => $value) {
             if (array_key_exists($field, $this->getAttributes())) {
-                $this->{$field} = $value;
+                parent::setAttribute($field, $value);
             }
         }
 
@@ -687,9 +732,9 @@ trait HasDrafts
      */
     protected function publishDirectRelationFromDraft($relation, $attributes)
     {
-        if (relation()->isParent($attributes->type)) {
+        if (relation()->isParent($attributes['type'])) {
             $this->publishDirectParentRelationFromDraft($relation, $attributes);
-        } elseif (relation()->isChild($attributes->type)) {
+        } elseif (relation()->isChild($attributes['type'])) {
             $this->publishDirectChildRelationFromDraft($relation, $attributes);
         }
     }
@@ -703,17 +748,17 @@ trait HasDrafts
      */
     protected function publishDirectParentRelationFromDraft($relation, $attributes)
     {
-        foreach ($attributes->records->items as $item) {
+        foreach ($attributes['records']['items'] as $item) {
             $related = $this->{$relation}();
 
             if (array_key_exists(SoftDeletes::class, class_uses($this->{$relation}))) {
                 $related = $related->withTrashed();
             }
 
-            $rel = $related->findOrNew($item->{$attributes->records->primary_key} ?? null);
+            $rel = $related->findOrNew($item->{$attributes['records']['primary_key']} ?? null);
 
             foreach ($item as $field => $value) {
-                if ($field != $attributes->records->primary_key) {
+                if ($field != $attributes['records']['primary_key']) {
                     $rel->attributes[$field] = $value;
                 }
             }
@@ -747,7 +792,7 @@ trait HasDrafts
             $rel = $related->newInstance();
 
             foreach ($item as $field => $value) {
-                if ($field != $attributes->records->primary_key) {
+                if ($field != $attributes['records']['primary_key']) {
                     $rel->attributes[$field] = $value;
                 }
             }
@@ -774,14 +819,14 @@ trait HasDrafts
      */
     protected function publishPivotedRelationFromDraft($relation, $attributes)
     {
-        foreach ($attributes->records->items as $item) {
+        foreach ($attributes['records']['items'] as $item) {
             $related = $this->{$relation}()->getRelated();
 
             if (array_key_exists(SoftDeletes::class, class_uses($related))) {
                 $related = $related->withTrashed();
             }
 
-            $rel = $related->findOrNew($item->{$attributes->records->primary_key} ?? null);
+            $rel = $related->findOrNew($item->{$attributes['records']['primary_key']} ?? null);
 
             if ($rel->exists === false) {
                 foreach ((array)$item as $field => $value) {
@@ -797,13 +842,13 @@ trait HasDrafts
 
         $this->{$relation}()->detach();
 
-        foreach ($attributes->pivots->items as $item) {
+        foreach ($attributes['pivots']['items'] as $item) {
             $this->{$relation}()->attach(
-                $item->{$attributes->pivots->related_key},
+                $item->{$attributes['pivots']['related_key']},
                 array_except((array)$item, [
-                    $attributes->pivots->primary_key,
-                    $attributes->pivots->foreign_key,
-                    $attributes->pivots->related_key,
+                    $attributes['pivots']['primary_key'],
+                    $attributes['pivots']['foreign_key'],
+                    $attributes['pivots']['related_key'],
                 ])
             );
         }
