@@ -237,7 +237,7 @@ class UploaderHelper
      *
      * @return $this
      */
-    private function buildManagerView()
+    protected function buildManagerView()
     {
         $this->view = view('helpers::uploader.manager')->with([
             'i' => $this->i,
@@ -262,7 +262,7 @@ class UploaderHelper
      *
      * @return $this
      */
-    private function resetToDefaults()
+    protected function resetToDefaults()
     {
         $this->field = $this->defaults['field'];
         $this->label = $this->defaults['label'];
@@ -281,23 +281,23 @@ class UploaderHelper
      *
      * @return $this
      */
-    private function generateCurrent()
+    protected function generateCurrent()
     {
         if (!$this->model->exists) {
             return $this;
         }
 
         if (str_contains($this->field, 'metadata')) {
-            try {
-                if (Storage::disk(config('upload.storage.disk'))->exists($this->model->metadata($this->field))) {
-                    $this->current = uploaded($this->model->metadata($this->field));
-                }
-            } catch (Exception $e) {
-                $this->current = null;
+            if (Storage::disk(config('upload.storage.disk'))->exists($this->model->metadata($this->field))) {
+                $this->current = uploaded($this->model->metadata($this->field));
             }
-        } elseif ($this->model->{$this->field} && ($field = $this->model->{'_' . $this->field}) && $field->exists()) {
-            $this->current = $this->model->{'_' . $this->field};
+
+            return $this;
         }
+
+        $upload = uploaded($this->model->{$this->field});
+
+        $this->current = $upload->exists() ? $upload : null;
 
         return $this;
     }
@@ -308,7 +308,7 @@ class UploaderHelper
      *
      * @return $this
      */
-    private function generateStyles()
+    protected function generateStyles()
     {
         if (
             method_exists($this->model, 'getUploadConfig') &&
@@ -327,7 +327,7 @@ class UploaderHelper
      *
      * @return $this
      */
-    private function parseLabel()
+    protected function parseLabel()
     {
         if (!$this->label) {
             $this->label = title_case(str_replace('_', ' ', $this->field));
@@ -342,7 +342,7 @@ class UploaderHelper
      *
      * @return $this
      */
-    private function parseTypes()
+    protected function parseTypes()
     {
         foreach ($this->types as $index => $type) {
             if (!in_array($type, ['image', 'video', 'audio', 'file'])) {
@@ -359,7 +359,7 @@ class UploaderHelper
      *
      * @return $this
      */
-    private function parseAccept()
+    protected function parseAccept()
     {
         if (count($this->accept) > 0 && in_array('*', $this->accept)) {
             $this->accept = null;
@@ -375,7 +375,7 @@ class UploaderHelper
      * @return $this
      * @throws UploadException
      */
-    private function checkModel()
+    protected function checkModel()
     {
         if (!$this->model) {
             throw UploadException::invalidUploaderModel();
@@ -391,7 +391,7 @@ class UploaderHelper
      * @return $this
      * @throws UploadException
      */
-    private function checkField()
+    protected function checkField()
     {
         if (!$this->field) {
             throw UploadException::invalidUploaderField();

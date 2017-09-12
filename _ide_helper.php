@@ -1,7 +1,7 @@
 <?php
 /**
  * A helper file for Laravel 5, to provide autocomplete information to your IDE
- * Generated for Laravel 5.5.2 on 2017-09-06.
+ * Generated for Laravel 5.5.2 on 2017-09-12.
  *
  * @author Barry vd. Heuvel <barryvdh@gmail.com>
  * @see https://github.com/barryvdh/laravel-ide-helper
@@ -14106,6 +14106,66 @@ namespace Swap\Laravel\Facades {
 
 namespace App\Facades { 
 
+    class MetaFacade {
+        
+        /**
+         * Set a meta property using the key and value provided.
+         *
+         * @param string $key
+         * @param string $value
+         * @return string 
+         * @static 
+         */ 
+        public static function set($key, $value)
+        {
+            return \App\Helpers\MetaHelper::set($key, $value);
+        }
+        
+        /**
+         * Get a meta property by it's key.
+         * 
+         * If the meta property does not have any value, the default one will be returned.
+         *
+         * @param string $key
+         * @param array|string|null $default
+         * @return string 
+         * @static 
+         */ 
+        public static function get($key, $default = null)
+        {
+            return \App\Helpers\MetaHelper::get($key, $default);
+        }
+        
+        /**
+         * Get the HTML format for a meta property by it's key.
+         * 
+         * All property types will be built for that key: tag, name, og property, twitter card.
+         * If the meta property does not have any value, it will use the default value to build the HTML.
+         *
+         * @param string $key
+         * @param array|string|null $default
+         * @return string 
+         * @static 
+         */ 
+        public static function tag($key, $default = null)
+        {
+            return \App\Helpers\MetaHelper::tag($key, $default);
+        }
+        
+        /**
+         * Get the HTML format for multiple meta properties by their keys.
+         *
+         * @param \App\Helpers\...$keys
+         * @return string 
+         * @static 
+         */ 
+        public static function tags($keys = null)
+        {
+            return \App\Helpers\MetaHelper::tags($keys);
+        }
+         
+    }
+
     class UploaderFacade {
         
         /**
@@ -14192,6 +14252,102 @@ namespace App\Facades {
         public static function disabled()
         {
             return \App\Helpers\UploaderHelper::disabled();
+        }
+         
+    }
+
+    class UploaderLangFacade {
+        
+        /**
+         * Set or get the name of an uploader instance.
+         *
+         * @param string|null $field
+         * @return $this|string 
+         * @static 
+         */ 
+        public static function field($field = null)
+        {
+            return \App\Helpers\UploaderLangHelper::field($field);
+        }
+        
+        /**
+         * 
+         *
+         * @return \View 
+         * @throws UploadException
+         * @static 
+         */ 
+        public static function manager()
+        {
+            //Method inherited from \App\Helpers\UploaderHelper            
+            return \App\Helpers\UploaderLangHelper::manager();
+        }
+        
+        /**
+         * Set or get the label for an uploader instance.
+         *
+         * @param string|null $label
+         * @return $this|string 
+         * @static 
+         */ 
+        public static function label($label = null)
+        {
+            //Method inherited from \App\Helpers\UploaderHelper            
+            return \App\Helpers\UploaderLangHelper::label($label);
+        }
+        
+        /**
+         * Set or get the model for an uploader instance.
+         *
+         * @param \App\Helpers\Model|null $model
+         * @return $this|string 
+         * @static 
+         */ 
+        public static function model($model = null)
+        {
+            //Method inherited from \App\Helpers\UploaderHelper            
+            return \App\Helpers\UploaderLangHelper::model($model);
+        }
+        
+        /**
+         * Set or get the types for an uploader instance.
+         *
+         * @param array|string $types
+         * @return $this|string 
+         * @static 
+         */ 
+        public static function types($types = null)
+        {
+            //Method inherited from \App\Helpers\UploaderHelper            
+            return \App\Helpers\UploaderLangHelper::types($types);
+        }
+        
+        /**
+         * Set or get the accepted extensions for an uploader instance.
+         *
+         * @param array|string $accept
+         * @return $this|string 
+         * @static 
+         */ 
+        public static function accept($accept = null)
+        {
+            //Method inherited from \App\Helpers\UploaderHelper            
+            return \App\Helpers\UploaderLangHelper::accept($accept);
+        }
+        
+        /**
+         * Set the $disabled property to true.
+         * 
+         * This means that the current uploader instance will be disabled.
+         * No upload or crop will be available, just viewing the existing uploaded file.
+         *
+         * @return $this 
+         * @static 
+         */ 
+        public static function disabled()
+        {
+            //Method inherited from \App\Helpers\UploaderHelper            
+            return \App\Helpers\UploaderLangHelper::disabled();
         }
          
     }
@@ -14564,62 +14720,394 @@ namespace App\Facades {
          
     }
 
-    class MetaFacade {
+    class FormAdminLangFacade {
         
         /**
-         * Set a meta property using the key and value provided.
+         * Create a new model based form builder.
          *
-         * @param string $key
+         * @param mixed $model
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function model($model, $options = array())
+        {
+            return \App\Helpers\FormAdminLangHelper::model($model, $options);
+        }
+        
+        /**
+         * Wraps the input field into html to match the admin layout.
+         *
+         * @param string $input
+         * @param string $label
+         * @return string 
+         * @static 
+         */ 
+        public static function wrap($input, $label)
+        {
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::wrap($input, $label);
+        }
+        
+        /**
+         * Open up a new HTML form.
+         *
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function open($options = array())
+        {
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::open($options);
+        }
+        
+        /**
+         * Close the current form.
+         *
+         * @return string 
+         * @static 
+         */ 
+        public static function close()
+        {
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::close();
+        }
+        
+        /**
+         * Create a submit button element.
+         *
          * @param string $value
+         * @param array $options
          * @return string 
          * @static 
          */ 
-        public static function set($key, $value)
+        public static function submit($value = null, $options = array())
         {
-            return \App\Helpers\MetaHelper::set($key, $value);
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::submit($value, $options);
         }
         
         /**
-         * Get a meta property by it's key.
-         * 
-         * If the meta property does not have any value, the default one will be returned.
+         * Create a reset button element.
          *
-         * @param string $key
-         * @param array|string|null $default
+         * @param string $value
+         * @param array $options
          * @return string 
          * @static 
          */ 
-        public static function get($key, $default = null)
+        public static function reset($value = null, $options = array())
         {
-            return \App\Helpers\MetaHelper::get($key, $default);
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::reset($value, $options);
         }
         
         /**
-         * Get the HTML format for a meta property by it's key.
-         * 
-         * All property types will be built for that key: tag, name, og property, twitter card.
-         * If the meta property does not have any value, it will use the default value to build the HTML.
+         * Create a button element.
          *
-         * @param string $key
-         * @param array|string|null $default
+         * @param string $value
+         * @param array $options
          * @return string 
          * @static 
          */ 
-        public static function tag($key, $default = null)
+        public static function button($value = null, $options = array())
         {
-            return \App\Helpers\MetaHelper::tag($key, $default);
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::button($value, $options);
         }
         
         /**
-         * Get the HTML format for multiple meta properties by their keys.
+         * Create a hidden input field.
          *
-         * @param \App\Helpers\...$keys
+         * @param string $name
+         * @param string $value
+         * @param array $options
          * @return string 
          * @static 
          */ 
-        public static function tags($keys = null)
+        public static function hidden($name, $value = null, $options = array())
         {
-            return \App\Helpers\MetaHelper::tags($keys);
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::hidden($name, $value, $options);
+        }
+        
+        /**
+         * Create a text input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param string|null $value
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function text($name, $label = null, $value = null, $options = array())
+        {
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::text($name, $label, $value, $options);
+        }
+        
+        /**
+         * Create a textarea input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param string|null $value
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function textarea($name, $label = null, $value = null, $options = array())
+        {
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::textarea($name, $label, $value, $options);
+        }
+        
+        /**
+         * Create a select input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param array $list
+         * @param string|null $selected
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function select($name, $label = null, $list = array(), $selected = null, $options = array())
+        {
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::select($name, $label, $list, $selected, $options);
+        }
+        
+        /**
+         * Create a password input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param array $options
+         * @param bool $generate
+         * @return string 
+         * @static 
+         */ 
+        public static function password($name, $label = null, $options = array(), $generate = false)
+        {
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::password($name, $label, $options, $generate);
+        }
+        
+        /**
+         * Create a file input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function file($name, $label = null, $options = array())
+        {
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::file($name, $label, $options);
+        }
+        
+        /**
+         * Create a number input field.
+         *
+         * @param string $name
+         * @param string|null $value
+         * @param string|null $label
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function number($name, $label = null, $value = null, $options = array())
+        {
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::number($name, $label, $value, $options);
+        }
+        
+        /**
+         * Create an email input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param string|null $value
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function email($name, $label = null, $value = null, $options = array())
+        {
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::email($name, $label, $value, $options);
+        }
+        
+        /**
+         * Create a phone input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param string|null $value
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function phone($name, $label = null, $value = null, $options = array())
+        {
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::phone($name, $label, $value, $options);
+        }
+        
+        /**
+         * Create a checkbox input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param int|null|string $value
+         * @param bool|null $checked
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function checkbox($name, $label = null, $value = 1, $checked = null, $options = array())
+        {
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::checkbox($name, $label, $value, $checked, $options);
+        }
+        
+        /**
+         * Create a radio input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param int|null|string $value
+         * @param bool|null $checked
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function radio($name, $label = null, $value = 1, $checked = null, $options = array())
+        {
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::radio($name, $label, $value, $checked, $options);
+        }
+        
+        /**
+         * Create an editor field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param string|null $value
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function editor($name, $label = null, $value = null, $options = array())
+        {
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::editor($name, $label, $value, $options);
+        }
+        
+        /**
+         * Create a calendar input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param string|null $value
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function calendar($name, $label = null, $value = null, $options = array())
+        {
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::calendar($name, $label, $value, $options);
+        }
+        
+        /**
+         * Create a time input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param string|null $value
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function time($name, $label = null, $value = null, $options = array())
+        {
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::time($name, $label, $value, $options);
+        }
+        
+        /**
+         * Create a color input field.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param string|null $value
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function color($name, $label = null, $value = null, $options = array())
+        {
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::color($name, $label, $value, $options);
+        }
+        
+        /**
+         * Create a select input field for a range.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param int $start
+         * @param int $end
+         * @param string|null $selected
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function selectRange($name, $label = null, $start = 0, $end = 0, $selected = null, $options = array())
+        {
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::selectRange($name, $label, $start, $end, $selected, $options);
+        }
+        
+        /**
+         * Create a select input field for years.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param int $start
+         * @param int $end
+         * @param string|null $selected
+         * @param array $options
+         * @return string 
+         * @static 
+         */ 
+        public static function selectYear($name, $label = null, $start = null, $end = null, $selected = null, $options = array())
+        {
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::selectYear($name, $label, $start, $end, $selected, $options);
+        }
+        
+        /**
+         * Create a select input field for months.
+         *
+         * @param string $name
+         * @param string|null $label
+         * @param string|null $selected
+         * @param array $options
+         * @param string $format
+         * @return string 
+         * @static 
+         */ 
+        public static function selectMonth($name, $label = null, $selected = null, $options = array(), $format = '%B')
+        {
+            //Method inherited from \App\Helpers\FormAdminHelper            
+            return \App\Helpers\FormAdminLangHelper::selectMonth($name, $label, $selected, $options, $format);
         }
          
     }
@@ -17016,11 +17504,15 @@ namespace  {
 
     class Swap extends \Swap\Laravel\Facades\Swap {}
 
+    class Meta extends \App\Facades\MetaFacade {}
+
     class Uploader extends \App\Facades\UploaderFacade {}
+
+    class UploaderLang extends \App\Facades\UploaderLangFacade {}
 
     class FormAdmin extends \App\Facades\FormAdminFacade {}
 
-    class Meta extends \App\Facades\MetaFacade {}
+    class FormAdminLang extends \App\Facades\FormAdminLangFacade {}
 
     class Breadcrumbs extends \DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs {}
 

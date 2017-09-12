@@ -6,6 +6,7 @@ use App\Helpers\FormAdminHelper;
 use App\Helpers\FormAdminLangHelper;
 use App\Helpers\MetaHelper;
 use App\Helpers\UploaderHelper;
+use App\Helpers\UploaderLangHelper;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
 use DB;
 use Illuminate\Support\ServiceProvider;
@@ -56,6 +57,10 @@ class AppServiceProvider extends ServiceProvider
             return new UploaderHelper($app);
         });
 
+        $this->app->singleton('UploaderLang', function ($app) {
+            return new UploaderLangHelper($app);
+        });
+
         $this->app->singleton('FormAdmin', function ($app) {
             return new FormAdminHelper($app);
         });
@@ -66,6 +71,7 @@ class AppServiceProvider extends ServiceProvider
 
         $this->app->alias('meta', MetaHelper::class);
         $this->app->alias('uploader', UploaderHelper::class);
+        $this->app->alias('uploader_lang', UploaderLangHelper::class);
         $this->app->alias('form_admin', FormAdminHelper::class);
         $this->app->alias('form_admin_lang', FormAdminLangHelper::class);
     }

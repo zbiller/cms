@@ -21,6 +21,16 @@ if (!function_exists('uploader')) {
     }
 }
 
+if (!function_exists('uploader_lang')) {
+    /**
+     * @return \App\Helpers\UploaderLangHelper
+     */
+    function uploader_lang()
+    {
+        return app(UploaderLang::class);
+    }
+}
+
 if (!function_exists('form')) {
     /**
      * @return \Collective\Html\FormBuilder

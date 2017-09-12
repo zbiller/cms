@@ -257,6 +257,7 @@ return [
          */
         'Meta' => App\Facades\MetaFacade::class,
         'Uploader' => App\Facades\UploaderFacade::class,
+        'UploaderLang' => App\Facades\UploaderLangFacade::class,
         'FormAdmin' => App\Facades\FormAdminFacade::class,
         'FormAdminLang' => App\Facades\FormAdminLangFacade::class,
     ],
