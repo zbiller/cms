@@ -4,11 +4,9 @@ namespace App\Traits;
 
 use App\Exceptions\CrudException;
 use App\Exceptions\UploadException;
-use App\Helpers\UploadedHelper;
 use App\Services\UploadService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
-use Storage;
 
 trait HasUploads
 {
@@ -47,27 +45,8 @@ trait HasUploads
     }
 
     /**
-     * Get the upload attribute as an upload helper instance.
-     * To achieve this, call the respective upload field property prefixed with an underscore "_".
-     * The script will look to see if it's meant for an upload and it will return the helper.
-     * The returned helper instance will contain the upload file coming from database field, without the underscore "_".
-     * Afterwards, you can call App\Helpers\UploadedHelper methods directly on the attribute.
+     * Verify if a given uploaded file is valid.
      *
-     * @param string $key
-     * @return UploadedHelper|mixed
-     */
-    public function getAttribute($key)
-    {
-        if (starts_with($key, '_')) {
-            if (Storage::disk(config('upload.storage.disk'))->exists($this->{ltrim($key, '_')})) {
-                return uploaded($this->{ltrim($key, '_')});
-            }
-        }
-
-        return parent::getAttribute($key);
-    }
-
-    /**
      * @param Model $model
      * @param UploadedFile $file
      * @param string $name

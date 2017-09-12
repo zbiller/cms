@@ -255,9 +255,10 @@ return [
         /**
          * Application Facades
          */
+        'Meta' => App\Facades\MetaFacade::class,
         'Uploader' => App\Facades\UploaderFacade::class,
         'FormAdmin' => App\Facades\FormAdminFacade::class,
-        'Meta' => App\Facades\MetaFacade::class,
+        'FormAdminLang' => App\Facades\FormAdminLangFacade::class,
     ],
 
 ];

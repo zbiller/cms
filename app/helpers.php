@@ -41,6 +41,26 @@ if (!function_exists('form_admin')) {
     }
 }
 
+if (!function_exists('form_admin_lang')) {
+    /**
+     * @return \App\Helpers\FormAdminHelper
+     */
+    function form_admin_lang()
+    {
+        return app(FormAdminLang::class);
+    }
+}
+
+if (!function_exists('translation')) {
+    /**
+     * @return \App\Helpers\TranslationHelper
+     */
+    function translation()
+    {
+        return new App\Helpers\TranslationHelper();
+    }
+}
+
 if (!function_exists('page')) {
     /**
      * @return \App\Helpers\PageHelper

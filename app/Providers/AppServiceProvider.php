@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Helpers\FormAdminHelper;
+use App\Helpers\FormAdminLangHelper;
 use App\Helpers\MetaHelper;
 use App\Helpers\UploaderHelper;
 use Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider;
@@ -47,6 +48,10 @@ class AppServiceProvider extends ServiceProvider
      */
     protected function registerFacades()
     {
+        $this->app->singleton('Meta', function ($app) {
+            return new MetaHelper($app);
+        });
+
         $this->app->singleton('Uploader', function ($app) {
             return new UploaderHelper($app);
         });
@@ -55,12 +60,13 @@ class AppServiceProvider extends ServiceProvider
             return new FormAdminHelper($app);
         });
 
-        $this->app->singleton('Meta', function ($app) {
-            return new MetaHelper($app);
+        $this->app->singleton('FormAdminLang', function ($app) {
+            return new FormAdminLangHelper($app);
         });
 
+        $this->app->alias('meta', MetaHelper::class);
         $this->app->alias('uploader', UploaderHelper::class);
         $this->app->alias('form_admin', FormAdminHelper::class);
-        $this->app->alias('meta', MetaHelper::class);
+        $this->app->alias('form_admin_lang', FormAdminLangHelper::class);
     }
 }
