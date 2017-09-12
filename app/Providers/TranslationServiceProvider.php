@@ -35,7 +35,7 @@ class TranslationServiceProvider extends ServiceProvider
     protected function registerBladeIfs()
     {
         Blade::{'if'}('istranslatable', function () {
-            return config('language.is_translatable') === true;
+            return translation()->isMultiLanguageEnabled() && translation()->isEntityTranslatable();
         });
     }
 }
