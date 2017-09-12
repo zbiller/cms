@@ -6,6 +6,7 @@ use App\Configs\ActivityConfig;
 use App\Configs\CacheConfig;
 use App\Configs\CrudConfig;
 use App\Configs\ShopConfig;
+use App\Configs\TranslationConfig;
 use App\Configs\UploadConfig;
 use Illuminate\Support\ServiceProvider;
 
@@ -22,6 +23,7 @@ class ConfigServiceProvider extends ServiceProvider
             $this->checkCrudConfig();
             $this->checkUploadConfig();
             $this->checkCacheConfig();
+            $this->checkTranslationConfig();
             $this->checkShopConfig();
             $this->checkActivityConfig();
         }
@@ -65,6 +67,16 @@ class ConfigServiceProvider extends ServiceProvider
     protected function checkCacheConfig()
     {
         CacheConfig::check();
+    }
+
+    /**
+     * Check if the config/translation.php is properly and fully configured.
+     *
+     * @return void
+     */
+    protected function checkTranslationConfig()
+    {
+        TranslationConfig::check();
     }
 
     /**

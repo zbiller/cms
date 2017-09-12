@@ -7,7 +7,7 @@ return [
      *
      * If this is set to false, the multi-language feature will not work (be present), regardless of your other settings.
      */
-    'enable_multi_language' => env('ENABLE_MULTI_LANGUAGE', false),
+    'enable_translations' => env('ENABLE_TRANSLATIONS', false),
 
     /**
      * Flag indicating if a particular entity is translatable.
@@ -19,6 +19,6 @@ return [
      * Because of this, do not forget to apply the "is.translatable" middleware defined in the "App\Http\Kernel".
      * On every route for the entity you wish to make translatable.
      */
-    'is_translatable' => false,
+    'is_translatable_entity' => false,
 
 ];
