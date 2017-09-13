@@ -206,7 +206,7 @@ trait CanCrud
                 call_user_func($function);
             }
 
-            flash()->success(__('crud.create_success'));
+            flash()->success('The record was successfully created!');
         }, $request);
     }
 
@@ -260,7 +260,7 @@ trait CanCrud
                 call_user_func($function);
             }
 
-            flash()->success(__('crud.update_success'));
+            flash()->success('The record was successfully updated!');
         }, $request);
     }
 
@@ -282,7 +282,7 @@ trait CanCrud
                 call_user_func($function);
             }
 
-            flash()->success(__('crud.delete_success'));
+            flash()->success('The record was successfully deleted!');
         });
     }
 
@@ -334,7 +334,7 @@ trait CanCrud
                 call_user_func($function);
             }
 
-            flash()->success(__('crud.restore_success'));
+            flash()->success('The record was successfully restored!');
         });
     }
 
@@ -356,7 +356,7 @@ trait CanCrud
                 call_user_func($function);
             }
 
-            flash()->success(__('crud.delete_success'));
+            flash()->success('The record was successfully deleted!');
         });
     }
 
@@ -379,7 +379,7 @@ trait CanCrud
                 call_user_func($function);
             }
 
-            flash()->success(__('crud.duplicate_success'));
+            flash()->success('The record was successfully duplicated!<br /><br />You have been redirected to the newly duplicated record.');
         }, $request);
     }
 
@@ -603,7 +603,7 @@ trait CanCrud
                             call_user_func($putFunction);
                         }
 
-                        flash()->success(__('crud.draft_save_success'));
+                        flash()->success('The draft was successfully saved!');
                     } catch (DraftException $e) {
                         flash()->error($e->getMessage());
                     } catch (Exception $e) {
@@ -618,8 +618,7 @@ trait CanCrud
                     break;
             }
         } catch (ModelNotFoundException $e) {
-            dd($e);
-            flash()->error(__('crud.draft_not_found'));
+            flash()->error('You are trying to access a record that does not exist!');
             return $this->redirect ?: back();
         }
     }
@@ -658,7 +657,7 @@ trait CanCrud
 
             return $this->view->with($this->vars);
         } catch (ModelNotFoundException $e) {
-            flash()->error(__('crud.model_not_found'));
+            flash()->error('You are trying to access a record that does not exist!');
         } catch (Exception $e) {
             if (in_array(get_class($e), config('crud.soft_exceptions'))) {
                 flash()->error($e->getMessage());
@@ -708,7 +707,7 @@ trait CanCrud
         } catch (ModelNotFoundException $e) {
             DB::rollBack();
 
-            flash()->error(__('crud.model_not_found'));
+            flash()->error('You are trying to access a record that does not exist!');
         } catch (Exception $e) {
             DB::rollBack();
 

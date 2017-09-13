@@ -103,7 +103,7 @@ class SettingsController extends Controller
                     }
                 }
 
-                flash()->success(__('crud.update_success'));
+                flash()->success('The record was successfully updated!');
                 return redirect()->route('admin.settings.general');
             });
         } catch (Exception $e) {
@@ -141,7 +141,7 @@ class SettingsController extends Controller
                     }
                 }
 
-                flash()->success(__('crud.update_success'));
+                flash()->success('The record was successfully updated!');
                 return redirect()->route('admin.settings.analytics');
             });
         } catch (Exception $e) {
@@ -179,7 +179,7 @@ class SettingsController extends Controller
                     }
                 }
 
-                flash()->success(__('crud.update_success'));
+                flash()->success('The record was successfully updated!');
                 return redirect()->route('admin.settings.courier');
             });
         } catch (Exception $e) {

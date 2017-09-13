@@ -56,7 +56,7 @@ class BackupsController extends Controller
 
             Artisan::call('backup:run');
 
-            flash()->success(__('crud.create_success'));
+            flash()->success('The record was successfully created!');
         } catch (Exception $e) {
             flash()->success($e->getMessage());
         }
