@@ -33,7 +33,7 @@ class Value extends Model
     protected $table = 'attribute_values';
 
     /**
-     * The attributes that mass assignable.
+     * The attributes that are mass assignable.
      *
      * @var array
      */

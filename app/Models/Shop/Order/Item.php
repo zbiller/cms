@@ -19,7 +19,7 @@ class Item extends Model
     protected $table = 'order_items';
 
     /**
-     * The attributes that mass assignable.
+     * The attributes that are mass assignable.
      *
      * @var array
      */

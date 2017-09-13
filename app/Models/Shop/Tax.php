@@ -26,7 +26,7 @@ class Tax extends Model
     protected $table = 'taxes';
 
     /**
-     * The attributes that mass assignable.
+     * The attributes that are mass assignable.
      *
      * @var array
      */

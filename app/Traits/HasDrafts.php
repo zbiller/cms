@@ -751,7 +751,7 @@ trait HasDrafts
                 $related = $related->withTrashed();
             }
 
-            $rel = $related->findOrNew($item->{$attributes['records']['primary_key']} ?? null);
+            $rel = $related->findOrNew($item[$attributes['records']['primary_key']] ?? null);
 
             foreach ($item as $field => $value) {
                 if ($field != $attributes['records']['primary_key']) {
@@ -822,7 +822,7 @@ trait HasDrafts
                 $related = $related->withTrashed();
             }
 
-            $rel = $related->findOrNew($item->{$attributes['records']['primary_key']} ?? null);
+            $rel = $related->findOrNew($item[$attributes['records']['primary_key']] ?? null);
 
             if ($rel->exists === false) {
                 foreach ((array)$item as $field => $value) {
@@ -840,7 +840,7 @@ trait HasDrafts
 
         foreach ($attributes['pivots']['items'] as $item) {
             $this->{$relation}()->attach(
-                $item->{$attributes['pivots']['related_key']},
+                $item[$attributes['pivots']['related_key']],
                 array_except((array)$item, [
                     $attributes['pivots']['primary_key'],
                     $attributes['pivots']['foreign_key'],
@@ -884,7 +884,7 @@ trait HasDrafts
         } elseif ($draft->exists) {
             if (isset($draft->metadata['relations'][$relation]['records']['items'])) {
                 foreach ($draft->metadata['relations'][$relation]['records']['items'] as $item) {
-                    if (isset($item->id) && $item->id == $id) {
+                    if (isset($item['id']) && $item['id'] == $id) {
                         foreach ((array)$item as $field => $value) {
                             $related->{$field} = $value;
                         }

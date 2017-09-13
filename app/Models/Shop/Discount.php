@@ -26,7 +26,7 @@ class Discount extends Model
     protected $table = 'discounts';
 
     /**
-     * The attributes that mass assignable.
+     * The attributes that are mass assignable.
      *
      * @var array
      */

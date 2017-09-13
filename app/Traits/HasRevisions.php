@@ -182,6 +182,7 @@ trait HasRevisions
 
             return true;
         } catch (Exception $e) {
+            dd($e);
             throw RevisionException::rollbackFailed();
         }
     }
@@ -438,7 +439,7 @@ trait HasRevisions
                 $related = $related->withTrashed();
             }
 
-            $rel = $related->findOrNew($item->{$attributes['records']['primary_key']} ?? null);
+            $rel = $related->findOrNew($item[$attributes['records']['primary_key']] ?? null);
 
             foreach ($item as $field => $value) {
                 $rel->attributes[$field] = $value;
@@ -478,7 +479,7 @@ trait HasRevisions
                 $related = $related->withTrashed();
             }
 
-            $rel = $related->findOrNew($item->{$attributes['records']['primary_key']} ?? null);
+            $rel = $related->findOrNew($item[$attributes['records']['primary_key']] ?? null);
 
             if ($rel->exists === false) {
                 foreach ($item as $field => $value) {
@@ -496,7 +497,7 @@ trait HasRevisions
 
         foreach ($attributes['pivots']['items'] as $item) {
             $this->{$relation}()->attach(
-                $item->{$attributes['pivots']['related_key']},
+                $item[$attributes['pivots']['related_key']],
                 array_except((array)$item, [
                     $attributes['pivots']['primary_key'],
                     $attributes['pivots']['foreign_key'],

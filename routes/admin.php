@@ -118,7 +118,6 @@ Route::group([
          */
         Route::group([
             'prefix' => 'pages',
-            'middleware' => 'is.translatable',
         ], function () {
             Route::get('/', ['as' => 'admin.pages.index', 'uses' => 'PagesController@index', 'permissions' => 'pages-list']);
             Route::get('create/{parent?}', ['as' => 'admin.pages.create', 'uses' => 'PagesController@create', 'permissions' => 'pages-add']);

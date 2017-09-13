@@ -24,7 +24,7 @@ class Backup extends Model
     protected $table = 'backups';
 
     /**
-     * The attributes that mass assignable.
+     * The attributes that are mass assignable.
      *
      * @var array
      */

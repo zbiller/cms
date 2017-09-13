@@ -34,7 +34,7 @@ class Attribute extends Model
     protected $table = 'attributes';
 
     /**
-     * The attributes that mass assignable.
+     * The attributes that are mass assignable.
      *
      * @var array
      */

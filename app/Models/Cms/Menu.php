@@ -33,7 +33,7 @@ class Menu extends Model
     protected $table = 'menus';
 
     /**
-     * The attributes that mass assignable.
+     * The attributes that are mass assignable.
      *
      * @var array
      */
