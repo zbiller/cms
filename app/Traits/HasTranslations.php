@@ -58,8 +58,16 @@ trait HasTranslations
      */
     public function getTranslation($key, $locale, $useFallbackLocale = true)
     {
+        $field = strtok($key, '.[]->');
         $locale = $this->normalizeLocale($key, $locale, $useFallbackLocale);
-        $translation = $this->getTranslations($key)[$locale] ?? '';
+        $translation = $this->getTranslations($field)[$locale] ?? '';
+
+        if (str_is('*[*]*', $key) && (is_array($translation) || is_object($translation))) {
+            return array_get(
+                is_object($translation) ? get_object_vars_recursive($translation) : $translation,
+                trim(str_replace($field, '', str_replace(['][', '[', ']'], '.', trim($key, '.[]'))), '.[]')
+            );
+        }
 
         if ($this->hasGetMutator($key)) {
             return $this->mutateAttribute($key, $translation);
@@ -158,7 +166,17 @@ trait HasTranslations
      */
     public function isTranslatableAttribute($key)
     {
-        return in_array($key, $this->getTranslatableAttributes());
+        if (in_array($key, $this->getTranslatableAttributes())) {
+            return true;
+        }
+
+        foreach ($this->getTranslatableAttributes() as $attribute) {
+            if (str_is("{$attribute}[*]*", $key)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

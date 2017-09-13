@@ -26,7 +26,6 @@
         "spatie/laravel-analytics": "^3.0",
         "spatie/laravel-backup": "^5.0",
         "spatie/laravel-image-optimizer": "^1.0",
-        "spatie/laravel-translatable": "^2.0",
         "doctrine/dbal": "^2.5"
     },
     "require-dev": {

@@ -16,7 +16,11 @@ class UploaderLangHelper extends UploaderHelper
             return str_replace('[' . app()->getLocale() . ']', '', $this->field);
         }
 
-        $this->field = $field . '[' . app()->getLocale() . ']';
+        if (str_is('*[*]*', $field)) {
+            $this->field = explode('[', $field, 2)[0] . '[' . app()->getLocale() . '][' . explode('[', $field, 2)[1];
+        } else {
+            $this->field = $field . '[' . app()->getLocale() . ']';
+        }
 
         return $this;
     }

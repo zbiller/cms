@@ -19,12 +19,10 @@ use App\Traits\IsSortable;
 use DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Spatie\Translatable\HasTranslations;
 
 class Block extends Model
 {
     use HasUploads;
-    use HasTranslations;
     use HasDrafts;
     use HasRevisions;
     use HasDuplicates;
@@ -51,13 +49,6 @@ class Block extends Model
         'name',
         'type',
         'anchor',
-        'metadata',
-    ];
-
-    /**
-     * @var array
-     */
-    protected $translatable = [
         'metadata',
     ];
 

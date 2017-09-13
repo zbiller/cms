@@ -26,6 +26,10 @@ class FormAdminLangHelper extends FormAdminHelper
      */
     protected function name($name)
     {
+        if (str_is('*[*]*', $name)) {
+            return explode('[', $name, 2)[0] . '[' . app()->getLocale() . '][' . explode('[', $name, 2)[1];
+        }
+
         return $name . '[' . app()->getLocale() . ']';
     }
 
