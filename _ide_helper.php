@@ -15179,6 +15179,74 @@ namespace App\Facades {
  
 }
 
+namespace Spatie\LaravelImageOptimizer\Facades { 
+
+    class ImageOptimizer {
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function getOptimizers()
+        {
+            return \Spatie\ImageOptimizer\OptimizerChain::getOptimizers();
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function addOptimizer($optimizer)
+        {
+            return \Spatie\ImageOptimizer\OptimizerChain::addOptimizer($optimizer);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setOptimizers($optimizers)
+        {
+            return \Spatie\ImageOptimizer\OptimizerChain::setOptimizers($optimizers);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function setTimeout($timeoutInSeconds)
+        {
+            return \Spatie\ImageOptimizer\OptimizerChain::setTimeout($timeoutInSeconds);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function useLogger($log)
+        {
+            return \Spatie\ImageOptimizer\OptimizerChain::useLogger($log);
+        }
+        
+        /**
+         * 
+         *
+         * @static 
+         */ 
+        public static function optimize($pathToImage, $pathToOutput = null)
+        {
+            return \Spatie\ImageOptimizer\OptimizerChain::optimize($pathToImage, $pathToOutput);
+        }
+         
+    }
+ 
+}
+
 namespace DaveJamesMiller\Breadcrumbs\Facades { 
 
     class Breadcrumbs {
@@ -15364,74 +15432,6 @@ namespace DaveJamesMiller\Breadcrumbs\Facades {
         public static function hasMacro($name)
         {
             return \DaveJamesMiller\Breadcrumbs\BreadcrumbsManager::hasMacro($name);
-        }
-         
-    }
- 
-}
-
-namespace Spatie\LaravelImageOptimizer\Facades { 
-
-    class ImageOptimizer {
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function getOptimizers()
-        {
-            return \Spatie\ImageOptimizer\OptimizerChain::getOptimizers();
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function addOptimizer($optimizer)
-        {
-            return \Spatie\ImageOptimizer\OptimizerChain::addOptimizer($optimizer);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function setOptimizers($optimizers)
-        {
-            return \Spatie\ImageOptimizer\OptimizerChain::setOptimizers($optimizers);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function setTimeout($timeoutInSeconds)
-        {
-            return \Spatie\ImageOptimizer\OptimizerChain::setTimeout($timeoutInSeconds);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function useLogger($log)
-        {
-            return \Spatie\ImageOptimizer\OptimizerChain::useLogger($log);
-        }
-        
-        /**
-         * 
-         *
-         * @static 
-         */ 
-        public static function optimize($pathToImage, $pathToOutput = null)
-        {
-            return \Spatie\ImageOptimizer\OptimizerChain::optimize($pathToImage, $pathToOutput);
         }
          
     }
@@ -17579,9 +17579,9 @@ namespace  {
 
     class FormAdminLang extends \App\Facades\FormAdminLangFacade {}
 
-    class Breadcrumbs extends \DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs {}
-
     class ImageOptimizer extends \Spatie\LaravelImageOptimizer\Facades\ImageOptimizer {}
+
+    class Breadcrumbs extends \DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs {}
  
 }
 

@@ -15,7 +15,7 @@
  * Admin routes that don't require authentication.
  */
 Route::group([
-    'namespace' => 'Auth',
+    'namespace' => 'Auth\Authenticate',
     'middleware' => 'not.authenticated:admin'
 ], function () {
     Route::get('login', ['as' => 'admin.login', 'uses' => 'LoginController@show']);
@@ -70,6 +70,31 @@ Route::group([
             Route::post('set', ['as' => 'admin.uploads.set', 'uses' => 'UploadsController@set', 'permissions' => 'uploads-select']);
             Route::post('cut', ['as' => 'admin.uploads.cut', 'uses' => 'UploadsController@cut', 'permissions' => 'uploads-crop']);
             Route::delete('destroy/{upload}', ['as' => 'admin.uploads.destroy', 'uses' => 'UploadsController@destroy', 'permissions' => 'uploads-delete']);
+        });
+    });
+
+    /**
+     * Translation.
+     */
+    Route::group([
+        'namespace' => 'Translation',
+    ], function () {
+        /**
+         * CRUD Translations.
+         */
+        Route::group([
+            'prefix' => 'translations',
+        ], function () {
+            Route::get('/', ['as' => 'admin.translations.index', 'uses' => 'TranslationsController@index', 'permissions' => 'translations-list']);
+            Route::get('create', ['as' => 'admin.translations.create', 'uses' => 'TranslationsController@create', 'permissions' => 'translations-add']);
+            Route::get('edit/{translation}', ['as' => 'admin.translations.edit', 'uses' => 'TranslationsController@edit', 'permissions' => 'translations-edit']);
+            Route::post('store', ['as' => 'admin.translations.store', 'uses' => 'TranslationsController@store', 'permissions' => 'translations-add']);
+            Route::put('update/{translation}', ['as' => 'admin.translations.update', 'uses' => 'TranslationsController@update', 'permissions' => 'translations-edit']);
+            Route::delete('destroy/{translation}', ['as' => 'admin.translations.destroy', 'uses' => 'TranslationsController@destroy', 'permissions' => 'translations-delete']);
+            Route::post('import', ['as' => 'admin.translations.import', 'uses' => 'TranslationsController@import', 'permissions' => 'translations-import']);
+            Route::post('export', ['as' => 'admin.translations.export', 'uses' => 'TranslationsController@export', 'permissions' => 'translations-export']);
+            Route::post('sync', ['as' => 'admin.translations.sync', 'uses' => 'TranslationsController@sync', 'permissions' => 'translations-sync']);
+            Route::delete('clear', ['as' => 'admin.translations.clear', 'uses' => 'TranslationsController@clear', 'permissions' => 'translations-clear']);
         });
     });
 
@@ -598,7 +623,7 @@ Route::group([
      * Access Control Level.
      */
     Route::group([
-        'namespace' => 'Acl',
+        'namespace' => 'Auth',
     ], function () {
         /**
          * CRUD Users.

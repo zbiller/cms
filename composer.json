@@ -6,14 +6,11 @@
     "type": "project",
     "require": {
         "php": ">=7.0.0",
-        "barryvdh/laravel-debugbar": "^3.0",
-        "barryvdh/laravel-ide-helper": "^2.4",
-        "davejamesmiller/laravel-breadcrumbs": "^4.0",
+        "doctrine/dbal": "^2.5",
         "fideloper/proxy": "~3.3",
         "florianv/laravel-swap": "^1.1",
         "guzzlehttp/guzzle": "^6.3",
         "intervention/image": "^2.3",
-        "kalnoy/nestedset": "^4.2",
         "laravel/framework": "5.5.*",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "^5.5.0",
@@ -22,11 +19,14 @@
         "php-http/guzzle6-adapter": "^1.1",
         "php-http/message": "^1.6",
         "predis/predis": "^1.1",
-        "proengsoft/laravel-jsvalidation": "^2.0",
         "spatie/laravel-analytics": "^3.0",
         "spatie/laravel-backup": "^5.0",
         "spatie/laravel-image-optimizer": "^1.0",
-        "doctrine/dbal": "^2.5"
+        "barryvdh/laravel-debugbar": "^3.0",
+        "barryvdh/laravel-ide-helper": "^2.4",
+        "proengsoft/laravel-jsvalidation": "^2.0",
+        "kalnoy/nestedset": "^4.2",
+        "davejamesmiller/laravel-breadcrumbs": "^4.0"
     },
     "require-dev": {
         "filp/whoops": "^2.1",

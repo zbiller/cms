@@ -64,6 +64,56 @@ class PermissionsSeeder extends Seeder
                 'name' => 'uploads-delete',
             ],
         ],
+        'Translations' => [
+            'List' => [
+                'group' => 'Translations',
+                'label' => 'List',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'translations-list',
+            ],
+            'Add' => [
+                'group' => 'Translations',
+                'label' => 'Add',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'translations-add',
+            ],
+            'Edit' => [
+                'group' => 'Translations',
+                'label' => 'Edit',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'translations-edit',
+            ],
+            'Delete' => [
+                'group' => 'Translations',
+                'label' => 'Delete',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'translations-delete',
+            ],
+            'Import' => [
+                'group' => 'Translations',
+                'label' => 'Import',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'translations-import',
+            ],
+            'Export' => [
+                'group' => 'Translations',
+                'label' => 'Export',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'translations-export',
+            ],
+            'Sync' => [
+                'group' => 'Translations',
+                'label' => 'Sync',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'translations-sync',
+            ],
+            'Clear' => [
+                'group' => 'Translations',
+                'label' => 'Clear',
+                'type' => Permission::TYPE_ADMIN,
+                'name' => 'translations-clear',
+            ],
+        ],
         'Drafts' => [
             'List' => [
                 'group' => 'Drafts',
