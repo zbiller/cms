@@ -2,15 +2,15 @@
 
 @section('content')
     <section class="filters">
-        @include('admin.cms.uploads._filter')
+        @include('admin.upload.uploads._filter')
     </section>
 
     <section class="upload">
-        @include('admin.cms.uploads._upload')
+        @include('admin.upload.uploads._upload')
     </section>
 
     <section class="list">
-        @include('admin.cms.uploads._table', ['items' => $items])
+        @include('admin.upload.uploads._table', ['items' => $items])
     </section>
 @endsection
 

@@ -1,4 +1,4 @@
-<a id="open-upload-new-{!! $index !!}" data-popup="open" data-popup-id="upload-new-{!! $index !!}" class="open-upload-new btn gray centered bordered left no-margin no-responsiveness {!! $current ? 'half' : 'full' !!} {!! $disabled || !(auth()->user()->isDeveloper() || auth()->user()->hasPermission('uploads-list')) ? 'disabled' : '' !!}">
+<a id="open-upload-new-{!! $index !!}" data-popup="open" data-popup-id="upload-new-{!! $index !!}" class="open-upload-new btn gray centered bordered left no-margin visible-text {!! $current ? 'half' : 'full' !!} {!! $disabled || !(auth()->user()->isDeveloper() || auth()->user()->hasPermission('uploads-list')) ? 'disabled' : '' !!}">
     Choose Upload
 </a>
 @if($disabled === false)

@@ -32,7 +32,7 @@ class UploadsController extends Controller
 
         $this->setMeta('title', 'Admin - Uploads');
 
-        return view('admin.cms.uploads.index')->with([
+        return view('admin.upload.uploads.index')->with([
             'title' => 'Uploads',
             'items' => $items,
             'types' => Upload::$types

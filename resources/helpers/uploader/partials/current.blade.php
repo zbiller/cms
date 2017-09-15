@@ -1,5 +1,5 @@
 @if($current)
-    <a id="open-upload-current-{!! $index !!}" data-popup="open" data-popup-id="upload-current-{!! $index !!}" data-index="{!! $index !!}" class="open-upload-current btn blue centered left half no-margin no-responsiveness">
+    <a id="open-upload-current-{!! $index !!}" data-popup="open" data-popup-id="upload-current-{!! $index !!}" data-index="{!! $index !!}" class="open-upload-current btn blue centered left half no-margin visible-text">
         View Current File
     </a>
     <section id="upload-current-{!! $index !!}" class="upload-current popup {!! $disabled ? 'disabled' : '' !!}" data-model="{{ get_class($model) }}" data-field="{{ $field }}" data-index="{{ $index }}">
@@ -38,7 +38,7 @@
                                 Your browser does not support the audio tag.
                             </audio>
                         @else
-                            <a href="{{ $current->url($style) }}" target="_blank" class="btn blue no-margin no-responsiveness centered full">
+                            <a href="{{ $current->url($style) }}" target="_blank" class="btn blue no-margin visible-text centered full">
                                 View File
                             </a>
                         @endif

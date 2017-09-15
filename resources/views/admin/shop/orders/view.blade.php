@@ -3,7 +3,7 @@
 @section('content')
 
     <div style="text-align: center;">
-        <section class="content content-third left">
+        <section class="content content-third one">
             <span class="title">Order Totals</span>
             <article class="split">
                 <em>Raw Total:</em> {{ number_format($item->raw_total, 2) }} {{ $item->currency }}
@@ -15,7 +15,7 @@
                 <em>Grand Total:</em> {{ number_format($item->grand_total, 2) }} {{ $item->currency }}
             </article>
         </section>
-        <section class="content content-third center">
+        <section class="content content-third two">
             <span class="title">Order Details</span>
             <article class="split">
                 <em>Order Status:</em> {{ $statuses[$item->status] ?? 'N/A' }}
@@ -27,7 +27,7 @@
                 <em>Shipping Option:</em> {{ $shippings[$item->shipping] ?? 'N/A' }}
             </article>
         </section>
-        <section class="content content-third right">
+        <section class="content content-third three">
             <span class="title">Customer Info</span>
             <article class="split">
                 <em>Full Name:</em> {{ $item->full_name ?: 'N/A' }}
@@ -41,15 +41,15 @@
         </section>
     </div>
 
-    <div style="margin-top: 20px;">
-        <section class="content content-half left">
+    <div>
+        <section class="content content-half one">
             <span class="title">Shipping Address</span>
             {{ isset($item->shipping_address['country']) ? $item->shipping_address['country'] . ', ' : '' }}
             {{ isset($item->shipping_address['state']) ? $item->shipping_address['state'] . ', ' : '' }}
             {{ isset($item->shipping_address['city']) ? $item->shipping_address['city'] : '' }}
             {!! isset($item->shipping_address['address']) ? '<br /><br />' . nl2br($item->shipping_address['address']) : '' !!}
         </section>
-        <section class="content content-half right">
+        <section class="content content-half two">
             <span class="title">Billing Address</span>
             {{ isset($item->billing_address['country']) ? $item->billing_address['country'] . ', ' : '' }}
             {{ isset($item->billing_address['state']) ? $item->billing_address['state'] . ', ' : '' }}
@@ -58,7 +58,7 @@
         </section>
     </div>
 
-    <section class="list" style="margin-top: 20px; padding: 2px 0 0 0;">
+    <section class="list">
         <table cellspacing="0" cellpadding="0" border="0">
             <thead>
                 <tr>
