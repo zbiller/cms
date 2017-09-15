@@ -6,6 +6,20 @@ section.list {
     padding: 10px 0 0 0;
     border-bottom: none;
 
+    &.list-content {
+        @include clear-padding();
+        @include font-size(13px);
+
+        padding: 15px;
+        font-family: "Open Sans", sans-serif;
+        color: $colorOsloGray;
+    }
+
+    &.list-margin-bottom {
+        margin: 0 0 20px 0;
+        border-bottom: 1px solid $colorGallery;
+    }
+
     &.list-small {
         width: 400px;
         margin: 0 0 20px;
@@ -117,6 +131,26 @@ section.list {
                 @include media-query('tablet') {
                     display: table-cell;
                     width: 78px;
+                }
+            }
+
+            &.visible-on-tablet-and-up {
+                @include media-query('tablet') {
+                    display: table-cell;
+                }
+
+                @include media-query('phone-wide') {
+                    display: none;
+                }
+            }
+
+            &.visible-on-mobile-and-up {
+                @include media-query('tablet') {
+                    display: table-cell;
+                }
+
+                @include media-query('phone-wide') {
+                    display: table-cell;
                 }
             }
 

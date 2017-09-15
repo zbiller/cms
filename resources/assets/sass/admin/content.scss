@@ -34,6 +34,7 @@ main {
 section.content {
     @include font-size(13px);
 
+    margin-bottom: 20px;
     padding: 15px;
     font-family: "Open Sans", sans-serif;
     color: $colorOsloGray;
@@ -42,7 +43,7 @@ section.content {
         width: 50%;
         display: inline-block;
 
-        &.left {
+        &.one {
             @include calc(width, '50% - 10px');
 
             float: left;
@@ -50,9 +51,17 @@ section.content {
             margin-right: 10px;
             border-right: 1px solid $colorGallery;
             border-bottom: 1px solid $colorGallery;
+
+            @include media-query('tablet') {
+                width: 100%;
+                margin-left: 0;
+                margin-right: 0;
+                border-left: none;
+                border-right: none;
+            }
         }
 
-        &.right {
+        &.two {
             @include calc(width, '50% - 10px');
 
             float: right;
@@ -60,36 +69,207 @@ section.content {
             margin-left: 10px;
             border-left: 1px solid $colorGallery;
             border-bottom: 1px solid $colorGallery;
+
+            @include media-query('tablet') {
+                width: 100%;
+                margin-left: 0;
+                margin-right: 0;
+                border-left: none;
+                border-right: none;
+            }
         }
     }
 
     &.content-third {
-        width: 33.3%;
+        @include calc(width, '33.3% - 20px');
+
         display: inline-block;
 
-        &.left {
+        &.one {
             float: left;
             text-align: left;
+            margin-right: 10px;
             border-right: 1px solid $colorGallery;
             border-bottom: 1px solid $colorGallery;
+
+            @include media-query('desktop') {
+                width: 100%;
+                margin: 0 0 20px 0;
+                border-left: none;
+                border-right: none;
+            }
+
+            @include media-query('tablet-wide') {
+                @include calc(width, '33.3% - 20px');
+
+                margin-right: 10px;
+                border-right: 1px solid $colorGallery;
+                border-bottom: 1px solid $colorGallery;
+            }
+
+            @include media-query('tablet') {
+                width: 100%;
+                margin: 0 0 20px 0;
+                border-left: none;
+                border-right: none;
+            }
         }
 
-        &.center {
-            @include calc(width, '33.3% - 40px');
-
-            float: none;
-            margin: 0 20px;
+        &.two {
+            width: 33.3%;
+            float: left;
             text-align: left;
+            margin-left: 10px;
+            margin-right: 10px;
             border-left: 1px solid $colorGallery;
             border-right: 1px solid $colorGallery;
             border-bottom: 1px solid $colorGallery;
+
+            @include media-query('desktop') {
+                width: 100%;
+                margin: 0 0 20px 0;
+                border-left: none;
+                border-right: none;
+            }
+
+            @include media-query('tablet-wide') {
+                width: 33.3%;
+                margin-left: 10px;
+                margin-right: 10px;
+                border-right: 1px solid $colorGallery;
+                border-bottom: 1px solid $colorGallery;
+            }
+
+            @include media-query('tablet') {
+                width: 100%;
+                margin: 0 0 20px 0;
+                border-left: none;
+                border-right: none;
+            }
         }
 
-        &.right {
-            float: right;
+        &.three {
+            float: left;
             text-align: left;
+            margin-left: 10px;
             border-left: 1px solid $colorGallery;
             border-bottom: 1px solid $colorGallery;
+
+            @include media-query('desktop') {
+                width: 100%;
+                margin: 0 0 20px 0;
+                border-left: none;
+                border-right: none;
+            }
+
+            @include media-query('tablet-wide') {
+                @include calc(width, '33.3% - 20px');
+
+                margin-left: 10px;
+                border-right: 1px solid $colorGallery;
+                border-bottom: 1px solid $colorGallery;
+            }
+
+            @include media-query('tablet') {
+                width: 100%;
+                margin: 0 0 20px 0;
+                border-left: none;
+                border-right: none;
+            }
+        }
+    }
+
+    &.content-quarter {
+        @include calc(width, '25% - 15px');
+
+        display: inline-block;
+
+        &.one {
+            float: left;
+            text-align: left;
+            margin-right: 10px;
+            border-right: 1px solid $colorGallery;
+            border-bottom: 1px solid $colorGallery;
+
+            @include media-query('desktop-wide') {
+                @include calc(width, '50% - 10px');
+            }
+
+            @include media-query('phablet') {
+                width: 100%;
+                margin-right: 0;
+                border-left: none;
+                border-right: none;
+            }
+        }
+
+        &.two {
+            float: left;
+            text-align: left;
+            margin-left: 10px;
+            margin-right: 10px;
+            border-left: 1px solid $colorGallery;
+            border-right: 1px solid $colorGallery;
+            border-bottom: 1px solid $colorGallery;
+
+            @include media-query('desktop-wide') {
+                @include calc(width, '50% - 10px');
+
+                margin-right: 0;
+                border-right: none;
+            }
+
+            @include media-query('phablet') {
+                width: 100%;
+                margin-left: 0;
+                margin-right: 0;
+                border-left: none;
+                border-right: none;
+            }
+        }
+
+        &.three {
+            float: left;
+            text-align: left;
+            margin-left: 10px;
+            margin-right: 10px;
+            border-left: 1px solid $colorGallery;
+            border-right: 1px solid $colorGallery;
+            border-bottom: 1px solid $colorGallery;
+
+            @include media-query('desktop-wide') {
+                @include calc(width, '50% - 10px');
+
+                margin-left: 0;
+                border-left: none;
+            }
+
+            @include media-query('phablet') {
+                width: 100%;
+                margin-left: 0;
+                margin-right: 0;
+                border-left: none;
+                border-right: none;
+            }
+        }
+
+        &.four {
+            float: left;
+            text-align: left;
+            margin-left: 10px;
+            border-left: 1px solid $colorGallery;
+            border-bottom: 1px solid $colorGallery;
+
+            @include media-query('desktop-wide') {
+                @include calc(width, '50% - 10px');
+            }
+
+            @include media-query('phablet') {
+                width: 100%;
+                margin-left: 0;
+                border-left: none;
+                border-right: none;
+            }
         }
     }
 
@@ -256,7 +436,7 @@ p {
     font-family: 'Open Sans Bold', sans-serif;
     text-transform: uppercase;
 
-    &:not(.no-responsiveness) {
+    &:not(.visible-text) {
         @include media-query('tablet') {
             @include font-size(14px);
             @include clear-padding();
@@ -282,6 +462,15 @@ p {
         pointer-events: none;
         cursor: not-allowed !important;
         background: lighten($colorTowerGray, 15%) !important;
+    }
+
+    &.big {
+        @include font-size(14px);
+        padding: 15px 10px;
+    }
+
+    &.full {
+        width: 100%;
     }
 
     &.centered {
@@ -365,10 +554,13 @@ p {
         }
 
         &.bordered {
-            border: 1px solid lighten($colorPictonBlue, 10%);
+            background: none;
+            color: $colorPictonBlue !important;
+            border: 1px solid $colorPictonBlue;
 
             &:hover {
-                background-color: lighten($colorPictonBlue, 22%) !important;
+                background: $colorPictonBlue !important;
+                color: $colorWhite !important;
             }
         }
     }
@@ -381,10 +573,13 @@ p {
         }
 
         &.bordered {
-            border: 1px solid lighten($colorEmerald, 10%);
+            background: none;
+            color: $colorEmerald !important;
+            border: 1px solid $colorEmerald;
 
             &:hover {
-                background-color: lighten($colorEmerald, 22%) !important;
+                background: $colorEmerald !important;
+                color: $colorWhite !important;
             }
         }
     }
@@ -397,10 +592,13 @@ p {
         }
 
         &.bordered {
-            border: 1px solid lighten($colorJaponica, 10%);
+            background: none;
+            color: $colorJaponica !important;
+            border: 1px solid $colorJaponica;
 
             &:hover {
-                background-color: lighten($colorJaponica, 22%) !important;
+                background: $colorJaponica !important;
+                color: $colorWhite !important;
             }
         }
     }
@@ -413,10 +611,13 @@ p {
         }
 
         &.bordered {
-            border: 1px solid lighten($colorGoldenTainoi, 10%);
+            background: none;
+            color: $colorGoldenTainoi !important;
+            border: 1px solid $colorGoldenTainoi;
 
             &:hover {
-                background-color: lighten($colorGoldenTainoi, 22%) !important;
+                background: $colorGoldenTainoi !important;
+                color: $colorWhite !important;
             }
         }
     }
@@ -429,10 +630,13 @@ p {
         }
 
         &.bordered {
-            border: 1px solid lighten($colorFiord, 10%);
+            background: none;
+            color: $colorFiord !important;
+            border: 1px solid $colorFiord;
 
             &:hover {
-                background-color: lighten($colorFiord, 22%) !important;
+                background: $colorFiord !important;
+                color: $colorWhite !important;
             }
         }
     }
