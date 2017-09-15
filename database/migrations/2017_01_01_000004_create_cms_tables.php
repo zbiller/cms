@@ -30,6 +30,19 @@ class CreateCmsTables extends Migration
             $table->timestamps();
         });
 
+        Schema::create('translations', function(Blueprint $table) {
+            $table->increments('id');
+
+            $table->string('locale');
+            $table->string('group');
+            $table->string('key');
+            $table->text('value')->nullable();
+
+            $table->tinyInteger('status')->default(0);
+
+            $table->timestamps();
+        });
+
         Schema::create('layouts', function (Blueprint $table) {
             $table->increments('id');
 

@@ -14,4 +14,12 @@ class TranslationException extends Exception
     {
         return new static('Attribute "' . $key . '" is not translatable!');
     }
+
+    /**
+     * @return static
+     */
+    public static function importTranslationFailed()
+    {
+        return new static('Failed importing a translation!');
+    }
 }
