@@ -293,7 +293,7 @@ class Email extends Model
     public function getFromNameAttribute()
     {
         return $this->metadata['from_name'] ?? (
-            setting()->value('company-email') ?: config('mail.from.address')
+            setting()->value('company-name') ?: config('mail.from.name')
         );
     }
 

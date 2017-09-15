@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Auth;
+namespace App\Http\Controllers\Admin\Auth\Authenticate;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\PasswordResetRequest;
@@ -20,7 +20,7 @@ class ForgotPasswordController extends Controller
     {
         $this->setMeta('title', 'Admin - Forgot Password');
 
-        return view('admin.auth.password.forgot');
+        return view('admin.auth.authenticate.password.forgot');
     }
 
     /**

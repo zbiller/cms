@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Auth;
+namespace App\Http\Controllers\Admin\Auth\Authenticate;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\PasswordResetRequest;
@@ -23,7 +23,7 @@ class ResetPasswordController extends Controller
     {
         $this->setMeta('title', 'Admin - Reset Password');
 
-        return view('admin.auth.password.reset')->with([
+        return view('admin.auth.authenticate.password.reset')->with([
             'username' => $request->username,
             'token' => $token,
         ]);

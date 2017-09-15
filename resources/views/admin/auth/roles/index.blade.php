@@ -2,11 +2,11 @@
 
 @section('content')
     <section class="filters">
-        @include('admin.acl.admins._filter')
+        @include('admin.auth.roles._filter')
     </section>
 
     <section class="list">
-        @include('admin.acl.admins._table', ['items' => $items])
+        @include('admin.auth.roles._table', ['items' => $items])
     </section>
 @endsection
 
@@ -15,6 +15,6 @@
 
     <section class="actions">
         {!! button()->updateAction() !!}
-        {!! button()->addRecord(route('admin.admins.create')) !!}
+        {!! button()->addRecord(route('admin.roles.create')) !!}
     </section>
 @endsection

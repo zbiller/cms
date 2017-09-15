@@ -6,11 +6,11 @@
     </section>
 
     <section class="filters">
-        @include('admin.acl.addresses._filter')
+        @include('admin.auth.addresses._filter')
     </section>
 
     <section class="list">
-        @include('admin.acl.addresses._table', ['items' => $items])
+        @include('admin.auth.addresses._table', ['items' => $items])
     </section>
 @endsection
 

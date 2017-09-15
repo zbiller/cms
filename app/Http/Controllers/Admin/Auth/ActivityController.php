@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Acl;
+namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Filters\Auth\ActivityFilter;
@@ -39,7 +39,7 @@ class ActivityController extends Controller
 
             $this->items = $query->paginate(config('crud.per_page'));
             $this->title = 'Activity';
-            $this->view = view('admin.acl.activity.index');
+            $this->view = view('admin.auth.activity.index');
             $this->vars = [
                 'users' => User::inAlphabeticalOrder()->get(),
             ];

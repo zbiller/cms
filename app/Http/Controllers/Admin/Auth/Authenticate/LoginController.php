@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Auth;
+namespace App\Http\Controllers\Admin\Auth\Authenticate;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
@@ -23,7 +23,7 @@ class LoginController extends Controller
         $this->intendRedirectTo();
         $this->setMeta('title', 'Admin');
 
-        return view('admin.auth.login');
+        return view('admin.auth.authenticate.login');
     }
 
     /**

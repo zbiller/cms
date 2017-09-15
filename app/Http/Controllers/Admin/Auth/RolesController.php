@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Acl;
+namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Filters\Auth\RoleFilter;
@@ -39,7 +39,7 @@ class RolesController extends Controller
 
             $this->items = Role::whereType(Role::TYPE_ADMIN)->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Roles';
-            $this->view = view('admin.acl.roles.index');
+            $this->view = view('admin.auth.roles.index');
             $this->vars = [
                 'permissions' => $permissions,
                 'types' => Role::$types,
@@ -54,7 +54,7 @@ class RolesController extends Controller
     {
         return $this->_create(function () {
             $this->title = 'Add Role';
-            $this->view = view('admin.acl.roles.add');
+            $this->view = view('admin.auth.roles.add');
             $this->vars['permissions'] = Permission::getGrouped(Permission::TYPE_ADMIN);
         });
     }
@@ -85,7 +85,7 @@ class RolesController extends Controller
         return $this->_edit(function () use ($role) {
             $this->item = $role;
             $this->title = 'Edit Role';
-            $this->view = view('admin.acl.roles.edit');
+            $this->view = view('admin.auth.roles.edit');
             $this->vars['permissions'] = Permission::getGrouped(Permission::TYPE_ADMIN);
         });
     }

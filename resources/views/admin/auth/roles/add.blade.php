@@ -2,14 +2,14 @@
 
 @section('content')
     <section class="tabs">
-        @include('admin.acl.users._tabs')
+        @include('admin.auth.roles._tabs')
     </section>
 
     <section class="view">
-        @include('admin.acl.users._form', ['url' => route('admin.users.store')])
+        @include('admin.auth.roles._form', ['url' => route('admin.roles.store')])
     </section>
 @endsection
 
 @section('footer')
-    @include('admin.acl.users._buttons')
+    @include('admin.auth.roles._buttons')
 @endsection

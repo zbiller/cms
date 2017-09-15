@@ -2,15 +2,15 @@
 
 @section('content')
     <section class="tabs">
-        @include('admin.acl.admins._tabs')
+        @include('admin.auth.roles._tabs')
     </section>
 
     <section class="view">
-        @include('admin.acl.admins._form', ['url' => route('admin.admins.update', $item->id)])
+        @include('admin.auth.roles._form', ['url' => route('admin.roles.update', $item->id)])
 </section>
 @endsection
 
 @section('footer')
-    @include('admin.acl.admins._buttons')
+    @include('admin.auth.roles._buttons')
 @endsection
 

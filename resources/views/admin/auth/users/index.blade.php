@@ -2,11 +2,11 @@
 
 @section('content')
     <section class="filters">
-        @include('admin.acl.users._filter')
+        @include('admin.auth.users._filter')
     </section>
 
     <section class="list">
-        @include('admin.acl.users._table', ['items' => $items])
+        @include('admin.auth.users._table', ['items' => $items])
     </section>
 @endsection
 

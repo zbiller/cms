@@ -1,16 +1,17 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Acl;
+namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Filters\Auth\UserFilter;
-use App\Http\Requests\Auth\UserRequest;
-use App\Http\Sorts\Auth\UserSort;
+use App\Http\Filters\Auth\AdminFilter;
+use App\Http\Requests\Auth\AdminRequest;
+use App\Http\Sorts\Auth\AdminSort;
+use App\Models\Auth\Role;
 use App\Models\Auth\User;
 use App\Traits\CanCrud;
 use Illuminate\Http\Request;
 
-class UsersController extends Controller
+class AdminsController extends Controller
 {
     use CanCrud;
 
@@ -21,18 +22,18 @@ class UsersController extends Controller
 
     /**
      * @param Request $request
-     * @param UserFilter $filter
-     * @param UserSort $sort
+     * @param AdminFilter $filter
+     * @param AdminSort $sort
      * @return \Illuminate\View\View
      */
-    public function index(Request $request, UserFilter $filter, UserSort $sort)
+    public function index(Request $request, AdminFilter $filter, AdminSort $sort)
     {
         return $this->_index(function () use ($request, $filter, $sort) {
-            $this->items = User::whereType(User::TYPE_FRONT)->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
-            $this->title = 'Users';
-            $this->view = view('admin.acl.users.index');
+            $this->items = User::notDeveloper()->whereType(User::TYPE_ADMIN)->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
+            $this->title = 'Admins';
+            $this->view = view('admin.auth.admins.index');
             $this->vars = [
-                'verified' => User::$verified,
+                'roles' => Role::whereType(Role::TYPE_ADMIN)->get(),
             ];
         });
     }
@@ -43,27 +44,28 @@ class UsersController extends Controller
     public function create()
     {
         return $this->_create(function () {
-            $this->title = 'Add User';
-            $this->view = view('admin.acl.users.add');
+            $this->title = 'Add Admin';
+            $this->view = view('admin.auth.admins.add');
             $this->vars = [
-                'verified' => User::$verified,
+                'roles' => Role::whereType(Role::TYPE_ADMIN)->get(),
             ];
         });
     }
 
     /**
-     * @param UserRequest $request
+     * @param AdminRequest $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function store(UserRequest $request)
+    public function store(AdminRequest $request)
     {
         $request = $this->mergeRequest($request);
 
         return $this->_store(function () use ($request) {
             $this->item = User::create($request->all());
-            $this->redirect = redirect()->route('admin.users.index');
+            $this->redirect = redirect()->route('admin.admins.index');
 
             $this->item->person()->create($request->input('person'));
+            $this->item->roles()->attach($request->input('roles'));
         }, $request);
     }
 
@@ -75,30 +77,31 @@ class UsersController extends Controller
     {
         return $this->_edit(function () use ($user) {
             $this->item = $user;
-            $this->title = 'Edit User';
-            $this->view = view('admin.acl.users.edit');
+            $this->title = 'Edit Admin';
+            $this->view = view('admin.auth.admins.edit');
             $this->vars = [
-                'verified' => User::$verified,
+                'roles' => Role::whereType(Role::TYPE_ADMIN)->get(),
             ];
         });
     }
 
     /**
-     * @param UserRequest $request
+     * @param AdminRequest $request
      * @param User $user
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function update(UserRequest $request, User $user)
+    public function update(AdminRequest $request, User $user)
     {
         $request = $this->mergeRequest($request);
 
         return $this->_update(function () use ($request, $user) {
             $this->item = $user;
-            $this->redirect = redirect()->route('admin.users.index');
+            $this->redirect = redirect()->route('admin.admins.index');
 
             $this->item->update($request->all());
             $this->item->person()->update($request->input('person'));
+            $this->item->roles()->sync($request->input('roles'));
         }, $request);
     }
 
@@ -111,22 +114,10 @@ class UsersController extends Controller
     {
         return $this->_destroy(function () use ($user) {
             $this->item = $user;
-            $this->redirect = redirect()->route('admin.users.index');
+            $this->redirect = redirect()->route('admin.admins.index');
 
             $this->item->delete();
         });
-    }
-
-    /**
-     * @param User $user
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function impersonate(User $user)
-    {
-        auth()->guard('user')->login($user);
-        flash()->error('You are now signed in as ' . $user->full_name);
-
-        return redirect('/');
     }
 
     /**
@@ -140,14 +131,14 @@ class UsersController extends Controller
                 'password' => bcrypt($request->input('password')),
             ]);
         } else {
-            $request = UserRequest::create($request->url(), $request->method(), $request->except([
+            $request = AdminRequest::create($request->url(), $request->method(), $request->except([
                 'password',
                 'password_confirmation'
             ]));
         }
 
         $request->merge([
-            'type' => User::TYPE_FRONT,
+            'type' => User::TYPE_ADMIN,
         ]);
 
         return $request;
