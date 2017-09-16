@@ -10,13 +10,16 @@ use App\Models\Cms\Layout;
 use App\Models\Cms\Page;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
+use App\Options\PreviewOptions;
 use App\Traits\CanCrud;
+use App\Traits\CanPreview;
 use Exception;
 use Illuminate\Http\Request;
 
 class PagesController extends Controller
 {
     use CanCrud;
+    use CanPreview;
 
     /**
      * @var string
@@ -198,24 +201,6 @@ class PagesController extends Controller
     }
 
     /**
-     * @param PageRequest $request
-     * @param Page|null $page
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws Exception
-     */
-    public function preview(PageRequest $request, Page $page = null)
-    {
-        return $this->_preview(function () use ($page, $request) {
-            if ($page && $page->exists) {
-                $this->item = $page;
-                $this->item->update($request->all());
-            } else {
-                $this->item = Page::create($request->all());
-            }
-        });
-    }
-
-    /**
      * @param Request $request
      * @param PageFilter $filter
      * @param PageSort $sort
@@ -329,5 +314,17 @@ class PagesController extends Controller
         return response()->json([
             'status' => false
         ]);
+    }
+
+    /**
+     * Set the options for the CanPreview trait.
+     *
+     * @return PreviewOptions
+     */
+    public static function getPreviewOptions()
+    {
+        return PreviewOptions::instance()
+            ->setModel(Page::class)
+            ->setValidator(new PageRequest);
     }
 }

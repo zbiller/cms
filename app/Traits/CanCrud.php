@@ -384,50 +384,6 @@ trait CanCrud
     }
 
     /**
-     * This method should be called inside the controller's preview() method.
-     * The closure should only attempt to create/update the record from the database.
-     *
-     * $this->item = $model;
-     * $this->item->update($request->all());
-     *
-     * OR
-     *
-     * $this->item = Model::create($request->all());
-     *
-     * @param Closure|null $function
-     * @return RedirectResponse|mixed
-     * @throws Exception
-     */
-    public function _preview(Closure $function = null)
-    {
-        $this->checkCrudMethod();
-        $this->checkCrudModel();
-        $this->initCrudModel();
-
-        if (!in_array(HasUrl::class, class_uses($this->model))) {
-            flash()->error('You cannot preview an entity that does not have an URL!');
-            return back();
-        }
-
-        try {
-            DB::beginTransaction();
-            CacheService::disableQueryCache();
-
-            if ($function) {
-                call_user_func($function);
-            }
-
-            session()->flash('is_preview', true);
-
-            return (new ControllerDispatcher(app()))->dispatch(app(Router::class)->setAction([
-                'model' => $this->item
-            ]), app($this->item->getUrlOptions()->routeController), $this->item->getUrlOptions()->routeAction);
-        } catch (Exception $e) {
-            throw $e;
-        }
-    }
-
-    /**
      * This method should be called inside the controller's index() method.
      * The closure should at least set the $items and $view properties.
      *
