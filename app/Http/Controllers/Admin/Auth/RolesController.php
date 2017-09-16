@@ -8,6 +8,7 @@ use App\Http\Requests\Auth\RoleRequest;
 use App\Http\Sorts\Auth\RoleSort;
 use App\Models\Auth\Permission;
 use App\Models\Auth\Role;
+use App\Models\Auth\User;
 use App\Traits\CanCrud;
 use Illuminate\Http\Request;
 
@@ -31,18 +32,18 @@ class RolesController extends Controller
         return $this->_index(function () use ($request, $filter, $sort) {
             $permissions = [];
 
-            foreach (Permission::getGrouped(Permission::TYPE_ADMIN) as $group => $perms) {
+            foreach (Permission::getGrouped('admin') as $group => $perms) {
                 foreach ($perms as $permission) {
                     $permissions[$group][$permission->id] = $permission->label;
                 }
             }
 
-            $this->items = Role::whereType(Role::TYPE_ADMIN)->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
+            $this->items = Role::whereGuard('admin')->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Roles';
             $this->view = view('admin.auth.roles.index');
             $this->vars = [
                 'permissions' => $permissions,
-                'types' => Role::$types,
+                'guards' => User::getAllGuards(),
             ];
         });
     }
@@ -55,7 +56,7 @@ class RolesController extends Controller
         return $this->_create(function () {
             $this->title = 'Add Role';
             $this->view = view('admin.auth.roles.add');
-            $this->vars['permissions'] = Permission::getGrouped(Permission::TYPE_ADMIN);
+            $this->vars['permissions'] = Permission::getGrouped('admin');
         });
     }
 
@@ -86,7 +87,7 @@ class RolesController extends Controller
             $this->item = $role;
             $this->title = 'Edit Role';
             $this->view = view('admin.auth.roles.edit');
-            $this->vars['permissions'] = Permission::getGrouped(Permission::TYPE_ADMIN);
+            $this->vars['permissions'] = Permission::getGrouped('admin');
         });
     }
 
@@ -131,7 +132,7 @@ class RolesController extends Controller
     protected function mergeRequest(Request $request)
     {
         $request->merge([
-            'type' => Role::TYPE_ADMIN
+            'guard' => 'admin'
         ]);
 
         return $request;

@@ -5,9 +5,7 @@ namespace App\Models\Auth;
 use App\Contracts\RoleContract;
 use App\Models\Model;
 use App\Options\ActivityOptions;
-use App\Traits\HasAclCache;
 use App\Traits\HasActivity;
-use App\Traits\HasPermissions;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
@@ -16,9 +14,7 @@ use Illuminate\Database\Query\Builder;
 
 class Role extends Model implements RoleContract
 {
-    use HasPermissions;
     use HasActivity;
-    use HasAclCache;
     use IsCacheable;
     use IsFilterable;
     use IsSortable;
@@ -37,25 +33,7 @@ class Role extends Model implements RoleContract
      */
     protected $fillable = [
         'name',
-        'type',
-    ];
-
-    /**
-     * Role types.
-     *
-     * @const
-     */
-    const TYPE_ADMIN = 1;
-    const TYPE_FRONT = 2;
-
-    /**
-     * Get role types.
-     *
-     * @var array
-     */
-    public static $types = [
-        self::TYPE_ADMIN => 'Admin',
-        self::TYPE_FRONT => 'Front',
+        'guard',
     ];
 
     /**
@@ -79,15 +57,15 @@ class Role extends Model implements RoleContract
     }
 
     /**
-     * Filter query results to show roles only of type.
-     * Param $type: single role type as constant (int).
+     * Filter query results to show roles only of specific guard.
+     * Param $guard: single role guard from config/auth.php -> guards (string).
      *
      * @param Builder $query
-     * @param int $type
+     * @param int $guard
      */
-    public function scopeWhereType($query, $type)
+    public function scopeWhereGuard($query, $guard)
     {
-        $query->where('type', $type);
+        $query->where('guard', $guard);
 
     }
 

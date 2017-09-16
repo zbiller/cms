@@ -25,7 +25,7 @@ class RoleFilter extends Filter
     {
         return [
             'search' => 'operator:like|condition:or|columns:name',
-            'type' => 'operator:=|condition:or|columns:type',
+            'guard' => 'operator:=|condition:or|columns:guard',
             'permission' => 'operator:=|condition:or|columns:permissions.permission_id',
             'start_date' => 'operator:date >=|condition:or|columns:created_at',
             'end_date' => 'operator:date <=|condition:or|columns:created_at',

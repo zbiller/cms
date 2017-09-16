@@ -29,7 +29,7 @@ class RolesSeeder extends Seeder
     private $adminMap = [
         'Owner' => [
             'name' => 'owner',
-            'type' => Role::TYPE_ADMIN,
+            'guard' => 'admin',
         ],
     ];
 
@@ -64,6 +64,6 @@ class RolesSeeder extends Seeder
          * Assign all permissions to the "owner" role.
          */
         $role = Role::findByName('owner');
-        $role->grantPermission(Permission::whereType(Permission::TYPE_ADMIN)->get());
+        $role->grantPermission(Permission::whereGuard('admin')->get());
     }
 }

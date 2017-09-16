@@ -5,7 +5,6 @@ namespace App\Models\Auth;
 use App\Contracts\PermissionContract;
 use App\Models\Model;
 use App\Options\ActivityOptions;
-use App\Traits\HasAclCache;
 use App\Traits\HasActivity;
 use App\Traits\IsCacheable;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,7 +14,6 @@ use Illuminate\Support\Collection;
 class Permission extends Model implements PermissionContract
 {
     use HasActivity;
-    use HasAclCache;
     use IsCacheable;
 
     /**
@@ -32,27 +30,9 @@ class Permission extends Model implements PermissionContract
      */
     protected $fillable = [
         'name',
+        'guard',
         'group',
         'label',
-        'type',
-    ];
-
-    /**
-     * Permission types.
-     *
-     * @const
-     */
-    const TYPE_ADMIN = 1;
-    const TYPE_FRONT = 2;
-
-    /**
-     * Get permission types.
-     *
-     * @var array
-     */
-    public static $types = [
-        self::TYPE_ADMIN => 'Admin',
-        self::TYPE_FRONT => 'Front',
     ];
 
     /**
@@ -76,14 +56,14 @@ class Permission extends Model implements PermissionContract
     }
 
     /**
-     * Filter the query by type.
+     * Filter the query by guard.
      *
      * @param Builder $query
-     * @param int $type
+     * @param string $guard
      */
-    public function scopeWhereType($query, $type)
+    public function scopeWhereGuard($query, $guard)
     {
-        $query->where('type', $type);
+        $query->where('guard', $guard);
     }
 
     /**
@@ -110,12 +90,12 @@ class Permission extends Model implements PermissionContract
     /**
      * Get permissions as array grouped by the "group" column.
      *
-     * @param int $type
+     * @param string $guard
      * @return Collection
      */
-    public static function getGrouped($type)
+    public static function getGrouped($guard)
     {
-        return static::whereType($type)->get()->groupBy('group');
+        return static::whereGuard($guard)->get()->groupBy('group');
     }
 
     /**

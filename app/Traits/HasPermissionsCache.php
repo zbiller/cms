@@ -2,7 +2,7 @@
 
 namespace App\Traits;
 
-trait HasAclCache
+trait HasPermissionsCache
 {
     /**
      * On every database change, attempt to clear the cache.
@@ -13,15 +13,15 @@ trait HasAclCache
     public static function HasAclCache()
     {
         static::created(function ($model) {
-            $model->forgetAclCache();
+            $model->forgetPermissionsCache();
         });
 
         static::updated(function ($model) {
-            $model->forgetAclCache();
+            $model->forgetPermissionsCache();
         });
 
         static::deleted(function ($model) {
-            $model->forgetAclCache();
+            $model->forgetPermissionsCache();
         });
     }
 
@@ -30,8 +30,8 @@ trait HasAclCache
      *
      * @return void
      */
-    public function forgetAclCache()
+    public function forgetPermissionsCache()
     {
-        cache()->forget('acl');
+        cache()->forget('permissions');
     }
 }

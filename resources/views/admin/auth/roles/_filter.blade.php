@@ -2,9 +2,9 @@
     <fieldset>
         {!! form()->text('search', request()->query('search') ?: null, ['placeholder' => 'Search']) !!}
     </fieldset>
-    {{--<fieldset>
-        {!! form()->select('type', ['' => 'All Types'] + $types, request()->query('type') ?: null) !!}
-    </fieldset>--}}
+    <fieldset>
+        {!! form()->select('guard', ['' => 'All Guards'] + $guards, request()->query('guard') ?: null) !!}
+    </fieldset>
     <fieldset>
         {!! form()->select('permission', ['' => 'All Permissions'] + $permissions, request()->query('permission') ?: null) !!}
     </fieldset>

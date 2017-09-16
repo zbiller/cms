@@ -11,9 +11,10 @@ use Illuminate\Database\QueryException;
 trait HasRoles
 {
     use HasPermissions;
-    use HasAclCache;
 
     /**
+     * A user belongs to many roles.
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function roles()
@@ -22,6 +23,8 @@ trait HasRoles
     }
 
     /**
+     * A user belongs to many permissions.
+     *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function permissions()
@@ -30,6 +33,8 @@ trait HasRoles
     }
 
     /**
+     * Filter the query by the given roles.
+     *
      * @param $query
      * @param string|array|Role|Collection $roles
      * @return mixed
@@ -58,6 +63,8 @@ trait HasRoles
     }
 
     /**
+     * Assign roles to the a user.
+     *
      * @param string|array|Role|Collection $roles
      * @return $this
      */
@@ -73,7 +80,7 @@ trait HasRoles
                     })->all()
                 );
 
-                $this->forgetAclCache();
+                $this->forgetPermissionsCache();
             }
         } catch (QueryException $e) {
             $this->removeRoles($roles);
@@ -84,6 +91,8 @@ trait HasRoles
     }
 
     /**
+     * Remove roles from the a user.
+     *
      * @param string|array|Role|Collection $roles
      * @return $this
      */
@@ -103,6 +112,8 @@ trait HasRoles
     }
 
     /**
+     * Sync a user's roles.
+     *
      * @param string|array|Role|Collection $roles
      * @return $this
      */
@@ -115,6 +126,8 @@ trait HasRoles
     }
 
     /**
+     * Check if a user has a given role.
+     *
      * @param string|Role $role
      * @return bool
      */
@@ -127,6 +140,8 @@ trait HasRoles
     }
 
     /**
+     * Check if a user has any role from a collection of given roles.
+     *
      * @param array|Collection $roles
      * @return bool
      */
@@ -142,6 +157,8 @@ trait HasRoles
     }
 
     /**
+     * Check if a user has every role from a collection of given roles.
+     *
      * @param array|Collection $roles
      * @return bool
      */
@@ -157,6 +174,8 @@ trait HasRoles
     }
 
     /**
+     * Check if a user has a given permission.
+     *
      * @param string|Permission $permission
      * @return bool
      */
@@ -174,6 +193,8 @@ trait HasRoles
     }
 
     /**
+     * Check if a user has any permission from a collection of given permissions.
+     *
      * @param array|Collection $permissions
      * @return bool
      */
@@ -193,6 +214,8 @@ trait HasRoles
     }
 
     /**
+     * Check if a user has every permission from a collection of given permissions.
+     *
      * @param array|Collection $permissions
      * @return bool
      */
@@ -208,6 +231,8 @@ trait HasRoles
     }
 
     /**
+     * Get all user's permissions, both direct or via roles.
+     *
      * @return \Illuminate\Support\Collection
      */
     public function getPermissions()
@@ -218,6 +243,8 @@ trait HasRoles
     }
 
     /**
+     * Check if a user has a permission granted via a role assigned.
+     *
      * @param string|Permission $permission
      * @return bool
      */
@@ -237,6 +264,8 @@ trait HasRoles
     }
 
     /**
+     * Check ifa user has a permission whose directly attached to it.
+     *
      * @param string|Permission $permission
      * @return bool
      */
@@ -254,6 +283,8 @@ trait HasRoles
     }
 
     /**
+     * Get a user's direct permissions.
+     *
      * @return \Illuminate\Support\Collection
      */
     protected function getDirectPermissions()
@@ -262,6 +293,8 @@ trait HasRoles
     }
 
     /**
+     * Get a user's permissions assigned via a role.
+     *
      * @return \Illuminate\Support\Collection
      */
     protected function getPermissionsViaRoles()
@@ -273,6 +306,8 @@ trait HasRoles
 
 
     /**
+     * Get a user's role.
+     *
      * @param string|array|Role|Collection $roles
      * @return Role|Collection
      */

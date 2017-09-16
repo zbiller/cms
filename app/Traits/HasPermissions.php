@@ -8,6 +8,8 @@ use Illuminate\Database\QueryException;
 
 trait HasPermissions
 {
+    use HasPermissionsCache;
+
     /**
      * @param string|array|Permission|Collection $permissions
      * @return HasPermissions
@@ -25,7 +27,7 @@ trait HasPermissions
                 );
             }
 
-            $this->forgetAclCache();
+            $this->forgetPermissionsCache();
         } catch (QueryException $e) {
             $this->revokePermission($permissions);
             $this->grantPermission($permissions);
@@ -50,7 +52,7 @@ trait HasPermissions
             );
         }
 
-        $this->forgetAclCache();
+        $this->forgetPermissionsCache();
 
         return $this;
     }
@@ -71,7 +73,7 @@ trait HasPermissions
      * @param string|array|Permission|Collection $permissions
      * @return mixed
      */
-    protected function getPermission($permissions)
+    public function getPermission($permissions)
     {
         if (is_numeric($permissions)) {
             return app(Permission::class)->find($permissions);
@@ -86,5 +88,27 @@ trait HasPermissions
         }
 
         return $permissions;
+    }
+
+    /**
+     * @return static
+     */
+    public static function getAllGuards()
+    {
+        $guards = [];
+
+        foreach (config('auth.guards') as $guard => $options) {
+            $guards[$guard] = title_case($guard);
+        }
+
+        return $guards;
+    }
+
+    /**
+     * @return static
+     */
+    public static function getDefaultGuard()
+    {
+        return config('auth.defaults.guard');
     }
 }

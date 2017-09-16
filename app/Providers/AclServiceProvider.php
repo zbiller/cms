@@ -8,7 +8,6 @@ use Cache;
 use Exception;
 use Gate;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\View\Compilers\BladeCompiler;
 use Log;
 
 class AclServiceProvider extends ServiceProvider
@@ -42,7 +41,7 @@ class AclServiceProvider extends ServiceProvider
     protected function registerGates()
     {
         try {
-            Cache::rememberForever('acl', function () {
+            Cache::rememberForever('permissions', function () {
                 return Permission::with('roles')->get();
             })->map(function ($permission) {
                 Gate::define($permission->name, function ($user) use ($permission) {
