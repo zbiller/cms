@@ -30,6 +30,11 @@ trait CanPreview
     protected $previewValidator;
 
     /**
+     * @var array
+     */
+    protected $previewPivotedRelations = [];
+
+    /**
      * The container for all the options necessary for this trait.
      * Options can be viewed in the App\Options\PreviewOptions file.
      *
@@ -100,6 +105,30 @@ trait CanPreview
     }
 
     /**
+     * Return the pivoted relations set by the PreviewOptions class.
+     *
+     * @return FormRequest
+     */
+    public function getPreviewPivotedRelations()
+    {
+        if (!$this->previewPivotedRelations) {
+            return $this->previewPivotedRelations = static::$previewOptions->pivotedRelations;
+        }
+
+        return $this->previewPivotedRelations;
+    }
+
+    /**
+     * Set the preview pivoted relations.
+     *
+     * @param array $relations
+     */
+    public function setPreviewPivotedRelations(array $relations)
+    {
+        $this->previewPivotedRelations = $relations;
+    }
+
+    /**
      * Verify if a model can be previewed.
      * It has to have a url, more precisely, it has to use the App\Traits\HasUrl trait.
      *
@@ -141,29 +170,67 @@ trait CanPreview
             DB::beginTransaction();
             CacheService::disableQueryCache();
 
-            $model = $this->getPreviewModel();
+            $this->newOrExistingModelForPreview($id);
+            $this->saveModelAndRelationsForPreview($request);
 
-            if ($id && is_numeric($id)) {
-                try {
-                    $model = $model->findOrFail($id);
-                } catch (ModelNotFoundException $e) {
-                    abort(404);
-                }
-            }
-
-            if ($model && $model->exists) {
-                $model->update($request->all());
-            } else {
-                $model = $model->create($request->all());
-            }
-
-            $this->setPreviewModel($model);
             $this->markAsPreview();
 
-            return $this->doModelPreview();
+            return $this->executePreviewRequest();
         } catch (Exception $e) {
             throw $e;
         }
+    }
+
+    /**
+     * Set the model to a valid model record.
+     * Based on the $id provided, the model will be new or loaded.
+     *
+     * @param int|null $id
+     * @return void
+     */
+    protected function newOrExistingModelForPreview($id = null)
+    {
+        $model = $this->getPreviewModel();
+
+        if ($id && is_numeric($id)) {
+            try {
+                $model = $model->findOrFail($id);
+            } catch (ModelNotFoundException $e) {
+                abort(404);
+            }
+        }
+
+        $this->setPreviewModel($model);
+    }
+
+    /**
+     * Save the given model and it's defined pivoted relations with the request provided.
+     * Persist the model saves to the model property to be used later.
+     *
+     * @param Request $request
+     * @return void
+     */
+    protected function saveModelAndRelationsForPreview(Request $request)
+    {
+        $model = $this->getPreviewModel();
+
+        if ($model && $model->exists) {
+            $model->update($request->all());
+        } else {
+            $model = $model->create($request->all());
+        }
+
+        dd($request['attributes']);
+
+        foreach ($this->getPreviewPivotedRelations() as $relation => $data) {
+            if ($model->wasRecentlyCreated) {
+                $model->{$relation}()->attach($request->input($data));
+            } else {
+                $model->{$relation}()->sync($request->input($data));
+            }
+        }
+
+        $this->setPreviewModel($model);
     }
 
     /**
@@ -172,7 +239,7 @@ trait CanPreview
      *
      * @return mixed
      */
-    protected function doModelPreview()
+    protected function executePreviewRequest()
     {
         $dispatcher = new ControllerDispatcher(app());
         $controller = $this->getPreviewModel()->getUrlOptions()->routeController;

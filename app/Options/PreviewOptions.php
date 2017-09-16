@@ -24,6 +24,17 @@ class PreviewOptions
     public $validator;
 
     /**
+     * The pivoted relations that should be saved alongside the original model when previewing.
+     *
+     * The $pivotedRelations parameter should be an associative array where the:
+     * - keys: represent each pivoted relation's name defined on the model.
+     * - values: represent the request array key name responsible for passing data into the "attach" or "sync" methods.
+     *
+     * @var array
+     */
+    public $pivotedRelations = [];
+
+    /**
      * Get a fresh instance of this class.
      *
      * @return PreviewOptions
@@ -55,6 +66,19 @@ class PreviewOptions
     public function setValidator(FormRequest $validator): PreviewOptions
     {
         $this->validator = $validator;
+
+        return $this;
+    }
+
+    /**
+     * Set the $pivotedRelations to work with in the App\Traits\CanPreview trait.
+     *
+     * @param array $relations
+     * @return PreviewOptions
+     */
+    public function withPivotedRelations(array $relations = []): PreviewOptions
+    {
+        $this->pivotedRelations = $relations;
 
         return $this;
     }

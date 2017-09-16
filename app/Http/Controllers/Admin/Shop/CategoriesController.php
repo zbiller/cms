@@ -11,13 +11,16 @@ use App\Models\Shop\Discount;
 use App\Models\Shop\Tax;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
+use App\Options\PreviewOptions;
 use App\Traits\CanCrud;
+use App\Traits\CanPreview;
 use Exception;
 use Illuminate\Http\Request;
 
 class CategoriesController extends Controller
 {
     use CanCrud;
+    use CanPreview;
 
     /**
      * @var string
@@ -205,30 +208,6 @@ class CategoriesController extends Controller
     }
 
     /**
-     * @param CategoryRequest $request
-     * @param Category|null $category
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws Exception
-     */
-    public function preview(CategoryRequest $request, Category $category = null)
-    {
-        return $this->_preview(function () use ($category, $request) {
-            if ($category && $category->exists) {
-                $this->item = $category;
-
-                $this->item->update($request->all());
-                $this->item->discounts()->sync($request->input('discounts'));
-                $this->item->taxes()->sync($request->input('taxes'));
-            } else {
-                $this->item = Category::create($request->all());
-
-                $this->item->discounts()->attach($request->input('discounts'));
-                $this->item->taxes()->attach($request->input('taxes'));
-            }
-        });
-    }
-
-    /**
      * @param Request $request
      * @param CategoryFilter $filter
      * @param CategorySort $sort
@@ -385,5 +364,21 @@ class CategoriesController extends Controller
                 'message' => $e->getMessage(),
             ]);
         }
+    }
+
+    /**
+     * Set the options for the CanPreview trait.
+     *
+     * @return PreviewOptions
+     */
+    public static function getPreviewOptions()
+    {
+        return PreviewOptions::instance()
+            ->setModel(Category::class)
+            ->setValidator(new CategoryRequest)
+            ->withPivotedRelations([
+                'discounts' => 'discounts',
+                'taxes' => 'taxes',
+            ]);
     }
 }

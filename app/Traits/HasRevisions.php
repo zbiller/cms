@@ -12,7 +12,6 @@ use DB;
 use Exception;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use ReflectionMethod;
-use Relation;
 
 trait HasRevisions
 {

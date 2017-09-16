@@ -10,7 +10,6 @@ use DB;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use ReflectionMethod;
-use Relation;
 
 trait HasDuplicates
 {

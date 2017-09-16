@@ -17,9 +17,11 @@ use App\Models\Shop\Product;
 use App\Models\Shop\Tax;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
+use App\Options\PreviewOptions;
 use App\Services\UploadService;
 use App\Traits\CanCrud;
 use App\Traits\CanOrder;
+use App\Traits\CanPreview;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -28,6 +30,7 @@ class ProductsController extends Controller
 {
     use CanCrud;
     use CanOrder;
+    use CanPreview;
 
     /**
      * @var string
@@ -282,34 +285,6 @@ class ProductsController extends Controller
         return $this->_duplicate(function () use ($product) {
             $this->item = $product->saveAsDuplicate();
             $this->redirect = redirect()->route('admin.products.edit', $this->item->id);
-        });
-    }
-
-    /**
-     * @param ProductRequest $request
-     * @param Product $product
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws Exception
-     */
-    public function preview(ProductRequest $request, Product $product = null)
-    {
-        return $this->_preview(function () use ($product, $request) {
-            if ($product && $product->exists) {
-                $this->item = $product;
-
-                $this->item->update($request->all());
-                $this->item->categories()->sync($request->input('categories'));
-                $this->item->attributes()->sync($request->input('attributes'));
-                $this->item->discounts()->sync($request->input('discounts'));
-                $this->item->taxes()->sync($request->input('taxes'));
-            } else {
-                $this->item = Product::create($request->all());
-
-                $this->item->categories()->attach($request->input('categories'));
-                $this->item->attributes()->attach($request->input('attributes'));
-                $this->item->discounts()->attach($request->input('discounts'));
-                $this->item->taxes()->attach($request->input('taxes'));
-            }
         });
     }
 
@@ -625,5 +600,23 @@ class ProductsController extends Controller
                 'message' => $e->getMessage(),
             ]);
         }
+    }
+
+    /**
+     * Set the options for the CanPreview trait.
+     *
+     * @return PreviewOptions
+     */
+    public static function getPreviewOptions()
+    {
+        return PreviewOptions::instance()
+            ->setModel(Product::class)
+            ->setValidator(new ProductRequest)
+            ->withPivotedRelations([
+                'categories' => 'categories',
+                'attributes' => 'attributes',
+                'discounts' => 'discounts',
+                'taxes' => 'taxes',
+            ]);
     }
 }
