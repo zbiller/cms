@@ -88,8 +88,7 @@ class CategoriesController extends Controller
             $this->item = Category::create($request->all(), $parent && $parent->exists ? $parent : null);
             $this->redirect = redirect()->route('admin.product_categories.index');
 
-            $this->item->discounts()->attach($request->input('discounts'));
-            $this->item->taxes()->attach($request->input('taxes'));
+            $this->saveCategoryPivotedRelations($request);
         }, $request);
     }
 
@@ -126,8 +125,7 @@ class CategoriesController extends Controller
             $this->redirect = redirect()->route('admin.product_categories.index');
 
             $this->item->update($request->all());
-            $this->item->discounts()->sync($request->input('discounts'));
-            $this->item->taxes()->sync($request->input('taxes'));
+            $this->saveCategoryPivotedRelations($request);
         }, $request);
     }
 
@@ -380,5 +378,27 @@ class CategoriesController extends Controller
                 'discounts' => 'discounts',
                 'taxes' => 'taxes',
             ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return void
+     */
+    protected function saveCategoryPivotedRelations(Request $request)
+    {
+        $this->item->discounts()->detach();
+        $this->item->taxes()->detach();
+
+        foreach ((array)$request->input('discounts') as $index => $data) {
+            foreach ($data as $id => $attributes) {
+                $this->item->discounts()->attach($id, $attributes);
+            }
+        }
+
+        foreach ((array)$request->input('taxes') as $index => $data) {
+            foreach ($data as $id => $attributes) {
+                $this->item->taxes()->attach($id, $attributes);
+            }
+        }
     }
 }

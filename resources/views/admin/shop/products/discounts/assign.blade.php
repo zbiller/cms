@@ -80,8 +80,8 @@
         @if($productDiscounts->count() > 0)
             @foreach($productDiscounts as $index => $discount)
                 @php($pivot = $discount->pivot)
-                {!! form()->hidden('discounts[' . $discount->id . ']', $pivot->product_id, ['class' => 'discount-input', 'data-index' => $pivot->id]) !!}
-                {!! form()->hidden('discounts[' . $discount->id . '][ord]', $pivot->ord, ['class' => 'discount-input', 'data-index' => $pivot->id]) !!}
+                {!! form()->hidden('discounts[' . $pivot->id . '][' . $discount->id . ']', $pivot->product_id, ['class' => 'discount-input', 'data-index' => $pivot->id]) !!}
+                {!! form()->hidden('discounts[' . $pivot->id . '][' . $discount->id . '][ord]', $pivot->ord, ['class' => 'discount-input', 'data-index' => $pivot->id]) !!}
             @endforeach
         @endif
     </div>
@@ -132,8 +132,8 @@
     There are no discounts assigned to this product
 </script>
 <script type="x-template" id="discount-request-template">
-    {!! form()->hidden('discounts[#discount_id#]', '#discount_id#', ['class' => 'discount-input', 'data-index' => '#index#']) !!}
-    {!! form()->hidden('discounts[#discount_id#][ord]', '#discount_ord#', ['class' => 'discount-input', 'data-index' => '#index#']) !!}
+    {!! form()->hidden('discounts[#index#][#discount_id#]', '#discount_id#', ['class' => 'discount-input', 'data-index' => '#index#']) !!}
+    {!! form()->hidden('discounts[#index#][#discount_id#][ord]', '#discount_ord#', ['class' => 'discount-input', 'data-index' => '#index#']) !!}
 </script>
 
 @php($item->clearQueryCache())
@@ -230,7 +230,7 @@
                     var rows = table.tBodies[0].rows;
 
                     $(rows).each(function (index, selector) {
-                        $('input[name="discounts[' + $(selector).attr('data-discount-id') + '][ord]"][data-index="' + $(selector).attr('data-index') + '"]').val(index + 1);
+                        $('input[name="discounts[' + $(selector).attr('data-index') + '][' + $(selector).attr('data-discount-id') + '][ord]"]').val(index + 1);
                     });
                 }
             });

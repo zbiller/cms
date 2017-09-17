@@ -66,10 +66,10 @@
         @if($attributes->count() > 0)
             @foreach($attributes as $index => $attribute)
                 @php($pivot = $attribute->pivot)
-                {!! form()->hidden('attributes[' . $attribute->id . ']', $pivot->product_id, ['class' => 'attribute-input', 'data-index' => $pivot->id]) !!}
-                {!! form()->hidden('attributes[' . $attribute->id . '][value_id]', $pivot->value_id, ['class' => 'attribute-input', 'data-index' => $pivot->id]) !!}
-                {!! form()->hidden('attributes[' . $attribute->id . '][value]', $pivot->value, ['class' => 'attribute-input attribute-custom-value', 'data-index' => $pivot->id]) !!}
-                {!! form()->hidden('attributes[' . $attribute->id . '][ord]', $pivot->ord, ['class' => 'attribute-input', 'data-index' => $pivot->id]) !!}
+                {!! form()->hidden('attributes[' . $pivot->id . '][' . $attribute->id . ']', $pivot->product_id, ['class' => 'attribute-input', 'data-index' => $pivot->id]) !!}
+                {!! form()->hidden('attributes[' . $pivot->id . '][' . $attribute->id . '][value_id]', $pivot->value_id, ['class' => 'attribute-input', 'data-index' => $pivot->id]) !!}
+                {!! form()->hidden('attributes[' . $pivot->id . '][' . $attribute->id . '][value]', $pivot->value, ['class' => 'attribute-input attribute-custom-value', 'data-index' => $pivot->id]) !!}
+                {!! form()->hidden('attributes[' . $pivot->id . '][' . $attribute->id . '][ord]', $pivot->ord, ['class' => 'attribute-input', 'data-index' => $pivot->id]) !!}
             @endforeach
         @endif
     </div>
@@ -101,10 +101,10 @@
     </tr>
 </script>
 <script type="x-template" id="attribute-request-template">
-    {!! form()->hidden('attributes[#attribute_id#]', '#attribute_id#', ['class' => 'attribute-input', 'data-index' => '#index#']) !!}
-    {!! form()->hidden('attributes[#attribute_id#][value_id]', '#value_id#', ['class' => 'attribute-input', 'data-index' => '#index#']) !!}
-    {!! form()->hidden('attributes[#attribute_id#][value]', '#attribute_value#', ['class' => 'attribute-input attribute-custom-value', 'data-index' => '#index#']) !!}
-    {!! form()->hidden('attributes[#attribute_id#][ord]', '#attribute_ord#', ['class' => 'attribute-input', 'data-index' => '#index#']) !!}
+    {!! form()->hidden('attributes[#index#][#attribute_id#]', '#attribute_id#', ['class' => 'attribute-input', 'data-index' => '#index#']) !!}
+    {!! form()->hidden('attributes[#index#][#attribute_id#][value_id]', '#value_id#', ['class' => 'attribute-input', 'data-index' => '#index#']) !!}
+    {!! form()->hidden('attributes[#index#][#attribute_id#][value]', '#attribute_value#', ['class' => 'attribute-input attribute-custom-value', 'data-index' => '#index#']) !!}
+    {!! form()->hidden('attributes[#index#][#attribute_id#][ord]', '#attribute_ord#', ['class' => 'attribute-input', 'data-index' => '#index#']) !!}
 </script>
 
 @php($item->clearQueryCache())
@@ -266,7 +266,7 @@
                     var rows = table.tBodies[0].rows;
 
                     $(rows).each(function (index, selector) {
-                        $('input[name="attributes[' + $(selector).attr('data-attribute-id') + '][ord]"][data-index="' + $(selector).attr('data-index') + '"]').val(index + 1);
+                        $('input[name="attributes[' + $(selector).attr('data-index') + '][' + $(selector).attr('data-attribute-id') + '][ord]"]').val(index + 1);
                     });
                 }
             });

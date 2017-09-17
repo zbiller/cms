@@ -121,10 +121,7 @@ class ProductsController extends Controller
             $this->item = Product::create($request->all());
             $this->redirect = redirect()->route('admin.products.index');
 
-            $this->item->categories()->attach($request->input('categories'));
-            $this->item->attributes()->attach($request->input('attributes'));
-            $this->item->discounts()->attach($request->input('discounts'));
-            $this->item->taxes()->attach($request->input('taxes'));
+            $this->saveProductPivotedRelations($request);
         }, $request);
     }
 
@@ -173,10 +170,7 @@ class ProductsController extends Controller
             $this->redirect = redirect()->route('admin.products.index');
 
             $this->item->update($request->all());
-            $this->item->categories()->sync($request->input('categories'));
-            $this->item->attributes()->sync($request->input('attributes'));
-            $this->item->discounts()->sync($request->input('discounts'));
-            $this->item->taxes()->sync($request->input('taxes'));
+            $this->saveProductPivotedRelations($request);
         }, $request);
     }
 
@@ -618,5 +612,36 @@ class ProductsController extends Controller
                 'discounts' => 'discounts',
                 'taxes' => 'taxes',
             ]);
+    }
+
+    /**
+     * @param Request $request
+     * @return void
+     */
+    protected function saveProductPivotedRelations(Request $request)
+    {
+        $this->item->categories()->sync($request->input('categories'));
+
+        $this->item->attributes()->detach();
+        $this->item->discounts()->detach();
+        $this->item->taxes()->detach();
+
+        foreach ((array)$request->input('attributes') as $index => $data) {
+            foreach ($data as $id => $attributes) {
+                $this->item->attributes()->attach($id, $attributes);
+            }
+        }
+
+        foreach ((array)$request->input('discounts') as $index => $data) {
+            foreach ($data as $id => $attributes) {
+                $this->item->discounts()->attach($id, $attributes);
+            }
+        }
+
+        foreach ((array)$request->input('taxes') as $index => $data) {
+            foreach ($data as $id => $attributes) {
+                $this->item->taxes()->attach($id, $attributes);
+            }
+        }
     }
 }

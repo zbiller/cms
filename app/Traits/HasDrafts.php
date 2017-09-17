@@ -11,7 +11,6 @@ use App\Sniffers\ModelSniffer;
 use BadMethodCallException;
 use Closure;
 use DB;
-use Doctrine\DBAL\Schema\SchemaException;
 use Exception;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use ReflectionMethod;
@@ -115,7 +114,6 @@ trait HasDrafts
 
             return $model;
         } catch (Exception $e) {
-            dd($e);
             throw DraftException::saveFailed();
         }
     }
@@ -446,10 +444,26 @@ trait HasDrafts
      */
     protected function savePivotedRelationForLimboDraft(Model $model, $relation, array $data = [])
     {
-        if ($model->wasRecentlyCreated === true) {
-            $model->{$relation}()->attach($data[$relation]);
-        } else {
-            $model->{$relation}()->sync($data[$relation]);
+        $model->{$relation}()->detach();
+
+        foreach ($data[$relation] as $index => $parameters) {
+            if (is_array($parameters)) {
+                if (array_depth($parameters) > 1) {
+                    foreach ($parameters as $id => $attributes) {
+                        $this->attachPivotedRelationFromExistingOrNewRelated(
+                            $model, $id, $relation, $attributes
+                        );
+                    }
+                } else {
+                    $this->attachPivotedRelationFromExistingOrNewRelated(
+                        $model, $index, $relation, $parameters
+                    );
+                }
+            } else {
+                $this->attachPivotedRelationFromExistingOrNewRelated(
+                    $model, $parameters, $relation, []
+                );
+            }
         }
     }
 
