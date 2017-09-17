@@ -10,8 +10,10 @@ use App\Models\Cms\Layout;
 use App\Models\Cms\Page;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
+use App\Options\DuplicateOptions;
 use App\Options\PreviewOptions;
 use App\Traits\CanCrud;
+use App\Traits\CanDuplicate;
 use App\Traits\CanPreview;
 use Exception;
 use Illuminate\Http\Request;
@@ -20,6 +22,7 @@ class PagesController extends Controller
 {
     use CanCrud;
     use CanPreview;
+    use CanDuplicate;
 
     /**
      * @var string
@@ -188,19 +191,6 @@ class PagesController extends Controller
     }
 
     /**
-     * @param Page $page
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
-     */
-    public function duplicate(Page $page)
-    {
-        return $this->_duplicate(function () use ($page) {
-            $this->item = $page->saveAsDuplicate();
-            $this->redirect = redirect()->route('admin.pages.edit', $this->item->id);
-        });
-    }
-
-    /**
      * @param Request $request
      * @param PageFilter $filter
      * @param PageSort $sort
@@ -326,5 +316,17 @@ class PagesController extends Controller
         return PreviewOptions::instance()
             ->setModel(Page::class)
             ->setValidator(new PageRequest);
+    }
+
+    /**
+     * Set the options for the CanPreview trait.
+     *
+     * @return DuplicateOptions
+     */
+    public static function getDuplicateOptions()
+    {
+        return DuplicateOptions::instance()
+            ->setModel(Page::class)
+            ->setRedirect('admin.pages.edit');
     }
 }

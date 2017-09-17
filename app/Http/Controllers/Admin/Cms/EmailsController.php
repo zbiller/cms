@@ -6,11 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Http\Filters\Cms\EmailFilter;
 use App\Http\Requests\Cms\EmailRequest;
 use App\Http\Sorts\Cms\EmailSort;
-use App\Mail\PasswordRecovery;
 use App\Models\Cms\Email;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
+use App\Options\DuplicateOptions;
 use App\Traits\CanCrud;
+use App\Traits\CanDuplicate;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -19,6 +20,7 @@ use Illuminate\Mail\Markdown;
 class EmailsController extends Controller
 {
     use CanCrud;
+    use CanDuplicate;
 
     /**
      * @var string
@@ -183,19 +185,6 @@ class EmailsController extends Controller
     }
 
     /**
-     * @param Email $email
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
-     */
-    public function duplicate(Email $email)
-    {
-        return $this->_duplicate(function () use ($email) {
-            $this->item = $email->saveAsDuplicate();
-            $this->redirect = redirect()->route('admin.emails.edit', $this->item->id);
-        });
-    }
-
-    /**
      * @param EmailRequest $request
      * @param Email|null $email
      * @return \Illuminate\Http\RedirectResponse
@@ -301,5 +290,17 @@ class EmailsController extends Controller
                 'fromName' => Email::getFromName(),
             ];
         }, $revision);
+    }
+
+    /**
+     * Set the options for the CanPreview trait.
+     *
+     * @return DuplicateOptions
+     */
+    public static function getDuplicateOptions()
+    {
+        return DuplicateOptions::instance()
+            ->setModel(Email::class)
+            ->setRedirect('admin.emails.edit');
     }
 }

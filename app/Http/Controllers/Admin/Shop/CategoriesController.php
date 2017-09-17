@@ -11,8 +11,10 @@ use App\Models\Shop\Discount;
 use App\Models\Shop\Tax;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
+use App\Options\DuplicateOptions;
 use App\Options\PreviewOptions;
 use App\Traits\CanCrud;
+use App\Traits\CanDuplicate;
 use App\Traits\CanPreview;
 use Exception;
 use Illuminate\Http\Request;
@@ -21,6 +23,7 @@ class CategoriesController extends Controller
 {
     use CanCrud;
     use CanPreview;
+    use CanDuplicate;
 
     /**
      * @var string
@@ -189,19 +192,6 @@ class CategoriesController extends Controller
             $this->redirect = redirect()->route('admin.product_categories.deleted');
 
             $this->item->forceDelete();
-        });
-    }
-
-    /**
-     * @param Category $category
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Exception
-     */
-    public function duplicate(Category $category)
-    {
-        return $this->_duplicate(function () use ($category) {
-            $this->item = $category->saveAsDuplicate();
-            $this->redirect = redirect()->route('admin.product_categories.edit', $this->item->id);
         });
     }
 
@@ -378,6 +368,18 @@ class CategoriesController extends Controller
                 'discounts' => 'discounts',
                 'taxes' => 'taxes',
             ]);
+    }
+
+    /**
+     * Set the options for the CanPreview trait.
+     *
+     * @return DuplicateOptions
+     */
+    public static function getDuplicateOptions()
+    {
+        return DuplicateOptions::instance()
+            ->setModel(Category::class)
+            ->setRedirect('admin.product_categories.edit');
     }
 
     /**

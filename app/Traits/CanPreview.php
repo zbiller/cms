@@ -51,7 +51,7 @@ trait CanPreview
     protected static $previewOptions;
 
     /**
-     * Instantiate the $AuthenticateOptions property with the necessary authentication properties.
+     * Instantiate the $previewOptions property with the necessary previewing properties.
      *
      * @set $AuthenticateOptions
      */
@@ -361,7 +361,7 @@ trait CanPreview
                 'The controller ' . self::class . ' uses the CanPreview trait.' . PHP_EOL .
                 'You are required to set the "model" that will be previewed.' . PHP_EOL .
                 'You can do this from inside the getPreviewOptions() method defined on the controller.' . PHP_EOL .
-                'Please note that the validator must be an instance of App\Models\Model or a string.'
+                'Please note that the model must be an instance of App\Models\Model or a string.'
             );
         }
     }

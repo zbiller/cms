@@ -2,10 +2,14 @@
 
 namespace App\Options;
 
+use App\Models\Model;
+
 class DuplicateOptions
 {
     /**
      * The database columns from the model that should be excluded (ignored) when duplicating the record.
+     *
+     * IMPORTANT: This option is available for the App\Traits\HasDuplicates trait.
      *
      * @var array
      */
@@ -14,12 +18,16 @@ class DuplicateOptions
     /**
      * The database columns from the model that should be unique when duplicating the record.
      *
+     * IMPORTANT: This option is available for the App\Traits\HasDuplicates trait.
+     *
      * @var array
      */
     public $uniqueColumns;
 
     /**
      * The database relations of the model that should be excluded (ignored) when duplicating the record.
+     *
+     * IMPORTANT: This option is available for the App\Traits\HasDuplicates trait.
      *
      * @var array
      */
@@ -28,12 +36,16 @@ class DuplicateOptions
     /**
      * The database columns for each model's relation tha should be excluded (ignored) when duplicating the record.
      *
+     * IMPORTANT: This option is available for the App\Traits\HasDuplicates trait.
+     *
      * @var array
      */
     public $excludedRelationColumns;
 
     /**
      * The database columns for each model's relation that should be unique when duplicating the record.
+     *
+     * IMPORTANT: This option is available for the App\Traits\HasDuplicates trait.
      *
      * @var array
      */
@@ -42,9 +54,33 @@ class DuplicateOptions
     /**
      * Flag indicating if when duplicating a record, the script should also duplicate it's relations.
      *
+     * IMPORTANT: This option is available for the App\Traits\HasDuplicates trait.
+     *
      * @var bool
      */
     public $shouldDuplicateDeeply = true;
+
+    /**
+     * The model that should be duplicated.
+     * When setting this, pass either an instance of App\Models\Model or a string.
+     * The "setModel()" method will convert it to a valid model.
+     *
+     * IMPORTANT: This option is available for the App\Traits\CanDuplicate trait.
+     *
+     * @var Model
+     */
+    public $model;
+
+    /**
+     * The url to redirect to after an entity has been duplicated.
+     * When setting this, pass a string for the entity's "edit" route.
+     * The CanDuplicate trait will automatically transform that into a redirect applying the duplicated id at the end.
+     *
+     * IMPORTANT: This option is available for the App\Traits\CanDuplicate trait.
+     *
+     * @var string
+     */
+    public $redirect;
 
     /**
      * Get a fresh instance of this class.
@@ -135,6 +171,32 @@ class DuplicateOptions
     public function disableDeepDuplication(): DuplicateOptions
     {
         $this->shouldDuplicateDeeply = false;
+
+        return $this;
+    }
+
+    /**
+     * Set the $model to work with in the App\Traits\CanDuplicate trait.
+     *
+     * @param Model|string $model
+     * @return DuplicateOptions
+     */
+    public function setModel($model): DuplicateOptions
+    {
+        $this->model = $model instanceof Model ? $model : app($model);
+
+        return $this;
+    }
+
+    /**
+     * Set the $redirect to work with in the App\Traits\CanDuplicate trait.
+     *
+     * @param $redirect
+     * @return DuplicateOptions
+     */
+    public function setRedirect($redirect): DuplicateOptions
+    {
+        $this->redirect = $redirect;
 
         return $this;
     }

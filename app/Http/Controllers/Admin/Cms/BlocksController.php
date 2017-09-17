@@ -9,7 +9,9 @@ use App\Http\Sorts\Cms\BlockSort;
 use App\Models\Cms\Block;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
+use App\Options\DuplicateOptions;
 use App\Traits\CanCrud;
+use App\Traits\CanDuplicate;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -17,6 +19,7 @@ use Illuminate\Http\Request;
 class BlocksController extends Controller
 {
     use CanCrud;
+    use CanDuplicate;
 
     /**
      * @var string
@@ -166,19 +169,6 @@ class BlocksController extends Controller
             $this->redirect = redirect()->route('admin.blocks.deleted');
 
             $this->item->forceDelete();
-        });
-    }
-
-    /**
-     * @param Block $block
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws Exception
-     */
-    public function duplicate(Block $block)
-    {
-        return $this->_duplicate(function () use ($block) {
-            $this->item = $block->saveAsDuplicate();
-            $this->redirect = redirect()->route('admin.blocks.edit', $this->item->id);
         });
     }
 
@@ -336,5 +326,17 @@ class BlocksController extends Controller
                 'message' => $e->getMessage(),
             ]);
         }
+    }
+
+    /**
+     * Set the options for the CanPreview trait.
+     *
+     * @return DuplicateOptions
+     */
+    public static function getDuplicateOptions()
+    {
+        return DuplicateOptions::instance()
+            ->setModel(Block::class)
+            ->setRedirect('admin.blocks.edit');
     }
 }

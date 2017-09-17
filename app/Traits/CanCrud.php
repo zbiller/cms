@@ -2,14 +2,7 @@
 
 namespace App\Traits;
 
-use App\Exceptions\CartException;
-use App\Exceptions\CrudException;
 use App\Exceptions\DraftException;
-use App\Exceptions\DuplicateException;
-use App\Exceptions\OrderException;
-use App\Exceptions\RevisionException;
-use App\Exceptions\UploadException;
-use App\Exceptions\UrlException;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
 use App\Services\CacheService;
@@ -23,8 +16,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\ControllerDispatcher;
-use Illuminate\Routing\Route as Router;
 use Illuminate\Validation\ValidationException;
 use Illuminate\View\View;
 use Route;
@@ -112,9 +103,6 @@ trait CanCrud
         ],
         'delete' => [
             'DELETE',
-        ],
-        'duplicate' => [
-            'POST',
         ],
         'drafts' => [
             'GET',
@@ -358,29 +346,6 @@ trait CanCrud
 
             flash()->success('The record was successfully deleted!');
         });
-    }
-
-    /**
-     * This method should be called inside the controller's duplicate() method.
-     * The closure should at least attempt to duplicate the record from the database and to set the $redirect property.
-     *
-     * $this->item = Model::findOrFail($id)->forceDelete();
-     * $this->redirect = redirect()->route('redirect.route');
-     *
-     * @param Closure|null $function
-     * @param Request|null $request
-     * @return RedirectResponse
-     * @throws Exception
-     */
-    public function _duplicate(Closure $function = null, Request $request = null)
-    {
-        return $this->performNonGetCrudRequest(function () use ($function, $request) {
-            if ($function) {
-                call_user_func($function);
-            }
-
-            flash()->success('The record was successfully duplicated!<br /><br />You have been redirected to the newly duplicated record.');
-        }, $request);
     }
 
     /**
