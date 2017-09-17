@@ -20,16 +20,24 @@ use ReflectionMethod;
 trait CanPreview
 {
     /**
+     * The model to be previewed.
+     *
      * @var Model
      */
     protected $previewModel;
 
     /**
+     * The form request validation class to validate the model before previewing it.
+     *
      * @var FormRequest
      */
     protected $previewValidator;
 
     /**
+     * The pivoted relations defined as an associative array where the:
+     * - keys: represent each pivoted relation's name defined on the model.
+     * - values: represent the request array key name responsible for passing data into the "attach" or "sync" methods.
+     *
      * @var array
      */
     protected $previewPivotedRelations = [];
@@ -171,7 +179,11 @@ trait CanPreview
             CacheService::disableQueryCache();
 
             $this->newOrExistingModelForPreview($id);
-            $this->saveModelAndRelationsForPreview($request);
+            $this->saveModelForPreview($request);
+
+            foreach ($this->getPreviewPivotedRelations() as $relation => $field) {
+                $this->savePivotedRelationForPreview($request, $relation, $field);
+            }
 
             $this->markAsPreview();
 
@@ -210,7 +222,7 @@ trait CanPreview
      * @param Request $request
      * @return void
      */
-    protected function saveModelAndRelationsForPreview(Request $request)
+    protected function saveModelForPreview(Request $request)
     {
         $model = $this->getPreviewModel();
 
@@ -220,13 +232,43 @@ trait CanPreview
             $model = $model->create($request->all());
         }
 
-        dd($request['attributes']);
+        $this->setPreviewModel($model);
+    }
 
-        foreach ($this->getPreviewPivotedRelations() as $relation => $data) {
-            if ($model->wasRecentlyCreated) {
-                $model->{$relation}()->attach($request->input($data));
-            } else {
-                $model->{$relation}()->sync($request->input($data));
+    /**
+     * Save a defined pivoted relation of the model for the preview.
+     *
+     * @param Request $request
+     * @param string $relation
+     * @param string $field
+     */
+    protected function savePivotedRelationForPreview(Request $request, $relation, $field)
+    {
+        $model = $this->getPreviewModel();
+        $data = $request->input($field);
+
+        $model->{$relation}()->detach();
+
+        if (is_array($data)) {
+            switch (array_depth($data)) {
+                case 1:
+                    $model->{$relation}()->attach($data);
+
+                    break;
+                case 2:
+                    foreach ($data as $id => $attributes) {
+                        $model->{$relation}()->attach($id, $attributes);
+                    }
+
+                    break;
+                case 3:
+                    foreach ($data as $index => $parameters) {
+                        foreach ($parameters as $id => $attributes) {
+                            $model->{$relation}()->attach($id, $attributes);
+                        }
+                    }
+
+                    break;
             }
         }
 
