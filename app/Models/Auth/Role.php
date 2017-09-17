@@ -6,6 +6,7 @@ use App\Contracts\RoleContract;
 use App\Models\Model;
 use App\Options\ActivityOptions;
 use App\Traits\HasActivity;
+use App\Traits\HasPermissions;
 use App\Traits\IsCacheable;
 use App\Traits\IsFilterable;
 use App\Traits\IsSortable;
@@ -14,6 +15,7 @@ use Illuminate\Database\Query\Builder;
 
 class Role extends Model implements RoleContract
 {
+    use HasPermissions;
     use HasActivity;
     use IsCacheable;
     use IsFilterable;
