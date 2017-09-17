@@ -2,10 +2,14 @@
 
 namespace App\Options;
 
+use Illuminate\View\View;
+
 class RevisionOptions
 {
     /**
      * Flag whether to make a revision on model creation.
+     *
+     * IMPORTANT: This option is available for the App\Traits\HasRevisions trait.
      *
      * @var bool
      */
@@ -15,6 +19,8 @@ class RevisionOptions
      * The limit of revisions to be created for a model instance.
      * If the limit is reached, oldest revisions will start getting deleted to make room for new ones.
      *
+     * IMPORTANT: This option is available for the App\Traits\HasRevisions trait.
+     *
      * @var int
      */
     public $revisionLimit;
@@ -23,6 +29,8 @@ class RevisionOptions
      * The fields that should be revisionable.
      * By default (null) all fields are revisionable.
      *
+     * IMPORTANT: This option is available for the App\Traits\HasRevisions trait.
+     *
      * @var array
      */
     public $revisionFields = [];
@@ -30,6 +38,8 @@ class RevisionOptions
     /**
      * The model's relations that should be revisionable.
      * By default (null) none of the model's relations are revisionable.
+     *
+     * IMPORTANT: This option is available for the App\Traits\HasRevisions trait.
      *
      * @var array
      */
@@ -40,9 +50,38 @@ class RevisionOptions
      * If set to "true", before rolling back a revision, the original model instance's data will be stored to a new revision.
      * If set to "false", after rolling back a revision, the original model instance's data will NOT be stored to a new revision.
      *
+     * IMPORTANT: This option is available for the App\Traits\HasRevisions trait.
+     *
      * @var bool
      */
     public $createRevisionWhenRollingBack = true;
+
+    /**
+     * The meta title displayed when viewing an entity record's revision.
+     *
+     * IMPORTANT: This option is available for the App\Traits\CanRevision trait.
+     *
+     * @var string
+     */
+    public $title = 'Revision';
+
+    /**
+     * The blade view file returned when viewing an entity record's revision.
+     *
+     * IMPORTANT: This option is available for the App\Traits\HasRevisions trait.
+     *
+     * @var View|string
+     */
+    public $view;
+
+    /**
+     * The variables that will be assigned to the view when viewing an entity record's revision.
+     *
+     * IMPORTANT: This option is available for the App\Traits\HasRevisions trait.
+     *
+     * @var array
+     */
+    public $variables = [];
 
     /**
      * Get a fresh instance of this class.
@@ -113,6 +152,45 @@ class RevisionOptions
     public function disableRevisioningWhenRollingBack(): RevisionOptions
     {
         $this->createRevisionWhenRollingBack = false;
+
+        return $this;
+    }
+
+    /**
+     * Set the $title to work with in the App\Traits\CanRevision trait.
+     *
+     * @param string $title
+     * @return RevisionOptions
+     */
+    public function setTitle($title): RevisionOptions
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Set the $view to work with in the App\Traits\CanRevision trait.
+     *
+     * @param View|string $view
+     * @return RevisionOptions
+     */
+    public function setView($view): RevisionOptions
+    {
+        $this->view = $view instanceof View ? $view : view($view);
+
+        return $this;
+    }
+
+    /**
+     * Set the $variables to work with in the App\Traits\CanRevision trait.
+     *
+     * @param array $variables
+     * @return RevisionOptions
+     */
+    public function setVariables(array $variables = []): RevisionOptions
+    {
+        $this->variables = $variables;
 
         return $this;
     }

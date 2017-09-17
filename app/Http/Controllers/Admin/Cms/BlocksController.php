@@ -10,8 +10,10 @@ use App\Models\Cms\Block;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
 use App\Options\DuplicateOptions;
+use App\Options\RevisionOptions;
 use App\Traits\CanCrud;
 use App\Traits\CanDuplicate;
+use App\Traits\CanRevision;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -19,6 +21,7 @@ use Illuminate\Http\Request;
 class BlocksController extends Controller
 {
     use CanCrud;
+    use CanRevision;
     use CanDuplicate;
 
     /**
@@ -223,21 +226,6 @@ class BlocksController extends Controller
     }
 
     /**
-     * @param Revision $revision
-     * @return \Illuminate\View\View
-     */
-    public function revision(Revision $revision)
-    {
-        return $this->_revision(function () use ($revision) {
-            $this->item = $revision->revisionable;
-            $this->item->rollbackToRevision($revision);
-
-            $this->title = 'Block Revision';
-            $this->view = view('admin.cms.blocks.revision');
-        }, $revision);
-    }
-
-    /**
      * @param Request $request
      * @return array
      */
@@ -329,7 +317,19 @@ class BlocksController extends Controller
     }
 
     /**
-     * Set the options for the CanPreview trait.
+     * Set the options for the CanRevision trait.
+     *
+     * @return RevisionOptions
+     */
+    public static function getRevisionOptions()
+    {
+        return RevisionOptions::instance()
+            ->setTitle('Block Revision')
+            ->setView('admin.cms.blocks.revision');
+    }
+
+    /**
+     * Set the options for the CanDuplicate trait.
      *
      * @return DuplicateOptions
      */

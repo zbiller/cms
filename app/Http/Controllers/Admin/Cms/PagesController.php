@@ -12,15 +12,18 @@ use App\Models\Version\Draft;
 use App\Models\Version\Revision;
 use App\Options\DuplicateOptions;
 use App\Options\PreviewOptions;
+use App\Options\RevisionOptions;
 use App\Traits\CanCrud;
 use App\Traits\CanDuplicate;
 use App\Traits\CanPreview;
+use App\Traits\CanRevision;
 use Exception;
 use Illuminate\Http\Request;
 
 class PagesController extends Controller
 {
     use CanCrud;
+    use CanRevision;
     use CanPreview;
     use CanDuplicate;
 
@@ -252,26 +255,6 @@ class PagesController extends Controller
     }
 
     /**
-     * @param Revision $revision
-     * @return \Illuminate\View\View
-     */
-    public function revision(Revision $revision)
-    {
-        return $this->_revision(function () use ($revision) {
-            $this->item = $revision->revisionable;
-            $this->item->rollbackToRevision($revision);
-
-            $this->title = 'Page Revision';
-            $this->view = view('admin.cms.pages.revision');
-            $this->vars = [
-                'layouts' => Layout::all(),
-                'types' => Page::$types,
-                'actives' => Page::$actives,
-            ];
-        }, $revision);
-    }
-
-    /**
      * @param Request $request
      * @param int|null $type
      * @return array
@@ -307,6 +290,23 @@ class PagesController extends Controller
     }
 
     /**
+     * Set the options for the CanRevision trait.
+     *
+     * @return RevisionOptions
+     */
+    public static function getRevisionOptions()
+    {
+        return RevisionOptions::instance()
+            ->setTitle('Page Revision')
+            ->setView('admin.cms.pages.revision')
+            ->setVariables([
+                'layouts' => Layout::all(),
+                'types' => Page::$types,
+                'actives' => Page::$actives,
+            ]);
+    }
+
+    /**
      * Set the options for the CanPreview trait.
      *
      * @return PreviewOptions
@@ -319,7 +319,7 @@ class PagesController extends Controller
     }
 
     /**
-     * Set the options for the CanPreview trait.
+     * Set the options for the CanDuplicate trait.
      *
      * @return DuplicateOptions
      */

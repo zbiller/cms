@@ -8,10 +8,11 @@ use App\Http\Requests\Cms\EmailRequest;
 use App\Http\Sorts\Cms\EmailSort;
 use App\Models\Cms\Email;
 use App\Models\Version\Draft;
-use App\Models\Version\Revision;
 use App\Options\DuplicateOptions;
+use App\Options\RevisionOptions;
 use App\Traits\CanCrud;
 use App\Traits\CanDuplicate;
+use App\Traits\CanRevision;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -20,6 +21,7 @@ use Illuminate\Mail\Markdown;
 class EmailsController extends Controller
 {
     use CanCrud;
+    use CanRevision;
     use CanDuplicate;
 
     /**
@@ -66,7 +68,6 @@ class EmailsController extends Controller
             $this->view = view('admin.cms.emails.add');
             $this->vars = [
                 'type' => $type,
-                'variables' => Email::getVariables($type),
                 'fromEmail' => Email::getFromAddress(),
                 'fromName' => Email::getFromName(),
             ];
@@ -98,7 +99,6 @@ class EmailsController extends Controller
             $this->title = 'Edit Email';
             $this->view = view('admin.cms.emails.edit');
             $this->vars = [
-                'variables' => Email::getVariables($this->item->type),
                 'fromEmail' => Email::getFromAddress(),
                 'fromName' => Email::getFromName(),
             ];
@@ -243,7 +243,6 @@ class EmailsController extends Controller
             $this->title = 'Email Draft';
             $this->view = view('admin.cms.emails.draft');
             $this->vars = [
-                'variables' => Email::getVariables($this->item->type),
                 'fromEmail' => Email::getFromAddress(),
                 'fromName' => Email::getFromName(),
             ];
@@ -262,7 +261,6 @@ class EmailsController extends Controller
             $this->title = 'Email Draft';
             $this->view = view('admin.cms.emails.limbo');
             $this->vars = [
-                'variables' => Email::getVariables($this->item->type),
                 'fromEmail' => Email::getFromAddress(),
                 'fromName' => Email::getFromName(),
             ];
@@ -273,27 +271,23 @@ class EmailsController extends Controller
     }
 
     /**
-     * @param Revision $revision
-     * @return \Illuminate\View\View
+     * Set the options for the CanRevision trait.
+     *
+     * @return RevisionOptions
      */
-    public function revision(Revision $revision)
+    public static function getRevisionOptions()
     {
-        return $this->_revision(function () use ($revision) {
-            $this->item = $revision->revisionable;
-            $this->item->rollbackToRevision($revision);
-
-            $this->title = 'Email Revision';
-            $this->view = view('admin.cms.emails.revision');
-            $this->vars = [
-                'variables' => Email::getVariables($this->item->type),
+        return RevisionOptions::instance()
+            ->setTitle('Email Revision')
+            ->setView('admin.cms.emails.revision')
+            ->setVariables([
                 'fromEmail' => Email::getFromAddress(),
                 'fromName' => Email::getFromName(),
-            ];
-        }, $revision);
+            ]);
     }
 
     /**
-     * Set the options for the CanPreview trait.
+     * Set the options for the CanDuplicate trait.
      *
      * @return DuplicateOptions
      */

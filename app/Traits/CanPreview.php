@@ -137,27 +137,6 @@ trait CanPreview
     }
 
     /**
-     * Verify if a model can be previewed.
-     * It has to have a url, more precisely, it has to use the App\Traits\HasUrl trait.
-     *
-     * @return bool
-     */
-    protected function canBePreviewed()
-    {
-        return in_array(HasUrl::class, class_uses($this->getPreviewModel()));
-    }
-
-    /**
-     * Mark the current request as a preview request, so the underlying logic would know that.
-     *
-     * @return void
-     */
-    protected function markAsPreview()
-    {
-        session()->flash('is_preview', true);
-    }
-
-    /**
      * Preview an entity that has a url.
      *
      * @param Request $request
@@ -191,6 +170,27 @@ trait CanPreview
         } catch (Exception $e) {
             throw $e;
         }
+    }
+
+    /**
+     * Verify if a model can be previewed.
+     * It has to have a url, more precisely, it has to use the App\Traits\HasUrl trait.
+     *
+     * @return bool
+     */
+    protected function canBePreviewed()
+    {
+        return in_array(HasUrl::class, class_uses($this->getPreviewModel()));
+    }
+
+    /**
+     * Mark the current request as a preview request, so the underlying logic would know that.
+     *
+     * @return void
+     */
+    protected function markAsPreview()
+    {
+        session()->flash('is_preview', true);
     }
 
     /**

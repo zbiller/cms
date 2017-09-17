@@ -10,18 +10,20 @@ use App\Models\Shop\Category;
 use App\Models\Shop\Discount;
 use App\Models\Shop\Tax;
 use App\Models\Version\Draft;
-use App\Models\Version\Revision;
 use App\Options\DuplicateOptions;
 use App\Options\PreviewOptions;
+use App\Options\RevisionOptions;
 use App\Traits\CanCrud;
 use App\Traits\CanDuplicate;
 use App\Traits\CanPreview;
+use App\Traits\CanRevision;
 use Exception;
 use Illuminate\Http\Request;
 
 class CategoriesController extends Controller
 {
     use CanCrud;
+    use CanRevision;
     use CanPreview;
     use CanDuplicate;
 
@@ -68,14 +70,10 @@ class CategoriesController extends Controller
         return $this->_create(function () use ($parent) {
             $this->title = 'Add Category';
             $this->view = view('admin.shop.categories.add');
-            $this->vars = [
-                'parent' => $parent && $parent->exists ? $parent : null,
-                'discounts' => Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
-                'taxes' => Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
-                'discountTypes' => Discount::$types,
-                'taxTypes' => Tax::$types,
-                'actives' => Category::$actives,
-            ];
+            $this->vars = array_merge(
+                static::buildCommonViewVariables(),
+                ['parent' => $parent && $parent->exists ? $parent : null]
+            );
         });
     }
 
@@ -105,13 +103,7 @@ class CategoriesController extends Controller
             $this->item = $category;
             $this->title = 'Edit Category';
             $this->view = view('admin.shop.categories.edit');
-            $this->vars = [
-                'actives' => Category::$actives,
-                'discounts' => Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
-                'taxes' => Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
-                'discountTypes' => Discount::$types,
-                'taxTypes' => Tax::$types,
-            ];
+            $this->vars = static::buildCommonViewVariables();
         });
     }
 
@@ -225,13 +217,7 @@ class CategoriesController extends Controller
 
             $this->title = 'Category Draft';
             $this->view = view('admin.shop.categories.draft');
-            $this->vars = [
-                'actives' => Category::$actives,
-                'discounts' => Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
-                'taxes' => Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
-                'discountTypes' => Discount::$types,
-                'taxTypes' => Tax::$types,
-            ];
+            $this->vars = static::buildCommonViewVariables();
         }, $draft);
     }
 
@@ -245,39 +231,11 @@ class CategoriesController extends Controller
         return $this->_limbo(function () {
             $this->title = 'Category Draft';
             $this->view = view('admin.shop.categories.limbo');
-            $this->vars = [
-                'actives' => Category::$actives,
-                'discounts' => Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
-                'taxes' => Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
-                'discountTypes' => Discount::$types,
-                'taxTypes' => Tax::$types,
-            ];
+            $this->vars = static::buildCommonViewVariables();
         }, function () use ($request) {
             $this->item->saveAsDraft($request->all());
             $this->redirect = redirect()->route('admin.product_categories.drafts');
         }, $id, $request, new CategoryRequest());
-    }
-
-    /**
-     * @param Revision $revision
-     * @return \Illuminate\View\View
-     */
-    public function revision(Revision $revision)
-    {
-        return $this->_revision(function () use ($revision) {
-            $this->item = $revision->revisionable;
-            $this->item->rollbackToRevision($revision);
-
-            $this->title = 'Category Revision';
-            $this->view = view('admin.shop.categories.revision');
-            $this->vars = [
-                'actives' => Category::$actives,
-                'discounts' => Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
-                'taxes' => Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
-                'discountTypes' => Discount::$types,
-                'taxTypes' => Tax::$types,
-            ];
-        }, $revision);
     }
 
     /**
@@ -355,6 +313,19 @@ class CategoriesController extends Controller
     }
 
     /**
+     * Set the options for the CanRevision trait.
+     *
+     * @return RevisionOptions
+     */
+    public static function getRevisionOptions()
+    {
+        return RevisionOptions::instance()
+            ->setTitle('Category Revision')
+            ->setView('admin.shop.categories.revision')
+            ->setVariables(static::buildCommonViewVariables());
+    }
+
+    /**
      * Set the options for the CanPreview trait.
      *
      * @return PreviewOptions
@@ -371,7 +342,7 @@ class CategoriesController extends Controller
     }
 
     /**
-     * Set the options for the CanPreview trait.
+     * Set the options for the CanDuplicate trait.
      *
      * @return DuplicateOptions
      */
@@ -402,5 +373,19 @@ class CategoriesController extends Controller
                 $this->item->taxes()->attach($id, $attributes);
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    protected static function buildCommonViewVariables()
+    {
+        return [
+            'discounts' => Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
+            'taxes' => Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
+            'actives' => Category::$actives,
+            'discountTypes' => Discount::$types,
+            'taxTypes' => Tax::$types,
+        ];
     }
 }

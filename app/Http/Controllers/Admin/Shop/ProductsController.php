@@ -16,14 +16,15 @@ use App\Models\Shop\Discount;
 use App\Models\Shop\Product;
 use App\Models\Shop\Tax;
 use App\Models\Version\Draft;
-use App\Models\Version\Revision;
 use App\Options\DuplicateOptions;
 use App\Options\PreviewOptions;
+use App\Options\RevisionOptions;
 use App\Services\UploadService;
 use App\Traits\CanCrud;
 use App\Traits\CanDuplicate;
 use App\Traits\CanOrder;
 use App\Traits\CanPreview;
+use App\Traits\CanRevision;
 use DB;
 use Exception;
 use Illuminate\Http\Request;
@@ -31,9 +32,10 @@ use Illuminate\Http\Request;
 class ProductsController extends Controller
 {
     use CanCrud;
-    use CanOrder;
+    use CanRevision;
     use CanPreview;
     use CanDuplicate;
+    use CanOrder;
 
     /**
      * @var string
@@ -64,22 +66,16 @@ class ProductsController extends Controller
                 $orderable = false;
             }
 
-            $query = Product::with('category');
-
-            if ($orderable) {
-                $this->items = $query->whereCategory($request->query('category'))->ordered()->get();
-            } else {
-                $this->items = $query->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
-            }
+            $this->items = $orderable ?
+                Product::with('category')->whereCategory($request->query('category'))->ordered()->get() :
+                Product::with('category')->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
 
             $this->title = 'Products';
             $this->view = view('admin.shop.products.index');
-            $this->vars = [
-                'categories' => Category::withDepth()->defaultOrder()->get(),
-                'currencies' => Currency::InAlphabeticalOrderByCode()->get(),
-                'actives' => Product::$actives,
-                'orderable' => $orderable,
-            ];
+            $this->vars = array_merge(
+                static::buildBasicViewVariables(),
+                ['orderable' => $orderable]
+            );
         });
     }
 
@@ -89,27 +85,9 @@ class ProductsController extends Controller
     public function create()
     {
         return $this->_create(function () {
-            $categories = Category::withDepth()->defaultOrder()->get();
-            $sets = Set::ordered()->get();
-            $attributes = collect();
-            $discounts = Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get();
-            $taxes = Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get();
-            $currencies = Currency::InAlphabeticalOrderByCode()->get();
-
             $this->title = 'Add Product';
             $this->view = view('admin.shop.products.add');
-            $this->vars = [
-                'categories' => $categories,
-                'sets' => $sets,
-                'attributes' => $attributes,
-                'discounts' => $discounts,
-                'taxes' => $taxes,
-                'currencies' => $currencies,
-                'actives' => Product::$actives,
-                'inherits' => Product::$inherits,
-                'discountTypes' => Discount::$types,
-                'taxTypes' => Tax::$types,
-            ];
+            $this->vars = static::buildAdvancedViewVariables();
         });
     }
 
@@ -135,28 +113,10 @@ class ProductsController extends Controller
     public function edit(Product $product)
     {
         return $this->_edit(function () use ($product) {
-            $categories = Category::withDepth()->defaultOrder()->get();
-            $sets = Set::ordered()->get();
-            $attributes = $product->attributes()->get();
-            $discounts = Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get();
-            $taxes = Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get();
-            $currencies = Currency::InAlphabeticalOrderByCode()->get();
-
             $this->item = $product;
             $this->title = 'Edit Product';
             $this->view = view('admin.shop.products.edit');
-            $this->vars = [
-                'categories' => $categories,
-                'sets' => $sets,
-                'attributes' => $attributes,
-                'discounts' => $discounts,
-                'taxes' => $taxes,
-                'currencies' => $currencies,
-                'actives' => Product::$actives,
-                'inherits' => Product::$inherits,
-                'discountTypes' => Discount::$types,
-                'taxTypes' => Tax::$types,
-            ];
+            $this->vars = static::buildAdvancedViewVariables();
         });
     }
 
@@ -194,36 +154,6 @@ class ProductsController extends Controller
 
     /**
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function upload(Request $request)
-    {
-        $status = $message = $file = null;
-
-        if ($request->hasFile('file') && $request->file('file')->isValid()) {
-            try {
-                $upload = (new UploadService($request->file('file'), app(Product::class), 'metadata[images][*][image]'))->upload();
-
-                $status = true;
-                $file = $upload->getPath() . '/' . $upload->getName();
-            } catch (UploadException $e) {
-                $status = false;
-                $message = $e->getMessage();
-            } catch (Exception $e) {
-                $status = false;
-                $message = 'Could not upload the file!';
-            }
-        }
-
-        return response()->json([
-            'status' => $status,
-            'message' => $message,
-            'file' => $file,
-        ]);
-    }
-
-    /**
-     * @param Request $request
      * @param ProductFilter $filter
      * @param ProductSort $sort
      * @return \Illuminate\View\View
@@ -234,11 +164,7 @@ class ProductsController extends Controller
             $this->items = Product::with('category')->onlyTrashed()->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Deleted Products';
             $this->view = view('admin.shop.products.deleted');
-            $this->vars = [
-                'categories' => Category::withDepth()->defaultOrder()->get(),
-                'currencies' => Currency::InAlphabeticalOrderByCode()->get(),
-                'actives' => Product::$actives,
-            ];
+            $this->vars = static::buildBasicViewVariables();
         });
     }
 
@@ -274,6 +200,40 @@ class ProductsController extends Controller
 
     /**
      * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function upload(Request $request)
+    {
+        $status = $message = $file = null;
+
+        if ($request->hasFile('file') && $request->file('file')->isValid()) {
+            try {
+                $upload = (new UploadService(
+                    $request->file('file'),
+                    app(Product::class),
+                    'metadata[images][*][image]'
+                ))->upload();
+
+                $status = true;
+                $file = $upload->getPath() . '/' . $upload->getName();
+            } catch (UploadException $e) {
+                $status = false;
+                $message = $e->getMessage();
+            } catch (Exception $e) {
+                $status = false;
+                $message = 'Could not upload the file!';
+            }
+        }
+
+        return response()->json([
+            'status' => $status,
+            'message' => $message,
+            'file' => $file,
+        ]);
+    }
+
+    /**
+     * @param Request $request
      * @param ProductFilter $filter
      * @param ProductSort $sort
      * @return \Illuminate\View\View
@@ -284,11 +244,7 @@ class ProductsController extends Controller
             $this->items = Product::with('category')->onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
             $this->title = 'Drafted Products';
             $this->view = view('admin.shop.products.drafts');
-            $this->vars = [
-                'categories' => Category::withDepth()->defaultOrder()->get(),
-                'currencies' => Currency::InAlphabeticalOrderByCode()->get(),
-                'actives' => Product::$actives,
-            ];
+            $this->vars = static::buildBasicViewVariables();
         });
     }
 
@@ -302,27 +258,9 @@ class ProductsController extends Controller
             $this->item = $draft->draftable;
             $this->item->publishDraft($draft);
 
-            $categories = Category::withDepth()->defaultOrder()->get();
-            $sets = Set::ordered()->get();
-            $attributes = $this->item->attributes()->get();
-            $discounts = Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get();
-            $taxes = Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get();
-            $currencies = Currency::InAlphabeticalOrderByCode()->get();
-
             $this->title = 'Product Draft';
             $this->view = view('admin.shop.products.draft');
-            $this->vars = [
-                'categories' => $categories,
-                'sets' => $sets,
-                'attributes' => $attributes,
-                'discounts' => $discounts,
-                'taxes' => $taxes,
-                'currencies' => $currencies,
-                'actives' => Product::$actives,
-                'inherits' => Product::$inherits,
-                'discountTypes' => Discount::$types,
-                'taxTypes' => Tax::$types,
-            ];
+            $this->vars = static::buildAdvancedViewVariables();
         }, $draft);
     }
 
@@ -334,65 +272,13 @@ class ProductsController extends Controller
     public function limbo(Request $request, $id)
     {
         return $this->_limbo(function () use ($id) {
-            $product = Product::onlyDrafts()->findOrFail($id);
-            $categories = Category::withDepth()->defaultOrder()->get();
-            $sets = Set::ordered()->get();
-            $attributes = $product->attributes()->get();
-            $discounts = Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get();
-            $taxes = Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get();
-            $currencies = Currency::InAlphabeticalOrderByCode()->get();
             $this->title = 'Product Draft';
             $this->view = view('admin.shop.products.limbo');
-            $this->vars = [
-                'categories' => $categories,
-                'sets' => $sets,
-                'attributes' => $attributes,
-                'discounts' => $discounts,
-                'taxes' => $taxes,
-                'currencies' => $currencies,
-                'actives' => Product::$actives,
-                'inherits' => Product::$inherits,
-                'discountTypes' => Discount::$types,
-                'taxTypes' => Tax::$types,
-            ];
+            $this->vars = static::buildAdvancedViewVariables();
         }, function () use ($request) {
             $this->item->saveAsDraft($request->all());
             $this->redirect = redirect()->route('admin.products.drafts');
         }, $id, $request, new ProductRequest());
-    }
-
-    /**
-     * @param Revision $revision
-     * @return \Illuminate\View\View
-     */
-    public function revision(Revision $revision)
-    {
-        return $this->_revision(function () use ($revision) {
-            $this->item = $revision->revisionable;
-            $this->item->rollbackToRevision($revision);
-
-            $categories = Category::withDepth()->defaultOrder()->get();
-            $sets = Set::ordered()->get();
-            $attributes = $this->item->attributes()->get();
-            $discounts = Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get();
-            $taxes = Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get();
-            $currencies = Currency::InAlphabeticalOrderByCode()->get();
-
-            $this->title = 'Product Revision';
-            $this->view = view('admin.shop.products.revision');
-            $this->vars = [
-                'categories' => $categories,
-                'sets' => $sets,
-                'attributes' => $attributes,
-                'discounts' => $discounts,
-                'taxes' => $taxes,
-                'currencies' => $currencies,
-                'actives' => Product::$actives,
-                'inherits' => Product::$inherits,
-                'discountTypes' => Discount::$types,
-                'taxTypes' => Tax::$types,
-            ];
-        }, $revision);
     }
 
     /**
@@ -587,6 +473,19 @@ class ProductsController extends Controller
     }
 
     /**
+     * Set the options for the CanRevision trait.
+     *
+     * @return RevisionOptions
+     */
+    public static function getRevisionOptions()
+    {
+        return RevisionOptions::instance()
+            ->setTitle('Product Revision')
+            ->setView('admin.shop.products.revision')
+            ->setVariables(static::buildAdvancedViewVariables());
+    }
+
+    /**
      * Set the options for the CanPreview trait.
      *
      * @return PreviewOptions
@@ -605,7 +504,7 @@ class ProductsController extends Controller
     }
 
     /**
-     * Set the options for the CanPreview trait.
+     * Set the options for the CanDuplicate trait.
      *
      * @return DuplicateOptions
      */
@@ -645,5 +544,35 @@ class ProductsController extends Controller
                 $this->item->taxes()->attach($id, $attributes);
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    protected static function buildBasicViewVariables()
+    {
+        return [
+            'categories' => Category::withDepth()->defaultOrder()->get(),
+            'currencies' => Currency::InAlphabeticalOrderByCode()->get(),
+            'actives' => Product::$actives,
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    protected static function buildAdvancedViewVariables()
+    {
+        return [
+            'categories' => Category::withDepth()->defaultOrder()->get(),
+            'sets' => Set::ordered()->get(),
+            'discounts' => Discount::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
+            'taxes' => Tax::inAlphabeticalOrder()->onlyActive()->forProduct()->get(),
+            'currencies' => Currency::InAlphabeticalOrderByCode()->get(),
+            'actives' => Product::$actives,
+            'inherits' => Product::$inherits,
+            'discountTypes' => Discount::$types,
+            'taxTypes' => Tax::$types,
+        ];
     }
 }

@@ -4,7 +4,6 @@ namespace App\Traits;
 
 use App\Exceptions\DraftException;
 use App\Models\Version\Draft;
-use App\Models\Version\Revision;
 use App\Services\CacheService;
 use Closure;
 use DB;
@@ -113,9 +112,6 @@ trait CanCrud
         'limbo' => [
             'GET',
             'PUT',
-        ],
-        'revision' => [
-            'GET',
         ],
     ];
 
@@ -412,42 +408,6 @@ trait CanCrud
 
             $this->vars['item'] = $this->item;
             $this->vars['draft'] = $draft;
-        });
-    }
-
-    /**
-     * This method should be called inside the controller's revision() method.
-     * The closure should at least set the $item and $view properties and publish the draft.
-     *
-     * $this->item = $revision->revisionable;
-     * $this->item->rollbackToRevision($revision);
-     * $this->view = view('view.file');
-     *
-     * Additionally you can also set variables to be available in the view.
-     *
-     * $this->vars['var_1'] = $var1;
-     * $this->vars['var_2'] = $var2;
-     *
-     * @param Closure $function
-     * @param Revision $revision
-     * @return RedirectResponse|View
-     * @throws Exception
-     */
-    public function _revision(Closure $function, Revision $revision)
-    {
-        return $this->performGetCrudRequest(function () use ($function, $revision) {
-            DB::beginTransaction();
-
-            if (!session('revision_back_url_' . $revision->id)) {
-                session()->put('revision_back_url_' . $revision->id, url()->previous());
-            }
-
-            if ($function) {
-                call_user_func($function);
-            }
-
-            $this->vars['item'] = $this->item;
-            $this->vars['revision'] = $revision;
         });
     }
 

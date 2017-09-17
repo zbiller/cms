@@ -1,5 +1,7 @@
 {!! form()->hidden('touch_attributes', true) !!}
 
+@php($attributes = isset($item) && $item->exists ? $item->attributes()->get() : collect())
+
 <div class="attributes-container">
     <table class="assign-table attributes-table" cellspacing="0" cellpadding="0" border="0">
         <thead>

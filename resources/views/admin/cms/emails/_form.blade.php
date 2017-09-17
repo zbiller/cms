@@ -37,6 +37,7 @@
     {!! form_admin()->editor('metadata[message]', 'Message') !!}
 </div>
 <div id="tab-3" class="tab">
+    @php($variables = App\Models\Cms\Email::getVariables(isset($item) && $item->exists ? $item->type : $type))
     @foreach($variables as $variable => $attributes)
         <span class="title">{{ $attributes['name'] }}</span>
         <p><span style="font-family: 'Open Sans Bold', sans-serif;">Name</span>: {{ $variable }}</p>

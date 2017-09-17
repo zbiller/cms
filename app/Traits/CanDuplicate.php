@@ -4,7 +4,6 @@ namespace App\Traits;
 
 use App\Models\Model;
 use App\Options\DuplicateOptions;
-use DB;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -46,6 +45,8 @@ trait CanDuplicate
     }
 
     /**
+     * Duplicate the given entity record.
+     *
      * @param Request $request
      * @param int $id
      * @return \Illuminate\Http\RedirectResponse
