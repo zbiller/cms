@@ -63,13 +63,13 @@ class DuplicateOptions
     /**
      * The model that should be duplicated.
      * When setting this, pass either an instance of App\Models\Model or a string.
-     * The "setModel()" method will convert it to a valid model.
+     * The "setEntityModel()" method will convert it to a valid model.
      *
      * IMPORTANT: This option is available for the App\Traits\CanDuplicate trait.
      *
      * @var Model
      */
-    public $model;
+    public $entityModel;
 
     /**
      * The url to redirect to after an entity has been duplicated.
@@ -80,7 +80,7 @@ class DuplicateOptions
      *
      * @var string
      */
-    public $redirect;
+    public $redirectUrl;
 
     /**
      * Get a fresh instance of this class.
@@ -176,27 +176,27 @@ class DuplicateOptions
     }
 
     /**
-     * Set the $model to work with in the App\Traits\CanDuplicate trait.
+     * Set the $entityModel to work with in the App\Traits\CanDuplicate trait.
      *
      * @param Model|string $model
      * @return DuplicateOptions
      */
-    public function setModel($model): DuplicateOptions
+    public function setEntityModel($model): DuplicateOptions
     {
-        $this->model = $model instanceof Model ? $model : app($model);
+        $this->entityModel = $model instanceof Model ? $model : app($model);
 
         return $this;
     }
 
     /**
-     * Set the $redirect to work with in the App\Traits\CanDuplicate trait.
+     * Set the $redirectUrl to work with in the App\Traits\CanDuplicate trait.
      *
      * @param $redirect
      * @return DuplicateOptions
      */
-    public function setRedirect($redirect): DuplicateOptions
+    public function setRedirectUrl($redirect): DuplicateOptions
     {
-        $this->redirect = $redirect;
+        $this->redirectUrl = $redirect;
 
         return $this;
     }

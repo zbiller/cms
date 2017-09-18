@@ -15,12 +15,13 @@ use App\Models\Localisation\Currency;
 use App\Models\Shop\Discount;
 use App\Models\Shop\Product;
 use App\Models\Shop\Tax;
-use App\Models\Version\Draft;
+use App\Options\DraftOptions;
 use App\Options\DuplicateOptions;
 use App\Options\PreviewOptions;
 use App\Options\RevisionOptions;
 use App\Services\UploadService;
 use App\Traits\CanCrud;
+use App\Traits\CanDraft;
 use App\Traits\CanDuplicate;
 use App\Traits\CanOrder;
 use App\Traits\CanPreview;
@@ -32,6 +33,7 @@ use Illuminate\Http\Request;
 class ProductsController extends Controller
 {
     use CanCrud;
+    use CanDraft;
     use CanRevision;
     use CanPreview;
     use CanDuplicate;
@@ -234,55 +236,6 @@ class ProductsController extends Controller
 
     /**
      * @param Request $request
-     * @param ProductFilter $filter
-     * @param ProductSort $sort
-     * @return \Illuminate\View\View
-     */
-    public function drafts(Request $request, ProductFilter $filter, ProductSort $sort)
-    {
-        return $this->_drafts(function () use ($request, $filter, $sort) {
-            $this->items = Product::with('category')->onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
-            $this->title = 'Drafted Products';
-            $this->view = view('admin.shop.products.drafts');
-            $this->vars = static::buildBasicViewVariables();
-        });
-    }
-
-    /**
-     * @param Draft $draft
-     * @return \Illuminate\View\View
-     */
-    public function draft(Draft $draft)
-    {
-        return $this->_draft(function () use ($draft) {
-            $this->item = $draft->draftable;
-            $this->item->publishDraft($draft);
-
-            $this->title = 'Product Draft';
-            $this->view = view('admin.shop.products.draft');
-            $this->vars = static::buildAdvancedViewVariables();
-        }, $draft);
-    }
-
-    /**
-     * @param Request $request
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function limbo(Request $request, $id)
-    {
-        return $this->_limbo(function () use ($id) {
-            $this->title = 'Product Draft';
-            $this->view = view('admin.shop.products.limbo');
-            $this->vars = static::buildAdvancedViewVariables();
-        }, function () use ($request) {
-            $this->item->saveAsDraft($request->all());
-            $this->redirect = redirect()->route('admin.products.drafts');
-        }, $id, $request, new ProductRequest());
-    }
-
-    /**
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function searchChosen(Request $request)
@@ -473,6 +426,27 @@ class ProductsController extends Controller
     }
 
     /**
+     * Set the options for the CanDraft trait.
+     *
+     * @return DraftOptions
+     */
+    public static function getDraftOptions()
+    {
+        return DraftOptions::instance()
+            ->setEntityModel(Product::class)
+            ->setValidatorRequest(new ProductRequest)
+            ->setFilterClass(new ProductFilter)
+            ->setSortClass(new ProductSort)
+            ->setListTitle('Drafted Products')
+            ->setSingleTitle('Product Draft')
+            ->setListView('admin.shop.products.drafts')
+            ->setSingleView('admin.shop.products.draft')
+            ->setLimboView('admin.shop.products.limbo')
+            ->setRedirectUrl('admin.products.drafts')
+            ->setViewVariables(static::buildAdvancedViewVariables());
+    }
+
+    /**
      * Set the options for the CanRevision trait.
      *
      * @return RevisionOptions
@@ -480,9 +454,9 @@ class ProductsController extends Controller
     public static function getRevisionOptions()
     {
         return RevisionOptions::instance()
-            ->setTitle('Product Revision')
-            ->setView('admin.shop.products.revision')
-            ->setVariables(static::buildAdvancedViewVariables());
+            ->setPageTitle('Product Revision')
+            ->setPageView('admin.shop.products.revision')
+            ->setViewVariables(static::buildAdvancedViewVariables());
     }
 
     /**
@@ -493,8 +467,8 @@ class ProductsController extends Controller
     public static function getPreviewOptions()
     {
         return PreviewOptions::instance()
-            ->setModel(Product::class)
-            ->setValidator(new ProductRequest)
+            ->setEntityModel(Product::class)
+            ->setValidatorRequest(new ProductRequest)
             ->withPivotedRelations([
                 'categories' => 'categories',
                 'attributes' => 'attributes',
@@ -511,8 +485,8 @@ class ProductsController extends Controller
     public static function getDuplicateOptions()
     {
         return DuplicateOptions::instance()
-            ->setModel(Product::class)
-            ->setRedirect('admin.products.edit');
+            ->setEntityModel(Product::class)
+            ->setRedirectUrl('admin.products.edit');
     }
 
     /**

@@ -9,9 +9,11 @@ use App\Http\Sorts\Cms\BlockSort;
 use App\Models\Cms\Block;
 use App\Models\Version\Draft;
 use App\Models\Version\Revision;
+use App\Options\DraftOptions;
 use App\Options\DuplicateOptions;
 use App\Options\RevisionOptions;
 use App\Traits\CanCrud;
+use App\Traits\CanDraft;
 use App\Traits\CanDuplicate;
 use App\Traits\CanRevision;
 use DB;
@@ -21,6 +23,7 @@ use Illuminate\Http\Request;
 class BlocksController extends Controller
 {
     use CanCrud;
+    use CanDraft;
     use CanRevision;
     use CanDuplicate;
 
@@ -177,56 +180,6 @@ class BlocksController extends Controller
 
     /**
      * @param Request $request
-     * @param BlockFilter $filter
-     * @param BlockSort $sort
-     * @return \Illuminate\View\View
-     */
-    public function drafts(Request $request, BlockFilter $filter, BlockSort $sort)
-    {
-        return $this->_drafts(function () use ($request, $filter, $sort) {
-            $this->items = Block::onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
-            $this->title = 'Drafted Blocks';
-            $this->view = view('admin.cms.blocks.drafts');
-            $this->vars = [
-                'types' => Block::getTypes(),
-            ];
-        });
-    }
-
-    /**
-     * @param Draft $draft
-     * @return \Illuminate\View\View
-     */
-    public function draft(Draft $draft)
-    {
-        return $this->_draft(function () use ($draft) {
-            $this->item = $draft->draftable;
-            $this->item->publishDraft($draft);
-
-            $this->title = 'Block Draft';
-            $this->view = view('admin.cms.blocks.draft');
-        }, $draft);
-    }
-
-    /**
-     * @param Request $request
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws Exception
-     */
-    public function limbo(Request $request, $id)
-    {
-        return $this->_limbo(function () {
-            $this->title = 'Block Draft';
-            $this->view = view('admin.cms.blocks.limbo');
-        }, function () use ($request) {
-            $this->item->saveAsDraft($request->all());
-            $this->redirect = redirect()->route('admin.blocks.drafts');
-        }, $id, $request, new BlockRequest);
-    }
-
-    /**
-     * @param Request $request
      * @return array
      */
     public function get(Request $request)
@@ -317,6 +270,29 @@ class BlocksController extends Controller
     }
 
     /**
+     * Set the options for the CanDraft trait.
+     *
+     * @return DraftOptions
+     */
+    public static function getDraftOptions()
+    {
+        return DraftOptions::instance()
+            ->setEntityModel(Block::class)
+            ->setValidatorRequest(new BlockRequest)
+            ->setFilterClass(new BlockFilter)
+            ->setSortClass(new BlockSort)
+            ->setListTitle('Drafted Blocks')
+            ->setSingleTitle('Block Draft')
+            ->setListView('admin.cms.blocks.drafts')
+            ->setSingleView('admin.cms.blocks.draft')
+            ->setLimboView('admin.cms.blocks.limbo')
+            ->setRedirectUrl('admin.blocks.drafts')
+            ->setViewVariables([
+                'types' => Block::getTypes(),
+            ]);
+    }
+
+    /**
      * Set the options for the CanRevision trait.
      *
      * @return RevisionOptions
@@ -324,8 +300,8 @@ class BlocksController extends Controller
     public static function getRevisionOptions()
     {
         return RevisionOptions::instance()
-            ->setTitle('Block Revision')
-            ->setView('admin.cms.blocks.revision');
+            ->setPageTitle('Block Revision')
+            ->setPageView('admin.cms.blocks.revision');
     }
 
     /**
@@ -336,7 +312,7 @@ class BlocksController extends Controller
     public static function getDuplicateOptions()
     {
         return DuplicateOptions::instance()
-            ->setModel(Block::class)
-            ->setRedirect('admin.blocks.edit');
+            ->setEntityModel(Block::class)
+            ->setRedirectUrl('admin.blocks.edit');
     }
 }

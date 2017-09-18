@@ -8,12 +8,12 @@ use App\Http\Requests\Cms\PageRequest;
 use App\Http\Sorts\Cms\PageSort;
 use App\Models\Cms\Layout;
 use App\Models\Cms\Page;
-use App\Models\Version\Draft;
-use App\Models\Version\Revision;
+use App\Options\DraftOptions;
 use App\Options\DuplicateOptions;
 use App\Options\PreviewOptions;
 use App\Options\RevisionOptions;
 use App\Traits\CanCrud;
+use App\Traits\CanDraft;
 use App\Traits\CanDuplicate;
 use App\Traits\CanPreview;
 use App\Traits\CanRevision;
@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 class PagesController extends Controller
 {
     use CanCrud;
+    use CanDraft;
     use CanRevision;
     use CanPreview;
     use CanDuplicate;
@@ -195,67 +196,6 @@ class PagesController extends Controller
 
     /**
      * @param Request $request
-     * @param PageFilter $filter
-     * @param PageSort $sort
-     * @return \Illuminate\View\View
-     */
-    public function drafts(Request $request, PageFilter $filter, PageSort $sort)
-    {
-        return $this->_drafts(function () use ($request, $filter, $sort) {
-            $this->items = Page::onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
-            $this->title = 'Drafted Pages';
-            $this->view = view('admin.cms.pages.drafts');
-            $this->vars = [
-                'layouts' => Layout::all(),
-                'types' => Page::$types,
-                'actives' => Page::$actives,
-            ];
-        });
-    }
-
-    /**
-     * @param Draft $draft
-     * @return \Illuminate\View\View
-     */
-    public function draft(Draft $draft)
-    {
-        return $this->_draft(function () use ($draft) {
-            $this->item = $draft->draftable;
-            $this->item->publishDraft($draft);
-
-            $this->title = 'Page Draft';
-            $this->view = view('admin.cms.pages.draft');
-            $this->vars = [
-                'layouts' => Layout::all(),
-                'types' => Page::$types,
-                'actives' => Page::$actives,
-            ];
-        }, $draft);
-    }
-
-    /**
-     * @param Request $request
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function limbo(Request $request, $id)
-    {
-        return $this->_limbo(function () {
-            $this->title = 'Page Draft';
-            $this->view = view('admin.cms.pages.limbo');
-            $this->vars = [
-                'layouts' => Layout::all(),
-                'types' => Page::$types,
-                'actives' => Page::$actives,
-            ];
-        }, function () use ($request) {
-            $this->item->saveAsDraft($request->all());
-            $this->redirect = redirect()->route('admin.pages.drafts');
-        }, $id, $request, new PageRequest());
-    }
-
-    /**
-     * @param Request $request
      * @param int|null $type
      * @return array
      */
@@ -290,6 +230,31 @@ class PagesController extends Controller
     }
 
     /**
+     * Set the options for the CanDraft trait.
+     *
+     * @return DraftOptions
+     */
+    public static function getDraftOptions()
+    {
+        return DraftOptions::instance()
+            ->setEntityModel(Page::class)
+            ->setValidatorRequest(new PageRequest)
+            ->setFilterClass(new PageFilter)
+            ->setSortClass(new PageSort)
+            ->setListTitle('Drafted Pages')
+            ->setSingleTitle('Page Draft')
+            ->setListView('admin.cms.pages.drafts')
+            ->setSingleView('admin.cms.pages.draft')
+            ->setLimboView('admin.cms.pages.limbo')
+            ->setRedirectUrl('admin.pages.drafts')
+            ->setViewVariables([
+                'layouts' => Layout::all(),
+                'types' => Page::$types,
+                'actives' => Page::$actives,
+            ]);
+    }
+
+    /**
      * Set the options for the CanRevision trait.
      *
      * @return RevisionOptions
@@ -297,9 +262,9 @@ class PagesController extends Controller
     public static function getRevisionOptions()
     {
         return RevisionOptions::instance()
-            ->setTitle('Page Revision')
-            ->setView('admin.cms.pages.revision')
-            ->setVariables([
+            ->setPageTitle('Page Revision')
+            ->setPageView('admin.cms.pages.revision')
+            ->setViewVariables([
                 'layouts' => Layout::all(),
                 'types' => Page::$types,
                 'actives' => Page::$actives,
@@ -314,8 +279,8 @@ class PagesController extends Controller
     public static function getPreviewOptions()
     {
         return PreviewOptions::instance()
-            ->setModel(Page::class)
-            ->setValidator(new PageRequest);
+            ->setEntityModel(Page::class)
+            ->setValidatorRequest(new PageRequest);
     }
 
     /**
@@ -326,7 +291,7 @@ class PagesController extends Controller
     public static function getDuplicateOptions()
     {
         return DuplicateOptions::instance()
-            ->setModel(Page::class)
-            ->setRedirect('admin.pages.edit');
+            ->setEntityModel(Page::class)
+            ->setRedirectUrl('admin.pages.edit');
     }
 }

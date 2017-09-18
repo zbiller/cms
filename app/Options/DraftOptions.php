@@ -2,11 +2,20 @@
 
 namespace App\Options;
 
+use App\Http\Filters\Filter;
+use App\Http\Sorts\Sort;
+use App\Models\Model;
+use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
+
 class DraftOptions
 {
     /**
      * The fields that should be draftable.
      * By default (null) all fields are draftable.
+     *
+     * IMPORTANT: This option is available for the App\Traits\HasDrafts trait.
      *
      * @var array
      */
@@ -15,6 +24,8 @@ class DraftOptions
     /**
      * The model's relations that should be draftable.
      * By default (null) none of the model's relations are draftable.
+     *
+     * IMPORTANT: This option is available for the App\Traits\HasDrafts trait.
      *
      * @var array
      */
@@ -31,6 +42,8 @@ class DraftOptions
      * After the model instance has been updated with the draft's data.
      * The recently published draft will be still be present in the drafts database table.
      *
+     * IMPORTANT: This option is available for the App\Traits\HasDrafts trait.
+     *
      * @var bool
      */
     public $deletePublishedDraft = true;
@@ -42,6 +55,8 @@ class DraftOptions
      *
      * If set to "false", after publishing a draft, the original model instance's data will NOT be stored to a revision.
      * Please note that if "false", there's the risk of losing valuable data.
+     *
+     * IMPORTANT: This option is available for the App\Traits\HasDrafts trait.
      *
      * @var bool
      */
@@ -63,9 +78,137 @@ class DraftOptions
      * This applies only for draftable relations which data has not been provided.
      * Please note that if EMPTY data is provided alongside to the SaveAsDraft method, those relations will get saved as empty, regardless this option.
      *
+     * IMPORTANT: This option is available for the App\Traits\HasDrafts trait.
+     *
      * @var bool
      */
     public $softDraftRelations = false;
+
+    /**
+     * The model that should be used for drafting.
+     * When setting this, pass either an instance of App\Models\Model or a string.
+     * The "setEntityModel()" method will convert it to a valid model.
+     *
+     * IMPORTANT: This option is available for the App\Traits\CanDraft trait.
+     *
+     * @var Model|string
+     */
+    public $entityModel;
+
+    /**
+     * The form request validator to validate against.
+     * This is used inside the "limbo()" methods of the App\Traits\CanDraft trait.
+     *
+     * IMPORTANT: This option is available for the App\Traits\CanDraft trait.
+     *
+     * @var FormRequest
+     */
+    public $validatorRequest;
+
+    /**
+     * The filter class based on which the drafts could be filtered.
+     * This is used inside the "drafts()" methods of the App\Traits\CanDraft trait.
+     *
+     * IMPORTANT: This option is available for the App\Traits\CanDraft trait.
+     *
+     * @var Filter
+     */
+    public $filterClass;
+
+    /**
+     * The sort class based on which the drafts could be sorted.
+     * This is used inside the "drafts()" methods of the App\Traits\CanDraft trait.
+     *
+     * IMPORTANT: This option is available for the App\Traits\CanDraft trait.
+     *
+     * @var Sort
+     */
+    public $sortClass;
+
+    /**
+     * The meta title displayed when viewing an entity record's list of drafts.
+     * This is used as the meta title for when viewing the entire list of drafts belonging to an entity record.
+     *
+     * IMPORTANT: This option is available for the App\Traits\CanDraft trait.
+     *
+     * @var string
+     */
+    public $listTitle = 'Drafts';
+
+    /**
+     * The meta title displayed when viewing an entity record's draft.
+     * This is used as the meta title for when viewing a single draft belonging to an entity record.
+     *
+     * IMPORTANT: This option is available for the App\Traits\CanDraft trait.
+     *
+     * @var string
+     */
+    public $singleTitle = 'Draft';
+
+    /**
+     * The blade view file returned when viewing an entity record's list of drafts.
+     * This is used to know which view to return when accessing the logic for displaying all of one entity's drafts.
+     * More precisely, it's used inside the "drafts()" method of the App\Traits\CanDraft trait.
+     *
+     * When setting this, pass either an instance of Illuminate\View\View or a string.
+     * The "setListView()" method will convert it to a valid view response.
+     *
+     * IMPORTANT: This option is available for the App\Traits\CanDraft trait.
+     *
+     * @var View|string
+     */
+    public $listView;
+
+    /**
+     * The blade view file returned when viewing an entity record's normal draft.
+     * This is used to know which view to return when accessing the logic for displaying a specific draft belonging to an entity record.
+     * More precisely, it's used inside the "draft()" method of the App\Traits\CanDraft trait.
+     *
+     * When setting this, pass either an instance of Illuminate\View\View or a string.
+     * The "setSingleView()" method will convert it to a valid view response.
+     *
+     * IMPORTANT: This option is available for the App\Traits\CanDraft trait.
+     *
+     * @var View|string
+     */
+    public $singleView;
+
+    /**
+     * The blade view file returned when viewing an entity record's limbo draft.
+     * This is used to know which view to return when accessing the logic for displaying a specific limbo draft.
+     * More precisely, it's used inside the "drafts()" method of the App\Traits\CanDraft trait.
+     *
+     * When setting this, pass either an instance of Illuminate\View\View or a string.
+     * The "setLimboView()" method will convert it to a valid view response.
+     *
+     * IMPORTANT: This option is available for the App\Traits\CanDraft trait.
+     *
+     * @var View|string
+     */
+    public $limboView;
+
+    /**
+     * The redirect url to redirect the admin user after a limbo draft has been saved.
+     * This is used inside the "limbo()" method of the  App\Traits\CanDraft trait, more precisely in the PUT logic.
+     *
+     * When setting this, pass either an instance of Illuminate\Http\RedirectResponse or a string.
+     * The "setRedirectUrl()" method will convert it to a valid redirect response to a route.
+     *
+     * IMPORTANT: This option is available for the App\Traits\CanDraft trait.
+     *
+     * @var RedirectResponse|string
+     */
+    public $redirectUrl;
+
+    /**
+     * The variables that will be assigned to the view when viewing an entity record's revision.
+     * This is used on the "drafts()", "draft()" and "limbo()" methods of the App\Traits\CanDraft trait.
+     *
+     * IMPORTANT: This option is available for the App\Traits\CanDraft trait.
+     *
+     * @var array
+     */
+    public $viewVariables = [];
 
     /**
      * Get a fresh instance of this class.
@@ -135,6 +278,149 @@ class DraftOptions
     public function softRelationDrafting(): DraftOptions
     {
         $this->softDraftRelations = true;
+
+        return $this;
+    }
+
+    /**
+     * Set the $validatorRequest to work with in the App\Traits\CanDraft trait.
+     *
+     * @param Model|string $model
+     * @return DraftOptions
+     */
+    public function setEntityModel($model): DraftOptions
+    {
+        $this->entityModel = $model instanceof Model ? $model : app($model);
+
+        return $this;
+    }
+
+    /**
+     * Set the $validatorRequest to work with in the App\Traits\CanDraft trait.
+     *
+     * @param FormRequest $validator
+     * @return DraftOptions
+     */
+    public function setValidatorRequest(FormRequest $validator): DraftOptions
+    {
+        $this->validatorRequest = $validator;
+
+        return $this;
+    }
+
+    /**
+     * Set the $filterClass to work with in the App\Traits\CanDraft trait.
+     *
+     * @param Filter $filter
+     * @return DraftOptions
+     */
+    public function setFilterClass(Filter $filter): DraftOptions
+    {
+        $this->filterClass = $filter;
+
+        return $this;
+    }
+
+    /**
+     * Set the $sortClass to work with in the App\Traits\CanDraft trait.
+     *
+     * @param Sort $sort
+     * @return DraftOptions
+     */
+    public function setSortClass(Sort $sort): DraftOptions
+    {
+        $this->sortClass = $sort;
+
+        return $this;
+    }
+
+    /**
+     * Set the $listTitle to work with in the App\Traits\CanDraft trait.
+     *
+     * @param string $title
+     * @return DraftOptions
+     */
+    public function setListTitle($title): DraftOptions
+    {
+        $this->listTitle = $title;
+
+        return $this;
+    }
+
+    /**
+     * Set the $singleTitle to work with in the App\Traits\CanDraft trait.
+     *
+     * @param string $title
+     * @return DraftOptions
+     */
+    public function setSingleTitle($title): DraftOptions
+    {
+        $this->singleTitle = $title;
+
+        return $this;
+    }
+
+    /**
+     * Set the $listView to work with in the App\Traits\CanDraft trait.
+     *
+     * @param View|string $view
+     * @return DraftOptions
+     */
+    public function setListView($view): DraftOptions
+    {
+        $this->listView = $view instanceof View ? $view : view($view);
+
+        return $this;
+    }
+
+    /**
+     * Set the $singleView to work with in the App\Traits\CanDraft trait.
+     *
+     * @param View|string $view
+     * @return DraftOptions
+     */
+    public function setSingleView($view): DraftOptions
+    {
+        $this->singleView = $view instanceof View ? $view : view($view);
+
+        return $this;
+    }
+
+    /**
+     * Set the $limboView to work with in the App\Traits\CanDraft trait.
+     *
+     * @param View|string $view
+     * @return DraftOptions
+     */
+    public function setLimboView($view): DraftOptions
+    {
+        $this->limboView = $view instanceof View ? $view : view($view);
+
+        return $this;
+    }
+
+    /**
+     * Set the $redirectUrl to work with in the App\Traits\CanDraft trait.
+     *
+     * @param RedirectResponse|string $redirect
+     * @return DraftOptions
+     */
+    public function setRedirectUrl($redirect): DraftOptions
+    {
+        $this->redirectUrl = $redirect instanceof RedirectResponse ? $redirect : redirect()->route($redirect);
+
+        return $this;
+    }
+
+    /**
+     * Set the $viewVariables to work with in the App\Traits\CanDraft trait.
+     *
+     * @param array $variables
+     * @return DraftOptions
+     */
+    public function setViewVariables(array $variables = []): DraftOptions
+    {
+        $this->viewVariables = $variables;
 
         return $this;
     }

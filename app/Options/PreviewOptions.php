@@ -10,18 +10,18 @@ class PreviewOptions
     /**
      * The model that should be previewed.
      * When setting this, pass either an instance of App\Models\Model or a string.
-     * The "setModel()" method will convert it to a valid model.
+     * The "setEntityModel()" method will convert it to a valid model.
      *
      * @var Model|string
      */
-    public $model;
+    public $entityModel;
 
     /**
      * The form request validator to validate against.
      *
      * @var FormRequest
      */
-    public $validator;
+    public $validatorRequest;
 
     /**
      * The pivoted relations that should be saved alongside the original model when previewing.
@@ -45,27 +45,27 @@ class PreviewOptions
     }
 
     /**
-     * Set the $model to work with in the App\Traits\CanPreview trait.
+     * Set the $entityModel to work with in the App\Traits\CanPreview trait.
      *
      * @param Model|string $model
      * @return PreviewOptions
      */
-    public function setModel($model): PreviewOptions
+    public function setEntityModel($model): PreviewOptions
     {
-        $this->model = $model instanceof Model ? $model : app($model);
+        $this->entityModel = $model instanceof Model ? $model : app($model);
 
         return $this;
     }
 
     /**
-     * Set the $validator to work with in the App\Traits\CanPreview trait.
+     * Set the $validatorRequest to work with in the App\Traits\CanPreview trait.
      *
      * @param FormRequest $validator
      * @return PreviewOptions
      */
-    public function setValidator(FormRequest $validator): PreviewOptions
+    public function setValidatorRequest(FormRequest $validator): PreviewOptions
     {
-        $this->validator = $validator;
+        $this->validatorRequest = $validator;
 
         return $this;
     }

@@ -63,25 +63,25 @@ class RevisionOptions
      *
      * @var string
      */
-    public $title = 'Revision';
+    public $pageTitle = 'Revision';
 
     /**
      * The blade view file returned when viewing an entity record's revision.
      *
-     * IMPORTANT: This option is available for the App\Traits\HasRevisions trait.
+     * IMPORTANT: This option is available for the App\Traits\CanRevision trait.
      *
      * @var View|string
      */
-    public $view;
+    public $pageView;
 
     /**
      * The variables that will be assigned to the view when viewing an entity record's revision.
      *
-     * IMPORTANT: This option is available for the App\Traits\HasRevisions trait.
+     * IMPORTANT: This option is available for the App\Traits\CanRevision trait.
      *
      * @var array
      */
-    public $variables = [];
+    public $viewVariables = [];
 
     /**
      * Get a fresh instance of this class.
@@ -157,40 +157,40 @@ class RevisionOptions
     }
 
     /**
-     * Set the $title to work with in the App\Traits\CanRevision trait.
+     * Set the $pageTitle to work with in the App\Traits\CanRevision trait.
      *
      * @param string $title
      * @return RevisionOptions
      */
-    public function setTitle($title): RevisionOptions
+    public function setPageTitle($title): RevisionOptions
     {
-        $this->title = $title;
+        $this->pageTitle = $title;
 
         return $this;
     }
 
     /**
-     * Set the $view to work with in the App\Traits\CanRevision trait.
+     * Set the $pageView to work with in the App\Traits\CanRevision trait.
      *
      * @param View|string $view
      * @return RevisionOptions
      */
-    public function setView($view): RevisionOptions
+    public function setPageView($view): RevisionOptions
     {
-        $this->view = $view instanceof View ? $view : view($view);
+        $this->pageView = $view instanceof View ? $view : view($view);
 
         return $this;
     }
 
     /**
-     * Set the $variables to work with in the App\Traits\CanRevision trait.
+     * Set the $viewVariables to work with in the App\Traits\CanRevision trait.
      *
      * @param array $variables
      * @return RevisionOptions
      */
-    public function setVariables(array $variables = []): RevisionOptions
+    public function setViewVariables(array $variables = []): RevisionOptions
     {
-        $this->variables = $variables;
+        $this->viewVariables = $variables;
 
         return $this;
     }

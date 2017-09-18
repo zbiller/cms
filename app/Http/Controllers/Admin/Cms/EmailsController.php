@@ -7,10 +7,11 @@ use App\Http\Filters\Cms\EmailFilter;
 use App\Http\Requests\Cms\EmailRequest;
 use App\Http\Sorts\Cms\EmailSort;
 use App\Models\Cms\Email;
-use App\Models\Version\Draft;
+use App\Options\DraftOptions;
 use App\Options\DuplicateOptions;
 use App\Options\RevisionOptions;
 use App\Traits\CanCrud;
+use App\Traits\CanDraft;
 use App\Traits\CanDuplicate;
 use App\Traits\CanRevision;
 use DB;
@@ -21,6 +22,7 @@ use Illuminate\Mail\Markdown;
 class EmailsController extends Controller
 {
     use CanCrud;
+    use CanDraft;
     use CanRevision;
     use CanDuplicate;
 
@@ -213,61 +215,28 @@ class EmailsController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param EmailFilter $filter
-     * @param EmailSort $sort
-     * @return \Illuminate\View\View
+     * Set the options for the CanDraft trait.
+     *
+     * @return DraftOptions
      */
-    public function drafts(Request $request, EmailFilter $filter, EmailSort $sort)
+    public static function getDraftOptions()
     {
-        return $this->_drafts(function () use ($request, $filter, $sort) {
-            $this->items = Email::onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
-            $this->title = 'Drafted Emails';
-            $this->view = view('admin.cms.emails.drafts');
-            $this->vars = [
+        return DraftOptions::instance()
+            ->setEntityModel(Email::class)
+            ->setValidatorRequest(new EmailRequest)
+            ->setFilterClass(new EmailFilter)
+            ->setSortClass(new EmailSort)
+            ->setListTitle('Drafted Emails')
+            ->setSingleTitle('Email Draft')
+            ->setListView('admin.cms.emails.drafts')
+            ->setSingleView('admin.cms.emails.draft')
+            ->setLimboView('admin.cms.emails.limbo')
+            ->setRedirectUrl('admin.emails.drafts')
+            ->setViewVariables([
                 'types' => Email::$types,
-            ];
-        });
-    }
-
-    /**
-     * @param Draft $draft
-     * @return \Illuminate\View\View
-     */
-    public function draft(Draft $draft)
-    {
-        return $this->_draft(function () use ($draft) {
-            $this->item = $draft->draftable;
-            $this->item->publishDraft($draft);
-
-            $this->title = 'Email Draft';
-            $this->view = view('admin.cms.emails.draft');
-            $this->vars = [
                 'fromEmail' => Email::getFromAddress(),
                 'fromName' => Email::getFromName(),
-            ];
-        }, $draft);
-    }
-
-    /**
-     * @param Request $request
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws Exception
-     */
-    public function limbo(Request $request, $id)
-    {
-        return $this->_limbo(function () {
-            $this->title = 'Email Draft';
-            $this->view = view('admin.cms.emails.limbo');
-            $this->vars = [
-                'fromEmail' => Email::getFromAddress(),
-                'fromName' => Email::getFromName(),
-            ];
-        }, function () use ($request) {
-            $this->item->saveAsDraft($request->all());
-            $this->redirect = redirect()->route('admin.emails.drafts');
-        }, $id, $request, new EmailRequest);
+            ]);
     }
 
     /**
@@ -278,9 +247,9 @@ class EmailsController extends Controller
     public static function getRevisionOptions()
     {
         return RevisionOptions::instance()
-            ->setTitle('Email Revision')
-            ->setView('admin.cms.emails.revision')
-            ->setVariables([
+            ->setPageTitle('Email Revision')
+            ->setPageView('admin.cms.emails.revision')
+            ->setViewVariables([
                 'fromEmail' => Email::getFromAddress(),
                 'fromName' => Email::getFromName(),
             ]);
@@ -294,7 +263,7 @@ class EmailsController extends Controller
     public static function getDuplicateOptions()
     {
         return DuplicateOptions::instance()
-            ->setModel(Email::class)
-            ->setRedirect('admin.emails.edit');
+            ->setEntityModel(Email::class)
+            ->setRedirectUrl('admin.emails.edit');
     }
 }

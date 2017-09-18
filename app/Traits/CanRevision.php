@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Models\Model;
 use App\Models\Version\Revision;
 use App\Options\RevisionOptions;
+use App\Services\CacheService;
 use DB;
 use Exception;
 use Meta;
@@ -50,6 +51,7 @@ trait CanRevision
 
         try {
             DB::beginTransaction();
+            CacheService::disableQueryCache();
 
             $model = $revision->revisionable;
 
@@ -101,7 +103,7 @@ trait CanRevision
      */
     protected function establishRevisionPageTitle()
     {
-        $title = self::$revisionOptions->title;
+        $title = self::$revisionOptions->pageTitle;
 
         Meta::set('title', $title ? 'Admin - ' . $title : 'Admin');
     }
@@ -115,8 +117,8 @@ trait CanRevision
      */
     protected function revisionViewWithVariables(Model $model, Revision $revision)
     {
-        return self::$revisionOptions->view->with(array_merge(
-            self::$revisionOptions->variables,
+        return self::$revisionOptions->pageView->with(array_merge(
+            self::$revisionOptions->viewVariables,
             ['item' => $model, 'revision' => $revision]
         ));
     }
@@ -131,10 +133,10 @@ trait CanRevision
      */
     protected static function validateRevisionOptions()
     {
-        if (!self::$revisionOptions->view) {
+        if (!self::$revisionOptions->pageView) {
             throw new Exception(
                 'The controller ' . self::class . ' uses the CanRevision trait.' . PHP_EOL .
-                'You are required to set the "view" that will be returned when viewing a revision.' . PHP_EOL .
+                'You are required to set the "page view" that will be returned when viewing a revision.' . PHP_EOL .
                 'You can do this from inside the getRevisionOptions() method defined on the controller.' . PHP_EOL .
                 'Please note that the view must be an instance of Illuminate\View\View or a string.'
             );

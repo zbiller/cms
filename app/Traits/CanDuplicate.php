@@ -34,17 +34,6 @@ trait CanDuplicate
     }
 
     /**
-     * Verify if a model can be duplicated.
-     * It has to use the App\Traits\HasDuplicates trait.
-     *
-     * @return bool
-     */
-    protected function canBeDuplicated()
-    {
-        return in_array(HasDuplicates::class, class_uses(self::$duplicateOptions->model));
-    }
-
-    /**
      * Duplicate the given entity record.
      *
      * @param Request $request
@@ -59,7 +48,7 @@ trait CanDuplicate
         }
 
         try {
-            $model = self::$duplicateOptions->model;
+            $model = self::$duplicateOptions->entityModel;
 
             try {
                 $model = $model->findOrFail($id);
@@ -71,11 +60,22 @@ trait CanDuplicate
             $duplicate = $model->saveAsDuplicate();
 
             flash()->success('The record was successfully duplicated!<br /><br />You have been redirected to the newly duplicated record.');
-            return redirect()->route(self::$duplicateOptions->redirect, $duplicate->id);
+            return redirect()->route(self::$duplicateOptions->redirectUrl, $duplicate->id);
         } catch (Exception $e) {
             flash()->error('Failed duplicating the record!');
             return back()->withInput($request ? $request->all() : []);
         }
+    }
+
+    /**
+     * Verify if a model can be duplicated.
+     * It has to use the App\Traits\HasDuplicates trait.
+     *
+     * @return bool
+     */
+    protected function canBeDuplicated()
+    {
+        return in_array(HasDuplicates::class, class_uses(self::$duplicateOptions->entityModel));
     }
 
     /**
@@ -88,16 +88,16 @@ trait CanDuplicate
      */
     protected static function validateDuplicateOptions()
     {
-        if (!self::$duplicateOptions->model || !(self::$duplicateOptions->model instanceof Model)) {
+        if (!self::$duplicateOptions->entityModel || !(self::$duplicateOptions->entityModel instanceof Model)) {
             throw new Exception(
                 'The controller ' . self::class . ' uses the CanDuplicate trait.' . PHP_EOL .
-                'You are required to set the "model" that will be duplicated.' . PHP_EOL .
+                'You are required to set the "entity model" that will be duplicated.' . PHP_EOL .
                 'You can do this from inside the getDuplicateOptions() method defined on the controller.' . PHP_EOL .
-                'Please note that the model must be an instance of App\Models\Model or a string.'
+                'Please note that the entity model must be an instance of App\Models\Model or a string.'
             );
         }
 
-        if (!self::$duplicateOptions->redirect) {
+        if (!self::$duplicateOptions->redirectUrl) {
             throw new Exception(
                 'The controller ' . self::class . ' uses the CanDuplicate trait.' . PHP_EOL .
                 'You are required to set the "redirect" url to go to after the duplicate process happened.' . PHP_EOL .

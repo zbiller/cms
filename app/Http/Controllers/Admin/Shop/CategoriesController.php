@@ -9,11 +9,12 @@ use App\Http\Sorts\Shop\CategorySort;
 use App\Models\Shop\Category;
 use App\Models\Shop\Discount;
 use App\Models\Shop\Tax;
-use App\Models\Version\Draft;
+use App\Options\DraftOptions;
 use App\Options\DuplicateOptions;
 use App\Options\PreviewOptions;
 use App\Options\RevisionOptions;
 use App\Traits\CanCrud;
+use App\Traits\CanDraft;
 use App\Traits\CanDuplicate;
 use App\Traits\CanPreview;
 use App\Traits\CanRevision;
@@ -23,6 +24,7 @@ use Illuminate\Http\Request;
 class CategoriesController extends Controller
 {
     use CanCrud;
+    use CanDraft;
     use CanRevision;
     use CanPreview;
     use CanDuplicate;
@@ -189,57 +191,6 @@ class CategoriesController extends Controller
 
     /**
      * @param Request $request
-     * @param CategoryFilter $filter
-     * @param CategorySort $sort
-     * @return \Illuminate\View\View
-     */
-    public function drafts(Request $request, CategoryFilter $filter, CategorySort $sort)
-    {
-        return $this->_drafts(function () use ($request, $filter, $sort) {
-            $this->items = Category::onlyDrafts()->filtered($request, $filter)->sorted($request, $sort)->paginate(config('crud.per_page'));
-            $this->title = 'Drafted Categories';
-            $this->view = view('admin.shop.categories.drafts');
-            $this->vars = [
-                'actives' => Category::$actives,
-            ];
-        });
-    }
-
-    /**
-     * @param Draft $draft
-     * @return \Illuminate\View\View
-     */
-    public function draft(Draft $draft)
-    {
-        return $this->_draft(function () use ($draft) {
-            $this->item = $draft->draftable;
-            $this->item->publishDraft($draft);
-
-            $this->title = 'Category Draft';
-            $this->view = view('admin.shop.categories.draft');
-            $this->vars = static::buildCommonViewVariables();
-        }, $draft);
-    }
-
-    /**
-     * @param Request $request
-     * @param int $id
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function limbo(Request $request, $id)
-    {
-        return $this->_limbo(function () {
-            $this->title = 'Category Draft';
-            $this->view = view('admin.shop.categories.limbo');
-            $this->vars = static::buildCommonViewVariables();
-        }, function () use ($request) {
-            $this->item->saveAsDraft($request->all());
-            $this->redirect = redirect()->route('admin.product_categories.drafts');
-        }, $id, $request, new CategoryRequest());
-    }
-
-    /**
-     * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function loadDiscount(Request $request)
@@ -313,6 +264,27 @@ class CategoriesController extends Controller
     }
 
     /**
+     * Set the options for the CanDraft trait.
+     *
+     * @return DraftOptions
+     */
+    public static function getDraftOptions()
+    {
+        return DraftOptions::instance()
+            ->setEntityModel(Category::class)
+            ->setValidatorRequest(new CategoryRequest)
+            ->setFilterClass(new CategoryFilter)
+            ->setSortClass(new CategorySort)
+            ->setListTitle('Drafted Categories')
+            ->setSingleTitle('Category Draft')
+            ->setListView('admin.shop.categories.drafts')
+            ->setSingleView('admin.shop.categories.draft')
+            ->setLimboView('admin.shop.categories.limbo')
+            ->setRedirectUrl('admin.product_categories.drafts')
+            ->setViewVariables(static::buildCommonViewVariables());
+    }
+
+    /**
      * Set the options for the CanRevision trait.
      *
      * @return RevisionOptions
@@ -320,9 +292,9 @@ class CategoriesController extends Controller
     public static function getRevisionOptions()
     {
         return RevisionOptions::instance()
-            ->setTitle('Category Revision')
-            ->setView('admin.shop.categories.revision')
-            ->setVariables(static::buildCommonViewVariables());
+            ->setPageTitle('Category Revision')
+            ->setPageView('admin.shop.categories.revision')
+            ->setViewVariables(static::buildCommonViewVariables());
     }
 
     /**
@@ -333,8 +305,8 @@ class CategoriesController extends Controller
     public static function getPreviewOptions()
     {
         return PreviewOptions::instance()
-            ->setModel(Category::class)
-            ->setValidator(new CategoryRequest)
+            ->setEntityModel(Category::class)
+            ->setValidatorRequest(new CategoryRequest)
             ->withPivotedRelations([
                 'discounts' => 'discounts',
                 'taxes' => 'taxes',
@@ -349,8 +321,8 @@ class CategoriesController extends Controller
     public static function getDuplicateOptions()
     {
         return DuplicateOptions::instance()
-            ->setModel(Category::class)
-            ->setRedirect('admin.product_categories.edit');
+            ->setEntityModel(Category::class)
+            ->setRedirectUrl('admin.product_categories.edit');
     }
 
     /**

@@ -72,7 +72,7 @@ trait CanPreview
     public function getPreviewModel()
     {
         if (!$this->previewModel) {
-            return $this->previewModel = static::$previewOptions->model;
+            return $this->previewModel = static::$previewOptions->entityModel;
         }
 
         return $this->previewModel;
@@ -96,7 +96,7 @@ trait CanPreview
     public function getPreviewValidator()
     {
         if (!$this->previewValidator) {
-            return $this->previewValidator = static::$previewOptions->validator;
+            return $this->previewValidator = static::$previewOptions->validatorRequest;
         }
 
         return $this->previewValidator;
@@ -151,7 +151,17 @@ trait CanPreview
             return back();
         }
 
-        $this->validatePreviewRequest($request);
+        if ($this->getPreviewValidator() instanceof FormRequest) {
+            try {
+                $request->validate(
+                    $this->parsePreviewValidationRules(),
+                    $this->getPreviewValidator()->messages(),
+                    $this->getPreviewValidator()->attributes()
+                );
+            } catch (ValidationException $e) {
+                return back()->withErrors($e->validator->errors());
+            }
+        }
 
         try {
             DB::beginTransaction();
@@ -295,32 +305,6 @@ trait CanPreview
     }
 
     /**
-     * Validate the request based on the form request specified in the getPreviewOptions() method from controller.
-     * If the rules don't pass, cancel the preview.
-     *
-     * @param Request $request
-     * @return $this|void
-     */
-    protected function validatePreviewRequest(Request $request)
-    {
-        if (!($this->getPreviewValidator() instanceof FormRequest)) {
-            return;
-        }
-
-        try {
-            $request->validate(
-                $this->parsePreviewValidationRules(),
-                $this->getPreviewValidator()->messages(),
-                $this->getPreviewValidator()->attributes()
-            );
-        } catch (ValidationException $e) {
-            return back()->withErrors(
-                $e->validator->errors()
-            );
-        }
-    }
-
-    /**
      * Parse the original form request validation rules into previewable rules.
      * Basically, strip any unique validation rule that might exist.
      *
@@ -349,19 +333,19 @@ trait CanPreview
 
     /**
      * Check if mandatory preview options have been properly set from the controller.
-     * Check if $model has been set.
+     * Check if $entityModel has been set.
      *
      * @return void
      * @throws Exception
      */
     protected static function validatePreviewOptions()
     {
-        if (!self::$previewOptions->model || !(self::$previewOptions->model instanceof Model)) {
+        if (!self::$previewOptions->entityModel || !(self::$previewOptions->entityModel instanceof Model)) {
             throw new Exception(
                 'The controller ' . self::class . ' uses the CanPreview trait.' . PHP_EOL .
-                'You are required to set the "model" that will be previewed.' . PHP_EOL .
+                'You are required to set the "entityModel" that will be previewed.' . PHP_EOL .
                 'You can do this from inside the getPreviewOptions() method defined on the controller.' . PHP_EOL .
-                'Please note that the model must be an instance of App\Models\Model or a string.'
+                'Please note that the entity model must be an instance of App\Models\Model or a string.'
             );
         }
     }
