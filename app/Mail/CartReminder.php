@@ -5,7 +5,6 @@ namespace App\Mail;
 use App\Exceptions\EmailException;
 use App\Models\Cms\Email;
 use App\Models\Shop\Cart;
-use App\Models\Localisation\Currency;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Queue\ShouldQueue;

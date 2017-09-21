@@ -73,92 +73,92 @@ section.list {
         color: $colorOsloGray;
 
     }
+}
 
-    table {
-        @include clear-padding();
+table {
+    @include clear-padding();
 
-        width: 100%;
-        color: $colorOsloGray;
+    width: 100%;
+    color: $colorOsloGray;
 
-        thead > tr {
-            @include font-size(12px);
+    thead > tr {
+        @include font-size(12px);
 
+        background: $colorWhite;
+        font-family: 'Open Sans Bold', sans-serif;
+        text-transform: uppercase;
+
+        td:not(:last-of-type) {
+            cursor: pointer;
+
+            i {
+                color: $colorGhost;
+            }
+        }
+    }
+
+    tbody > tr {
+        @include font-size(13px);
+
+        font-family: 'Open Sans', sans-serif;
+
+        &.odd {
             background: $colorWhite;
-            font-family: 'Open Sans Bold', sans-serif;
-            text-transform: uppercase;
+        }
 
-            td:not(:last-of-type) {
-                cursor: pointer;
+        &.even {
+            background: $colorAlabaster;
+        }
+    }
 
-                i {
-                    color: $colorGhost;
-                }
+    tr > td {
+        padding: 10px 15px;
+        border-bottom: 1px solid $colorGallery;
+
+        @include media-query('tablet') {
+            display: none;
+        }
+
+        &:first-of-type {
+            @include media-query('tablet') {
+                display: table-cell;
             }
         }
 
-        tbody > tr {
-            @include font-size(13px);
-
-            font-family: 'Open Sans', sans-serif;
-
-            &.odd {
-                background: $colorWhite;
-            }
-
-            &.even {
-                background: $colorAlabaster;
-            }
-        }
-
-        tr > td {
-            padding: 10px 15px;
-            border-bottom: 1px solid $colorGallery;
+        &:last-of-type {
+            width: 158px;
+            padding: 10px;
 
             @include media-query('tablet') {
+                display: table-cell;
+                width: 78px;
+            }
+        }
+
+        &.visible-on-tablet-and-up {
+            @include media-query('tablet') {
+                display: table-cell;
+            }
+
+            @include media-query('phone-wide') {
                 display: none;
             }
+        }
 
-            &:first-of-type {
-                @include media-query('tablet') {
-                    display: table-cell;
-                }
+        &.visible-on-mobile-and-up {
+            @include media-query('tablet') {
+                display: table-cell;
             }
 
-            &:last-of-type {
-                width: 158px;
-                padding: 10px;
-
-                @include media-query('tablet') {
-                    display: table-cell;
-                    width: 78px;
-                }
+            @include media-query('phone-wide') {
+                display: table-cell;
             }
+        }
 
-            &.visible-on-tablet-and-up {
-                @include media-query('tablet') {
-                    display: table-cell;
-                }
-
-                @include media-query('phone-wide') {
-                    display: none;
-                }
-            }
-
-            &.visible-on-mobile-and-up {
-                @include media-query('tablet') {
-                    display: table-cell;
-                }
-
-                @include media-query('phone-wide') {
-                    display: table-cell;
-                }
-            }
-
-            a:not(.btn) {
-                color: $colorPictonBlue;
-                font-family: 'Open Sans Semibold';
-                text-decoration: none;
-            }
+        a:not(.btn) {
+            color: $colorPictonBlue;
+            font-family: 'Open Sans Semibold';
+            text-decoration: none;
         }
     }
 }

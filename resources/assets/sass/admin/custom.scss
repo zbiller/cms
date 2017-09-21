@@ -45,6 +45,14 @@
     }
 }
 
+.actions-sitemap {
+    width: 283px !important;
+
+    @include media-query('tablet') {
+        width: 116px !important;
+    }
+}
+
 td .upload-aligned-text {
     margin: 6px 0 0 10px;
     display: inline-block;

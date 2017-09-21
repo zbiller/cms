@@ -65,6 +65,14 @@ class MenuComposer
             });
 
             $menu->add(function ($item) use ($menu) {
+                $seo = $item->name('Seo Administration')->data('icon', 'fa-bar-chart')->active('admin/sitemap/*');
+
+                $menu->child($seo, function (MenuItem $item) {
+                    $item->name('Sitemap')->url(route('admin.sitemap.index'))->permissions('sitemap-list')->active('admin/sitemap/*');
+                });
+            });
+
+            $menu->add(function ($item) use ($menu) {
                 $shop = $item->name('Shop Panel')->data('icon', 'fa-shopping-cart')->active('admin/orders/*', 'admin/carts/*', 'admin/product-categories/*', 'admin/products/*', 'admin/sets/*', 'admin/attributes/*', 'admin/discounts/*', 'admin/taxes/*');
 
                 $menu->child($shop, function (MenuItem $item) {

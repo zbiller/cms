@@ -107,7 +107,7 @@ class SettingsController extends Controller
                 return redirect()->route('admin.settings.general');
             });
         } catch (Exception $e) {
-            flash()->success('Something went wrong! Please try again.');
+            flash()->error('Something went wrong! Please try again.');
             return redirect()->route('admin.settings.general');
         }
     }
@@ -145,7 +145,7 @@ class SettingsController extends Controller
                 return redirect()->route('admin.settings.analytics');
             });
         } catch (Exception $e) {
-            flash()->success('Something went wrong! Please try again.');
+            flash()->error('Something went wrong! Please try again.');
             return redirect()->route('admin.settings.analytics');
         }
     }
@@ -183,7 +183,7 @@ class SettingsController extends Controller
                 return redirect()->route('admin.settings.courier');
             });
         } catch (Exception $e) {
-            flash()->success('Something went wrong! Please try again.');
+            flash()->error('Something went wrong! Please try again.');
             return redirect()->route('admin.settings.courier');
         }
     }

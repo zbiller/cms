@@ -786,27 +786,59 @@ Route::group([
     });
 
     /**
-     * Crud Settings.
-     */
-    Route::group([
-        'namespace' => 'Config',
-        'prefix' => 'settings',
-    ], function () {
-        Route::match(['get', 'post'], 'general', ['as' => 'admin.settings.general', 'uses' => 'SettingsController@general', 'permissions' => 'settings-general']);
-        Route::match(['get', 'post'], 'analytics', ['as' => 'admin.settings.analytics', 'uses' => 'SettingsController@analytics', 'permissions' => 'settings-analytics']);
-        Route::match(['get', 'post'], 'courier', ['as' => 'admin.settings.courier', 'uses' => 'SettingsController@courier', 'permissions' => 'settings-courier']);
-    });
-
-    /**
-     * Crud Backups.
+     * Backup.
      */
     Route::group([
         'namespace' => 'Backup',
-        'prefix' => 'backups',
     ], function () {
-        Route::get('/', ['as' => 'admin.backups.index', 'uses' => 'BackupsController@index', 'permissions' => 'backups-list']);
-        Route::post('create', ['as' => 'admin.backups.create', 'uses' => 'BackupsController@create', 'permissions' => 'backups-create']);
-        Route::get('download/{backup}', ['as' => 'admin.backups.download', 'uses' => 'BackupsController@download', 'permissions' => 'backups-download']);
-        Route::delete('destroy/{backup}', ['as' => 'admin.backups.destroy', 'uses' => 'BackupsController@destroy', 'permissions' => 'backups-delete']);
+        /**
+         * Crud Backups.
+         */
+        Route::group([
+            'prefix' => 'backups',
+        ], function () {
+            Route::get('/', ['as' => 'admin.backups.index', 'uses' => 'BackupsController@index', 'permissions' => 'backups-list']);
+            Route::post('create', ['as' => 'admin.backups.create', 'uses' => 'BackupsController@create', 'permissions' => 'backups-create']);
+            Route::get('download/{backup}', ['as' => 'admin.backups.download', 'uses' => 'BackupsController@download', 'permissions' => 'backups-download']);
+            Route::delete('destroy/{backup}', ['as' => 'admin.backups.destroy', 'uses' => 'BackupsController@destroy', 'permissions' => 'backups-delete']);
+        });
+    });
+
+    /**
+     * Seo.
+     */
+    Route::group([
+        'namespace' => 'Seo',
+    ], function () {
+        /**
+         * Crud Sitemap.
+         */
+        Route::group([
+            'prefix' => 'sitemap',
+        ], function () {
+            Route::get('/', ['as' => 'admin.sitemap.index', 'uses' => 'SitemapController@index', 'permissions' => 'sitemap-list']);
+            Route::get('download/{sitemap?}', ['as' => 'admin.sitemap.download', 'uses' => 'SitemapController@download', 'permissions' => 'sitemap-download']);
+            Route::post('generate', ['as' => 'admin.sitemap.generate', 'uses' => 'SitemapController@generate', 'permissions' => 'sitemap-generate']);
+            Route::delete('destroy/{sitemap}', ['as' => 'admin.sitemap.destroy', 'uses' => 'SitemapController@destroy', 'permissions' => 'sitemap-delete']);
+            Route::delete('clear', ['as' => 'admin.sitemap.clear', 'uses' => 'SitemapController@clear', 'permissions' => 'sitemap-clear']);
+        });
+    });
+
+    /**
+     * Config.
+     */
+    Route::group([
+        'namespace' => 'Config',
+    ], function () {
+        /**
+         * Crud Settings.
+         */
+        Route::group([
+            'prefix' => 'settings',
+        ], function () {
+            Route::match(['get', 'post'], 'general', ['as' => 'admin.settings.general', 'uses' => 'SettingsController@general', 'permissions' => 'settings-general']);
+            Route::match(['get', 'post'], 'analytics', ['as' => 'admin.settings.analytics', 'uses' => 'SettingsController@analytics', 'permissions' => 'settings-analytics']);
+            Route::match(['get', 'post'], 'courier', ['as' => 'admin.settings.courier', 'uses' => 'SettingsController@courier', 'permissions' => 'settings-courier']);
+        });
     });
 });

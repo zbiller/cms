@@ -936,26 +936,6 @@ class PermissionsSeeder extends Seeder
                 'name' => 'addresses-delete',
             ],
         ],
-        'Settings' => [
-            'General' => [
-                'group' => 'Settings',
-                'label' => 'General',
-                'guard' => 'admin',
-                'name' => 'settings-general',
-            ],
-            'Analytics' => [
-                'group' => 'Settings',
-                'label' => 'Analytics',
-                'guard' => 'admin',
-                'name' => 'settings-analytics',
-            ],
-            'Courier' => [
-                'group' => 'Settings',
-                'label' => 'Courier',
-                'guard' => 'admin',
-                'name' => 'settings-courier',
-            ],
-        ],
         'Backups' => [
             'List' => [
                 'group' => 'Backups',
@@ -980,6 +960,58 @@ class PermissionsSeeder extends Seeder
                 'label' => 'Delete',
                 'guard' => 'admin',
                 'name' => 'backups-delete',
+            ],
+        ],
+        'Sitemap' => [
+            'List' => [
+                'group' => 'Sitemap',
+                'label' => 'List',
+                'guard' => 'admin',
+                'name' => 'sitemap-list',
+            ],
+            'Generate' => [
+                'group' => 'Sitemap',
+                'label' => 'Generate',
+                'guard' => 'admin',
+                'name' => 'sitemap-generate',
+            ],
+            'Download' => [
+                'group' => 'Sitemap',
+                'label' => 'Download',
+                'guard' => 'admin',
+                'name' => 'sitemap-download',
+            ],
+            'Delete' => [
+                'group' => 'Sitemap',
+                'label' => 'Delete',
+                'guard' => 'admin',
+                'name' => 'sitemap-delete',
+            ],
+            'Clear' => [
+                'group' => 'Sitemap',
+                'label' => 'Clear',
+                'guard' => 'admin',
+                'name' => 'sitemap-clear',
+            ],
+        ],
+        'Settings' => [
+            'General' => [
+                'group' => 'Settings',
+                'label' => 'General',
+                'guard' => 'admin',
+                'name' => 'settings-general',
+            ],
+            'Analytics' => [
+                'group' => 'Settings',
+                'label' => 'Analytics',
+                'guard' => 'admin',
+                'name' => 'settings-analytics',
+            ],
+            'Courier' => [
+                'group' => 'Settings',
+                'label' => 'Courier',
+                'guard' => 'admin',
+                'name' => 'settings-courier',
             ],
         ],
     ];
