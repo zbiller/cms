@@ -7,6 +7,7 @@
 /public/js
 /public/uploads
 /public/vendor
+/public/sitemap*.xml
 /storage/*.key
 /vendor
 /.idea
