@@ -7,6 +7,7 @@ use App\Console\Commands\BlockMakeCommand;
 use App\Console\Commands\CartCleanCommand;
 use App\Console\Commands\CartReminderCommand;
 use App\Console\Commands\CurrencyUpdateCommand;
+use App\Console\Commands\SitemapGenerateCommand;
 use App\Console\Commands\UploadsLinkCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -30,9 +31,14 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        //uncomment to clean activity log entries weekly via cron jobs
+        //uncomment to clean old backups daily via cron jobs
         //$schedule->command('backup:clean')->daily()->at('01:00')->withoutOverlapping()->emailOutputTo('example@mail.com');
+
+        //uncomment to generate a new backup daily via cron jobs
         //$schedule->command('backup:run')->daily()->at('02:00')->withoutOverlapping()->emailOutputTo('example@mail.com');
+
+        //uncomment to run sitemap generation daily via cron jobs
+        //$schedule->command(SitemapGenerateCommand::class)->daily()->at('01:00')->withoutOverlapping()->emailOutputTo('example@mail.com');
 
         //uncomment to clean activity log entries weekly via cron jobs
         //$schedule->command(ActivityCleanCommand::class)->weekly()->withoutOverlapping()->emailOutputTo('example@mail.com');
