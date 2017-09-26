@@ -38,7 +38,7 @@ class AdminRequest extends Request
             'roles' => [
                 'required',
                 'array',
-                Rule::exists('roles', 'id')->where('type', Role::TYPE_ADMIN)
+                Rule::exists('roles', 'id')->where('guard', 'admin')
             ],
             'person.email' => [
                 'required',

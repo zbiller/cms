@@ -33,7 +33,7 @@ class AdminsController extends Controller
             $this->title = 'Admins';
             $this->view = view('admin.auth.admins.index');
             $this->vars = [
-                'roles' => Role::whereType(Role::TYPE_ADMIN)->get(),
+                'roles' => Role::whereGuard('admin')->get(),
             ];
         });
     }
@@ -47,7 +47,7 @@ class AdminsController extends Controller
             $this->title = 'Add Admin';
             $this->view = view('admin.auth.admins.add');
             $this->vars = [
-                'roles' => Role::whereType(Role::TYPE_ADMIN)->get(),
+                'roles' => Role::whereGuard('admin')->get(),
             ];
         });
     }
@@ -80,7 +80,7 @@ class AdminsController extends Controller
             $this->title = 'Edit Admin';
             $this->view = view('admin.auth.admins.edit');
             $this->vars = [
-                'roles' => Role::whereType(Role::TYPE_ADMIN)->get(),
+                'roles' => Role::whereGuard('admin')->get(),
             ];
         });
     }

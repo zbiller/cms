@@ -48,15 +48,16 @@ class SitemapController extends Controller
     public function generate()
     {
         try {
-            dispatch(new GenerateSitemapXml);
+            dispatch(new GenerateSitemapXml(auth()->user()));
 
             flash()->success(
                 'The sitemap file is being generated!<br /><br />' . PHP_EOL .
-                'You will receive an email at ' . setting()->value('company-email') . ' when the sitemap files have finished generating.'
+                'You will receive an email when the sitemap files have finished generating.'
             );
         } catch (SitemapException $e) {
             flash()->error($e->getMessage());
         } catch (Exception $e) {
+            dd($e);
             flash()->error('Something went wrong! Please try again.');
         }
 

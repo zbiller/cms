@@ -2,15 +2,16 @@
 
 namespace App\Jobs;
 
-use App\Mail\SitemapGeneration;
 use App\Models\Seo\Sitemap;
+use App\Notifications\SitemapGenerationFailed;
+use App\Notifications\SitemapGenerationSuccessful;
 use Exception;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use Mail;
 
 class GenerateSitemapXml implements ShouldQueue
 {
@@ -31,6 +32,21 @@ class GenerateSitemapXml implements ShouldQueue
     public $timeout = 3600;
 
     /**
+     * The currently authenticated user.
+     *
+     * @var Authenticatable
+     */
+    public $user;
+
+    /**
+     * Set the currently authenticated user.
+     */
+    public function __construct(Authenticatable $user)
+    {
+        $this->user = $user;
+    }
+
+    /**
      * Execute the job.
      *
      * @return void
@@ -39,7 +55,7 @@ class GenerateSitemapXml implements ShouldQueue
     {
         $sitemap->generateAllXmlFiles();
 
-        Mail::to(setting()->value('company-email'))->send(new SitemapGeneration(true));
+        $this->user->notify(new SitemapGenerationSuccessful);
     }
 
     /**
@@ -50,6 +66,6 @@ class GenerateSitemapXml implements ShouldQueue
      */
     public function failed(Exception $exception)
     {
-        Mail::to(setting()->value('company-email'))->send(new SitemapGeneration(false));
+        $this->user->notify(new SitemapGenerationFailed($exception->getMessage()));
     }
 }
