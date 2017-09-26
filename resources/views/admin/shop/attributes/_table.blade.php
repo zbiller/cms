@@ -1,4 +1,4 @@
-<table
+<table class="table"
     cellspacing="0" cellpadding="0" border="0"
     data-orderable="{{ empty(request()->all()) ? 'true' : 'false' }}"
     data-order-url="{{ route('admin.attributes.order', $set) }}"

@@ -1,4 +1,4 @@
-<table class="pages-table" cellspacing="0" cellpadding="0" border="0">
+<table class="table pages-table" cellspacing="0" cellpadding="0" border="0">
     <thead>
     <tr>
         <td class="sortable" data-sort="name">

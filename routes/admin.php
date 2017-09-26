@@ -801,6 +801,7 @@ Route::group([
             Route::post('create', ['as' => 'admin.backups.create', 'uses' => 'BackupsController@create', 'permissions' => 'backups-create']);
             Route::get('download/{backup}', ['as' => 'admin.backups.download', 'uses' => 'BackupsController@download', 'permissions' => 'backups-download']);
             Route::delete('destroy/{backup}', ['as' => 'admin.backups.destroy', 'uses' => 'BackupsController@destroy', 'permissions' => 'backups-delete']);
+            Route::delete('delete', ['as' => 'admin.backups.delete', 'uses' => 'BackupsController@delete', 'permissions' => 'backups-delete']);
         });
     });
 

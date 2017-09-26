@@ -2,7 +2,7 @@
 
 @section('content')
     <section class="list">
-        <table cellspacing="0" cellpadding="0" border="0">
+        <table class="table" cellspacing="0" cellpadding="0" border="0">
             <thead>
                 <tr>
                     <td>Location</td>

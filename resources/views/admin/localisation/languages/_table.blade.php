@@ -1,4 +1,4 @@
-<table cellspacing="0" cellpadding="0" border="0">
+<table class="table" cellspacing="0" cellpadding="0" border="0">
     <thead>
     <tr>
         <td class="sortable" data-sort="name">

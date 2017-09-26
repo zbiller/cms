@@ -1,4 +1,4 @@
-<table
+<table class="table"
     cellspacing="0" cellpadding="0" border="0"
     data-orderable="{{ $orderable ? 'true' : 'false' }}"
     data-order-url="{{ route('admin.products.order') }}"

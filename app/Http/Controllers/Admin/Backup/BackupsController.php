@@ -97,4 +97,29 @@ class BackupsController extends Controller
             $backup->delete();
         });
     }
+
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function delete()
+    {
+        try {
+            foreach (Backup::all() as $backup) {
+                $filesystem = Storage::disk($backup->disk);
+
+                if ($filesystem->exists($backup->path)) {
+                    $filesystem->delete($backup->path);
+                }
+
+                $backup->delete();
+            }
+
+            flash()->success('All backups were successfully removed!');
+        } catch (ModelNotFoundException $e) {
+            flash()->error('Something went wrong! Please try again.');
+        }
+
+        return back();
+    }
 }

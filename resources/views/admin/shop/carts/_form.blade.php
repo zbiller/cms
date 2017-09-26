@@ -13,7 +13,7 @@
     {!! form_admin()->text('total', 'Grand Total', number_format($item->grand_total, 2), ['disabled' => 'disabled']) !!}
 </div>
 <div id="tab-2" class="tab">
-    <table cellspacing="0" cellpadding="0" border="0">
+    <table class="table" cellspacing="0" cellpadding="0" border="0">
         <thead>
         <tr class="even nodrag nodrop">
             <td>Name</td>

@@ -326,7 +326,7 @@ td .upload-aligned-image {
 
 /* Assignments Styles */
 .actions-assign {
-    width: 165px;
+    width: 165px !important;
     padding: 10px;
 
     @include media-query('tablet') {
