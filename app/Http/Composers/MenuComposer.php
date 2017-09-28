@@ -65,10 +65,14 @@ class MenuComposer
             });
 
             $menu->add(function ($item) use ($menu) {
-                $seo = $item->name('Seo Administration')->data('icon', 'fa-bar-chart')->active('admin/sitemap/*');
+                $seo = $item->name('Seo Administration')->data('icon', 'fa-bar-chart')->active('admin/sitemap/*', 'admin/redirects/*');
 
                 $menu->child($seo, function (MenuItem $item) {
                     $item->name('Sitemap')->url(route('admin.sitemap.index'))->permissions('sitemap-list')->active('admin/sitemap/*');
+                });
+
+                $menu->child($seo, function (MenuItem $item) {
+                    $item->name('Redirects')->url(route('admin.redirects.index'))->permissions('redirects-list')->active('admin/redirects/*');
                 });
             });
 

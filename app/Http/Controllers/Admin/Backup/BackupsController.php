@@ -102,7 +102,7 @@ class BackupsController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      * @throws \Exception
      */
-    public function delete()
+    public function clear()
     {
         try {
             foreach (Backup::all() as $backup) {
@@ -120,6 +120,6 @@ class BackupsController extends Controller
             flash()->error('Something went wrong! Please try again.');
         }
 
-        return back();
+        return redirect()->route('admin.backups.index');
     }
 }

@@ -801,7 +801,7 @@ Route::group([
             Route::post('create', ['as' => 'admin.backups.create', 'uses' => 'BackupsController@create', 'permissions' => 'backups-create']);
             Route::get('download/{backup}', ['as' => 'admin.backups.download', 'uses' => 'BackupsController@download', 'permissions' => 'backups-download']);
             Route::delete('destroy/{backup}', ['as' => 'admin.backups.destroy', 'uses' => 'BackupsController@destroy', 'permissions' => 'backups-delete']);
-            Route::delete('delete', ['as' => 'admin.backups.delete', 'uses' => 'BackupsController@delete', 'permissions' => 'backups-delete']);
+            Route::delete('clear', ['as' => 'admin.backups.clear', 'uses' => 'BackupsController@clear', 'permissions' => 'backups-clear']);
         });
     });
 
@@ -822,6 +822,23 @@ Route::group([
             Route::post('generate', ['as' => 'admin.sitemap.generate', 'uses' => 'SitemapController@generate', 'permissions' => 'sitemap-generate']);
             Route::delete('destroy/{sitemap}', ['as' => 'admin.sitemap.destroy', 'uses' => 'SitemapController@destroy', 'permissions' => 'sitemap-delete']);
             Route::delete('clear', ['as' => 'admin.sitemap.clear', 'uses' => 'SitemapController@clear', 'permissions' => 'sitemap-clear']);
+        });
+
+        /**
+         * Crud Redirects.
+         */
+        Route::group([
+            'prefix' => 'redirects',
+        ], function () {
+            Route::get('/', ['as' => 'admin.redirects.index', 'uses' => 'RedirectsController@index', 'permissions' => 'redirects-list']);
+            Route::get('create', ['as' => 'admin.redirects.create', 'uses' => 'RedirectsController@create', 'permissions' => 'redirects-add']);
+            Route::get('edit/{redirect}', ['as' => 'admin.redirects.edit', 'uses' => 'RedirectsController@edit', 'permissions' => 'redirects-edit']);
+            Route::post('find', ['as' => 'admin.redirects.find', 'uses' => 'RedirectsController@find', 'permissions' => 'redirects-find-broken']);
+            Route::post('store', ['as' => 'admin.redirects.store', 'uses' => 'RedirectsController@store', 'permissions' => 'redirects-add']);
+            Route::put('update/{redirect}', ['as' => 'admin.redirects.update', 'uses' => 'RedirectsController@update', 'permissions' => 'redirects-edit']);
+            Route::delete('destroy/{redirect}', ['as' => 'admin.redirects.destroy', 'uses' => 'RedirectsController@destroy', 'permissions' => 'redirects-delete']);
+            Route::delete('clean', ['as' => 'admin.redirects.clean', 'uses' => 'RedirectsController@clean', 'permissions' => 'redirects-clean']);
+            Route::delete('clear', ['as' => 'admin.redirects.clear', 'uses' => 'RedirectsController@clear', 'permissions' => 'redirects-clear']);
         });
     });
 

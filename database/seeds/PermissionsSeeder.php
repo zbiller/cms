@@ -961,6 +961,12 @@ class PermissionsSeeder extends Seeder
                 'guard' => 'admin',
                 'name' => 'backups-delete',
             ],
+            'Clear' => [
+                'group' => 'Backups',
+                'label' => 'Clear',
+                'guard' => 'admin',
+                'name' => 'backups-clear',
+            ],
         ],
         'Sitemap' => [
             'List' => [
@@ -992,6 +998,50 @@ class PermissionsSeeder extends Seeder
                 'label' => 'Clear',
                 'guard' => 'admin',
                 'name' => 'sitemap-clear',
+            ],
+        ],
+        'Redirects' => [
+            'List' => [
+                'group' => 'Redirects',
+                'label' => 'List',
+                'guard' => 'admin',
+                'name' => 'redirects-list',
+            ],
+            'Add' => [
+                'group' => 'Redirects',
+                'label' => 'Add',
+                'guard' => 'admin',
+                'name' => 'redirects-add',
+            ],
+            'Edit' => [
+                'group' => 'Redirects',
+                'label' => 'Edit',
+                'guard' => 'admin',
+                'name' => 'redirects-edit',
+            ],
+            'Delete' => [
+                'group' => 'Redirects',
+                'label' => 'Delete',
+                'guard' => 'admin',
+                'name' => 'redirects-delete',
+            ],
+            'Find Broken' => [
+                'group' => 'Redirects',
+                'label' => 'Find Broken',
+                'guard' => 'admin',
+                'name' => 'redirects-find-broken',
+            ],
+            'Clean' => [
+                'group' => 'Redirects',
+                'label' => 'Clean',
+                'guard' => 'admin',
+                'name' => 'redirects-clean',
+            ],
+            'Clear' => [
+                'group' => 'Redirects',
+                'label' => 'Clear',
+                'guard' => 'admin',
+                'name' => 'redirects-clear',
             ],
         ],
         'Settings' => [

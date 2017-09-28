@@ -12,7 +12,7 @@
     </section>
 
     <section class="content content-half two">
-        {!! form()->open(['url' => route('admin.backups.delete'), 'method' => 'DELETE']) !!}
+        {!! form()->open(['url' => route('admin.backups.clear'), 'method' => 'DELETE']) !!}
         {!! form()->button('<i class="fa fa-trash"></i>&nbsp; Remove all backups', ['type' => 'submit', 'class' => 'btn red full centered no-margin visible-text', 'onclick' => 'return confirm("Are you sure you want to remove all of the backups?")']) !!}
         {!! form()->close() !!}
     </section>

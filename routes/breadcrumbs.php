@@ -20,7 +20,7 @@ Breadcrumbs::register('admin', function($breadcrumbs) {
 | Uploads
 | ---------------------------------------------------------------------------------------------------------------------
  */
-/* Home > Layouts */
+/* Home > Uploads */
 Breadcrumbs::register('admin.uploads.index', function($breadcrumbs) {
     $breadcrumbs->parent('admin');
     $breadcrumbs->push('Uploads', route('admin.uploads.index'));
@@ -906,6 +906,34 @@ Breadcrumbs::register('admin.backups.index', function($breadcrumbs) {
 Breadcrumbs::register('admin.sitemap.index', function($breadcrumbs) {
     $breadcrumbs->parent('admin');
     $breadcrumbs->push('Sitemap', route('admin.sitemap.index'));
+});
+/**
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+
+
+
+/**
+| ---------------------------------------------------------------------------------------------------------------------
+| Redirects
+| ---------------------------------------------------------------------------------------------------------------------
+ */
+/* Home > Redirects */
+Breadcrumbs::register('admin.redirects.index', function($breadcrumbs) {
+    $breadcrumbs->parent('admin');
+    $breadcrumbs->push('Redirects', route('admin.redirects.index'));
+});
+
+/* Home > Redirects > Add */
+Breadcrumbs::register('admin.redirects.create', function($breadcrumbs) {
+    $breadcrumbs->parent('admin.redirects.index');
+    $breadcrumbs->push('Add', route('admin.redirects.create'));
+});
+
+/* Home > Redirects > Edit */
+Breadcrumbs::register('admin.redirects.edit', function($breadcrumbs, $redirect) {
+    $breadcrumbs->parent('admin.redirects.index');
+    $breadcrumbs->push('Edit', route('admin.redirects.edit', $redirect));
 });
 /**
 | ---------------------------------------------------------------------------------------------------------------------
