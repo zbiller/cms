@@ -34,6 +34,7 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \App\Http\Middleware\PersistLocale::class,
+            \App\Http\Middleware\RedirectRequests::class,
             \Spatie\LaravelImageOptimizer\Middlewares\OptimizeImages::class,
         ],
         'api' => [
