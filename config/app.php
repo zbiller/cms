@@ -167,12 +167,13 @@ return [
          */
         Barryvdh\Debugbar\ServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
-        Proengsoft\JsValidation\JsValidationServiceProvider::class,
-        Intervention\Image\ImageServiceProvider::class,
-        Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
         Spatie\Backup\BackupServiceProvider::class,
         Spatie\Analytics\AnalyticsServiceProvider::class,
         Spatie\LaravelImageOptimizer\ImageOptimizerServiceProvider::class,
+        Spatie\LinkChecker\LinkCheckerServiceProvider::class,
+        Proengsoft\JsValidation\JsValidationServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
+        Pbmedia\LaravelFFMpeg\FFMpegServiceProvider::class,
         Swap\Laravel\SwapServiceProvider::class,
 
         /*
