@@ -6,7 +6,6 @@ use App\Http\Controllers\Admin\Cms\PagesController;
 use App\Http\Filters\Cms\PageFilter;
 use App\Http\Sorts\Cms\PageSort;
 use App\Models\Cms\Page;
-use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 

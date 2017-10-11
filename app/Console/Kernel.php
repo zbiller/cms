@@ -2,13 +2,6 @@
 
 namespace App\Console;
 
-use App\Console\Commands\ActivityCleanCommand;
-use App\Console\Commands\BlockMakeCommand;
-use App\Console\Commands\CartCleanCommand;
-use App\Console\Commands\CartReminderCommand;
-use App\Console\Commands\CurrencyUpdateCommand;
-use App\Console\Commands\SitemapGenerateCommand;
-use App\Console\Commands\UploadsLinkCommand;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 

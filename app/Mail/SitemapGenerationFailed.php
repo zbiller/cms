@@ -3,7 +3,6 @@
 namespace App\Mail;
 
 use App\Exceptions\EmailException;
-use App\Models\Shop\Cart;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;

@@ -8,7 +8,6 @@ use App\Http\Requests\Shop\DiscountRequest;
 use App\Http\Sorts\Shop\DiscountSort;
 use App\Models\Shop\Discount;
 use App\Traits\CanCrud;
-use Exception;
 use Illuminate\Http\Request;
 
 class DiscountsController extends Controller

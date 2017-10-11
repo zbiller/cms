@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Auth;
 
 use App\Http\Requests\Request;
-use App\Models\Auth\Role;
 use Illuminate\Validation\Rule;
 
 class AdminRequest extends Request

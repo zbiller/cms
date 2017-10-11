@@ -4,7 +4,6 @@ namespace App\Helpers;
 
 use App\Exceptions\UploadException;
 use App\Models\Model;
-use Exception;
 use Illuminate\View\View;
 use Storage;
 

@@ -7,9 +7,9 @@ use App\Models\Shop\Cart;
 use App\Models\Shop\Cart\Item;
 use DB;
 use Illuminate\Auth\Events\Login;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class MigrateUserCart implements ShouldQueue
 {

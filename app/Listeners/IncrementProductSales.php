@@ -3,8 +3,8 @@
 namespace App\Listeners;
 
 use App\Events\OrderCreated;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 
 class IncrementProductSales implements ShouldQueue
 {

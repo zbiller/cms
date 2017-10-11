@@ -4,8 +4,8 @@ namespace App\Listeners;
 
 use App\Events\OrderCanceled;
 use App\Mail\OrderCanceled as OrderCanceledMail;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 use Mail;
 
 class NotifyOrderCancellation implements ShouldQueue

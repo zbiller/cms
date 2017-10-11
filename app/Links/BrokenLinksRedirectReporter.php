@@ -3,7 +3,6 @@
 namespace App\Links;
 
 use App\Models\Seo\Redirect;
-use Illuminate\Contracts\Logging\Log;
 use Spatie\Crawler\Url;
 use Spatie\LinkChecker\Reporters\BaseReporter;
 

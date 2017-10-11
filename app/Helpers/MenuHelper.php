@@ -177,7 +177,7 @@ class MenuItem
      */
     public function __construct()
     {
-        $this->id = uniqid(rand());
+        $this->id = uniqid(rand(), true);
     }
 
     /**

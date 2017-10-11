@@ -7,8 +7,8 @@ use App\Mail\CartReminder;
 use App\Models\Shop\Cart;
 use Carbon\Carbon;
 use Exception;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 use Mail;
 
 class SendCartReminders implements ShouldQueue

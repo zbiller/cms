@@ -6,7 +6,6 @@ use App\Http\Controllers\Admin\Shop\CategoriesController;
 use App\Http\Filters\Shop\CategoryFilter;
 use App\Http\Sorts\Shop\CategorySort;
 use App\Models\Shop\Category;
-use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 

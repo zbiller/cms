@@ -17,7 +17,6 @@ use App\Traits\CanDraft;
 use App\Traits\CanDuplicate;
 use App\Traits\CanPreview;
 use App\Traits\CanRevision;
-use Exception;
 use Illuminate\Http\Request;
 
 class PagesController extends Controller

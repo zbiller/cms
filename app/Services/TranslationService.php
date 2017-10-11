@@ -8,8 +8,8 @@ use App\Models\Translation\Translation;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Events\Dispatcher;
-use Illuminate\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Foundation\Application;
 use Lang;
 use Symfony\Component\Finder\Finder;
 

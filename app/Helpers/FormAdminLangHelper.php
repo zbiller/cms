@@ -2,8 +2,6 @@
 
 namespace App\Helpers;
 
-use Collective\Html\FormFacade;
-
 class FormAdminLangHelper extends FormAdminHelper
 {
     /**

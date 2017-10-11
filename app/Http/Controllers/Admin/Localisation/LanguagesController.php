@@ -8,7 +8,6 @@ use App\Http\Requests\Localisation\LanguageRequest;
 use App\Http\Sorts\Localisation\LanguageSort;
 use App\Models\Localisation\Language;
 use App\Traits\CanCrud;
-use Exception;
 use Illuminate\Http\Request;
 
 class LanguagesController extends Controller

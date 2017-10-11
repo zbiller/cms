@@ -7,7 +7,6 @@ use App\Events\OrderCompleted;
 use App\Events\OrderCreated;
 use App\Events\OrderFailed;
 use App\Exceptions\OrderException;
-use App\Models\Auth\User;
 use App\Models\Localisation\Currency;
 use App\Models\Model;
 use App\Models\Shop\Order\Item;

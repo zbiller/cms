@@ -5,7 +5,6 @@ namespace App\Traits;
 use App\Database\Builder;
 use App\Services\CacheService;
 use Illuminate\Database\Query\Builder as QueryBuilder;
-use Illuminate\Support\Facades\Cache;
 
 trait IsCacheable
 {

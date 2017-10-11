@@ -1,11 +1,11 @@
 <?php
 
+use App\Models\Localisation\Currency;
 use App\Models\Shop\Attribute;
 use App\Models\Shop\Attribute\Set;
 use App\Models\Shop\Attribute\Value;
 use App\Models\Shop\Cart;
 use App\Models\Shop\Category as ProductCategory;
-use App\Models\Localisation\Currency;
 use App\Models\Shop\Discount;
 use App\Models\Shop\Product;
 use App\Models\Shop\Tax;

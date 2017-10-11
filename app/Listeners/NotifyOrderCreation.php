@@ -4,8 +4,8 @@ namespace App\Listeners;
 
 use App\Events\OrderCreated;
 use App\Mail\OrderCreated as OrderCreatedMail;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 use Mail;
 
 class NotifyOrderCreation implements ShouldQueue

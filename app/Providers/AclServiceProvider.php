@@ -2,13 +2,8 @@
 
 namespace App\Providers;
 
-use App\Models\Auth\Permission;
 use Blade;
-use Cache;
-use Exception;
-use Gate;
 use Illuminate\Support\ServiceProvider;
-use Log;
 
 class AclServiceProvider extends ServiceProvider
 {
@@ -19,8 +14,7 @@ class AclServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->registerGates();
-        $this->registerBladeIfs();
+        //
     }
 
     /**
@@ -30,31 +24,7 @@ class AclServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
-    }
-
-    /**
-     * Register gates for acl permissions.
-     *
-     * @return bool
-     */
-    protected function registerGates()
-    {
-        try {
-            Cache::rememberForever('permissions', function () {
-                return Permission::with('roles')->get();
-            })->map(function ($permission) {
-                Gate::define($permission->name, function ($user) use ($permission) {
-                    return $user->hasPermission($permission);
-                });
-            });
-
-            return true;
-        } catch (Exception $e) {
-            Log::alert("Could not register permissions because {$e->getMessage()}" . PHP_EOL . $e->getTraceAsString());
-            
-            return false;
-        }
+        $this->registerBladeIfs();
     }
 
     /**

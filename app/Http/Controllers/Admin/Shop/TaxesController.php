@@ -8,7 +8,6 @@ use App\Http\Requests\Shop\TaxRequest;
 use App\Http\Sorts\Shop\TaxSort;
 use App\Models\Shop\Tax;
 use App\Traits\CanCrud;
-use Exception;
 use Illuminate\Http\Request;
 
 class TaxesController extends Controller

@@ -4,8 +4,8 @@ namespace App\Listeners;
 
 use App\Events\OrderCompleted;
 use App\Mail\OrderCompleted as OrderCompletedMail;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 use Mail;
 
 class NotifyOrderCompletion implements ShouldQueue

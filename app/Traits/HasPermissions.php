@@ -8,8 +8,6 @@ use Illuminate\Database\QueryException;
 
 trait HasPermissions
 {
-    use HasPermissionsCache;
-
     /**
      * @param string|array|Permission|Collection $permissions
      * @return HasPermissions

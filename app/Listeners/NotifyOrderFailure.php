@@ -4,8 +4,8 @@ namespace App\Listeners;
 
 use App\Events\OrderFailed;
 use App\Mail\OrderFailed as OrderFailedMail;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Queue\InteractsWithQueue;
 use Mail;
 
 class NotifyOrderFailure implements ShouldQueue

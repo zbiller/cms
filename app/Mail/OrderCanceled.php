@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use App\Exceptions\EmailException;
 use App\Models\Cms\Email;
-use App\Models\Shop\Cart;
 use App\Models\Shop\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
