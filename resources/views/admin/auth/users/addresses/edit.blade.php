@@ -6,15 +6,15 @@
     </section>
 
     <section class="tabs">
-        @include('admin.auth.addresses._tabs')
+        @include('admin.auth.users.addresses._tabs')
     </section>
 
     <section class="view">
-        @include('admin.auth.addresses._form', ['url' => route('admin.addresses.update', ['user' => $user->id, 'id' => $item->id])])
+        @include('admin.auth.users.addresses._form', ['url' => route('admin.addresses.update', ['user' => $user->id, 'id' => $item->id])])
     </section>
 @endsection
 
 @section('footer')
-    @include('admin.auth.addresses._buttons')
+    @include('admin.auth.users.addresses._buttons')
 @endsection
 
