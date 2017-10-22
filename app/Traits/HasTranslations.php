@@ -30,9 +30,11 @@ trait HasTranslations
         if ($this->isTranslatableAttribute($key) && $this->exists === true) {
             $value = is_json_format($value) ? $this->fromJson($value) : $value[app()->getLocale()] ?? '';
 
-            !is_null($value) && !empty($value) ?
-                $this->setTranslation($key, $value, app()->getLocale()) :
+            if (!is_null($value) && !empty($value)) {
+                $this->setTranslation($key, $value, app()->getLocale());
+            } else {
                 $this->forgetTranslation($key, app()->getLocale());
+            }
 
             return $this;
         }

@@ -43,7 +43,7 @@ class ActivityConfig
     {
         if (!array_key_exists('enabled', self::$config)) {
             throw new ConfigException(
-                "The key 'enabled' does not exist in " .self::$path . "."
+                "The key 'enabled' does not exist in " . self::$path . "."
             );
         }
 
