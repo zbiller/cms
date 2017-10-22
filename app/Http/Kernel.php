@@ -26,7 +26,7 @@ class Kernel extends HttpKernel
      * @var array
      */
     protected $middlewareGroups = [
-        'web' => [
+        'admin' => [
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
             \Illuminate\Session\Middleware\StartSession::class,
@@ -34,8 +34,11 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \App\Http\Middleware\PersistLocale::class,
-            \App\Http\Middleware\RedirectRequests::class,
             \Spatie\LaravelImageOptimizer\Middlewares\OptimizeImages::class,
+        ],
+        'web' => [
+            'admin',
+            \App\Http\Middleware\RedirectRequests::class,
         ],
         'api' => [
             'throttle:60,1',
@@ -52,6 +55,7 @@ class Kernel extends HttpKernel
     protected $routeMiddleware = [
         'auth' => \App\Http\Middleware\AuthenticateSession::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'auth.laravel' => \Illuminate\Auth\Middleware\Authenticate::class,
         'authenticated' => \App\Http\Middleware\Authenticated::class,
         'not.authenticated' => \App\Http\Middleware\NotAuthenticated::class,
         'check.roles' => \App\Http\Middleware\CheckRoles::class,
