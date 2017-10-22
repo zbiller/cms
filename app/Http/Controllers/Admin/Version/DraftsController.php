@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Auth\User;
 use App\Models\Model;
 use App\Models\Version\Draft;
+use App\Notifications\PendingApproval;
 use DB;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
@@ -233,8 +234,6 @@ class DraftsController extends Controller
     public function submitDraftForApproval(Request $request)
     {
         try {
-            dd('sterge dupa notificari');
-
             User::withPermissions('drafts-publish')->get()->each(function ($user) use ($request) {
                 $user->notify(new PendingApproval($request->get('approval_url')));
             });

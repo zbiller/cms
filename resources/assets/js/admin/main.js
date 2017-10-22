@@ -24,6 +24,7 @@ $(window).load(function(){
     blocks();
     items();
     emails();
+    notifications();
 });
 
 /**
@@ -810,6 +811,9 @@ function items()
     }
 }
 
+/**
+ * @return void
+ */
 function emails()
 {
     //select email type on add
@@ -840,4 +844,28 @@ function emails()
             selectType();
         });
     }
+}
+
+/**
+ * @return void
+ */
+function notifications()
+{
+    var notifications = $('div.notifications-container');
+
+    // toggle dropdown
+    notifications.find('a.notifications-indicator, span.notifications-count').on('click', function (e) {
+        e.preventDefault();
+
+        $(this).toggleClass('active');
+        notifications.find('ul.notifications').toggle();
+    });
+
+    // hide dropdown when clicked outside
+    $(document).mouseup(function(e) {
+        if (!notifications.is(e.target) && notifications.has(e.target).length === 0) {
+            notifications.find('a.notifications-indicator').removeClass('active');
+            notifications.find('a.notifications-indicator').next('ul.notifications').hide();
+        }
+    });
 }

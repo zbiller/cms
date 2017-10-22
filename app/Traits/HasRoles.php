@@ -2,9 +2,11 @@
 
 namespace App\Traits;
 
+use App\Contracts\PermissionContract;
 use App\Models\Auth\Permission;
 use App\Models\Auth\Role;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as SupportCollection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 
@@ -351,10 +353,8 @@ trait HasRoles
     {
         if (is_string($permission)) {
             try {
-                dd($permission);
                 $permission = Permission::findByName($permission);
             } catch (ModelNotFoundException $e) {
-                dd($e);
                 return false;
             }
         }
@@ -425,5 +425,28 @@ trait HasRoles
         }
 
         return $roles;
+    }
+
+    /**
+     * Convert permissions to Permission models.
+     *
+     * @param string|array|PermissionContract|SupportCollection $permissions
+     * @return array
+     */
+    protected function convertToPermissionModels($permissions)
+    {
+        if ($permissions instanceof SupportCollection) {
+            $permissions = $permissions->toArray();
+        }
+
+        $permissions = array_wrap($permissions);
+
+        return array_map(function ($permission) {
+            if ($permission instanceof Permission) {
+                return $permission;
+            }
+
+            return Permission::findByName($permission);
+        }, $permissions);
     }
 }

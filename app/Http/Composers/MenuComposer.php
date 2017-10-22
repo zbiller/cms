@@ -102,8 +102,8 @@ class MenuComposer
 
             $menu->add(function ($item) use ($menu) {
                 $access = $item->name('Access Control')->data('icon', 'fa-sign-in')
-                    ->permissions('users-list', 'admins-list', 'roles-list', 'activity-list')
-                    ->active('admin/users/*', 'admin/admins/*', 'admin/roles/*', 'admin/activity/*');
+                    ->permissions('users-list', 'admins-list', 'roles-list', 'notifications-list', 'activity-list')
+                    ->active('admin/users/*', 'admin/admins/*', 'admin/roles/*', 'admin/notifications/*', 'admin/activity/*');
 
                 $menu->child($access, function (MenuItem $item) {
                     $item->name('Users')->url(route('admin.users.index'))->permissions('users-list')->active('admin/users/*');
@@ -115,6 +115,10 @@ class MenuComposer
 
                 $menu->child($access, function (MenuItem $item) {
                     $item->name('Roles')->url(route('admin.roles.index'))->permissions('roles-list')->active('admin/roles/*');
+                });
+
+                $menu->child($access, function (MenuItem $item) {
+                    $item->name('Notifications')->url(route('admin.notifications.index'))->permissions('notifications-list')->active('admin/notifications/*');
                 });
 
                 $menu->child($access, function (MenuItem $item) {

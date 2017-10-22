@@ -54,7 +54,7 @@ class ResetPassword extends Notification implements ShouldQueue
 
     /**
      * @param mixed $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return PasswordRecovery
      */
     public function toMail($notifiable)
     {

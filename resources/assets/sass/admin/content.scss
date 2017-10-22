@@ -472,6 +472,11 @@ p {
         padding: 15px 10px;
     }
 
+    &.small {
+        @include font-size(11px);
+        padding: 5px 8px;
+    }
+
     &.full {
         width: 100%;
     }
@@ -491,6 +496,10 @@ p {
         &:hover {
             background-color: lighten($colorTowerGray, 22%) !important;
         }
+    }
+
+    &.no-float {
+        float: none !important;
     }
 
     &.no-margin {

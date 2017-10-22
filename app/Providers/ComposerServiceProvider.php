@@ -20,6 +20,9 @@ class ComposerServiceProvider extends ServiceProvider
         /* link admin language switcher composer */
         view()->composer('layouts::admin.partials._languages', 'App\Http\Composers\LanguagesComposer');
 
+        /* link admin notifications indicator composer */
+        view()->composer('layouts::admin.partials._notifications', 'App\Http\Composers\NotificationsComposer');
+
         /* link blocks composers */
         foreach (Block::$blocks as $type => $options) {
             view()->composer("blocks_{$type}::front", $options['composer_class']);

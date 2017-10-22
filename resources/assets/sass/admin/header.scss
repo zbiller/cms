@@ -116,6 +116,7 @@ header {
             list-style: none;
             right: 0;
             top: 61px;
+            max-width: 250px;
 
             li {
                 a {
@@ -124,9 +125,9 @@ header {
 
                     display: block;
                     padding: 7px 70px 7px 10px;
+                    font-family: 'Open Sans', sans-serif;
                     background: $colorFiord;
                     color: $colorGhost;
-                    font-family: 'Open Sans', sans-serif;
 
                     &:hover {
                         color: $colorWhite;
@@ -141,6 +142,96 @@ header {
                         padding: 7px 20px 7px 10px;
                     }
                 }
+            }
+        }
+    }
+
+    div.notifications-container {
+        position: relative;
+        float: right;
+        height: auto;
+        margin: 0 20px 0 0;
+
+        a.notifications-indicator {
+            @include font-size(16px);
+
+            display: inline-block;
+            padding: 20px 15px 21px 15px;
+            color: $colorGullGray;
+            font-family: 'Open Sans Bold', sans-serif;
+            text-transform: uppercase;
+        }
+
+        span.notifications-count {
+            @include border-radius('100px');
+            @include font-size(10px);
+            @include clear-padding();
+
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+            bottom: 20px;
+            width: 14px;
+            height: 14px;
+            display: block;
+            color: $colorWhite;
+            background: $colorJaponica;
+            font-family: 'Open Sans Bold', sans-serif;
+            text-transform: uppercase;
+            padding: 0 0 0 4px;
+
+            &.hidden {
+                display: none;
+            }
+        }
+
+        ul.notifications {
+            display: none;
+            position: absolute;
+            width: 250px;
+            height: 100%;
+            list-style: none;
+            right: 0;
+            top: 62px;
+
+            li {
+                background: $colorWhite;
+                border-left: 1px solid $colorGallery;
+                border-right: 1px solid $colorGallery;
+                padding: 7px;
+
+                a.notification {
+                    @include font-size(13px);
+                    @include transition(all 0.3s ease);
+
+                    display: block;
+                    padding: 7px 10px;
+                    font-family: 'Open Sans', sans-serif;
+                    background: $colorWhite;
+                    color: $colorGullGray;
+
+                    &:hover {
+                        color: $colorGullGray;
+                        background: lighten($colorPictonBlue, 39%);
+                        //background: darken($colorAlabaster, 3%);
+                    }
+
+                    @include media-query('tablet') {
+                        padding: 7px 40px 7px 10px;
+                    }
+
+                    @include media-query('phone-wide') {
+                        padding: 7px 20px 7px 10px;
+                    }
+                }
+
+                &:last-of-type {
+                    border-bottom: 1px solid $colorGallery;
+                }
+            }
+
+            @include media-query('phone') {
+                width: 180px;
             }
         }
     }

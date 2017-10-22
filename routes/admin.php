@@ -685,6 +685,22 @@ Route::group([
         });
 
         /**
+         * CRUD Notifications.
+         */
+        Route::group([
+            'prefix' => 'notifications',
+        ], function () {
+            Route::get('/', ['as' => 'admin.notifications.index', 'uses' => 'NotificationsController@index', 'permissions' => 'notifications-list']);
+            Route::get('get', ['as' => 'admin.notifications.get', 'uses' => 'NotificationsController@get']);
+            Route::get('action/{notification?}', ['as' => 'admin.notifications.action', 'uses' => 'NotificationsController@action']);
+            Route::put('read/{notification}', ['as' => 'admin.notifications.mark_as_read', 'uses' => 'NotificationsController@read']);
+            Route::delete('destroy/{notification}', ['as' => 'admin.notifications.destroy', 'uses' => 'NotificationsController@destroy', 'permissions' => 'notifications-delete']);
+            Route::post('read-all', ['as' => 'admin.notifications.mark_all_as_read', 'uses' => 'NotificationsController@readAll']);
+            Route::delete('clean', ['as' => 'admin.notifications.clean', 'uses' => 'NotificationsController@clean', 'permissions' => 'notifications-delete']);
+            Route::delete('delete', ['as' => 'admin.notifications.delete', 'uses' => 'NotificationsController@delete', 'permissions' => 'notifications-delete']);
+        });
+
+        /**
          * CRUD Activity.
          */
         Route::group([
@@ -793,7 +809,7 @@ Route::group([
         'namespace' => 'Backup',
     ], function () {
         /**
-         * Crud Backups.
+         * CRUD Backups.
          */
         Route::group([
             'prefix' => 'backups',
@@ -813,7 +829,7 @@ Route::group([
         'namespace' => 'Seo',
     ], function () {
         /**
-         * Crud Sitemap.
+         * CRUD Sitemap.
          */
         Route::group([
             'prefix' => 'sitemap',
@@ -826,7 +842,7 @@ Route::group([
         });
 
         /**
-         * Crud Redirects.
+         * CRUD Redirects.
          */
         Route::group([
             'prefix' => 'redirects',
@@ -850,7 +866,7 @@ Route::group([
         'namespace' => 'Config',
     ], function () {
         /**
-         * Crud Settings.
+         * CRUD Settings.
          */
         Route::group([
             'prefix' => 'settings',

@@ -772,6 +772,20 @@ class PermissionsSeeder extends Seeder
                 'name' => 'roles-delete',
             ],
         ],
+        'Notifications' => [
+            'List' => [
+                'group' => 'Notifications',
+                'label' => 'List',
+                'guard' => 'admin',
+                'name' => 'notifications-list',
+            ],
+            'Delete' => [
+                'group' => 'Notifications',
+                'label' => 'Delete',
+                'guard' => 'admin',
+                'name' => 'notifications-delete',
+            ],
+        ],
         'Activity' => [
             'List' => [
                 'group' => 'Activity',
