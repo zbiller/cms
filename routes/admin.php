@@ -123,6 +123,7 @@ Route::group([
         ], function () {
             Route::get('/', ['as' => 'admin.drafts.get', 'uses' => 'DraftsController@getDrafts', 'permissions' => 'drafts-list']);
             Route::match(['post', 'put'], 'save', ['as' => 'admin.drafts.save', 'uses' => 'DraftsController@saveDraft', 'permissions' => 'drafts-save']);
+            Route::match(['post', 'put'], 'approval', ['as' => 'admin.drafts.approval', 'uses' => 'DraftsController@submitDraftForApproval', 'permissions' => 'drafts-approval']);
             Route::match(['post', 'put'], 'create/{draft}', ['as' => 'admin.drafts.create', 'uses' => 'DraftsController@createDraft', 'permissions' => 'drafts-save']);
             Route::match(['post', 'put'], 'update/{draft}', ['as' => 'admin.drafts.update', 'uses' => 'DraftsController@updateDraft', 'permissions' => 'drafts-save']);
             Route::match(['post', 'put'], 'publish/{draft}', ['as' => 'admin.drafts.publish', 'uses' => 'DraftsController@publishDraft', 'permissions' => 'drafts-publish']);
@@ -162,13 +163,13 @@ Route::group([
              * Draft Actions.
              */
             Route::get('drafts', ['as' => 'admin.pages.drafts', 'uses' => 'PagesController@drafts', 'permissions' => 'drafts-list']);
-            Route::get('draft/{draft}', ['as' => 'admin.pages.draft', 'uses' => 'PagesController@draft', 'permissions' => 'drafts-publish']);
+            Route::get('draft/{draft}', ['as' => 'admin.pages.draft', 'uses' => 'PagesController@draft', 'permissions' => 'drafts-view']);
             Route::match(['get', 'put'], 'limbo/{id}', ['as' => 'admin.pages.limbo', 'uses' => 'PagesController@limbo', 'permissions' => 'drafts-save']);
 
             /**
              * Revision Actions.
              */
-            Route::get('revision/{revision}', ['as' => 'admin.pages.revision', 'uses' => 'PagesController@revision', 'permissions' => 'revisions-rollback']);
+            Route::get('revision/{revision}', ['as' => 'admin.pages.revision', 'uses' => 'PagesController@revision', 'permissions' => 'revisions-view']);
 
             /**
              * Duplicate Actions.
@@ -253,13 +254,13 @@ Route::group([
              * Draft Actions.
              */
             Route::get('drafts', ['as' => 'admin.blocks.drafts', 'uses' => 'BlocksController@drafts', 'permissions' => 'drafts-list']);
-            Route::get('draft/{draft}', ['as' => 'admin.blocks.draft', 'uses' => 'BlocksController@draft', 'permissions' => 'drafts-publish']);
+            Route::get('draft/{draft}', ['as' => 'admin.blocks.draft', 'uses' => 'BlocksController@draft', 'permissions' => 'drafts-view']);
             Route::match(['get', 'put'], 'limbo/{id}', ['as' => 'admin.blocks.limbo', 'uses' => 'BlocksController@limbo', 'permissions' => 'drafts-save']);
 
             /**
              * Revision Actions.
              */
-            Route::get('revision/{revision}', ['as' => 'admin.blocks.revision', 'uses' => 'BlocksController@revision', 'permissions' => 'revisions-rollback']);
+            Route::get('revision/{revision}', ['as' => 'admin.blocks.revision', 'uses' => 'BlocksController@revision', 'permissions' => 'revisions-view']);
 
             /**
              * Duplicate Actions.
@@ -269,8 +270,8 @@ Route::group([
             /**
              * Ajax Actions.
              */
-            Route::get('get', ['as' => 'admin.blocks.get', 'uses' => 'BlocksController@get', 'permissions' => 'blocks-list']);
-            Route::post('row', ['as' => 'admin.blocks.row', 'uses' => 'BlocksController@row', 'permissions' => 'blocks-list']);
+            Route::get('get', ['as' => 'admin.blocks.get', 'uses' => 'BlocksController@get', 'permissions' => 'blocks-show']);
+            Route::post('row', ['as' => 'admin.blocks.row', 'uses' => 'BlocksController@row', 'permissions' => 'blocks-show']);
         });
 
         /**
@@ -297,13 +298,13 @@ Route::group([
              * Draft Actions.
              */
             Route::get('drafts', ['as' => 'admin.emails.drafts', 'uses' => 'EmailsController@drafts', 'permissions' => 'drafts-list']);
-            Route::get('draft/{draft}', ['as' => 'admin.emails.draft', 'uses' => 'EmailsController@draft', 'permissions' => 'drafts-publish']);
+            Route::get('draft/{draft}', ['as' => 'admin.emails.draft', 'uses' => 'EmailsController@draft', 'permissions' => 'drafts-view']);
             Route::match(['get', 'put'], 'limbo/{id}', ['as' => 'admin.emails.limbo', 'uses' => 'EmailsController@limbo', 'permissions' => 'drafts-save']);
 
             /**
              * Revision Actions.
              */
-            Route::get('revision/{revision}', ['as' => 'admin.emails.revision', 'uses' => 'EmailsController@revision', 'permissions' => 'revisions-rollback']);
+            Route::get('revision/{revision}', ['as' => 'admin.emails.revision', 'uses' => 'EmailsController@revision', 'permissions' => 'revisions-view']);
 
             /**
              * Duplicate Actions.
@@ -362,13 +363,13 @@ Route::group([
              * Draft Actions.
              */
             Route::get('drafts', ['as' => 'admin.orders.drafts', 'uses' => 'OrdersController@drafts', 'permissions' => 'drafts-list']);
-            Route::get('draft/{draft}', ['as' => 'admin.orders.draft', 'uses' => 'OrdersController@draft', 'permissions' => 'drafts-publish']);
+            Route::get('draft/{draft}', ['as' => 'admin.orders.draft', 'uses' => 'OrdersController@draft', 'permissions' => 'drafts-view']);
             Route::match(['get', 'put'], 'limbo/{id}', ['as' => 'admin.orders.limbo', 'uses' => 'OrdersController@limbo', 'permissions' => 'drafts-save']);
 
             /**
              * Revision Actions.
              */
-            Route::get('revision/{revision}', ['as' => 'admin.orders.revision', 'uses' => 'OrdersController@revision', 'permissions' => 'revisions-rollback']);
+            Route::get('revision/{revision}', ['as' => 'admin.orders.revision', 'uses' => 'OrdersController@revision', 'permissions' => 'revisions-vie']);
 
             /**
              * Duplicate Actions.
@@ -423,13 +424,13 @@ Route::group([
              * Draft Actions.
              */
             Route::get('drafts', ['as' => 'admin.products.drafts', 'uses' => 'ProductsController@drafts', 'permissions' => 'drafts-list']);
-            Route::get('draft/{draft}', ['as' => 'admin.products.draft', 'uses' => 'ProductsController@draft', 'permissions' => 'drafts-publish']);
+            Route::get('draft/{draft}', ['as' => 'admin.products.draft', 'uses' => 'ProductsController@draft', 'permissions' => 'drafts-view']);
             Route::match(['get', 'put'], 'limbo/{id}', ['as' => 'admin.products.limbo', 'uses' => 'ProductsController@limbo', 'permissions' => 'drafts-save']);
 
             /**
              * Revision Actions.
              */
-            Route::get('revision/{revision}', ['as' => 'admin.products.revision', 'uses' => 'ProductsController@revision', 'permissions' => 'revisions-rollback']);
+            Route::get('revision/{revision}', ['as' => 'admin.products.revision', 'uses' => 'ProductsController@revision', 'permissions' => 'revisions-view']);
 
             /**
              * Duplicate Actions.
@@ -484,13 +485,13 @@ Route::group([
              * Draft Actions.
              */
             Route::get('drafts', ['as' => 'admin.product_categories.drafts', 'uses' => 'CategoriesController@drafts', 'permissions' => 'drafts-list']);
-            Route::get('draft/{draft}', ['as' => 'admin.product_categories.draft', 'uses' => 'CategoriesController@draft', 'permissions' => 'drafts-publish']);
+            Route::get('draft/{draft}', ['as' => 'admin.product_categories.draft', 'uses' => 'CategoriesController@draft', 'permissions' => 'drafts-view']);
             Route::match(['get', 'put'], 'limbo/{id}', ['as' => 'admin.product_categories.limbo', 'uses' => 'CategoriesController@limbo', 'permissions' => 'drafts-save']);
 
             /**
              * Revision Actions.
              */
-            Route::get('revision/{revision}', ['as' => 'admin.product_categories.revision', 'uses' => 'CategoriesController@revision', 'permissions' => 'revisions-rollback']);
+            Route::get('revision/{revision}', ['as' => 'admin.product_categories.revision', 'uses' => 'CategoriesController@revision', 'permissions' => 'revisions-view']);
 
             /**
              * Duplicate Actions.

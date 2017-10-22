@@ -24,8 +24,6 @@ trait HasPermissions
                     })->all()
                 );
             }
-
-            $this->forgetPermissionsCache();
         } catch (QueryException $e) {
             $this->revokePermission($permissions);
             $this->grantPermission($permissions);
@@ -49,8 +47,6 @@ trait HasPermissions
                 })
             );
         }
-
-        $this->forgetPermissionsCache();
 
         return $this;
     }

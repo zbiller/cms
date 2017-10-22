@@ -12,13 +12,15 @@ class DraftHelper
      *
      * @param Model $model
      * @param string $route
+     * @param array $parameters
      * @return \Illuminate\View\View
      */
-    public function tab(Model $model, $route)
+    public function tab(Model $model, $route, array $parameters = [])
     {
         return view('helpers::draft.tab')->with([
             'model' => $model,
             'route' => $route,
+            'parameters' => $parameters,
         ]);
     }
 
@@ -40,13 +42,15 @@ class DraftHelper
      *
      * @param Draft $draft
      * @param Model $model
+     * @param string|null $approvalUrl
      * @return \Illuminate\View\View
      */
-    public function view(Draft $draft, Model $model)
+    public function view(Draft $draft, Model $model, $approvalUrl = null)
     {
         return view('helpers::draft.view')->with([
             'draft' => $draft,
             'model' => $model,
+            'approvalUrl' => $approvalUrl,
         ]);
     }
 }

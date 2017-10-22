@@ -12,7 +12,8 @@
                     _token: token,
                     revisionable_id: revisionsTable.data('revisionable-id'),
                     revisionable_type: revisionsTable.data('revisionable-type'),
-                    route: '{{ $route }}'
+                    route: '{{ $route }}',
+                    parameters: '{!! json_encode($parameters) !!}'
                 },
                 beforeSend: function () {
                     revisionsTable.hide();
@@ -67,7 +68,8 @@
                     _token: token,
                     revisionable_id: revisionsTable.data('revisionable-id'),
                     revisionable_type: revisionsTable.data('revisionable-type'),
-                    route: '{{ $route }}'
+                    route: '{{ $route }}',
+                    parameters: '{!! json_encode($parameters) !!}'
                 },
                 beforeSend: function () {
                     revisionsTable.css({opacity: 0.5});

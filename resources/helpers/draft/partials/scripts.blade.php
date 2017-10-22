@@ -12,7 +12,8 @@
                     _token: token,
                     draftable_id: draftsTable.data('draftable-id'),
                     draftable_type: draftsTable.data('draftable-type'),
-                    route: '{{ $route }}'
+                    route: '{{ $route }}',
+                    parameters: '{!! json_encode($parameters) !!}'
                 },
                 beforeSend: function () {
                     draftsTable.hide();
@@ -67,7 +68,8 @@
                     _token: token,
                     draftable_id: draftsTable.data('draftable-id'),
                     draftable_type: draftsTable.data('draftable-type'),
-                    route: '{{ $route }}'
+                    route: '{{ $route }}',
+                    parameters: '{!! json_encode($parameters) !!}'
                 },
                 beforeSend: function () {
                     draftsTable.css({opacity: 0.5});
@@ -86,6 +88,28 @@
                     init.FlashMessage('error', 'Could not remove the draft! Please try again.');
                 }
             });
+        }, submitDraftForApproval = function (_this) {
+            $.ajax({
+                type : 'POST',
+                url: _this.attr('href'),
+                data: {
+                    _token: token,
+                    approval_url: _this.data('approval-url')
+                },
+                beforeSend: function () {
+                    draftsTable.css({opacity: 0.5});
+                },
+                success : function(data) {
+                    if (data.status == true) {
+                        location.reload();
+                    } else {
+                        init.FlashMessage('error', 'Could not submit the draft for approval! Please try again.');
+                    }
+                },
+                error: function (err) {
+                    init.FlashMessage('error', 'Could not submit the draft for approval! Please try again.');
+                }
+            });
         };
 
         $(function () {
@@ -101,6 +125,16 @@
 
                 if (confirm('Are you sure you want to publish this draft?')) {
                     publishDraft($(this));
+                }
+
+                return false;
+            });
+
+            $(document).on('click', '.draft-approval', function (e) {
+                e.preventDefault();
+
+                if (confirm('Are you sure you want to submit this draft for approval with the purpose of becoming live?')) {
+                    submitDraftForApproval($(this));
                 }
 
                 return false;

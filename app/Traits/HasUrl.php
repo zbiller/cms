@@ -219,9 +219,9 @@ trait HasUrl
         $suffix = $this->buildUrlSegment('suffix');
 
         return
-            (str_is('/', $prefix) ? '' : ($prefix ? $prefix . '/' : '')) .
+            (str_is('/', $prefix) ? '' : ($prefix ? $prefix . self::$urlOptions->urlGlue : '')) .
             $this->getAttribute(self::$urlOptions->toField) .
-            (str_is('/', $suffix) ? '' : ($suffix ? '/' . $suffix : ''));
+            (str_is('/', $suffix) ? '' : ($suffix ? self::$urlOptions->urlGlue . $suffix : ''));
     }
 
     /**
@@ -244,7 +244,7 @@ trait HasUrl
         if (is_callable($segment)) {
             return call_user_func_array($segment, [[], $this]);
         } elseif (is_array($segment)) {
-            return implode('/', $segment);
+            return implode(self::$urlOptions->urlGlue, $segment);
         } elseif (is_string($segment)) {
             return $segment;
         } else {

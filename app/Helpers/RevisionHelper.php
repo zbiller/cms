@@ -12,13 +12,15 @@ class RevisionHelper
      *
      * @param Model $model
      * @param string $route
+     * @param array $parameters
      * @return \Illuminate\View\View
      */
-    public function tab(Model $model, $route)
+    public function tab(Model $model, $route, array $parameters = [])
     {
         return view('helpers::revision.tab')->with([
             'model' => $model,
             'route' => $route,
+            'parameters' => $parameters,
         ]);
     }
 

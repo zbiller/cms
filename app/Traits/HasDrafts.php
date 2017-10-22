@@ -105,6 +105,8 @@ trait HasDrafts
                     $model = $this->saveRegularDraft($data, $draft);
                 }
 
+                $this->clearOldDrafts();
+
                 return $model;
             });
 
@@ -189,6 +191,22 @@ trait HasDrafts
             $this->drafts()->delete();
         } catch (Exception $e) {
             throw DraftException::deleteFailed();
+        }
+    }
+
+    /**
+     * If a draft record limit is set on the model and that limit is exceeded.
+     * Remove the oldest drafts until the limit is met.
+     *
+     * @return void
+     */
+    public function clearOldDrafts()
+    {
+        $limit = (int)self::$draftOptions->draftLimit;
+        $count = $this->drafts()->count();
+
+        if ($limit > 0 && $count > $limit) {
+            $this->drafts()->oldest()->take($count - $limit)->delete();
         }
     }
 

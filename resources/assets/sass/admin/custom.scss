@@ -12,6 +12,16 @@
     }
 }
 
+.actions-default {
+    width: 165px;
+    padding: 10px;
+
+    @include media-query('tablet') {
+        display: table-cell;
+        width: 78px;
+    }
+}
+
 /* Uploads Styles */
 .open-upload-new {
     background: $colorWhite !important;
@@ -237,6 +247,16 @@ td .upload-aligned-image {
 
 .actions-drafts {
     width: 265px;
+    padding: 10px;
+
+    @include media-query('tablet') {
+        display: table-cell;
+        width: 117px;
+    }
+}
+
+.actions-approval {
+    width: 352px;
     padding: 10px;
 
     @include media-query('tablet') {

@@ -19,6 +19,7 @@ use Illuminate\Validation\Rules\Unique;
 use Illuminate\Validation\ValidationException;
 use Meta;
 use ReflectionMethod;
+use Route;
 
 trait CanDraft
 {
@@ -85,11 +86,18 @@ trait CanDraft
      * Set the draft page meta title.
      * Display the single draft view.
      *
-     * @param Draft $draft
+     * @param Request $request
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
-    public function draft(Draft $draft)
+    public function draft(Request $request)
     {
+        try {
+            $draft = Draft::findOrFail(Route::current()->parameter('draft'));
+        } catch (ModelNotFoundException $e) {
+            flash()->error('The draft does not exist!');
+            return back();
+        }
+
         $this->rememberDraftBackUrl($draft);
         $this->establishDraftPageTitle();
 
@@ -119,11 +127,12 @@ trait CanDraft
      * Display the limbo draft view or save / publish the limbo draft, depending on the request method (GET | PUT).
      *
      * @param Request $request
-     * @param int $id
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
-    public function limbo(Request $request, $id)
+    public function limbo(Request $request)
     {
+        $id = Route::current()->parameter('id');
+
         if (!$this->canBeDrafted()) {
             flash()->error('This entity does not support drafts!');
             return back();
@@ -150,6 +159,8 @@ trait CanDraft
                             );
                         } catch (ValidationException $e) {
                             return back()->withErrors($e->validator->errors());
+                        } catch (\Exception $e) {
+                            dd($e);
                         }
                     }
 

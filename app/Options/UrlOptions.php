@@ -51,6 +51,13 @@ class UrlOptions
     public $urlSuffix;
 
     /**
+     * The symbol that will be used to glue url segments together.
+     *
+     * @var string
+     */
+    public $urlGlue = '/';
+
+    /**
      * Flag whether to update children urls on parent url save.
      *
      * @var bool
@@ -130,6 +137,19 @@ class UrlOptions
     public function suffixUrlWith($suffix): UrlOptions
     {
         $this->urlSuffix = $suffix;
+
+        return $this;
+    }
+
+    /**
+     * Set the $urlGlue to work with in the App\Traits\HasUrl trait.
+     *
+     * @param string|array|callable $glue
+     * @return UrlOptions
+     */
+    public function glueUrlWith($glue): UrlOptions
+    {
+        $this->urlGlue = $glue;
 
         return $this;
     }

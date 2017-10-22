@@ -121,11 +121,23 @@ class PermissionsSeeder extends Seeder
                 'guard' => 'admin',
                 'name' => 'drafts-list',
             ],
+            'view' => [
+                'group' => 'Drafts',
+                'label' => 'View',
+                'guard' => 'admin',
+                'name' => 'drafts-view',
+            ],
             'Save' => [
                 'group' => 'Drafts',
                 'label' => 'Save',
                 'guard' => 'admin',
                 'name' => 'drafts-save',
+            ],
+            'Approval' => [
+                'group' => 'Drafts',
+                'label' => 'Approval',
+                'guard' => 'admin',
+                'name' => 'drafts-approval',
             ],
             'Publish' => [
                 'group' => 'Drafts',
@@ -146,6 +158,12 @@ class PermissionsSeeder extends Seeder
                 'label' => 'List',
                 'guard' => 'admin',
                 'name' => 'revisions-list',
+            ],
+            'view' => [
+                'group' => 'Revisions',
+                'label' => 'View',
+                'guard' => 'admin',
+                'name' => 'revisions-view',
             ],
             'Rollback' => [
                 'group' => 'Revisions',

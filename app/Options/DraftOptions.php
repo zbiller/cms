@@ -12,6 +12,16 @@ use Illuminate\View\View;
 class DraftOptions
 {
     /**
+     * The limit of drafts to be created for a model instance.
+     * If the limit is reached, oldest drafts will start getting deleted to make room for new ones.
+     *
+     * IMPORTANT: This option is available for the App\Traits\HasDrafts trait.
+     *
+     * @var int
+     */
+    public $draftLimit;
+
+    /**
      * The fields that should be draftable.
      * By default (null) all fields are draftable.
      *
@@ -218,6 +228,19 @@ class DraftOptions
     public static function instance(): DraftOptions
     {
         return new static();
+    }
+
+    /**
+     * Set the $draftLimit to work with in the App\Traits\HasDrafts trait.
+     *
+     * @param int $limit
+     * @return DraftOptions
+     */
+    public function limitDraftsTo($limit): DraftOptions
+    {
+        $this->draftLimit = (int)$limit > 0 ? (int)$limit : null;
+
+        return $this;
     }
 
     /**

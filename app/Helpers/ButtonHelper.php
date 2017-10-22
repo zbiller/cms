@@ -193,6 +193,81 @@ class ButtonHelper
     }
 
     /**
+     * Render the save elsewhere button.
+     *
+     * @param string $url
+     * @param array $attributes
+     * @return \Illuminate\View\View
+     */
+    public function saveElsewhere($url, array $attributes = [])
+    {
+        return view('helpers::button.save_elsewhere')->with([
+            'url' => $url,
+            'attributes' => self::buildAttributes($attributes)
+        ]);
+    }
+
+    /**
+     * Render the save new button.
+     *
+     * @param string $url
+     * @param array $attributes
+     * @return \Illuminate\View\View
+     */
+    public function saveAsNew($url, array $attributes = [])
+    {
+        return view('helpers::button.save_new')->with([
+            'url' => $url,
+            'attributes' => self::buildAttributes($attributes)
+        ]);
+    }
+
+    /**
+     * Render save and stay button.
+     *
+     * @param array $attributes
+     * @return \Illuminate\View\View
+     */
+    public function saveAndStay(array $attributes = [])
+    {
+        return view('helpers::button.save_stay')->with([
+            'attributes' => self::buildAttributes($attributes)
+        ]);
+    }
+
+    /**
+     * Render the save as draft button.
+     *
+     * @param string $url
+     * @param array $attributes
+     * @return \Illuminate\View\View
+     */
+    public function saveAsDraft($url, array $attributes = [])
+    {
+        return view('helpers::button.save_draft')->with([
+            'url' => $url,
+            'attributes' => self::buildAttributes($attributes)
+        ]);
+    }
+
+    /**
+     * Render the save for approval button view helper.
+     *
+     * @param string $url
+     * @param string $approvalUrl
+     * @param array $attributes
+     * @return \Illuminate\View\View
+     */
+    public function saveForApproval($url, $approvalUrl, array $attributes = [])
+    {
+        return view('helpers::button.save_approval')->with([
+            'url' => $url,
+            'approvalUrl' => $approvalUrl,
+            'attributes' => self::buildAttributes($attributes),
+        ]);
+    }
+
+    /**
      * Render the publish button.
      *
      * @param string $url
@@ -298,64 +373,6 @@ class ButtonHelper
         return view('helpers::button.restore_record')->with([
             'url' => $url,
             'attributes' => $attributes
-        ]);
-    }
-
-    /**
-     * Render the save elsewhere button.
-     *
-     * @param string $url
-     * @param array $attributes
-     * @return \Illuminate\View\View
-     */
-    public function saveElsewhere($url, array $attributes = [])
-    {
-        return view('helpers::button.save_elsewhere')->with([
-            'url' => $url,
-            'attributes' => self::buildAttributes($attributes)
-        ]);
-    }
-
-    /**
-     * Render the save new button.
-     *
-     * @param string $url
-     * @param array $attributes
-     * @return \Illuminate\View\View
-     */
-    public function saveAsNew($url, array $attributes = [])
-    {
-        return view('helpers::button.save_new')->with([
-            'url' => $url,
-            'attributes' => self::buildAttributes($attributes)
-        ]);
-    }
-
-    /**
-     * Render save and stay button.
-     *
-     * @param array $attributes
-     * @return \Illuminate\View\View
-     */
-    public function saveAndStay(array $attributes = [])
-    {
-        return view('helpers::button.save_stay')->with([
-            'attributes' => self::buildAttributes($attributes)
-        ]);
-    }
-
-    /**
-     * Render the save as draft button.
-     *
-     * @param string $url
-     * @param array $attributes
-     * @return \Illuminate\View\View
-     */
-    public function saveAsDraft($url, array $attributes = [])
-    {
-        return view('helpers::button.save_draft')->with([
-            'url' => $url,
-            'attributes' => self::buildAttributes($attributes)
         ]);
     }
 

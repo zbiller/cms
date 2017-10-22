@@ -10,4 +10,4 @@
     </section>
 @endsection
 
-{!! draft()->view($draft, $item) !!}
+{!! draft()->view($draft, $item, route('admin.emails.draft', $draft)) !!}

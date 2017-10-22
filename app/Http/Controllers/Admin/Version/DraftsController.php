@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Version;
 
 use App\Exceptions\DraftException;
 use App\Http\Controllers\Controller;
+use App\Models\Auth\User;
 use App\Models\Model;
 use App\Models\Version\Draft;
 use DB;
@@ -54,6 +55,13 @@ class DraftsController extends Controller
     protected $route;
 
     /**
+     * The additional route parameters.
+     *
+     * @var string
+     */
+    protected $parameters;
+
+    /**
      * The model id if it exists.
      *
      * @var int
@@ -79,6 +87,7 @@ class DraftsController extends Controller
         try {
             $this->drafts = $this->getDraftRecords($request);
             $this->route = $request->input('route');
+            $this->parameters = json_decode($request->input('parameters'), true);
 
             return response()->json([
                 'status' => true,
@@ -161,7 +170,9 @@ class DraftsController extends Controller
             $model->saveAsDraft($data);
 
             flash()->success('The draft was successfully created!');
-            return back();
+            return session()->has('draft_back_url_' . $draft->id) ?
+                redirect(session('draft_back_url_' . $draft->id)) :
+                back();
         } catch (DraftException $e) {
             flash()->error($e->getMessage());
             return back()->withInput($request->all());
@@ -210,6 +221,38 @@ class DraftsController extends Controller
         } catch (Exception $e) {
             throw new Exception($e->getMessage(), $e->getCode());
         }
+    }
+
+    /**
+     * Submit a draft for approval.
+     * Send a notification to all users that can "publish a draft".
+     *
+     * @param Request $request
+     * @return array|\Illuminate\Http\RedirectResponse
+     */
+    public function submitDraftForApproval(Request $request)
+    {
+        try {
+            dd('sterge dupa notificari');
+
+            User::withPermissions('drafts-publish')->get()->each(function ($user) use ($request) {
+                $user->notify(new PendingApproval($request->get('approval_url')));
+            });
+
+            flash()->success(
+                'The draft was successfully submitted for approval!' .
+                '<br /><br />' .
+                'One of the administrators will look over your changes as soon as possible.'
+            );
+        } catch (Exception $e) {
+            flash()->error('Could not submit the draft for approval! Please try again.');
+        }
+
+        if ($request->ajax()) {
+            return ['status' => true];
+        }
+
+        return back();
     }
 
     /**
@@ -266,6 +309,11 @@ class DraftsController extends Controller
             return back()->withInput($request->all());
         } catch (ValidationException $e) {
             flash()->error($e->getMessage());
+
+            if ($request->ajax()) {
+                return ['status' => true];
+            }
+
             return back()->withInput($request->all())->withErrors($e->validator->errors());
         } catch (Exception $e) {
             if ($request->ajax()) {
@@ -345,6 +393,7 @@ class DraftsController extends Controller
 
                 $this->drafts = $this->getDraftRecords($request);
                 $this->route = $request->input('route');
+                $this->parameters = json_decode($request->input('parameters'), true);
 
                 return [
                     'status' => true,
@@ -424,6 +473,7 @@ class DraftsController extends Controller
         return view('helpers::draft.partials.table')->with([
             'drafts' => $this->drafts,
             'route' => $this->route,
+            'parameters' => $this->parameters,
         ])->render();
     }
 

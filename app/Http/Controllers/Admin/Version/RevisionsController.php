@@ -27,6 +27,13 @@ class RevisionsController extends Controller
     protected $route;
 
     /**
+     * The additional route parameters.
+     *
+     * @var string
+     */
+    protected $parameters;
+
+    /**
      * Get the revisions.
      *
      * @param Request $request
@@ -45,6 +52,7 @@ class RevisionsController extends Controller
         try {
             $this->revisions = $this->getRevisionRecords($request);
             $this->route = $request->input('route');
+            $this->parameters = json_decode($request->input('parameters'), true);
 
             return response()->json([
                 'status' => true,
@@ -103,6 +111,7 @@ class RevisionsController extends Controller
 
                 $this->revisions = $this->getRevisionRecords($request);
                 $this->route = $request->input('route');
+                $this->parameters = json_decode($request->input('parameters'), true);
 
                 return [
                     'status' => true,
@@ -143,6 +152,7 @@ class RevisionsController extends Controller
         return view('helpers::revision.partials.table')->with([
             'revisions' => $this->revisions,
             'route' => $this->route,
+            'parameters' => $this->parameters,
         ])->render();
     }
 

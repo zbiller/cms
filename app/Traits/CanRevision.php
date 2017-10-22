@@ -8,8 +8,11 @@ use App\Options\RevisionOptions;
 use App\Services\CacheService;
 use DB;
 use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Http\Request;
 use Meta;
 use ReflectionMethod;
+use Route;
 
 trait CanRevision
 {
@@ -41,11 +44,18 @@ trait CanRevision
      * Set the revision page meta title.
      * Display the revision view.
      *
-     * @param Revision $revision
-     * @return \Illuminate\Http\RedirectResponse
+     * @param Request $request
+     * @return \Illuminate\View\View
      */
-    public function revision(Revision $revision)
+    public function revision(Request $request)
     {
+        try {
+            $revision = Revision::findOrFail(Route::current()->parameter('revision'));
+        } catch (ModelNotFoundException $e) {
+            flash()->error('The revision does not exist!');
+            return back();
+        }
+
         $this->rememberRevisionBackUrl($revision);
         $this->establishRevisionPageTitle();
 

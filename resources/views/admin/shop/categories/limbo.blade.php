@@ -16,6 +16,11 @@
     </section>
     <section class="actions">
         {!! button()->saveRecord(['style' => 'margin-right: 5px;']) !!}
-        {!! button()->publishDraft(route('admin.drafts.publish_limbo')) !!}
+
+        @permission('drafts-publish')
+            {!! button()->publishDraft(route('admin.drafts.publish_limbo')) !!}
+        @else
+            {!! button()->saveForApproval(route('admin.drafts.approval'), route('admin.product_categories.limbo', $item->id)) !!}
+        @endpermission
     </section>
 @endsection

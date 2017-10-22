@@ -196,7 +196,7 @@ trait CanCrud
      * $this->vars['var_2'] = $var2;
      *
      * @param Closure|null $function
-     * @return RedirectResponse
+     * @return View
      * @throws Exception
      */
     public function _edit(Closure $function = null)

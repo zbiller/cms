@@ -84,12 +84,20 @@ Breadcrumbs::register('admin.pages.edit', function($breadcrumbs, $page) {
 
 /* Home > Pages > Edit > Draft */
 Breadcrumbs::register('admin.pages.draft', function($breadcrumbs, $draft) {
+    if (!($draft instanceof \App\Models\Version\Draft)) {
+        $draft = \App\Models\Version\Draft::find($draft);
+    }
+
     $breadcrumbs->parent('admin.pages.edit', $draft->draftable);
     $breadcrumbs->push('Draft', route('admin.pages.draft', $draft));
 });
 
 /* Home > Pages > Edit > Revision */
 Breadcrumbs::register('admin.pages.revision', function($breadcrumbs, $revision) {
+    if (!($revision instanceof \App\Models\Version\Revision)) {
+        $revision = \App\Models\Version\Revision::find($revision);
+    }
+
     $breadcrumbs->parent('admin.pages.edit', $revision->revisionable);
     $breadcrumbs->push('Revision', route('admin.pages.revision', $revision));
 });
@@ -176,12 +184,20 @@ Breadcrumbs::register('admin.blocks.edit', function($breadcrumbs, $block) {
 
 /* Home > Blocks > Edit > Draft */
 Breadcrumbs::register('admin.blocks.draft', function($breadcrumbs, $draft) {
+    if (!($draft instanceof \App\Models\Version\Draft)) {
+        $draft = \App\Models\Version\Draft::find($draft);
+    }
+
     $breadcrumbs->parent('admin.blocks.edit', $draft->draftable);
     $breadcrumbs->push('Draft', route('admin.blocks.draft', $draft));
 });
 
 /* Home > Blocks > Edit > Revision */
 Breadcrumbs::register('admin.blocks.revision', function($breadcrumbs, $revision) {
+    if (!($revision instanceof \App\Models\Version\Revision)) {
+        $revision = \App\Models\Version\Revision::find($revision);
+    }
+
     $breadcrumbs->parent('admin.blocks.edit', $revision->revisionable);
     $breadcrumbs->push('Revision', route('admin.blocks.revision', $revision));
 });
@@ -262,12 +278,20 @@ Breadcrumbs::register('admin.emails.edit', function($breadcrumbs, $email) {
 
 /* Home > Emails > Edit > Draft */
 Breadcrumbs::register('admin.emails.draft', function($breadcrumbs, $draft) {
+    if (!($draft instanceof \App\Models\Version\Draft)) {
+        $draft = \App\Models\Version\Draft::find($draft);
+    }
+
     $breadcrumbs->parent('admin.emails.edit', $draft->draftable);
     $breadcrumbs->push('Draft', route('admin.emails.draft', $draft));
 });
 
 /* Home > Emails > Edit > Revision */
 Breadcrumbs::register('admin.emails.revision', function($breadcrumbs, $revision) {
+    if (!($revision instanceof \App\Models\Version\Revision)) {
+        $revision = \App\Models\Version\Revision::find($revision);
+    }
+
     $breadcrumbs->parent('admin.emails.edit', $revision->revisionable);
     $breadcrumbs->push('Revision', route('admin.emails.revision', $revision));
 });
@@ -382,12 +406,20 @@ Breadcrumbs::register('admin.products.edit', function($breadcrumbs, $product) {
 
 /* Home > Products > Edit > Draft */
 Breadcrumbs::register('admin.products.draft', function($breadcrumbs, $draft) {
+    if (!($draft instanceof \App\Models\Version\Draft)) {
+        $draft = \App\Models\Version\Draft::find($draft);
+    }
+
     $breadcrumbs->parent('admin.products.edit', $draft->draftable);
     $breadcrumbs->push('Draft', route('admin.products.draft', $draft));
 });
 
 /* Home > Products > Edit > Revision */
 Breadcrumbs::register('admin.products.revision', function($breadcrumbs, $revision) {
+    if (!($revision instanceof \App\Models\Version\Revision)) {
+        $revision = \App\Models\Version\Revision::find($revision);
+    }
+
     $breadcrumbs->parent('admin.products.edit', $revision->revisionable);
     $breadcrumbs->push('Revision', route('admin.products.revision', $revision));
 });
@@ -440,12 +472,20 @@ Breadcrumbs::register('admin.product_categories.edit', function($breadcrumbs, $c
 
 /* Home > Categories > Edit > Draft */
 Breadcrumbs::register('admin.product_categories.draft', function($breadcrumbs, $draft) {
+    if (!($draft instanceof \App\Models\Version\Draft)) {
+        $draft = \App\Models\Version\Draft::find($draft);
+    }
+
     $breadcrumbs->parent('admin.product_categories.edit', $draft->draftable);
     $breadcrumbs->push('Draft', route('admin.product_categories.draft', $draft));
 });
 
 /* Home > Categories > Edit > Revision */
 Breadcrumbs::register('admin.product_categories.revision', function($breadcrumbs, $revision) {
+    if (!($revision instanceof \App\Models\Version\Revision)) {
+        $revision = \App\Models\Version\Revision::find($revision);
+    }
+
     $breadcrumbs->parent('admin.product_categories.edit', $revision->revisionable);
     $breadcrumbs->push('Revision', route('admin.product_categories.revision', $revision));
 });

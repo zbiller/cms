@@ -3,9 +3,17 @@
         {!! button()->action('Back To Original', session('draft_back_url_' . $draft->id), 'fa-chevron-left') !!}
     </section>
     <section class="actions">
-        {!! button()->saveAsNew(route('admin.drafts.create', $draft->id)) !!}
+        @if(optional($draft->draftable::getDraftOptions())->draftLimit > 1)
+            {!! button()->saveAsNew(route('admin.drafts.create', $draft->id)) !!}
+        @endif
+        @permission('drafts-save')
         {!! button()->saveElsewhere(route('admin.drafts.update', $draft->id)) !!}
+        @endpermission
+        @permission('drafts-publish')
         {!! button()->publishDraft(route('admin.drafts.publish', $draft->id)) !!}
+        @else
+            {!! button()->saveForApproval(route('admin.drafts.approval'), $approvalUrl) !!}
+            @endpermission
     </section>
 @endsection
 

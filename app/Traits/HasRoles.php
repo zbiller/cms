@@ -180,8 +180,6 @@ trait HasRoles
                         return $this->getRole($role);
                     })->all()
                 );
-
-                $this->forgetPermissionsCache();
             }
         } catch (QueryException $e) {
             $this->removeRoles($roles);

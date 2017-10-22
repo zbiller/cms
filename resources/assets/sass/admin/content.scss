@@ -328,7 +328,10 @@ p {
     padding: 10px;
     background: $colorAlabaster;
     border: 1px solid $colorGallery;
-    text-align: center;
+
+    &.centered {
+        text-align: center !important;
+    }
 
     &.success {
         @include calc(width, '100% - 2px');
