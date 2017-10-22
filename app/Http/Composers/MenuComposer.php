@@ -33,7 +33,9 @@ class MenuComposer
             });
 
             $menu->add(function ($item) use ($menu) {
-                $content = $item->name('Manage Content')->data('icon', 'fa-pencil-square-o')->active('admin/pages/*', 'admin/menus/*', 'admin/blocks/*', 'admin/emails/*', 'admin/layouts/*', 'admin/uploads/*', 'admin/translations/*');
+                $content = $item->name('Manage Content')->data('icon', 'fa-pencil-square-o')
+                    ->permissions('pages-list', 'menus-list', 'blocks-list', 'emails-list', 'layouts-list', 'uploads-list', 'translations-list')
+                    ->active('admin/pages/*', 'admin/menus/*', 'admin/blocks/*', 'admin/emails/*', 'admin/layouts/*', 'admin/uploads/*', 'admin/translations/*');
 
                 $menu->child($content, function (MenuItem $item) {
                     $item->name('Pages')->url(route('admin.pages.index'))->permissions('pages-list')->active('admin/pages/*');
@@ -65,19 +67,9 @@ class MenuComposer
             });
 
             $menu->add(function ($item) use ($menu) {
-                $seo = $item->name('Seo Administration')->data('icon', 'fa-bar-chart')->active('admin/sitemap/*', 'admin/redirects/*');
-
-                $menu->child($seo, function (MenuItem $item) {
-                    $item->name('Sitemap')->url(route('admin.sitemap.index'))->permissions('sitemap-list')->active('admin/sitemap/*');
-                });
-
-                $menu->child($seo, function (MenuItem $item) {
-                    $item->name('Redirects')->url(route('admin.redirects.index'))->permissions('redirects-list')->active('admin/redirects/*');
-                });
-            });
-
-            $menu->add(function ($item) use ($menu) {
-                $shop = $item->name('Shop Panel')->data('icon', 'fa-shopping-cart')->active('admin/orders/*', 'admin/carts/*', 'admin/product-categories/*', 'admin/products/*', 'admin/sets/*', 'admin/attributes/*', 'admin/discounts/*', 'admin/taxes/*');
+                $shop = $item->name('Shop Panel')->data('icon', 'fa-shopping-cart')
+                    ->permissions('orders-list', 'carts-list', 'product-categories-list', 'products-list', 'attributes-list', 'discounts-list', 'taxes-list')
+                    ->active('admin/orders/*', 'admin/carts/*', 'admin/product-categories/*', 'admin/products/*', 'admin/sets/*', 'admin/attributes/*', 'admin/discounts/*', 'admin/taxes/*');
 
                 $menu->child($shop, function (MenuItem $item) {
                     $item->name('Orders')->url(route('admin.orders.index'))->permissions('orders-list')->active('admin/orders/*');
@@ -109,7 +101,9 @@ class MenuComposer
             });
 
             $menu->add(function ($item) use ($menu) {
-                $access = $item->name('Access Control')->data('icon', 'fa-sign-in')->active('admin/users/*', 'admin/admins/*', 'admin/roles/*', 'admin/activity/*');
+                $access = $item->name('Access Control')->data('icon', 'fa-sign-in')
+                    ->permissions('users-list', 'admins-list', 'roles-list', 'activity-list')
+                    ->active('admin/users/*', 'admin/admins/*', 'admin/roles/*', 'admin/activity/*');
 
                 $menu->child($access, function (MenuItem $item) {
                     $item->name('Users')->url(route('admin.users.index'))->permissions('users-list')->active('admin/users/*');
@@ -129,7 +123,9 @@ class MenuComposer
             });
 
             $menu->add(function ($item) use ($menu) {
-                $localisation = $item->name('Localisation')->data('icon', 'fa-globe')->active('admin/languages/*', 'admin/currencies/*', 'admin/countries/*', 'admin/states/*', 'admin/cities/*');
+                $localisation = $item->name('Localisation')->data('icon', 'fa-globe')
+                    ->permissions('languages-list', 'currencies-list', 'countries-list', 'states-list', 'cities-list')
+                    ->active('admin/languages/*', 'admin/currencies/*', 'admin/countries/*', 'admin/states/*', 'admin/cities/*');
 
                 $menu->child($localisation, function (MenuItem $item) {
                     $item->name('Languages')->url(route('admin.languages.index'))->permissions('languages-list')->active('admin/languages/*');
@@ -153,7 +149,23 @@ class MenuComposer
             });
 
             $menu->add(function ($item) use ($menu) {
-                $config = $item->name('System Settings')->data('icon', 'fa-cog')->active('admin/settings/*', 'admin/backups/*');
+                $seo = $item->name('Seo Administration')->data('icon', 'fa-bar-chart')
+                    ->permissions('sitemap-list', 'redirects-list')
+                    ->active('admin/sitemap/*', 'admin/redirects/*');
+
+                $menu->child($seo, function (MenuItem $item) {
+                    $item->name('Sitemap')->url(route('admin.sitemap.index'))->permissions('sitemap-list')->active('admin/sitemap/*');
+                });
+
+                $menu->child($seo, function (MenuItem $item) {
+                    $item->name('Redirects')->url(route('admin.redirects.index'))->permissions('redirects-list')->active('admin/redirects/*');
+                });
+            });
+
+            $menu->add(function ($item) use ($menu) {
+                $config = $item->name('System Settings')->data('icon', 'fa-cog')
+                    ->permissions('settings-general', 'settings-analytics', 'settings-courier', 'backups-list')
+                    ->active('admin/settings/*', 'admin/backups/*');
 
                 $menu->child($config, function (MenuItem $item) {
                     $item->name('General')->url(route('admin.settings.general'))->permissions('settings-general')->active('admin/settings/general/*');
