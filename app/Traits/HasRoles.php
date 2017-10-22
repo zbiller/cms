@@ -63,6 +63,107 @@ trait HasRoles
     }
 
     /**
+     * Filter the query excluding the given roles.
+     *
+     * @param $query
+     * @param string|array|Role|Collection $roles
+     */
+    public function scopeWithoutRoles($query, $roles)
+    {
+        if ($roles instanceof Role) {
+            $roles = [$roles];
+        } else {
+            $roles = collect($roles)->map(function ($role) {
+                if ($role instanceof Role) {
+                    return $role;
+                }
+
+                return Role::findByName($role);
+            });
+        }
+
+        $query->whereDoesntHave('roles', function ($query) use ($roles) {
+            $query->where(function ($query) use ($roles) {
+                foreach ($roles as $role) {
+                    $query->where('roles.id', '=', $role->id);
+                }
+            });
+        });
+    }
+
+    /**
+     * Filter the query by the given permissions.
+     *
+     * @param $query
+     * @param string|array|Role|Collection $permissions
+     * @return mixed
+     */
+    public function scopeWithPermissions($query, $permissions)
+    {
+        $permissions = $this->convertToPermissionModels($permissions);
+
+        $rolesWithPermissions = array_unique(array_reduce($permissions, function ($result, $permission) {
+            return array_merge($result, $permission->roles->all());
+        }, []));
+
+        return $query->where(function ($query) use ($permissions, $rolesWithPermissions) {
+            $query->whereHas('permissions', function ($query) use ($permissions) {
+                $query->where(function ($query) use ($permissions) {
+                    foreach ($permissions as $permission) {
+                        $query->orWhere(config('permission.table_names.permissions').'.id', $permission->id);
+                    }
+                });
+            });
+
+            if (count($rolesWithPermissions) > 0) {
+                $query->orWhereHas('roles', function ($query) use ($rolesWithPermissions) {
+                    $query->where(function ($query) use ($rolesWithPermissions) {
+                        foreach ($rolesWithPermissions as $role) {
+                            $query->orWhere(config('permission.table_names.roles').'.id', $role->id);
+                        }
+                    });
+                });
+            }
+        });
+    }
+
+    /**
+     * Filter the query excluding the given permissions.
+     *
+     * @param $query
+     * @param string|array|Role|Collection $permissions
+     * @return mixed
+     */
+    public function scopeWithoutPermissions($query, $permissions)
+    {
+        $permissions = $this->convertToPermissionModels($permissions);
+
+        $rolesWithPermissions = array_unique(array_reduce($permissions, function ($result, $permission) {
+            return array_merge($result, $permission->roles->all());
+        }, []));
+
+        return $query->where(function ($query) use ($permissions, $rolesWithPermissions) {
+            $query->whereDoesntHave('permissions', function ($query) use ($permissions) {
+                $query->where(function ($query) use ($permissions) {
+                    foreach ($permissions as $permission) {
+                        $query->orWhere(config('permission.table_names.permissions').'.id', $permission->id);
+                    }
+                });
+            });
+
+            if (count($rolesWithPermissions) > 0) {
+                $query->whereDoesntHave('roles', function ($query) use ($rolesWithPermissions) {
+                    $query->where(function ($query) use ($rolesWithPermissions) {
+                        foreach ($rolesWithPermissions as $role) {
+                            $query->orWhere(config('permission.table_names.roles').'.id', $role->id);
+                        }
+                    });
+                });
+            }
+        });
+    }
+
+    /**
      * Assign roles to the a user.
      *
      * @param string|array|Role|Collection $roles
