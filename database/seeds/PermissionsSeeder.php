@@ -249,6 +249,12 @@ class PermissionsSeeder extends Seeder
                 'guard' => 'admin',
                 'name' => 'blocks-list',
             ],
+            'Show' => [
+                'group' => 'Blocks',
+                'label' => 'Show',
+                'guard' => 'admin',
+                'name' => 'blocks-show',
+            ],
             'Add' => [
                 'group' => 'Blocks',
                 'label' => 'Add',

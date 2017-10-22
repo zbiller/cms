@@ -1,4 +1,4 @@
-@permission('blocks-list')
+@permission('blocks-show')
     <div id="tab-blocks" class="tab">
         <div class="loading loading-blocks">
             <img src="{{ asset('/images/admin/loading.gif') }}" />
