@@ -5,6 +5,7 @@ namespace App\Options;
 use App\Http\Filters\Filter;
 use App\Http\Sorts\Sort;
 use App\Models\Model;
+use Exception;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -19,7 +20,7 @@ class DraftOptions
      *
      * @var int
      */
-    public $draftLimit;
+    private $draftLimit;
 
     /**
      * The fields that should be draftable.
@@ -29,7 +30,7 @@ class DraftOptions
      *
      * @var array
      */
-    public $draftFields = [];
+    private $draftFields = [];
 
     /**
      * The model's relations that should be draftable.
@@ -39,7 +40,7 @@ class DraftOptions
      *
      * @var array
      */
-    public $draftRelations = [];
+    private $draftRelations = [];
 
     /**
      * Flag indicating whether to delete the just published draft.
@@ -56,7 +57,7 @@ class DraftOptions
      *
      * @var bool
      */
-    public $deletePublishedDraft = true;
+    private $deletePublishedDraft = true;
 
     /**
      * Flag indicating whether to create a revision for the model, when publishing a draft to that model.
@@ -70,7 +71,7 @@ class DraftOptions
      *
      * @var bool
      */
-    public $createRevisionWhenPublishingDraft = true;
+    private $createRevisionWhenPublishingDraft = true;
 
     /**
      * Flag indicating whether to force publish a draft's relations.
@@ -92,7 +93,7 @@ class DraftOptions
      *
      * @var bool
      */
-    public $softDraftRelations = false;
+    private $softDraftRelations = false;
 
     /**
      * The model that should be used for drafting.
@@ -103,7 +104,7 @@ class DraftOptions
      *
      * @var Model|string
      */
-    public $entityModel;
+    private $entityModel;
 
     /**
      * The form request validator to validate against.
@@ -113,7 +114,7 @@ class DraftOptions
      *
      * @var FormRequest
      */
-    public $validatorRequest;
+    private $validatorRequest;
 
     /**
      * The filter class based on which the drafts could be filtered.
@@ -123,7 +124,7 @@ class DraftOptions
      *
      * @var Filter
      */
-    public $filterClass;
+    private $filterClass;
 
     /**
      * The sort class based on which the drafts could be sorted.
@@ -133,7 +134,7 @@ class DraftOptions
      *
      * @var Sort
      */
-    public $sortClass;
+    private $sortClass;
 
     /**
      * The meta title displayed when viewing an entity record's list of drafts.
@@ -143,7 +144,7 @@ class DraftOptions
      *
      * @var string
      */
-    public $listTitle = 'Drafts';
+    private $listTitle = 'Drafts';
 
     /**
      * The meta title displayed when viewing an entity record's draft.
@@ -153,7 +154,7 @@ class DraftOptions
      *
      * @var string
      */
-    public $singleTitle = 'Draft';
+    private $singleTitle = 'Draft';
 
     /**
      * The blade view file returned when viewing an entity record's list of drafts.
@@ -167,7 +168,7 @@ class DraftOptions
      *
      * @var View|string
      */
-    public $listView;
+    private $listView;
 
     /**
      * The blade view file returned when viewing an entity record's normal draft.
@@ -181,7 +182,7 @@ class DraftOptions
      *
      * @var View|string
      */
-    public $singleView;
+    private $singleView;
 
     /**
      * The blade view file returned when viewing an entity record's limbo draft.
@@ -195,7 +196,7 @@ class DraftOptions
      *
      * @var View|string
      */
-    public $limboView;
+    private $limboView;
 
     /**
      * The redirect url to redirect the admin user after a limbo draft has been saved.
@@ -208,7 +209,7 @@ class DraftOptions
      *
      * @var RedirectResponse|string
      */
-    public $redirectUrl;
+    private $redirectUrl;
 
     /**
      * The variables that will be assigned to the view when viewing an entity record's revision.
@@ -218,7 +219,25 @@ class DraftOptions
      *
      * @var array
      */
-    public $viewVariables = [];
+    private $viewVariables = [];
+
+    /**
+     * Get the value of a property of this class.
+     *
+     * @param $name
+     * @return mixed
+     * @throws Exception
+     */
+    public function __get($name)
+    {
+        if (property_exists(static::class, $name)) {
+            return $this->{$name};
+        }
+
+        throw new Exception(
+            'The property "' . $name . '" does not exist in class "' . static::class . '"'
+        );
+    }
 
     /**
      * Get a fresh instance of this class.
@@ -246,7 +265,7 @@ class DraftOptions
     /**
      * Set the $draftFields to work with in the App\Traits\HasDrafts trait.
      *
-     * @param ...$fields
+     * @param $fields
      * @return DraftOptions
      */
     public function fieldsToDraft(...$fields): DraftOptions
@@ -259,7 +278,7 @@ class DraftOptions
     /**
      * Set the $draftRelations to work with in the App\Traits\HasDrafts trait.
      *
-     * @param ...$relations
+     * @param $relations
      * @return DraftOptions
      */
     public function relationsToDraft(...$relations): DraftOptions

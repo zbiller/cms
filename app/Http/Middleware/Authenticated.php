@@ -31,7 +31,7 @@ class Authenticated
      *
      * @param Request $request
      * @param Closure $next
-     * @param ...$guards
+     * @param $guards
      * @return mixed
      *
      * @throws AuthenticationException

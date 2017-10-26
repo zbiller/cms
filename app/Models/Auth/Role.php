@@ -75,7 +75,7 @@ class Role extends Model implements RoleContract
      * Filter query by name.
      *
      * @param Builder $query
-     * @param ...$permissions
+     * @param $permissions
      */
     public function scopeWhereName($query, $name)
     {

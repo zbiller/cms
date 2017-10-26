@@ -2,6 +2,8 @@
 
 namespace App\Options;
 
+use Exception;
+
 class UrlOptions
 {
     /**
@@ -11,7 +13,7 @@ class UrlOptions
      *
      * @var string
      */
-    public $routeController;
+    private $routeController;
 
     /**
      * The controller where the laravel router should dispatch the request.
@@ -20,49 +22,67 @@ class UrlOptions
      *
      * @var string
      */
-    public $routeAction;
+    private $routeAction;
 
     /**
      * The field used to generate the url slug from.
      *
      * @var string
      */
-    public $fromField;
+    private $fromField;
 
     /**
      * The field where to store the generated url slug.
      *
      * @var string
      */
-    public $toField;
+    private $toField;
 
     /**
      * The prefix that should be prepended to the generated url slug.
      *
      * @var string
      */
-    public $urlPrefix;
+    private $urlPrefix;
 
     /**
      * The suffix that should be appended to the generated url slug.
      *
      * @var string
      */
-    public $urlSuffix;
+    private $urlSuffix;
 
     /**
      * The symbol that will be used to glue url segments together.
      *
      * @var string
      */
-    public $urlGlue = '/';
+    private $urlGlue = '/';
 
     /**
      * Flag whether to update children urls on parent url save.
      *
      * @var bool
      */
-    public $cascadeUpdate = true;
+    private $cascadeUpdate = true;
+
+    /**
+     * Get the value of a property of this class.
+     *
+     * @param $name
+     * @return mixed
+     * @throws Exception
+     */
+    public function __get($name)
+    {
+        if (property_exists(static::class, $name)) {
+            return $this->{$name};
+        }
+
+        throw new Exception(
+            'The property "' . $name . '" does not exist in class "' . static::class . '"'
+        );
+    }
 
     /**
      * Get a fresh instance of this class.

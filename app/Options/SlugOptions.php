@@ -2,6 +2,8 @@
 
 namespace App\Options;
 
+use Exception;
+
 class SlugOptions
 {
     /**
@@ -9,35 +11,53 @@ class SlugOptions
      *
      * @var string
      */
-    public $fromField;
+    private $fromField;
 
     /**
      * The field where to store the generated slug.
      *
      * @var string
      */
-    public $toField;
+    private $toField;
 
     /**
      * Flag whether slugs should be unique or not.
      *
      * @var bool
      */
-    public $uniqueSlugs = true;
+    private $uniqueSlugs = true;
 
     /**
      * Flag whether to generate slug on model create event or not.
      *
      * @var bool
      */
-    public $generateSlugOnCreate = true;
+    private $generateSlugOnCreate = true;
 
     /**
      * Flag whether to generate slug on model update event or not.
      *
      * @var bool
      */
-    public $generateSlugOnUpdate = true;
+    private $generateSlugOnUpdate = true;
+
+    /**
+     * Get the value of a property of this class.
+     *
+     * @param $name
+     * @return mixed
+     * @throws Exception
+     */
+    public function __get($name)
+    {
+        if (property_exists(static::class, $name)) {
+            return $this->{$name};
+        }
+
+        throw new Exception(
+            'The property "' . $name . '" does not exist in class "' . static::class . '"'
+        );
+    }
 
     /**
      * Get a fresh instance of this class.

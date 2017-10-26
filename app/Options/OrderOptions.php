@@ -2,6 +2,8 @@
 
 namespace App\Options;
 
+use Exception;
+
 class OrderOptions
 {
     /**
@@ -9,14 +11,32 @@ class OrderOptions
      *
      * @var string
      */
-    public $orderColumn = 'ord';
+    private $orderColumn = 'ord';
 
     /**
      * Flag indicating whether or not automatic ordering on creating should be done.
      *
      * @var bool
      */
-    public $orderWhenCreating = true;
+    private $orderWhenCreating = true;
+
+    /**
+     * Get the value of a property of this class.
+     *
+     * @param $name
+     * @return mixed
+     * @throws Exception
+     */
+    public function __get($name)
+    {
+        if (property_exists(static::class, $name)) {
+            return $this->{$name};
+        }
+
+        throw new Exception(
+            'The property "' . $name . '" does not exist in class "' . static::class . '"'
+        );
+    }
 
     /**
      * Get a fresh instance of this class.

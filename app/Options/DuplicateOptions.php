@@ -3,6 +3,7 @@
 namespace App\Options;
 
 use App\Models\Model;
+use Exception;
 
 class DuplicateOptions
 {
@@ -13,7 +14,7 @@ class DuplicateOptions
      *
      * @var array
      */
-    public $excludedColumns;
+    private $excludedColumns;
 
     /**
      * The database columns from the model that should be unique when duplicating the record.
@@ -22,7 +23,7 @@ class DuplicateOptions
      *
      * @var array
      */
-    public $uniqueColumns;
+    private $uniqueColumns;
 
     /**
      * The database relations of the model that should be excluded (ignored) when duplicating the record.
@@ -31,7 +32,7 @@ class DuplicateOptions
      *
      * @var array
      */
-    public $excludedRelations;
+    private $excludedRelations;
 
     /**
      * The database columns for each model's relation tha should be excluded (ignored) when duplicating the record.
@@ -40,7 +41,7 @@ class DuplicateOptions
      *
      * @var array
      */
-    public $excludedRelationColumns;
+    private $excludedRelationColumns;
 
     /**
      * The database columns for each model's relation that should be unique when duplicating the record.
@@ -49,7 +50,7 @@ class DuplicateOptions
      *
      * @var array
      */
-    public $uniqueRelationColumns;
+    private $uniqueRelationColumns;
 
     /**
      * Flag indicating if when duplicating a record, the script should also duplicate it's relations.
@@ -58,7 +59,7 @@ class DuplicateOptions
      *
      * @var bool
      */
-    public $shouldDuplicateDeeply = true;
+    private $shouldDuplicateDeeply = true;
 
     /**
      * The model that should be duplicated.
@@ -69,7 +70,7 @@ class DuplicateOptions
      *
      * @var Model
      */
-    public $entityModel;
+    private $entityModel;
 
     /**
      * The url to redirect to after an entity has been duplicated.
@@ -80,7 +81,25 @@ class DuplicateOptions
      *
      * @var string
      */
-    public $redirectUrl;
+    private $redirectUrl;
+
+    /**
+     * Get the value of a property of this class.
+     *
+     * @param $name
+     * @return mixed
+     * @throws Exception
+     */
+    public function __get($name)
+    {
+        if (property_exists(static::class, $name)) {
+            return $this->{$name};
+        }
+
+        throw new Exception(
+            'The property "' . $name . '" does not exist in class "' . static::class . '"'
+        );
+    }
 
     /**
      * Get a fresh instance of this class.
@@ -95,7 +114,7 @@ class DuplicateOptions
     /**
      * Set the $excludedColumns to work with in the App\Traits\HasDuplicates trait.
      *
-     * @param ...$columns
+     * @param $columns
      * @return DuplicateOptions
      */
     public function excludeColumns(...$columns): DuplicateOptions
@@ -108,7 +127,7 @@ class DuplicateOptions
     /**
      * Set the $uniqueColumns to work with in the App\Traits\HasDuplicates trait.
      *
-     * @param ...$columns
+     * @param $columns
      * @return DuplicateOptions
      */
     public function uniqueColumns(...$columns): DuplicateOptions
@@ -121,7 +140,7 @@ class DuplicateOptions
     /**
      * Set the $excludedRelations to work with in the App\Traits\HasDuplicates trait.
      *
-     * @param ...$relations
+     * @param $relations
      * @return DuplicateOptions
      */
     public function excludeRelations(...$relations): DuplicateOptions

@@ -133,7 +133,7 @@ class Upload extends Model
      * Param $types: single upload type as string or multiple upload types as an array.
      *
      * @param Builder $query
-     * @param ...$types
+     * @param $types
      */
     public function scopeOnlyTypes($query, ...$types)
     {
@@ -155,7 +155,7 @@ class Upload extends Model
      * Param $types: single upload type as string or multiple upload types as an array.
      *
      * @param Builder $query
-     * @param ...$types
+     * @param $types
      */
     public function scopeExcludingTypes($query, ...$types)
     {
@@ -177,7 +177,7 @@ class Upload extends Model
      * Param $extensions: single upload extension as string or multiple upload extensions as an array.
      *
      * @param Builder $query
-     * @param ...$extensions
+     * @param $extensions
      */
     public function scopeOnlyExtensions($query, ...$extensions)
     {
@@ -199,7 +199,7 @@ class Upload extends Model
      * Param $extensions: single upload extension as string or multiple upload extensions as an array.
      *
      * @param Builder $query
-     * @param ...$extensions
+     * @param $extensions
      */
     public function scopeExcludingExtensions($query, ...$extensions)
     {
@@ -221,7 +221,7 @@ class Upload extends Model
      * Param $mimes: single upload mime as string or multiple upload mimes as an array.
      *
      * @param Builder $query
-     * @param ...$mimes
+     * @param $mimes
      */
     public function scopeOnlyMimes($query, ...$mimes)
     {
@@ -243,7 +243,7 @@ class Upload extends Model
      * Param $mimes: single upload mime as string or multiple upload mimes as an array.
      *
      * @param Builder $query
-     * @param ...$mimes
+     * @param $mimes
      */
     public function scopeExcludingMimes($query, ...$mimes)
     {

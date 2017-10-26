@@ -2,6 +2,8 @@
 
 namespace App\Options;
 
+use Exception;
+
 class VerifyOptions
 {
     /**
@@ -10,7 +12,25 @@ class VerifyOptions
      *
      * @var bool
      */
-    public $enableQueue = false;
+    private $enableQueue = false;
+
+    /**
+     * Get the value of a property of this class.
+     *
+     * @param $name
+     * @return mixed
+     * @throws Exception
+     */
+    public function __get($name)
+    {
+        if (property_exists(static::class, $name)) {
+            return $this->{$name};
+        }
+
+        throw new Exception(
+            'The property "' . $name . '" does not exist in class "' . static::class . '"'
+        );
+    }
 
     /**
      * Get a fresh instance of this class.

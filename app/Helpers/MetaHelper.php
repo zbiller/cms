@@ -82,7 +82,7 @@ class MetaHelper
     /**
      * Get the HTML format for multiple meta properties by their keys.
      *
-     * @param ...$keys
+     * @param $keys
      * @return string
      */
     public function tags(...$keys)

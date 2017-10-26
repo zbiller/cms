@@ -2,6 +2,7 @@
 
 namespace App\Options;
 
+use Exception;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterOptions
@@ -11,35 +12,53 @@ class RegisterOptions
      *
      * @var string
      */
-    public $guard;
+    private $guard;
 
     /**
      * The form request validator to validate against.
      *
      * @var FormRequest
      */
-    public $validator;
+    private $validator;
 
     /**
      * Flag whether or not to verify the email of a newly registered user.
      *
      * @var bool
      */
-    public $verify = true;
+    private $verify = true;
 
     /**
      * The path to redirect the user after register.
      *
      * @var string
      */
-    public $registerRedirect = '/';
+    private $registerRedirect = '/';
 
     /**
      * The path to redirect the user after email verification.
      *
      * @var string
      */
-    public $verificationRedirect = '/';
+    private $verificationRedirect = '/';
+
+    /**
+     * Get the value of a property of this class.
+     *
+     * @param $name
+     * @return mixed
+     * @throws Exception
+     */
+    public function __get($name)
+    {
+        if (property_exists(static::class, $name)) {
+            return $this->{$name};
+        }
+
+        throw new Exception(
+            'The property "' . $name . '" does not exist in class "' . static::class . '"'
+        );
+    }
 
     /**
      * Get a fresh instance of this class.

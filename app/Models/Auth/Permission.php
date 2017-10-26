@@ -70,7 +70,7 @@ class Permission extends Model implements PermissionContract
      * Filter query by name.
      *
      * @param Builder $query
-     * @param ...$permissions
+     * @param $permissions
      */
     public function scopeWhereName($query, $name)
     {

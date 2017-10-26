@@ -3,6 +3,7 @@
 namespace App\Options;
 
 use App\Models\Model;
+use Exception;
 
 class BlockOptions
 {
@@ -11,14 +12,32 @@ class BlockOptions
      *
      * @var array
      */
-    public $locations;
+    private $locations;
 
     /**
      * The cache key in use.
      *
      * @var Model|string
      */
-    public $inherit;
+    private $inherit;
+
+    /**
+     * Get the value of a property of this class.
+     *
+     * @param $name
+     * @return mixed
+     * @throws Exception
+     */
+    public function __get($name)
+    {
+        if (property_exists(static::class, $name)) {
+            return $this->{$name};
+        }
+
+        throw new Exception(
+            'The property "' . $name . '" does not exist in class "' . static::class . '"'
+        );
+    }
 
     /**
      * Get a fresh instance of this class.

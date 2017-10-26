@@ -2,6 +2,8 @@
 
 namespace App\Options;
 
+use Exception;
+
 class ActivityOptions
 {
     /**
@@ -10,7 +12,7 @@ class ActivityOptions
      *
      * @var array
      */
-    public $field = [];
+    private $field = [];
 
     /**
      * The eloquent model events that should trigger an activity being logged.
@@ -19,7 +21,25 @@ class ActivityOptions
      *
      * @var array
      */
-    public $logEvents = [];
+    private $logEvents = [];
+
+    /**
+     * Get the value of a property of this class.
+     *
+     * @param $name
+     * @return mixed
+     * @throws Exception
+     */
+    public function __get($name)
+    {
+        if (property_exists(static::class, $name)) {
+            return $this->{$name};
+        }
+
+        throw new Exception(
+            'The property "' . $name . '" does not exist in class "' . static::class . '"'
+        );
+    }
 
     /**
      * Get a fresh instance of this class.
@@ -47,7 +67,7 @@ class ActivityOptions
     /**
      * Set the $logEvents to work with in the App\Traits\HasActivity trait.
      *
-     * @param ...$events
+     * @param $events
      * @return ActivityOptions
      */
     public function logOnlyForTheseEvents(...$events): ActivityOptions

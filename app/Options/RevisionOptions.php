@@ -2,6 +2,7 @@
 
 namespace App\Options;
 
+use Exception;
 use Illuminate\View\View;
 
 class RevisionOptions
@@ -13,7 +14,7 @@ class RevisionOptions
      *
      * @var bool
      */
-    public $revisionOnCreate = false;
+    private $revisionOnCreate = false;
 
     /**
      * The limit of revisions to be created for a model instance.
@@ -23,7 +24,7 @@ class RevisionOptions
      *
      * @var int
      */
-    public $revisionLimit;
+    private $revisionLimit;
 
     /**
      * The fields that should be revisionable.
@@ -33,7 +34,7 @@ class RevisionOptions
      *
      * @var array
      */
-    public $revisionFields = [];
+    private $revisionFields = [];
 
     /**
      * The model's relations that should be revisionable.
@@ -43,7 +44,7 @@ class RevisionOptions
      *
      * @var array
      */
-    public $revisionRelations = [];
+    private $revisionRelations = [];
 
     /**
      * Flag indicating whether to create a revision for the model, when rolling back another revision of that model.
@@ -54,7 +55,7 @@ class RevisionOptions
      *
      * @var bool
      */
-    public $createRevisionWhenRollingBack = true;
+    private $createRevisionWhenRollingBack = true;
 
     /**
      * The meta title displayed when viewing an entity record's revision.
@@ -63,7 +64,7 @@ class RevisionOptions
      *
      * @var string
      */
-    public $pageTitle = 'Revision';
+    private $pageTitle = 'Revision';
 
     /**
      * The blade view file returned when viewing an entity record's revision.
@@ -72,7 +73,7 @@ class RevisionOptions
      *
      * @var View|string
      */
-    public $pageView;
+    private $pageView;
 
     /**
      * The variables that will be assigned to the view when viewing an entity record's revision.
@@ -81,7 +82,25 @@ class RevisionOptions
      *
      * @var array
      */
-    public $viewVariables = [];
+    private $viewVariables = [];
+
+    /**
+     * Get the value of a property of this class.
+     *
+     * @param $name
+     * @return mixed
+     * @throws Exception
+     */
+    public function __get($name)
+    {
+        if (property_exists(static::class, $name)) {
+            return $this->{$name};
+        }
+
+        throw new Exception(
+            'The property "' . $name . '" does not exist in class "' . static::class . '"'
+        );
+    }
 
     /**
      * Get a fresh instance of this class.
@@ -121,7 +140,7 @@ class RevisionOptions
     /**
      * Set the $revisionFields to work with in the App\Traits\HasRevisions trait.
      *
-     * @param ...$fields
+     * @param $fields
      * @return RevisionOptions
      */
     public function fieldsToRevision(...$fields): RevisionOptions
@@ -134,7 +153,7 @@ class RevisionOptions
     /**
      * Set the $revisionRelations to work with in the App\Traits\HasRevisions trait.
      *
-     * @param ...$relations
+     * @param $relations
      * @return RevisionOptions
      */
     public function relationsToRevision(...$relations): RevisionOptions

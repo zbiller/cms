@@ -2,6 +2,7 @@
 
 namespace App\Options;
 
+use Exception;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ResetPasswordOptions
@@ -11,28 +12,46 @@ class ResetPasswordOptions
      *
      * @var string
      */
-    public $guard;
+    private $guard;
 
     /**
      * The form request validator to validate against.
      *
      * @var FormRequest
      */
-    public $validator;
+    private $validator;
 
     /**
      * The field name identifier used in combination with the password.
      *
      * @var string
      */
-    public $identifier = 'email';
+    private $identifier = 'email';
 
     /**
      * The path to redirect after successfully performed the password reset email sending.
      *
      * @var
      */
-    public $redirect = '/';
+    private $redirect = '/';
+
+    /**
+     * Get the value of a property of this class.
+     *
+     * @param $name
+     * @return mixed
+     * @throws Exception
+     */
+    public function __get($name)
+    {
+        if (property_exists(static::class, $name)) {
+            return $this->{$name};
+        }
+
+        throw new Exception(
+            'The property "' . $name . '" does not exist in class "' . static::class . '"'
+        );
+    }
 
     /**
      * Get a fresh instance of this class.

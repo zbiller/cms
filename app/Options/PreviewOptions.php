@@ -3,6 +3,7 @@
 namespace App\Options;
 
 use App\Models\Model;
+use Exception;
 use Illuminate\Foundation\Http\FormRequest;
 
 class PreviewOptions
@@ -14,14 +15,14 @@ class PreviewOptions
      *
      * @var Model|string
      */
-    public $entityModel;
+    private $entityModel;
 
     /**
      * The form request validator to validate against.
      *
      * @var FormRequest
      */
-    public $validatorRequest;
+    private $validatorRequest;
 
     /**
      * The pivoted relations that should be saved alongside the original model when previewing.
@@ -32,7 +33,25 @@ class PreviewOptions
      *
      * @var array
      */
-    public $pivotedRelations = [];
+    private $pivotedRelations = [];
+
+    /**
+     * Get the value of a property of this class.
+     *
+     * @param $name
+     * @return mixed
+     * @throws Exception
+     */
+    public function __get($name)
+    {
+        if (property_exists(static::class, $name)) {
+            return $this->{$name};
+        }
+
+        throw new Exception(
+            'The property "' . $name . '" does not exist in class "' . static::class . '"'
+        );
+    }
 
     /**
      * Get a fresh instance of this class.
