@@ -1,4 +1,8 @@
+/.idea
+/.vagrant
+/.sass-cache
 /node_modules
+/vendor
 /public/storage
 /public/hot
 /public/css
@@ -8,11 +12,8 @@
 /public/uploads
 /public/vendor
 /public/sitemap*.xml
+/public/mix-manifest.json
 /storage/*.key
-/vendor
-/.idea
-/.vagrant
-/.sass-cache
 Homestead.json
 Homestead.yaml
 npm-debug.log

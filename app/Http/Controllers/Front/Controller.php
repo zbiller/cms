@@ -13,10 +13,10 @@ class Controller extends BaseController
     /**
      * Dispatch the request to the designated controller and action.
      *
-     * @param $url
+     * @param string $url
      * @return mixed
      */
-    public function show($url)
+    public function show($url = '/')
     {
         try {
             $url = Url::whereUrl($url)->firstOrFail();
