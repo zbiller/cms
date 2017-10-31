@@ -366,10 +366,10 @@ function popups()
     });
 
     //upload select
-    $('body').on('click', 'section.popup:visible div.uploads > a', function (e) {
+    $('body').on('click', 'section.popup:visible div.modal-items > a', function (e) {
         e.preventDefault();
 
-        $('section.popup:visible div.uploads > a').removeClass('active');
+        $('section.popup:visible div.modal-items > a').removeClass('active');
         $(this).addClass('active');
     });
 
@@ -851,10 +851,10 @@ function emails()
  */
 function notifications()
 {
-    var notifications = $('div.notifications-container');
+    var notifications = $('div.notifications');
 
     // toggle dropdown
-    notifications.find('a.notifications-indicator, span.notifications-count').on('click', function (e) {
+    notifications.find('a.indicator, span.count').on('click', function (e) {
         e.preventDefault();
 
         $(this).toggleClass('active');
@@ -864,8 +864,8 @@ function notifications()
     // hide dropdown when clicked outside
     $(document).mouseup(function(e) {
         if (!notifications.is(e.target) && notifications.has(e.target).length === 0) {
-            notifications.find('a.notifications-indicator').removeClass('active');
-            notifications.find('a.notifications-indicator').next('ul.notifications').hide();
+            notifications.find('a.indicator').removeClass('active');
+            notifications.find('a.indicator').next('ul.notifications').hide();
         }
     });
 }

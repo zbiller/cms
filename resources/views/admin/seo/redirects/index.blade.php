@@ -6,7 +6,7 @@
     </section>
 
     <section class="content">
-        <div class="box warning">
+        <div class="box yellow">
             <span>
                 <em>IMPORTANT!</em>&nbsp;
                 In order to fully fix the broken links after the script has automatically found them, you will have to manually set the <em>NEW URL</em> for each one.
@@ -40,7 +40,7 @@
 @section('footer')
     {!! pagination('admin')->render($items) !!}
 
-    <section class="actions">
+    <section class="right">
         {!! button()->updateAction() !!}
         {!! button()->addRecord(route('admin.redirects.create')) !!}
     </section>

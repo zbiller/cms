@@ -27,7 +27,7 @@
         {!! pagination('admin')->render($items) !!}
     @endif
 
-    <section class="actions">
+    <section class="right">
         {!! button()->updateAction() !!}
     </section>
 @endsection

@@ -1,8 +1,8 @@
 @section('footer')
-    <section class="actions left">
+    <section class="left">
         {!! button()->action('Back To Original', session('draft_back_url_' . $draft->id), 'fa-chevron-left') !!}
     </section>
-    <section class="actions">
+    <section class="right">
         @if(optional($draft->draftable::getDraftOptions())->draftLimit > 1)
             {!! button()->saveAsNew(route('admin.drafts.create', $draft->id)) !!}
         @endif

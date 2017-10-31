@@ -14,7 +14,7 @@
     {!! form_admin()->select('active', 'Active', $actives) !!}
 </div>
 <div id="tab-2" class="tab">
-    <div class="box warning" style="margin-bottom: 20px;">
+    <div class="box yellow" style="margin-bottom: 20px;">
         <span>
             This discount will be applied only in the date interval selected
         </span>
@@ -23,7 +23,7 @@
     {!! form_admin()->calendar('end_date') !!}
 </div>
 <div id="tab-3" class="tab">
-    <div class="box warning" style="margin-bottom: 20px;">
+    <div class="box yellow" style="margin-bottom: 20px;">
         <span>
             This discount will be applied only after the minimum value is met.<br />
             The "minimum value" represents either the product's price or the order's total, depending on your discount applicability.

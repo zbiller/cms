@@ -1,0 +1,108 @@
+div.block-assign-container {
+    @include clear-padding();
+    
+    display: block;
+    float: left;
+    width: 100%;
+    padding: 15px;
+    background: $colorAlabaster;
+    border: 1px solid $colorGallery;
+    border-top: none;
+}
+
+div.block-assign-select-container {
+    @include calc(width, '100% - 95px');
+    
+    float: left;
+    
+    @include media-query('tablet') {
+        @include calc(width, '100% - 45px');
+    }
+}
+
+div.block-assign-btn-container {
+    width: 95px;
+    float: right;
+    
+    @include media-query('tablet') {
+        width: 45px;
+    }
+}
+
+select.block-assign-select {
+    float: left;
+    width: 100%;
+    border: 1px solid $colorGallery;
+    padding: 4px 5px 9px;
+    max-height: none;
+    margin-top: 0;
+    
+    @include media-query('tablet') {
+        padding: 4px 5px 8px;
+    }
+}
+
+div.block-inheritance {
+    @include clear-padding();
+    @include calc(width, '100% - 2px');
+    
+    display: block;
+    float: left;
+    margin: 5px 0;
+    padding: 15px;
+    border: 1px solid $colorGoldenTainoi;
+    background: lighten($colorGoldenTainoi, 30%);
+    
+    span {
+        @include font-size(13px);
+        
+        font-family: 'Open Sans', sans-serif;
+        color: $colorOsloGray;
+    }
+    
+    em {
+        @include font-size(13px);
+        
+        font-family: 'Open Sans Bold', sans-serif;
+        color: $colorOsloGray;
+    }
+}
+
+div.loading-blocks {
+    display: none;
+    text-align: center;
+}
+
+td.actions-blocks {
+    width: 165px;
+    padding: 10px;
+    
+    @include media-query('tablet') {
+        display: table-cell;
+        width: 78px;
+    }
+}
+
+span.block-location-title {
+    @include font-size(12px);
+    
+    display: block;
+    float: left;
+    width: 100%;
+    padding: 0 0 2px;
+    margin: 50px 0 15px 0;
+    border-bottom: 1px solid $colorPictonBlue;
+    font-family: 'Open Sans Bold', sans-serif;
+    color: $colorPictonBlue;
+    text-transform: uppercase;
+    
+    &:first-of-type {
+        margin: 0 0 15px 0;
+    }
+}
+
+img#block-image {
+    display: none;
+    float: right;
+    max-width: 100%;
+}

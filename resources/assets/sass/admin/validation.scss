@@ -1,0 +1,31 @@
+div.validation {
+    p {
+        @include clear-padding();
+        @include font-size(13px);
+        
+        display: block;
+        float: left;
+        width: 100%;
+        margin: 0 0 20px 0;
+        padding: 0 0 2px 0;
+        border-bottom: 1px solid darken($colorGallery, 3%);
+        background: $colorWhite;
+        color: $colorTowerGray;
+        font-family: 'Open Sans', sans-serif;
+        
+        &.success {
+            color: $colorEmerald;
+            border-bottom: 1px solid $colorEmerald;
+        }
+        
+        &.error {
+            color: $colorJaponica;
+            border-bottom: 1px solid $colorJaponica;
+        }
+        
+        &.alert {
+            color: $colorGoldenTainoi;
+            border-bottom: 1px solid $colorGoldenTainoi;
+        }
+    }
+}

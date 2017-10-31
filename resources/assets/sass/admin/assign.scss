@@ -1,0 +1,88 @@
+div.assign-container {
+    @include clear-padding();
+    
+    display: block;
+    float: left;
+    width: 100%;
+    padding: 15px;
+    background: $colorAlabaster;
+    border: 1px solid $colorGallery;
+    border-top: none;
+}
+
+div.assign-content {
+    @include calc(width, '100% - 95px');
+    
+    float: left;
+    
+    @include media-query('tablet') {
+        @include calc(width, '100% - 45px');
+    }
+    
+    &.full {
+        width: 100%;
+        float: left;
+    }
+    
+    .assign-select {
+        float: left !important;
+        width: 100% !important;
+        border: 1px solid $colorGallery !important;
+        padding: 4px 5px 9px !important;
+        max-height: none !important;
+        margin-top: 0 !important;
+        
+        &.full {
+            margin-bottom: 15px !important;
+        }
+        
+        @include media-query('tablet') {
+            padding: 4px 5px 8px !important;
+        }
+    }
+    
+    .assign-input, .assign-textarea {
+        float: left !important;
+        width: 100% !important;
+        border: 1px solid $colorGallery !important;
+        padding: 5px 8px !important;
+        margin-bottom: 15px !important;
+    }
+    
+    .asign.textarea {
+        height: 120px !important;
+    }
+}
+
+div.assign-footer {
+    float: right;
+    
+    &.full {
+        width: auto !important;
+        float: left !important;
+    }
+}
+
+td.actions-assign {
+    width: 165px !important;
+    padding: 10px;
+    
+    @include media-query('tablet') {
+        display: table-cell;
+        width: 78px;
+    }
+}
+
+.assign-input-update, .assign-textarea-update {
+    @include transition(none !important);
+    
+    float: left !important;
+    width: 100% !important;
+    border: 1px solid $colorGallery !important;
+    padding: 5px 8px !important;
+    height: 32px !important;
+    
+    &.expanded {
+        height: 150px !important;
+    }
+}

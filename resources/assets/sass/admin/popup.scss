@@ -1,5 +1,3 @@
-@import 'init';
-
 @-webkit-keyframes animatetop {
     from {
         top: -200px;
@@ -78,25 +76,6 @@ section.popup {
             @include transform('translate(-50%,30px)');
         }
 
-        div.loading {
-            z-index: z-index('overlay');
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.6);
-
-            img {
-                @include transform('translate(-50%,-50%)');
-
-                position: absolute;
-                top: 50%;
-                left: 50%;
-            }
-        }
-
         a.close {
             position: absolute;
             top: 17px;
@@ -130,6 +109,101 @@ section.popup {
                 border-top: 1px solid $colorGallery;
             }
         }
+    
+        div.modal-tab {
+            display: none;
+        
+            &.active {
+                display: block;
+            }
+        
+            img:not(.full-element), video {
+                display: block;
+                max-width: 100%;
+                max-height: 600px;
+                margin: 0 auto;
+            
+                @include media-query('desktop') {
+                    max-height: 500px;
+                }
+            
+                @include media-query('tablet') {
+                    max-height: 400px;
+                }
+            
+                @include media-query('phablet') {
+                    max-height: 300px;
+                }
+            
+                @include media-query('phone') {
+                    max-height: 220px;
+                }
+            }
+        
+            img.full-element {
+                @include transform('translate(0,-50%)');
+            
+                left: 50%;
+                margin: 0 auto !important;
+                max-width: 100% !important;
+            }
+        
+            audio {
+                width: 100% !important;
+            }
+        }
+    
+        div.modal-items {
+            display: block;
+            float: left;
+            width: 100%;
+            margin-top: 10px;
+            height: 270px;
+            overflow-x: hidden;
+            overflow-y: scroll;
+        
+            a {
+                @include transition(all 0.3s ease);
+            
+                display: block;
+                float: left;
+                margin: 10px;
+                width: 100px;
+                height: 100px;
+            
+                &:hover{
+                    opacity: 0.4;
+                }
+            
+                &.active{
+                    opacity: 0.4;
+                }
+            
+                img {
+                    width: 100px;
+                    height: 100px;
+                }
+            }
+        }
+    
+        div.loading {
+            z-index: z-index('overlay');
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.6);
+        
+            img {
+                @include transform('translate(-50%,-50%)');
+            
+                position: absolute;
+                top: 50%;
+                left: 50%;
+            }
+        }
 
         ul.modal-tabs {
             display: block;
@@ -161,104 +235,6 @@ section.popup {
                 font-family: 'Open Sans Bold', sans-serif;
                 color: $colorTowerGray;
                 text-transform: uppercase;
-            }
-        }
-
-        div.modal-tab {
-            display: none;
-
-            &.active {
-                display: block;
-            }
-
-            img:not(.full-element), video {
-                display: block;
-                max-width: 100%;
-                max-height: 600px;
-                margin: 0 auto;
-
-                @include media-query('desktop') {
-                    max-height: 500px;
-                }
-
-                @include media-query('tablet') {
-                    max-height: 400px;
-                }
-
-                @include media-query('phablet') {
-                    max-height: 300px;
-                }
-
-                @include media-query('phone') {
-                    max-height: 220px;
-                }
-            }
-
-            img.full-element {
-                @include transform('translate(0,-50%)');
-
-                left: 50%;
-                margin: 0 auto !important;
-                max-width: 100% !important;
-            }
-
-            audio {
-                width: 100% !important;
-            }
-        }
-
-        form.library-form {
-            input {
-                @include font-size(13px);
-                @include transition(all 0.3s ease);
-                @include clear-padding();
-
-                display: block;
-                width: 100%;
-                margin: 0;
-                padding: 5px;
-                border: none;
-                border-bottom: 1px solid darken($colorGallery, 3%);
-                background: $colorWhite;
-                color: $colorOsloGray;
-                font-family: 'Open Sans', sans-serif;
-
-                &:focus {
-                    border-bottom: 1px solid $colorPictonBlue;
-                }
-            }
-        }
-
-        div.uploads {
-            display: block;
-            float: left;
-            width: 100%;
-            margin-top: 10px;
-            height: 270px;
-            overflow-x: hidden;
-            overflow-y: scroll;
-
-            a {
-                @include transition(all 0.3s ease);
-
-                display: block;
-                float: left;
-                margin: 10px;
-                width: 100px;
-                height: 100px;
-
-                &:hover{
-                    opacity: 0.4;
-                }
-
-                &.active{
-                    opacity: 0.4;
-                }
-
-                img {
-                    width: 100px;
-                    height: 100px;
-                }
             }
         }
     }

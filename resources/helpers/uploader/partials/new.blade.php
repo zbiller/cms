@@ -23,7 +23,7 @@
                 @foreach($types as $type)
                     <div id="{!! $type !!}" class="modal-tab {!! $loop->first ? 'active' : '' !!}">
                         <input type="text" placeholder="Search for {!! str_plural($type) !!}" class="search full" />
-                        <div class="uploads">
+                        <div class="modal-items">
                             @include('helpers::uploader.partials.items')
                         </div>
                     </div>

@@ -48,7 +48,7 @@
 @section('footer')
     {!! pagination('admin')->render($items) !!}
 
-    <section class="actions">
+    <section class="right">
         {!! button()->goBack(route('admin.pages.index')) !!}
     </section>
 @endsection

@@ -6,7 +6,7 @@
     </section>
 
     <section class="content">
-        <div class="box warning">
+        <div class="box yellow">
             <span>
                 <em>IMPORTANT!</em>&nbsp;
                 Before changing anything, first <em>import</em> your translations, to ensure you see the currently used ones.
@@ -47,7 +47,7 @@
 @section('footer')
     {!! pagination('admin')->render($items) !!}
 
-    <section class="actions">
+    <section class="right">
         {!! button()->updateAction() !!}
         {!! button()->addRecord(route('admin.translations.create')) !!}
     </section>

@@ -15,7 +15,7 @@
         {!! pagination('admin')->render($items) !!}
     @endif
 
-    <section class="actions">
+    <section class="right">
         {!! button()->updateAction() !!}
         {!! button()->deletedRecords(route('admin.products.deleted')) !!}
         {!! button()->draftedRecords(route('admin.products.drafts')) !!}

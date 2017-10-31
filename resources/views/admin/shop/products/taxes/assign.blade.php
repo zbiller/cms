@@ -3,7 +3,7 @@
 
 {!! form()->hidden('touch_taxes', true) !!}
 
-<div class="box warning" style="margin-bottom: 20px;">
+<div class="box yellow" style="margin-bottom: 20px;">
     <span>
         Please note that when applying multiple taxes, the product's final price will increase progressively, applying the taxes in cascade in the order they are assigned.
     </span>

@@ -11,10 +11,10 @@
 @endsection
 
 @section('footer')
-    <section class="actions left">
+    <section class="left">
         {!! button()->cancelAction(route('admin.blocks.drafts')) !!}
     </section>
-    <section class="actions">
+    <section class="right">
         {!! button()->saveRecord(['style' => 'margin-right: 5px;']) !!}
 
         @permission('drafts-publish')

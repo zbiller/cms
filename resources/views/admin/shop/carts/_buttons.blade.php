@@ -1,7 +1,7 @@
-<section class="actions left">
+<section class="left">
     {!! button()->cancelAction(route('admin.carts.index')) !!}
 </section>
-<section class="actions">
+<section class="right">
     <a href="{{ route('admin.carts.index') }}" class="btn blue no-margin-right">
         <i class="fa fa-chevron-left"></i>&nbsp; Go Back
     </a>

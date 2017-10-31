@@ -1,0 +1,38 @@
+div.flash {
+    @include opacity(0.9);
+    
+    z-index: z-index('flash');
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    max-width: 300px;
+    padding: 15px 45px 15px 15px;
+    
+    &.success {
+        background: $colorEmerald;
+    }
+    
+    &.error {
+        background: $colorJaponica;
+    }
+    
+    &.warning {
+        background: $colorGoldenTainoi;
+    }
+    
+    a {
+        position: fixed;
+        top: 45px;
+        right: 45px;
+        color: $colorWhite;
+    }
+    
+    p {
+        @include font-size(13px);
+        
+        margin: 0;
+        padding: 0;
+        color: $colorWhite;
+        font-family: 'Open Sans Semibold', sans-serif;
+    }
+}

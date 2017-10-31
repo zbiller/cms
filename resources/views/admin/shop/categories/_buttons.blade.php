@@ -1,7 +1,7 @@
-<section class="actions left">
+<section class="left">
     {!! button()->cancelAction(route('admin.product_categories.index')) !!}
 </section>
-<section class="actions">
+<section class="right">
     @if($item->exists)
         {!! button()->duplicateRecord(route('admin.product_categories.duplicate', $item->id)) !!}
     @endif

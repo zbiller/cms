@@ -7,7 +7,7 @@
             <td class="sortable" data-sort="created_at">
                 <i class="fa fa-sort"></i>&nbsp; Logged At
             </td>
-            <td class="actions-activity-logs">Actions</td>
+            <td class="actions-activity">Actions</td>
         </tr>
     </thead>
     <tbody>
@@ -16,7 +16,7 @@
                 <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
                     <td>{{ $item->name ?: 'N/A' }}</td>
                     <td>{{ $item->created_at ?: 'N/A' }}</td>
-                    <td class="actions-activity-logs">
+                    <td class="actions-activity">
                         {!! button()->deleteRecord(route('admin.activity.destroy', $item->id), ['style' => 'float: right; margin-left: 0; margin-right: 5px;']) !!}
                     </td>
                 </tr>

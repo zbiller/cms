@@ -15,7 +15,7 @@
 @endsection
 
 @section('footer')
-    <section class="actions">
+    <section class="right">
         {!! button()->updateAction() !!}
         {!! button()->deletedRecords(route('admin.product_categories.deleted')) !!}
         {!! button()->draftedRecords(route('admin.product_categories.drafts')) !!}

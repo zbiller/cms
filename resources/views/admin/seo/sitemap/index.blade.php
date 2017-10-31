@@ -2,7 +2,7 @@
 
 @section('content')
     <section class="content">
-        <div class="box warning">
+        <div class="box yellow">
         <span>
             <em>IMPORTANT!</em>&nbsp;
             Please note that when creating / updating the sitemap files, the job will be queued to run in the background, so you won't immediately see any changes.

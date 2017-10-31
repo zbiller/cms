@@ -1,0 +1,103 @@
+.actions-default {
+    width: 165px;
+    padding: 10px;
+    
+    @include media-query('tablet') {
+        display: table-cell;
+        width: 78px;
+    }
+}
+
+.actions-deleted {
+    width: 181px !important;
+    
+    @include media-query('tablet') {
+        width: 78px !important;
+    }
+}
+
+.actions-backups {
+    width: 200px !important;
+    
+    @include media-query('tablet') {
+        width: 78px !important;
+    }
+}
+
+.actions-sitemap {
+    width: 283px !important;
+    
+    @include media-query('tablet') {
+        width: 116px !important;
+    }
+}
+
+.actions-approval {
+    width: 352px;
+    padding: 10px;
+    
+    @include media-query('tablet') {
+        display: table-cell;
+        width: 117px;
+    }
+}
+
+.actions-notifications {
+    width: 310px !important;
+    
+    @include media-query('tablet') {
+        width: 117px !important;
+    }
+}
+
+.actions-activity {
+    width: 85px !important;
+    
+    @include media-query('tablet') {
+        width: 60px !important;
+    }
+}
+
+.actions-users {
+    width: 283px !important;
+    
+    @include media-query('tablet') {
+        width: 116px !important;
+    }
+}
+
+.actions-view {
+    width: 75px !important;
+    
+    @include media-query('tablet') {
+        width: 75px !important;
+    }
+}
+
+.actions-orders {
+    width: 233px !important;
+    
+    @include media-query('tablet') {
+        width: 116px !important;
+    }
+}
+
+#email-image {
+    display: none;
+    float: right;
+    max-width: 100%;
+}
+
+.menu-types {
+    display: none;
+    float: left;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.attribute-value {
+    display: none;
+    float: left;
+    width: 100%;
+    margin: 10px 0;
+}

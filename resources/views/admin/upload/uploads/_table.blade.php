@@ -15,8 +15,8 @@
         @foreach($items as $index => $item)
             <tr class="{!! $index % 2 == 0 ? 'even' : 'odd' !!}">
                 <td>
-                    <img src="{{ $item->type_icon }}" title="{{ $types[$item->type] }}" class="upload-aligned-image" width="30" height="30" />
-                    <span class="upload-aligned-text">{{ $item->original_name ?: 'N/A' }}</span>
+                    <img src="{{ $item->type_icon }}" title="{{ $types[$item->type] }}" class="aligned-image" width="30" height="30" />
+                    <span class="aligned-text">{{ $item->original_name ?: 'N/A' }}</span>
                 </td>
                 <td>
                     {{ $item->size_in_mb . ' MB' }}

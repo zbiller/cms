@@ -1,8 +1,8 @@
-<div class="notifications-container">
-    <span class="notifications-count {{ $count == 0 ? 'hidden' : '' }}">
+<div class="notifications">
+    <span class="count {{ $count == 0 ? 'hidden' : '' }}">
         {{ $count }}
     </span>
-    <a href="#" class="notifications-indicator">
+    <a href="#" class="indicator">
         <i class="fa fa-bell"></i>
     </a>
     <ul class="notifications">

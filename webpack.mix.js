@@ -19,12 +19,12 @@ mix
     /**
      * Compile ADMIN sass files.
      */
-    .sass('resources/assets/sass/admin/main.scss', 'public/css/admin/app.css')
+    .sass('resources/assets/sass/admin/app.scss', 'public/css/admin/app.css')
 
     /**
      * Compile FRONT sass files.
      */
-    .sass('resources/assets/sass/front/main.scss', 'public/css/front/app.css')
+    .sass('resources/assets/sass/front/app.scss', 'public/css/front/app.css')
 
     /**
      * Concatenate LIBRARY css files.

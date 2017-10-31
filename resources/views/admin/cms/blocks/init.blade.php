@@ -10,10 +10,10 @@
 @endsection
 
 @section('footer')
-    <section class="actions left">
+    <section class="left">
         {!! button()->cancelAction(route('admin.blocks.index')) !!}
     </section>
-    <section class="actions">
+    <section class="right">
         {!! button()->action('Continue', '#', 'fa-arrow-right', 'blue', ['id' => 'block-continue-button']) !!}
     </section>
 @endsection

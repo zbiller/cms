@@ -17,7 +17,7 @@
 @section('footer')
     {!! pagination('admin')->render($items) !!}
 
-    <section class="actions">
+    <section class="right">
         {!! button()->updateAction() !!}
     </section>
 @endsection

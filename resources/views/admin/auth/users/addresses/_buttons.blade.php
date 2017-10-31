@@ -1,7 +1,7 @@
-<section class="actions left">
+<section class="left">
     {!! button()->cancelAction(route('admin.addresses.index', $user->id)) !!}
 </section>
-<section class="actions">
+<section class="right">
     {!! button()->saveAndStay() !!}
     {!! button()->saveRecord() !!}
 </section>

@@ -2,12 +2,12 @@
 
 {!! form()->hidden('touch_discounts', true) !!}
 
-<div class="box danger" style="margin-bottom: 20px;">
+<div class="box red" style="margin-bottom: 20px;">
     <span>
         Please note that the applied discounts from a category are inherited by default by every product belonging to that category.
     </span>
 </div>
-<div class="box warning" style="margin-bottom: 20px;">
+<div class="box yellow" style="margin-bottom: 20px;">
     <span>
         Please note that when applying multiple discounts, the product's final price will lower progressively, applying the discounts in cascade in the order they are assigned.
     </span>

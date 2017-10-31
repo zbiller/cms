@@ -1,0 +1,36 @@
+#tab-revisions {
+    min-height: 52px;
+}
+
+div.loading-revisions {
+    display: none;
+    text-align: center;
+}
+
+table.revisions-table {
+    thead > tr > td:first-of-type {
+        width: 8px;
+        text-align: center;
+    }
+    
+    tbody {
+        tr > td:first-of-type {
+            width: 8px;
+            text-align: center;
+        }
+        
+        tr.no-revisions > td {
+            text-align: left !important;
+        }
+    }
+}
+
+td.actions-revisions {
+    width: 275px;
+    padding: 10px;
+    
+    @include media-query('tablet') {
+        display: table-cell;
+        width: 117px;
+    }
+}

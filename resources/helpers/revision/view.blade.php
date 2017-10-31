@@ -1,8 +1,8 @@
 @section('footer')
-    <section class="actions left">
+    <section class="left">
         {!! button()->action('Back To Original', session('revision_back_url_' . $revision->id), 'fa-chevron-left') !!}
     </section>
-    <section class="actions">
+    <section class="right">
         @permission('revisions-rollback')
             {!! button()->rollbackRevision(route('admin.revisions.rollback', $revision->id)) !!}
         @endpermission

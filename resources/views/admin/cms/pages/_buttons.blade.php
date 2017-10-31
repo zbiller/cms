@@ -1,7 +1,7 @@
-<section class="actions left">
+<section class="left">
     {!! button()->cancelAction(route('admin.pages.index')) !!}
 </section>
-<section class="actions">
+<section class="right">
     @if($item->exists)
         {!! button()->duplicateRecord(route('admin.pages.duplicate', $item->id)) !!}
     @endif

@@ -16,7 +16,7 @@
 {!! form()->hidden('_back', route('admin.orders.drafts')) !!}
 
 <div id="tab-1" class="tab">
-    <div class="box warning" style="margin-bottom: 20px;">
+    <div class="box yellow" style="margin-bottom: 20px;">
         <span>
             Please note that all of the order's totals are dynamically generated using the assigned products and their quantities.
         </span>

@@ -1,0 +1,121 @@
+#password-generate {
+    float: right;
+    margin: 0;
+    padding: 6px 10px;
+    
+    @include media-query('tablet') {
+        @include font-size(14px);
+        @include clear-padding();
+        
+        padding: 7px 10px;
+        text-indent: -9999px;
+        width: 32px;
+        height: 30px;
+    }
+    
+    > i {
+        @include media-query('tablet') {
+            text-indent: 0;
+            float: left;
+        }
+    }
+}
+
+div.permissions {
+    column-count: 4;
+    -webkit-column-count: 4;
+    -moz-column-count: 4;
+    
+    @include media-query('desktop-wide') {
+        column-count: 3;
+        -webkit-column-count: 3;
+        -moz-column-count: 3;
+    }
+    
+    @include media-query('tablet') {
+        column-count: 2;
+        -webkit-column-count: 2;
+        -moz-column-count: 2;
+    }
+    
+    @include media-query('phone-wide') {
+        column-count: 1;
+        -webkit-column-count: 1;
+        -moz-column-count: 1;
+    }
+    
+    .permission-group {
+        @include calc(width, '100% - 15px');
+        
+        display: inline-block;
+        margin: 15px;
+        break-inside: avoid;
+        page-break-inside: avoid;
+        -webkit-column-break-inside: avoid;
+    }
+    
+    .permission-header {
+        @include calc(width, '100% - 2px');
+        @include clear-padding();
+        
+        display: block;
+        float: left;
+        padding: 10px;
+        border: 1px solid $colorGallery;
+        background: $colorAlabaster;
+        
+        span {
+            @include font-size(12px);
+            
+            display: block;
+            float: left;
+            font-family: 'Open Sans Bold', sans-serif;
+            color: $colorPictonBlue;
+            text-transform: uppercase;
+        }
+        
+        input[type="checkbox"] {
+            display: block;
+            float: right;
+        }
+    }
+    
+    .permission-content {
+        @include calc(width, '100% - 2px');
+        @include clear-padding();
+        
+        display: block;
+        float: left;
+        border: 1px solid $colorGallery;
+        border-top: 0;
+        background: $colorWhite;
+        
+        > div {
+            @include clear-padding();
+            
+            display: block;
+            float: left;
+            width: 100%;
+            padding: 10px;
+            border-bottom: 1px solid #eaeaea;
+            
+            > span {
+                @include font-size(13px);
+                
+                display: block;
+                float: left;
+                font-family: 'Open Sans', sans-serif;
+                color: $colorOsloGray;
+            }
+            
+            > input[type="checkbox"] {
+                display: block;
+                float: right;
+            }
+            
+            &:last-of-type {
+                border-bottom: 0;
+            }
+        }
+    }
+}

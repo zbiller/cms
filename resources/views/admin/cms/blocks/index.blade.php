@@ -13,7 +13,7 @@
 @section('footer')
     {!! pagination('admin')->render($items) !!}
 
-    <section class="actions">
+    <section class="right">
         {!! button()->updateAction() !!}
         {!! button()->deletedRecords(route('admin.blocks.deleted')) !!}
         {!! button()->draftedRecords(route('admin.blocks.drafts')) !!}

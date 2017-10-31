@@ -15,7 +15,7 @@
         {!! pagination('admin')->render($items) !!}
     @endif
 
-    <section class="actions">
+    <section class="right">
         {!! button()->updateAction() !!}
         {!! button()->addRecord(route('admin.attribute_sets.create')) !!}
     </section>

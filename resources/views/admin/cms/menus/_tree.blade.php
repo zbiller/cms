@@ -9,9 +9,8 @@
          data-container="#menus-container"
          data-table=".menus-table"
     ></div>
-    {{--
-    <span class="box full">
-        Something wrong in tree? <a href="{{ route('admin.menus.tree.fix') }}">Fix it now!</a>
-    </span>
-    --}}
+    <div class="box spaced">
+        <span>Something wrong in tree?</span>&nbsp;
+        <a href="{{ route('admin.menus.tree.fix') }}">Fix it now!</a>
+    </div>
 </div>

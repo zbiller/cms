@@ -1,0 +1,44 @@
+#tab-drafts {
+    min-height: 52px;
+}
+
+div.loading-drafts {
+    display: none;
+    text-align: center;
+}
+
+table.drafts-table {
+    thead > tr > td:first-of-type {
+        width: 8px;
+        text-align: center;
+    }
+    
+    tbody {
+        tr > td:first-of-type {
+            width: 8px;
+            text-align: center;
+        }
+        
+        tr.no-drafts > td {
+            text-align: left !important;
+        }
+    }
+}
+
+td.actions-drafts {
+    width: 265px;
+    padding: 10px;
+    
+    @include media-query('tablet') {
+        display: table-cell;
+        width: 117px;
+    }
+}
+
+td.actions-drafted {
+    width: 252px !important;
+    
+    @include media-query('tablet') {
+        width: 117px !important;
+    }
+}

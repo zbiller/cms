@@ -27,7 +27,7 @@
 @endsection
 
 @section('footer')
-    <section class="actions">
+    <section class="right">
         {!! button()->updateAction(['style' => 'margin-right: 0;']) !!}
     </section>
 @endsection

@@ -5,39 +5,39 @@
     <div style="text-align: center;">
         <section class="content content-third one">
             <span class="title">Order Totals</span>
-            <article class="split">
+            <div class="delimited bottom">
                 <em>Raw Total:</em> {{ number_format($item->raw_total, 2) }} {{ $item->currency }}
-            </article>
-            <article class="split">
+            </div>
+            <div class="delimited bottom">
                 <em>Sub Total:</em> {{ number_format($item->sub_total, 2) }} {{ $item->currency }}
-            </article>
-            <article class="split">
+            </div>
+            <div class="delimited bottom">
                 <em>Grand Total:</em> {{ number_format($item->grand_total, 2) }} {{ $item->currency }}
-            </article>
+            </div>
         </section>
         <section class="content content-third two">
             <span class="title">Order Details</span>
-            <article class="split">
+            <div class="delimited bottom">
                 <em>Order Status:</em> {{ $statuses[$item->status] ?? 'N/A' }}
-            </article>
-            <article class="split">
+            </div>
+            <div class="delimited bottom">
                 <em>Payment Method:</em> {{ $payments[$item->payment] ?? 'N/A' }}
-            </article>
-            <article class="split">
+            </div>
+            <div class="delimited bottom">
                 <em>Shipping Option:</em> {{ $shippings[$item->shipping] ?? 'N/A' }}
-            </article>
+            </div>
         </section>
         <section class="content content-third three">
             <span class="title">Customer Info</span>
-            <article class="split">
+            <div class="delimited bottom">
                 <em>Full Name:</em> {{ $item->full_name ?: 'N/A' }}
-            </article>
-            <article class="split">
+            </div>
+            <div class="delimited bottom">
                 <em>Email Address:</em> {{ $item->email ?: 'N/A' }}
-            </article>
-            <article class="split">
+            </div>
+            <div class="delimited bottom">
                 <em>Phone Number:</em> {{ $item->phone ?: 'N/A' }}
-            </article>
+            </div>
         </section>
     </div>
 
@@ -89,10 +89,10 @@
 @endsection
 
 @section('footer')
-    <section class="actions left">
+    <section class="left">
         {!! button()->goBack(route('admin.orders.index')) !!}
     </section>
-    <section class="actions">
+    <section class="right">
         {!! button()->action('Modify', route('admin.orders.edit', $item->id), 'fa-pencil', 'green') !!}
     </section>
 @endsection

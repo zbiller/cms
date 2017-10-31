@@ -1,31 +1,10 @@
-@import 'init';
-
-footer {
-    @include calc(width, "100% - 250px");
-    @include clear-padding();
-
-    display: block;
-    /*display: none;*/
-    z-index: z-index('footer');
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    padding: 0 15px;
-    background: $colorWhite;
-    border-top: 1px solid $colorGallery;
-
-    @include media-query('tablet-wide') {
-        width: 100%;
-    }
-}
-
-.pagination {
+section.pagination {
     float: left;
-
+    
     a {
         @include font-size(12px);
         @include transition(all 0.3s ease);
-
+        
         display: block;
         float: left;
         width: 34px;
@@ -36,37 +15,37 @@ footer {
         font-family: 'Open Sans Semibold', sans-serif;
         text-align: center;
         line-height: 30px;
-
+        
         @include media-query('tablet-small') {
             display: none;
-
+            
             &.first, &.last, &.previous, &.next {
                 display: block;
             }
         }
-
+        
         &:hover {
             background: $colorTowerGray;
         }
-
+        
         &.current {
             background: $colorPictonBlue;
         }
-
+        
         &.inactive {
             cursor: not-allowed;
             background: lighten($colorTowerGray, 10%);
         }
     }
-
+    
     .jump {
         float: left;
         margin: 15px 0 15px 20px;
-
+        
         @include media-query('tablet-small') {
             display: none;
         }
-
+        
         input[type="number"] {
             width: 50px;
             height: 28px;
@@ -74,13 +53,13 @@ footer {
             border: 1px solid darken($colorGallery, 2%);
             background: $colorWhite;
             color: $colorOsloGray;
-
+            
         }
-
+        
         input[type="submit"] {
             @include font-size(12px);
             @include transition(background 0.3s ease);
-
+            
             width: 40px;
             height: 30px;
             margin: 0 0 0 -5px;
@@ -90,14 +69,10 @@ footer {
             color: $colorWhite;
             font-family: 'Open Sans Bold', sans-serif;
             text-transform: uppercase;
-
+            
             &:hover {
                 background: darken($colorPictonBlue, 10%);
             }
         }
     }
-}
-
-section.actions {
-    float: right;
 }

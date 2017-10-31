@@ -16,7 +16,7 @@
                 var popup = _this.next('.upload-new'),
                     tab = popup.find('.modal-tab.active'),
                     list = popup.find('ul.modal-tabs').find('li.active'),
-                    container = tab.find('div.uploads'),
+                    container = tab.find('div.modal-items'),
                     keyword = tab.find('input.search').val(),
                     type = list.data('type'),
                     accept = list.data('accept'),
@@ -47,7 +47,7 @@
             }, uploadScroll = function (_this) {
                 var tab = _this.find('.modal-tab.active'),
                     list = _this.find('ul.modal-tabs').find('li.active'),
-                    container = tab.find('div.uploads'),
+                    container = tab.find('div.modal-items'),
                     keyword = tab.find('input.search').val(),
                     type = list.data('type'),
                     accept = list.data('accept'),
@@ -72,7 +72,7 @@
             }, uploadSearch = function (_this) {
                 var tab = _this.find('.modal-tab.active'),
                     list = _this.find('ul.modal-tabs').find('li.active'),
-                    container = tab.find('div.uploads'),
+                    container = tab.find('div.modal-items'),
                     keyword = tab.find('input.search').val(),
                     type = list.data('type'),
                     accept = list.data('accept'),
@@ -118,11 +118,11 @@
                         _this.find('.loading').fadeOut(300);
 
                         if (data.result.status === true) {
-                            _this.find('#' + data.result.type).find('.uploads').prepend(data.result.html);
-                            _this.find('#' + data.result.type).find('.uploads > p').remove();
+                            _this.find('#' + data.result.type).find('.modal-items').prepend(data.result.html);
+                            _this.find('#' + data.result.type).find('.modal-items > p').remove();
 
-                            _this.find('.modal-tab').find('.uploads > a').removeClass('active');
-                            _this.find('#' + data.result.type).find('.uploads > a:first-of-type').addClass('active');
+                            _this.find('.modal-tab').find('.modal-items > a').removeClass('active');
+                            _this.find('#' + data.result.type).find('.modal-items > a:first-of-type').addClass('active');
 
                             message.text(data.result.message).removeClass('error').addClass('success');
                             progress.find('.bar').removeClass('error').addClass('success');
@@ -149,7 +149,7 @@
                 });
             }, uploadSave = function (_this) {
                 var tab = _this.find('.modal-tab.active'),
-                    container = tab.find('div.uploads'),
+                    container = tab.find('div.modal-items'),
                     model = _this.data('model'),
                     field = _this.data('field'),
                     path = container.find('a.active').data('path'),
