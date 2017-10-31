@@ -36,18 +36,4 @@ Route::group([
 /**
  * Dynamic routes.
  */
-Route::get('{url}', function ($url = '/') {
-    try {
-        $url = \App\Models\Cms\Url::whereUrl($url)->firstOrFail();
-
-        if ($model = $url->urlable) {
-            return (new Illuminate\Routing\ControllerDispatcher(app()))->dispatch(app(Illuminate\Routing\Route::class)->setAction([
-                'model' => $model
-            ]), app($model->getUrlOptions()->routeController), $model->getUrlOptions()->routeAction);
-        } else {
-            abort(404);
-        }
-    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-        abort(404);
-    }
-})->where('url', '(.*)');
+Route::get('{url}', ['uses' => 'Controller@show'])->where('url', '(.*)');

@@ -69,14 +69,14 @@ mix
      */
     .scripts([
         'resources/assets/js/admin/helpers.js',
-        'resources/assets/js/admin/main.js'
+        'resources/assets/js/admin/app.js'
     ], 'public/js/admin/app.js')
 
     /**
      * Bundle FRONT js files.
      */
     .scripts([
-        'resources/assets/js/front/main.js'
+        'resources/assets/js/front/app.js'
     ], 'public/js/front/app.js')
 
     /**
