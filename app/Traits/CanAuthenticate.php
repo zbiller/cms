@@ -113,11 +113,7 @@ trait CanAuthenticate
      */
     protected function redirectTo()
     {
-        if (session()->has('intended_redirect')) {
-            return session('intended_redirect');
-        }
-
-        return self::$authenticationOptions->loginRedirect;
+        return session('url.intended') ?: self::$authenticationOptions->loginRedirect;
     }
 
     /**
@@ -128,7 +124,7 @@ trait CanAuthenticate
     protected function intendRedirectTo()
     {
         if (str_contains(url()->previous(), self::$authenticationOptions->loginRedirect)) {
-            session()->flash('intended_redirect', url()->previous());
+            session()->flash('url.intended', url()->previous());
         }
     }
 
