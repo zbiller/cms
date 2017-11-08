@@ -5,6 +5,7 @@ namespace App\Traits;
 use App\Exceptions\SortException;
 use App\Http\Sorts\Sort;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Http\Request;
@@ -56,6 +57,7 @@ trait IsSortable
      * @param Builder $query
      * @param Request $request
      * @param Sort $sort
+     *
      * @throws SortException
      */
     public function scopeSorted($query, Request $request, Sort $sort = null)
@@ -89,21 +91,59 @@ trait IsSortable
      */
     private function sortByRelation()
     {
-        list($relation, $field) = explode('.', $this->sort['request']->get($this->sort['field']));
+        $sortParts = explode('.', $this->sort['request']->get($this->sort['field']));
+        $sortModels = [];
 
-        $this->checkRelationToSortBy($relation);
-
-        $modelTable = $this->getTable();
-        $relationTable = $this->{$relation}()->getModel()->getTable();
-        $foreignKey = $this->{$relation}() instanceof HasOne ?
-            $this->{$relation}()->getForeignKeyName() :
-            $this->{$relation}()->getForeignKey();
-
-        if (!$this->joinAlreadyExists($relationTable)) {
-            $this->sort['query']->join($relationTable, $modelTable . '.id', '=', $relationTable . '.' . $foreignKey);
+        if (count($sortParts) > 2) {
+            $field = array_pop($sortParts);
+            $relations = $sortParts;
+        } else {
+            $field = array_last($sortParts);
+            $relations = (array)array_first($sortParts);
         }
 
-        $this->sort['query']->orderBy($relationTable . '.' . $field, $this->sort['request']->get($this->sort['direction']));
+        foreach ($relations as $index => $relation) {
+            $previousModel = $this;
+
+            if (isset($sortModels[$index - 1])) {
+                $previousModel = $sortModels[$index - 1];
+            }
+
+            $this->checkRelationToSortBy($previousModel, $relation);
+
+            $sortModels[] = $previousModel->{$relation}()->getModel();
+
+            $modelTable = $previousModel->getTable();
+            $relationTable = $previousModel->{$relation}()->getModel()->getTable();
+            $foreignKey = $previousModel->{$relation}() instanceof HasOne ?
+                $previousModel->{$relation}()->getForeignKeyName() :
+                $previousModel->{$relation}()->getForeignKey();
+
+            if (!$this->joinAlreadyExists($relationTable)) {
+                if ($previousModel->{$relation}() instanceof BelongsTo) {
+                    $this->sort['query']->join(
+                        $relationTable, $modelTable . '.' . $foreignKey, '=', $relationTable . '.id'
+                    );
+                } else {
+                    $this->sort['query']->join(
+                        $relationTable, $modelTable . '.id', '=', $relationTable . '.' . $foreignKey
+                    );
+                }
+            }
+        }
+
+        $sortFieldAlias = implode('_', $relations) . '_' . $field;
+
+        if (isset($relationTable)) {
+            $this->sort['query']->addSelect([
+                $this->getTable() . '.*',
+                $relationTable . '.' . $field . ' AS ' . $sortFieldAlias
+            ]);
+        }
+
+        $this->sort['query']->orderBy(
+            $sortFieldAlias, $this->sort['request']->get($this->sort['direction'])
+        );
     }
 
     /**
@@ -113,7 +153,10 @@ trait IsSortable
      */
     private function sortNormally()
     {
-        $this->sort['query']->orderBy($this->sort['request']->get($this->sort['field']), $this->sort['request']->get($this->sort['direction']));
+        $this->sort['query']->orderBy(
+            $this->sort['request']->get($this->sort['field']),
+            $this->sort['request']->get($this->sort['direction'])
+        );
     }
 
     /**
@@ -123,7 +166,10 @@ trait IsSortable
      */
     private function isValidSort()
     {
-        return $this->sort['request']->isMethod('get') && $this->sort['request']->has($this->sort['field']) && $this->sort['request']->has($this->sort['direction']);
+        return
+            $this->sort['request']->isMethod('get') &&
+            $this->sort['request']->has($this->sort['field']) &&
+            $this->sort['request']->has($this->sort['direction']);
     }
 
     /**
@@ -162,6 +208,7 @@ trait IsSortable
      * Verify if the desired join exists already, possibly included by a global scope.
      *
      * @param string $table
+     *
      * @return bool
      */
     private function joinAlreadyExists($table)
@@ -190,15 +237,17 @@ trait IsSortable
      * Verify if the desired relation to sort by is one of: HasOne or BelongsTo.
      * Sorting by "many" relations or "morph" ones is not possible.
      *
+     * @param Model $model
      * @param string $relation
+     *
      * @throws SortException
      */
-    private function checkRelationToSortBy($relation)
+    private function checkRelationToSortBy(Model $model, $relation)
     {
-        if (!($this->{$relation}() instanceof HasOne) && !($this->{$relation}() instanceof BelongsTo)) {
+        if (!($model->{$relation}() instanceof HasOne) && !($model->{$relation}() instanceof BelongsTo)) {
             throw new SortException(
                 'You can only sort records by the following relations: HasOne, BelongsTo.' . PHP_EOL .
-                'The relation "' . $relation . '" is of type ' . get_class($this->{$relation}()) . ' and cannot be sorted by.'
+                'The relation "' . $relation . '" is of type ' . get_class($model->{$relation}()) . ' and cannot be sorted by.'
             );
         }
     }
