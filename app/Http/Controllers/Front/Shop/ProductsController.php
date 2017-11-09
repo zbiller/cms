@@ -56,13 +56,13 @@ class ProductsController extends Controller
             $this->setMeta([
                 'title' => $this->product->meta_title ?: $this->product->name,
                 'image' => $this->product->meta_image ? uploaded($this->product->meta_image)->url() : null,
-                'description' => $this->product->description ?: null,
-                'keywords' => $this->product->keywords ?: null,
+                'description' => $this->product->meta_description ?: null,
+                'keywords' => $this->product->meta_keywords ?: null,
             ]);
 
             view()->share([
-                'product' => $this->product,
                 'page' => $this->page,
+                'product' => $this->product,
             ]);
         } else {
             abort(404);

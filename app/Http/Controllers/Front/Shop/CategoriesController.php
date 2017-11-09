@@ -56,13 +56,13 @@ class CategoriesController extends Controller
             $this->setMeta([
                 'title' => $this->category->meta_title ?: $this->category->name,
                 'image' => $this->category->meta_image ? uploaded($this->category->meta_image)->url() : null,
-                'description' => $this->category->description ?: null,
-                'keywords' => $this->category->keywords ?: null,
+                'description' => $this->category->meta_description ?: null,
+                'keywords' => $this->category->meta_keywords ?: null,
             ]);
 
             view()->share([
-                'category' => $this->category,
                 'page' => $this->page,
+                'category' => $this->category,
             ]);
         } else {
             abort(404);

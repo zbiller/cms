@@ -39,13 +39,11 @@ class PagesController extends Controller
             $this->setMeta([
                 'title' => $this->page->meta_title ?: $this->page->name,
                 'image' => $this->page->meta_image ? uploaded($this->page->meta_image)->url() : null,
-                'description' => $this->page->description ?: null,
-                'keywords' => $this->page->keywords ?: null,
+                'description' => $this->page->meta_description ?: null,
+                'keywords' => $this->page->meta_keywords ?: null,
             ]);
 
-            view()->share([
-                'page' => $this->page,
-            ]);
+            view()->share('page', $this->page);
         } else {
             abort(404);
         }
